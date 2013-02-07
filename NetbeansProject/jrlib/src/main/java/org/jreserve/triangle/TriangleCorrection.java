@@ -5,13 +5,13 @@ package org.jreserve.triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleCorrection extends AbstractTriangularCalculationData {
+public class TriangleCorrection extends AbstractTriangularModification {
 
     private final int accident;
     private final int development;
     private final double correction;
     
-    public TriangleCorrection(TriangularCalculationData source, int accident, int development, double correction) {
+    public TriangleCorrection(Triangle source, int accident, int development, double correction) {
         super(source);
         this.accident = accident;
         this.development = development;
@@ -42,9 +42,8 @@ public class TriangleCorrection extends AbstractTriangularCalculationData {
     }
     
     private boolean isMyCell(int accident, int development) {
-        return withinSourceBound(accident, development) &&
+        return withinBounds(accident, development) &&
                this.accident == accident &&
                this.development == development;
     }
-
 }

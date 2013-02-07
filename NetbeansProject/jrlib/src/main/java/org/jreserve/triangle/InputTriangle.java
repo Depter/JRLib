@@ -1,13 +1,11 @@
 package org.jreserve.triangle;
 
-import org.jreserve.AbstractCalculationData;
-
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class InputTriangle extends AbstractCalculationData<TriangularCalculationData> implements TriangularCalculationData {
+public class InputTriangle extends AbstractTriangle implements Triangle {
 
     private double[][] data;
     private int accidents;
@@ -66,37 +64,11 @@ public class InputTriangle extends AbstractCalculationData<TriangularCalculation
             return data[accident].length;
         return 0;
     }
-
-    private boolean withinBounds(int accident) {
-        return accident >= 0 &&
-               accident < accidents;
-    }
     
     @Override
     public double getValue(int accident, int development) {
         if(withinBounds(accident, development))
             return data[accident][development];
         return Double.NaN;
-    }
-    
-    private boolean withinBounds(int accident, int development) {
-        return withinBounds(accident) &&
-               development >= 0 &&
-               development < getDevelopmentCount(accident);
-    }
-
-    @Override
-    public double[][] toArray() {
-        double[][] result = new double[accidents][];
-        for(int a=0; a<accidents; a++)
-            result[a] = toArray(a);
-        return result;
-    }
-    
-    private double[] toArray(int accident) {
-        int size = data[accident].length;
-        double[] result = new double[size];
-        System.arraycopy(data[accident], 0, result, 0, size);
-        return result;
     }
 }

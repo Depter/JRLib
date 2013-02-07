@@ -18,11 +18,11 @@ public class InputTriangleTest {
         {16}
     };
     
-    public static TriangularCalculationData createData() {
+    public static Triangle createData() {
         return new InputTriangle(DATA);
     }
     
-    private TriangularCalculationData triangle;
+    private Triangle triangle;
     
     public InputTriangleTest() {
     }
@@ -46,6 +46,27 @@ public class InputTriangleTest {
     public void testGetDevelopmentCount_int() {
         for(int a=0; a<DATA.length; a++)
             assertEquals(DATA[a].length, triangle.getDevelopmentCount(a));
+    }
+
+    @Test
+    public void testGetValue_Cell() {
+        assertTrue(Double.isNaN(triangle.getValue(new Cell(-1, 0))));
+        
+        for(int a=0; a<DATA.length; a++) {
+            assertTrue(Double.isNaN(triangle.getValue(new Cell(a, - 1))));
+        
+            for(int d=0; d<DATA[a].length; d++)
+                assertEquals(DATA[a][d], triangle.getValue(new Cell(a, d)), EPSILON);
+            
+            assertTrue(Double.isNaN(triangle.getValue(new Cell(a, DATA[a].length))));
+        }
+        
+        assertTrue(Double.isNaN(triangle.getValue(new Cell(DATA.length, 0))));
+    }
+
+    @Test(expected=NullPointerException.class)
+    public void testGetValue_Cell_Null() {
+        triangle.getValue(null);
     }
 
     @Test

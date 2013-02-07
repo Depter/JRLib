@@ -15,7 +15,7 @@ public class TriangleCorrectionTest {
     private final static int ACCIDENT = 0;
     private final static int DEVELOPMENT = 3;
 
-    private TriangularCalculationData source;
+    private Triangle source;
     private TriangleCorrection corrigated;
     private TriangleCorrection outsider;
     

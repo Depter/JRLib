@@ -1,6 +1,6 @@
 package org.jreserve.smoothing;
 
-import org.jreserve.triangle.TriangularCalculationData;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -14,5 +14,5 @@ public interface TriangleSmoothing {
      * @param input the triangle to smooth.
      * @return the smoothed triangle.
      */
-    public double[][] smooth(TriangularCalculationData input);
+    public double[][] smooth(Triangle input);
 }

@@ -11,9 +11,9 @@ import org.junit.Test;
  */
 public class AbstractTriangularCalculationDataTest {
 
-    private AbstractTriangularCalculationData data;
-    private AbstractTriangularCalculationData emptyData;
-    private TriangularCalculationData source;
+    private AbstractTriangularModification data;
+    private AbstractTriangularModification emptyData;
+    private Triangle source;
     
     public AbstractTriangularCalculationDataTest() {
     }
@@ -82,9 +82,9 @@ public class AbstractTriangularCalculationDataTest {
         }
     }
 
-    public class AbstractTriangularCalculationDataImpl extends AbstractTriangularCalculationData {
+    public class AbstractTriangularCalculationDataImpl extends AbstractTriangularModification {
 
-        public AbstractTriangularCalculationDataImpl(TriangularCalculationData source) {
+        public AbstractTriangularCalculationDataImpl(Triangle source) {
             super(source);
         }
 

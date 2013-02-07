@@ -10,6 +10,8 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     TriangleGeometryTest.class,
+    CellTest.class,
+    TriangleUtilTest.class,
     InputTriangleTest.class,
     AbstractTriangularCalculationDataTest.class,
     TriangleCorrectionTest.class
