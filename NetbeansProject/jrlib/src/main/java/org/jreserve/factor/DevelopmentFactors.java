@@ -2,7 +2,6 @@ package org.jreserve.factor;
 
 import org.jreserve.triangle.AbstractTriangle;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleUtil;
 
 /**
  *
@@ -14,11 +13,9 @@ public class DevelopmentFactors extends AbstractTriangle {
     private double[][] factors;
     private int accidents;
     private int developments;
-    private boolean cummulateInput;
 
-    public DevelopmentFactors(Triangle source, boolean cummulateInput) {
+    public DevelopmentFactors(Triangle source) {
         super(source);
-        this.cummulateInput = cummulateInput;
         doRecalculate();
     }
     
@@ -85,10 +82,9 @@ public class DevelopmentFactors extends AbstractTriangle {
     }
     
     private double[][] getSourceData() {
-        double[][] result = source==null? new double[0][] : source.toArray();
-        if(cummulateInput)
-            TriangleUtil.cummulate(result);
-        return result;
+        if(source == null)
+            return new double[0][];
+        return source.toArray();
     }
     
     private double[] calculateFactors(double[] input) {

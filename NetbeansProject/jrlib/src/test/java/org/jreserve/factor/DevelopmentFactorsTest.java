@@ -1,8 +1,9 @@
 package org.jreserve.factor;
 
-import static org.jreserve.JLibTestSuite.EPSILON;
+import static org.jreserve.JRLibTestSuite.EPSILON;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -56,8 +57,9 @@ public class DevelopmentFactorsTest {
     @Before
     public void setUp() {
         source = new InputTriangle(INCREMENTIAL);
-        incrementialFactors = new DevelopmentFactors(source, false);
-        cummulatedFactors = new DevelopmentFactors(source, true);
+        incrementialFactors = new DevelopmentFactors(source);
+        Triangle cummulated = new TriangleCummulation(source);
+        cummulatedFactors = new DevelopmentFactors(cummulated);
     }
 
     @Test

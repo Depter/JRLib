@@ -1,6 +1,6 @@
 package org.jreserve.smoothing;
 
-import static org.jreserve.JLibTestSuite.EPSILON;
+import static org.jreserve.JRLibTestSuite.EPSILON;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;

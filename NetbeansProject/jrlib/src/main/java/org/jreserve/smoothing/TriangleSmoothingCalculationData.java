@@ -1,6 +1,6 @@
 package org.jreserve.smoothing;
 
-import org.jreserve.triangle.AbstractTriangularModification;
+import org.jreserve.triangle.AbstractTriangleModification;
 import org.jreserve.triangle.Triangle;
 
 /**
@@ -8,7 +8,7 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleSmoothingCalculationData extends AbstractTriangularModification {
+public class TriangleSmoothingCalculationData extends AbstractTriangleModification {
 
     private final TriangleSmoothing smoothing;
     private double[][] values;

@@ -1,6 +1,6 @@
 package org.jreserve.triangle;
 
-import static org.jreserve.JLibTestSuite.EPSILON;
+import static org.jreserve.JRLibTestSuite.EPSILON;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;

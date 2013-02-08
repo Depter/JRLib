@@ -13,8 +13,9 @@ import org.junit.runners.Suite;
     CellTest.class,
     TriangleUtilTest.class,
     InputTriangleTest.class,
-    AbstractTriangularCalculationDataTest.class,
-    TriangleCorrectionTest.class
+    AbstractTriangleModificationTest.class,
+    TriangleCorrectionTest.class,
+    TriangleCummulationTest.class
 })
 public class TriangleTestSuite {
 }

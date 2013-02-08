@@ -1,6 +1,6 @@
 package org.jreserve.smoothing;
 
-import static org.jreserve.JLibTestSuite.EPSILON;
+import static org.jreserve.JRLibTestSuite.EPSILON;
 import org.jreserve.triangle.InputTriangleTest;
 import org.jreserve.triangle.Triangle;
 import static org.junit.Assert.assertEquals;

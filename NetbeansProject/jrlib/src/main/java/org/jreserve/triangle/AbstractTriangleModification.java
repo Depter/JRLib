@@ -5,12 +5,12 @@ package org.jreserve.triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractTriangularModification extends AbstractTriangle {
+public abstract class AbstractTriangleModification extends AbstractTriangle {
 
-    protected AbstractTriangularModification() {
+    protected AbstractTriangleModification() {
     }
 
-    protected AbstractTriangularModification(Triangle source) {
+    protected AbstractTriangleModification(Triangle source) {
         super(source);
     }
 

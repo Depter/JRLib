@@ -1,6 +1,6 @@
 package org.jreserve.triangle;
 
-import static org.jreserve.JLibTestSuite.EPSILON;
+import static org.jreserve.JRLibTestSuite.EPSILON;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,20 +9,20 @@ import org.junit.Test;
  *
  * @author Peter Decsi
  */
-public class AbstractTriangularCalculationDataTest {
+public class AbstractTriangleModificationTest {
 
-    private AbstractTriangularModification data;
-    private AbstractTriangularModification emptyData;
+    private AbstractTriangleModification data;
+    private AbstractTriangleModification emptyData;
     private Triangle source;
     
-    public AbstractTriangularCalculationDataTest() {
+    public AbstractTriangleModificationTest() {
     }
 
     @Before
     public void setUp() {
         source = InputTriangleTest.createData();
-        data = new AbstractTriangularCalculationDataImpl(source);
-        emptyData = new AbstractTriangularCalculationDataImpl();
+        data = new AbstractTriangleModificationImpl(source);
+        emptyData = new AbstractTriangleModificationImpl();
     }
 
     @Test
@@ -82,13 +82,13 @@ public class AbstractTriangularCalculationDataTest {
         }
     }
 
-    public class AbstractTriangularCalculationDataImpl extends AbstractTriangularModification {
+    public class AbstractTriangleModificationImpl extends AbstractTriangleModification {
 
-        public AbstractTriangularCalculationDataImpl(Triangle source) {
+        public AbstractTriangleModificationImpl(Triangle source) {
             super(source);
         }
 
-        public AbstractTriangularCalculationDataImpl() {
+        public AbstractTriangleModificationImpl() {
         }
         
         @Override
