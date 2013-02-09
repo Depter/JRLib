@@ -1,21 +1,23 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.factor.LinkRatio;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class LinearRegression {
+public class Regression {
 
     public static double[] fit(double[] y) {
         int size = y.length;
         double[] x = new double[size];
         for(int i=0; i<size; i++)
             x[i] = (i+1);
-        return fit(x, y);
+        return linearRegression(x, y);
     }
     
-    public static double[] fit(double[] x, double[] y) {
+    public static double[] linearRegression(double[] x, double[] y) {
         checkInput(x, y);
         boolean[] used = getUsed(x, y);
         double slope = slope(x, y, used);
@@ -100,6 +102,19 @@ public class LinearRegression {
         return sum / (double)n;
     }
     
+    public static double rSquareModel(LinkRatio lr, LinkRatioFuncton lrf) {
+        double[] original = lr.toArray();
+        double[] fitted = predict(lrf, original.length);
+        return rSquare(original, fitted);
+    }
+    
+    private static double[] predict(LinkRatioFuncton lrf, int developments) {
+        double[] result = new double[developments];
+        for(int d=0; d<developments; d++)
+            result[d] = lrf.getValue(d+1);
+        return result;
+    }
+    
     public static double rSquareModel(double[] original, double[] model) {
         double[] fitted = predict(model[0], model[1], original.length);
         return rSquare(original, fitted);
@@ -142,6 +157,6 @@ public class LinearRegression {
         return result;
     }
     
-    private LinearRegression() {
+    private Regression() {
     }
 }

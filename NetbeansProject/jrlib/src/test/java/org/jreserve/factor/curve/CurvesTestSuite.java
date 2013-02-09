@@ -1,8 +1,5 @@
 package org.jreserve.factor.curve;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -12,8 +9,10 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    InversePowerTest.class,
-    LinearRegressionTest.class
+    RegressionTest.class,
+    InversePowerLRFunctionTest.class,
+    ExponentialLRFunctionTest.class,
+    PowerLRFunctionTest.class
 })
 public class CurvesTestSuite {
 }

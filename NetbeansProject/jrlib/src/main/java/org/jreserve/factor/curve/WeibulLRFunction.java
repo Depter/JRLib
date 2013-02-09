@@ -1,16 +1,19 @@
 package org.jreserve.factor.curve;
 
+import static java.lang.Math.*;
 import org.apache.commons.math3.analysis.ParametricUnivariateFunction;
 import org.apache.commons.math3.fitting.CurveFitter;
 import org.apache.commons.math3.optim.nonlinear.vector.jacobian.LevenbergMarquardtOptimizer;
 import org.jreserve.factor.LinkRatio;
 
 /**
+ * Link ratio smoothing, based on the Weibul curve:
+ * <i>1 / (1-e^(-a * x ^ b))</i>.
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class InversePower implements LinkRatioFuncton, ParametricUnivariateFunction {
+public class WeibulLRFunction implements LinkRatioFuncton, ParametricUnivariateFunction {
     
     private final static int INDEX_A = 0;
     private final static int INDEX_B = 1;
@@ -45,14 +48,14 @@ public class InversePower implements LinkRatioFuncton, ParametricUnivariateFunct
 
     @Override
     public double getValue(int development) {
-        return 1d + pa * Math.pow(development, pb);
+        return 1d / (1d - exp(-pa * pow((double)development, pb)));
     }
 
     @Override
     public double value(double x, double... parameters) {
         double a = parameters[INDEX_A];
         double b = parameters[INDEX_B];
-        return 1 + a * Math.pow(x, b);
+        return 1d / (1d - exp(-a * pow(x, b)));
     }
 
     @Override
@@ -61,26 +64,31 @@ public class InversePower implements LinkRatioFuncton, ParametricUnivariateFunct
         double b = parameters[INDEX_B];
         
         double[] gradient = new double[2];
-        gradient[INDEX_A] = Math.pow(x, b);                     //x^b
-        gradient[INDEX_B] = a * (Math.pow(x, b) * Math.log(x));//a * (x^b * ln(x))
+        double xPb = pow(x, b);
+        double exPb = exp(a * xPb);
+        double exPb2 = pow(exPb - 1d , 2d);
+        //-(x^b * e^(a * x^b))/(e^(a * x^b)-1)^2
+        gradient[INDEX_A] = -(xPb * exPb) / exPb2;
+        // -(a * x^b * log(x)* e^(a* x^b))/(e^(a* x^b)-1)^2
+        gradient[INDEX_B] = -(a * xPb * log(x) * exPb / exPb2);
         
         return gradient;
     }
     
     @Override
     public boolean equals(Object o) {
-        return (o instanceof InversePower);
+        return (o instanceof WeibulLRFunction);
     }
     
     @Override
     public int hashCode() {
-        return InversePower.class.hashCode();
+        return WeibulLRFunction.class.hashCode();
     }
 
     @Override
     public String toString() {
         return String.format(
-            "InversePower: [LR(t) = 1 + %f * t ^ %f]",
+            "WeibulLR [LR(t) = 1 / (1 - e^(-%.5f * t^%.5f))]",
             pa, pb);
     }
 }

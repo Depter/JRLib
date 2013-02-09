@@ -14,7 +14,7 @@ import org.junit.Test;
  */
 public class WeightedAverageLRMethodTest {
         
-    private final static double[] EXPECTED = {
+    private final static double[] EXPECTED_PAID = {
         1.24694402,
         1.01584722,
         1.00946012,
@@ -24,6 +24,16 @@ public class WeightedAverageLRMethodTest {
         1.00191164
     };
 
+    private final static double[] EXPECTED_INCURRED = {
+        1.19471971,
+        0.99540619,
+        0.99507566,
+        1.01018160,
+        1.00310913,
+        1.00031727,
+        0.98794674
+    };
+    
     private DevelopmentFactors factors;
 
     public WeightedAverageLRMethodTest() {
@@ -31,15 +41,27 @@ public class WeightedAverageLRMethodTest {
 
     @Before
     public void setUp() {
-        Triangle source = new InputTriangle(JRLibTestSuite.PAID);
+    }
+
+    @Test
+    public void testGetLinkRatios_Paid() {
+        initFactors(JRLibTestSuite.PAID);
+        WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
+        double[] found = lrs.getLinkRatios(factors);
+        assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
+    }
+    
+    private void initFactors(double[][] data) {
+        Triangle source = new InputTriangle(data);
         source = new TriangleCummulation(source);
         factors = new DevelopmentFactors(source);
     }
 
     @Test
-    public void testGetLinkRatios() {
+    public void testGetLinkRatios_Incurred() {
+        initFactors(JRLibTestSuite.INCURRED);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
         double[] found = lrs.getLinkRatios(factors);
-        assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
+        assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);
     }
 }
