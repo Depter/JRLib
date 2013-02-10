@@ -1,20 +1,16 @@
 package org.jreserve.factor.curve;
 
-import static java.lang.Math.log;
-import static java.lang.Math.pow;
-import org.apache.commons.math3.analysis.ParametricUnivariateFunction;
-import org.apache.commons.math3.fitting.CurveFitter;
-import org.apache.commons.math3.optim.nonlinear.vector.jacobian.LevenbergMarquardtOptimizer;
+import static java.lang.Math.*;
 import org.jreserve.factor.LinkRatio;
 
 /**
  * Link ratio smoothing, based on the power curve:
- * <i>a ^ b ^ t</i>.
+ * <i>a ^ (b ^ t)</i>.
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class PowerLRFunction implements LinkRatioFuncton, ParametricUnivariateFunction {
+public class PowerLRFunction implements LinkRatioFunction {
     
     private final static int INDEX_A = 0;
     private final static int INDEX_B = 1;
@@ -24,20 +20,28 @@ public class PowerLRFunction implements LinkRatioFuncton, ParametricUnivariateFu
     
     @Override
     public void fit(LinkRatio lr) {
-        CurveFitter fitter = createFitter(lr);
-        double[] params = fitter.fit(this, new double[]{pa, pb});
-        pa = params[INDEX_A];
-        pb = params[INDEX_B];
+        int devs = lr.getDevelopmentCount();
+        double[] x = getXs(devs);
+        double[] y = getYs(lr.toArray(), devs);
+        double[] params = Regression.linearRegression(x, y);
+        pa = exp(exp(params[Regression.INTERCEPT]));
+        pb = exp(params[Regression.SLOPE]);
     }
     
-    private CurveFitter createFitter(LinkRatio lr) {
-        CurveFitter fitter = new CurveFitter(new LevenbergMarquardtOptimizer());
-        double[] lrs = lr.toArray();
-        int size = lrs.length;
-        for(int i=0; i<size; i++)
-            fitter.addObservedPoint(i+1, lrs[i]);
-        return fitter;
-    } 
+    private double[] getXs(int devs) {
+        double[] x = new double[devs];
+        for(int i=0; i<devs; i++)
+            x[i] = (double) (i+1);
+        return x;
+    }
+    
+    private double[] getYs(double[] lrs, int devs) {
+        for(int i=0; i<devs; i++) {
+            double lr = lrs[i];
+            lrs[i] = (Double.isNaN(lr) || !(lr > 1d))? Double.NaN : log(log(lr));
+        }
+        return lrs;
+    }
     
     public double getA() {
         return pa;
@@ -50,27 +54,6 @@ public class PowerLRFunction implements LinkRatioFuncton, ParametricUnivariateFu
     @Override
     public double getValue(int development) {
         return pow(pa, pow(pb, (double) development));
-    }
-
-    @Override
-    public double value(double x, double... parameters) {
-        double a = parameters[INDEX_A];
-        double b = parameters[INDEX_B];
-        return pow(a, pow(b, x));
-    }
-
-    @Override
-    public double[] gradient(double x, double... parameters) {
-        double a = parameters[INDEX_A];
-        double b = parameters[INDEX_B];
-        
-        double[] gradient = new double[2];
-        //(b^x) * a ^ (b^x-1)
-        gradient[INDEX_A] = pow(b, x) * pow(a, pow(b, x) - 1d);
-        // x*b^(x-1)*ln(a)*a^(b^x)
-        gradient[INDEX_B] = x*pow(b, x-1d) * log(a) * pow(a, pow(b, x));
-        
-        return gradient;
     }
     
     @Override

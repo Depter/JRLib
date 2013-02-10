@@ -12,7 +12,10 @@ import org.junit.runners.Suite;
     RegressionTest.class,
     InversePowerLRFunctionTest.class,
     ExponentialLRFunctionTest.class,
-    PowerLRFunctionTest.class
+    PowerLRFunctionTest.class,
+    WeibulLRFunctionTest.class,
+    DefaultLRFunctionTest.class,
+    DefaultLinkRatioSmoothingTest.class
 })
 public class CurvesTestSuite {
 }

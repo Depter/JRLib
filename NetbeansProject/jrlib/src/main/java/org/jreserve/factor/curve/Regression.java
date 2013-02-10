@@ -9,6 +9,9 @@ import org.jreserve.factor.LinkRatio;
  */
 public class Regression {
 
+    public final static int INTERCEPT = 0;
+    public final static int SLOPE = 1;
+    
     public static double[] fit(double[] y) {
         int size = y.length;
         double[] x = new double[size];
@@ -20,8 +23,29 @@ public class Regression {
     public static double[] linearRegression(double[] x, double[] y) {
         checkInput(x, y);
         boolean[] used = getUsed(x, y);
-        double slope = slope(x, y, used);
-        double intercept = intercept(x, y, used, slope);
+        
+        double sxy = 0d;
+        double sx = 0d;
+        double sy = 0d;
+        double sxs = 0d;
+        int n = 0;
+        int size = used.length;
+        for(int i=0; i<size; i++) {
+            if(used[i]) {
+                double xv = x[i];
+                double yv = y[i];
+                
+                sxy += (xv*yv);
+                sx += xv;
+                sy += yv;
+                sxs += (xv*xv);
+                n++;
+            }
+        }
+        double dn = (double) n;
+        double denom = dn*sxs - sx*sx;
+        double slope = (dn*sxy - sx*sy) / denom;
+        double intercept = (sy*sxs - sx*sxy) / denom;
         return new double[]{intercept, slope};
     }
     
@@ -67,48 +91,13 @@ public class Regression {
         return sum / (double)n;
     }
     
-    private static double slope(double[] x, double[]y, boolean[] used) {
-        //SLOPE = sum((x-mean(x)) * (y-mean(y))) / sum((x-mean(x))^2)
-        int size = x.length;
-        
-        double meanX = mean(x, used);
-        double meanY = mean(y, used);
-        
-        double s1 = 0d;
-        double s2 = 0d;
-        for(int i=0; i<size; i++) {
-            if(used[i]) {
-                double xmX = x[i]-meanX;
-                double ymY = y[i]-meanY;
-                s1 += (xmX * ymY);
-                s2 += Math.pow(xmX, 2);
-            }
-        }
-        return (Double.isNaN(s1) || Double.isNaN(s2) || s2==0)? 0 : s1/s2;
-    }
-    
-    private static double intercept(double[] x, double[] y, boolean[] used, double slope) {
-        int n=0;
-        int size = x.length;
-        double sum = 0d;
-        
-        for(int i=0; i<size; i++) {
-            if(used[i]) {
-                sum += y[i] - x[i] * slope;
-                n++;
-            }
-        }
-        
-        return sum / (double)n;
-    }
-    
-    public static double rSquareModel(LinkRatio lr, LinkRatioFuncton lrf) {
+    public static double rSquareModel(LinkRatio lr, LinkRatioFunction lrf) {
         double[] original = lr.toArray();
         double[] fitted = predict(lrf, original.length);
         return rSquare(original, fitted);
     }
     
-    private static double[] predict(LinkRatioFuncton lrf, int developments) {
+    private static double[] predict(LinkRatioFunction lrf, int developments) {
         double[] result = new double[developments];
         for(int d=0; d<developments; d++)
             result[d] = lrf.getValue(d+1);

@@ -2,21 +2,16 @@ package org.jreserve.factor.curve;
 
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.factor.LinkRatio;
-import org.junit.AfterClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 public class ExponentialLRFunctionTest {
-    //Excel solver
-    private final static double PAID_R2 = 0.996222800585825;
-    //Excel solver
-    private final static double INCURRED_R2 = 0.990785271100597;
     
     private ExponentialLRFunction ef;
     
@@ -32,16 +27,16 @@ public class ExponentialLRFunctionTest {
     public void testFit_Paid() {
         LinkRatio lr = FixedLinkRatio.getPaid();
         ef.fit(lr);
-        double r2 = Regression.rSquareModel(lr, ef);
-        assertTrue(PAID_R2 <= r2);
+        assertEquals(0.139573203, ef.getA(), JRLibTestSuite.EPSILON);
+        assertEquals(0.667524784, ef.getB(), JRLibTestSuite.EPSILON);
     }
 
     @Test
     public void testFit_Incurred() {
         LinkRatio lr = FixedLinkRatio.getIncurred();
         ef.fit(lr);
-        double r2 = Regression.rSquareModel(lr, ef);
-        assertTrue(INCURRED_R2 <= r2);
+        assertEquals(0.849803581, ef.getA(), JRLibTestSuite.EPSILON);
+        assertEquals(1.212596053, ef.getB(), JRLibTestSuite.EPSILON);
     }
 
     @Test
@@ -64,31 +59,6 @@ public class ExponentialLRFunctionTest {
         for(int d=0; d<7; d++)
             assertEquals(expected[d], ef.getValue(d+1), JRLibTestSuite.EPSILON);
     }
-
-    @Test
-    public void testGradient() {
-        double[] params = new double[] {0.3, 0.8};
-        double x = 0.1;
-        double[] expected = new double[] {0.923116346386636, -0.0276934903915991};
-        assertArrayEquals(expected, ef.gradient(x, params), JRLibTestSuite.EPSILON);
-        
-        x = 0.5;
-        expected = new double[] {0.670320046035639, -0.100548006905346};
-        assertArrayEquals(expected, ef.gradient(x, params), JRLibTestSuite.EPSILON);
-        
-        x = 1.5;
-        expected = new double[] {0.301194211912202, -0.135537395360491};
-        assertArrayEquals(expected, ef.gradient(x, params), JRLibTestSuite.EPSILON);
-        
-        params = new double[] {0.7, 0.8};
-        expected = new double[] {0.301194211912202, -0.316253922507812};
-        assertArrayEquals(expected, ef.gradient(x, params), JRLibTestSuite.EPSILON);
-        
-        params = new double[] {0.7, 5d};
-        expected = new double[] {0.000553084370147834, -0.000580738588655225};
-        assertArrayEquals(expected, ef.gradient(x, params), JRLibTestSuite.EPSILON);
-    }
-
 
     @Test
     public void testEquals() {

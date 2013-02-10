@@ -1,8 +1,5 @@
 package org.jreserve.factor.curve;
 
-import org.apache.commons.math3.analysis.ParametricUnivariateFunction;
-import org.apache.commons.math3.fitting.CurveFitter;
-import org.apache.commons.math3.optim.nonlinear.vector.jacobian.LevenbergMarquardtOptimizer;
 import org.jreserve.factor.LinkRatio;
 
 /**
@@ -12,30 +9,35 @@ import org.jreserve.factor.LinkRatio;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ExponentialLRFunction implements LinkRatioFuncton, ParametricUnivariateFunction {
-    
-    private final static int INDEX_A = 0;
-    private final static int INDEX_B = 1;
+public class ExponentialLRFunction implements LinkRatioFunction {
     
     private double pa = 1d;
     private double pb = 1d;
 
     @Override
     public void fit(LinkRatio lr) {
-        CurveFitter fitter = createFitter(lr);
-        double[] params = fitter.fit(this, new double[]{pa, pb});
-        pa = params[INDEX_A];
-        pb = params[INDEX_B];
+        int devs = lr.getDevelopmentCount();
+        double[] x = getXs(devs);
+        double[] y = getYs(lr.toArray(), devs);
+        double[] params = Regression.linearRegression(x, y);
+        pa = Math.exp(params[Regression.INTERCEPT]);
+        pb = -params[Regression.SLOPE];
     }
     
-    private CurveFitter createFitter(LinkRatio lr) {
-        CurveFitter fitter = new CurveFitter(new LevenbergMarquardtOptimizer());
-        double[] lrs = lr.toArray();
-        int size = lrs.length;
-        for(int i=0; i<size; i++)
-            fitter.addObservedPoint(i+1, lrs[i]);
-        return fitter;
-    } 
+    private double[] getXs(int devs) {
+        double[] x = new double[devs];
+        for(int i=0; i<devs; i++)
+            x[i] = (double) (i+1);
+        return x;
+    }
+    
+    private double[] getYs(double[] lrs, int devs) {
+        for(int i=0; i<devs; i++) {
+            double lr = lrs[i];
+            lrs[i] = (Double.isNaN(lr) || !(lr > 1d))? Double.NaN : Math.log(lr - 1d);
+        }
+        return lrs;
+    }
     
     public double getA() {
         return pa;
@@ -43,24 +45,6 @@ public class ExponentialLRFunction implements LinkRatioFuncton, ParametricUnivar
     
     public double getB() {
         return pb;
-    }
-
-    @Override
-    public double value(double x, double... params) {
-        double a = params[INDEX_A];
-        double b = params[INDEX_B];
-        return 1d + a * Math.exp(-b * x);
-    }
-
-    @Override
-    public double[] gradient(double x, double... params) {
-        double a = params[INDEX_A];
-        double b = params[INDEX_B];
-        
-        double[] gradient = new double[2];
-        gradient[INDEX_A] = Math.exp(-b * x);               //e ^ (-b * x)
-        gradient[INDEX_B] = -a * x * Math.exp(-b * x);  //-a*x * e ^ (-b*x)
-        return gradient;
     }
 
     @Override

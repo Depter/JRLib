@@ -23,7 +23,6 @@ class FixedLinkRatio implements LinkRatio {
     private final static double[] INCURRED_LR = {
         1.19471971, 0.99540619, 0.99507566, 1.01018160, 
         1.00310913, 1.00031727, 0.98794674
-
     };
     
     static LinkRatio getPaid() {
@@ -35,14 +34,16 @@ class FixedLinkRatio implements LinkRatio {
     }
 
     private double[] factors;
-
+    private int size;
+    
     FixedLinkRatio(double[] factors) {
         this.factors = factors;
+        this.size = factors.length;
     }
 
     @Override
     public int getDevelopmentCount() {
-        return factors.length;
+        return size;
     }
 
     @Override
@@ -52,7 +53,9 @@ class FixedLinkRatio implements LinkRatio {
 
     @Override
     public double[] toArray() {
-        return factors;
+        double[] result = new double[size];
+        System.arraycopy(factors, 0, result, 0, size);
+        return result;
     }
 
     @Override
