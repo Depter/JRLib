@@ -1,6 +1,7 @@
 package org.jreserve.factor;
 
 import org.jreserve.JRLibTestSuite;
+import org.jreserve.TestData;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
@@ -45,7 +46,7 @@ public class WeightedAverageLRMethodTest {
 
     @Test
     public void testGetLinkRatios_Paid() {
-        initFactors(JRLibTestSuite.PAID);
+        initFactors(TestData.PAID);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
         double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
@@ -59,7 +60,7 @@ public class WeightedAverageLRMethodTest {
 
     @Test
     public void testGetLinkRatios_Incurred() {
-        initFactors(JRLibTestSuite.INCURRED);
+        initFactors(TestData.INCURRED);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
         double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);

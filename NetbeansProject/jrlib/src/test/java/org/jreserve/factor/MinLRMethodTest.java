@@ -1,6 +1,7 @@
 package org.jreserve.factor;
 
 import org.jreserve.JRLibTestSuite;
+import org.jreserve.TestData;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
@@ -31,7 +32,7 @@ public class MinLRMethodTest {
 
     @Before
     public void setUp() {
-        Triangle source = new InputTriangle(JRLibTestSuite.PAID);
+        Triangle source = new InputTriangle(TestData.PAID);
         source = new TriangleCummulation(source);
         factors = new DevelopmentFactors(source);
     }

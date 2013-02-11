@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.JRLibTestSuite;
+import org.jreserve.TestData;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
@@ -27,7 +28,7 @@ public class DefaultLinkRatioSelectionTest {
 
     @Before
     public void setUp() {
-        Triangle triangle = new InputTriangle(JRLibTestSuite.PAID);
+        Triangle triangle = new InputTriangle(TestData.PAID);
         triangle = new TriangleCummulation(triangle);
         factors = new DevelopmentFactors(triangle);
         lr = new DefaultLinkRatioSelection(factors);

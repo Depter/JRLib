@@ -1,6 +1,7 @@
 package org.jreserve.triangle;
 
 import org.jreserve.JRLibTestSuite;
+import org.jreserve.TestData;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -30,7 +31,7 @@ public class TriangleCummulationTest {
 
     @Before
     public void setUp() {
-        triangle = new InputTriangle(JRLibTestSuite.INCURRED);
+        triangle = new InputTriangle(TestData.INCURRED);
         triangle = new TriangleCummulation(triangle);
     }
 

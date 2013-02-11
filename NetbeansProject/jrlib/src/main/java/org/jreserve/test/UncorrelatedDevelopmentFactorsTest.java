@@ -140,16 +140,23 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         
         private int[] getRanks(Double[] values) {
             int size = values.length;
-            Double[] copy = new Double[size];
-            System.arraycopy(values, 0, copy, 0, size);
-            Arrays.sort(copy, RANK_COMPARATOR);
+            Double[] sorted = new Double[size];
+            System.arraycopy(values, 0, sorted, 0, size);
+            Arrays.sort(sorted, RANK_COMPARATOR);
             
             int[] ranks = new int[size];
             for(int i=0; i<size; i++) {
                 Double value = values[i];
-                ranks[i] = (value==null || Double.isNaN(value))? -1 : (1+Arrays.binarySearch(copy, value));
+                ranks[i] = (value==null || Double.isNaN(value))? -1 : (1+getRank(sorted, value, size));
             }
             return ranks;
+        }
+        
+        private int getRank(Double[] values, Double value, int size) {
+            for(int i=0; i<size; i++)
+                if(value.equals(values[i]))
+                    return i;
+            return -1;
         }
         
         private Double[] createSi(Triangle source, int size) {
