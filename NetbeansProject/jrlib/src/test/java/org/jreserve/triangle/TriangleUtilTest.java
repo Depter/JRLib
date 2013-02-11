@@ -102,4 +102,20 @@ public class TriangleUtilTest {
         for(int i=0; i<size; i++)
             assertArrayEquals(INCREMENTIAL[i], cummulated[i], EPSILON);
     }
+    
+    @Test
+    public void testGetAccidentCount() {
+        Triangle triangle = new InputTriangle(cummulated);
+        for(int d=0; d<8; d++)
+            assertEquals(8-d, TriangleUtil.getAccidentCount(triangle, d));
+        assertEquals(0, TriangleUtil.getAccidentCount(triangle, 8));
+        assertEquals(0, TriangleUtil.getAccidentCount(triangle, 9));
+        
+        cummulated[7][0] = Double.NaN;
+        triangle = new InputTriangle(cummulated);
+        for(int d=0; d<8; d++)
+            assertEquals(8-d, TriangleUtil.getAccidentCount(triangle, d));
+        assertEquals(0, TriangleUtil.getAccidentCount(triangle, 8));
+        assertEquals(0, TriangleUtil.getAccidentCount(triangle, 9));
+    }
 }

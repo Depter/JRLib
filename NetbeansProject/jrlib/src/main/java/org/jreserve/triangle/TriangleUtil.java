@@ -49,6 +49,14 @@ public class TriangleUtil {
             values[i] -= values[i-1];
     }
     
+    public static int getAccidentCount(Triangle triangle, int development) {
+        int max = triangle.getAccidentCount();
+        int count = 0;
+        while(count<max && development<triangle.getDevelopmentCount(count))
+            count++;
+        return count;
+    }
+    
     private TriangleUtil() {
     }
 }
