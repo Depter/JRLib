@@ -20,10 +20,33 @@ public class Regression {
         return linearRegression(x, y);
     }
     
+    /**
+     * Finds the slope (b) and intercept (a) for the linear regression
+     * <pre>y = a + bx</pre>. The input values should not be null, 
+     * must have to same length and they must contain at least two rows, 
+     * where both array contains real values (thus not <i>Double.NaN</i> 
+     * or <i>Double.INFINITY</i>.
+     * 
+     * <p>
+     *<pre>
+     *     (sum(y)*sum(x^2) - sum(x)*sum(x*y))
+     * a = --------------------------------
+     *         n*(sum(x^2) - sum(x)^2)
+     *</pre>
+     *<pre>
+     *      n*sum(x*y) - sum(x) * sum(y)
+     * b = --------------------------------
+     *         n(sum(x^2) - sum(x)^2)
+     *</pre>
+     * </p>
+     * 
+     * @return am array with langth of 2, the first element containing
+     * the intercept, the second containing the slope.
+     */
     public static double[] linearRegression(double[] x, double[] y) {
         checkInput(x, y);
         boolean[] used = getUsed(x, y);
-        
+
         double sxy = 0d;
         double sx = 0d;
         double sy = 0d;
@@ -54,26 +77,31 @@ public class Regression {
             throw new NullPointerException();
         if(x.length != y.length)
             throw new IllegalArgumentException("Length of x ("+x.length+") must be equal to length of y ("+y.length+")!");
-        if(x.length == 0)
-            throw new IllegalArgumentException("Length of input is 0!");
+        if(x.length < 2)
+            throw new IllegalArgumentException("Length of input is less then 2!");
     }
     
     private static boolean[] getUsed(double[] x, double[] y) {
         int size = x.length;
         boolean[] used = new boolean[size];
-        boolean hasUsed = false;
+        int usedCount = 0;
         
         for(int i=0; i<size; i++) {
-            if(!Double.isNaN(x[i]) && !Double.isNaN(y[i])) {
+            if(isReal(x[i]) && isReal(y[i])) {
                 used[i] = true;
-                hasUsed = true;
+                usedCount++;
             }
         }
         
-        if(!hasUsed)
-            throw new IllegalArgumentException("All rows contains NaN!");
+        if(usedCount < 2)
+            throw new IllegalArgumentException("Less then two rows contains valid values!");
         
         return used;
+    }
+    
+    private static boolean isReal(double value) {
+        return !Double.isNaN(value) &&
+               !Double.isInfinite(value);
     }
     
     private static double mean(double[] x, boolean[] used) {

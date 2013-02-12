@@ -1,7 +1,6 @@
 package org.jreserve.test;
 
 import java.util.Arrays;
-import java.util.Comparator;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
@@ -12,25 +11,6 @@ import org.jreserve.triangle.TriangleUtil;
  * @version 1.0
  */
 public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<Triangle> {
-    
-    private final static Comparator<Double> RANK_COMPARATOR = new Comparator<Double>() {
-        @Override
-        public int compare(Double o1, Double o2) {
-            if(o1==null)
-                return o2==null? 0 : 1;
-            return o2==null? -1 : comparePrimitive(o1, o2);
-        }
-        
-        private int comparePrimitive(double d1, double d2) {
-            if(Double.isNaN(d1))
-                return Double.isNaN(d2)? 0 : 1;
-            if(Double.isNaN(d2)) 
-                return -1;
-            if(d1 == d2)
-                return 0;
-            return d1<d2? -1 : 1;
-        }
-    };
     
     private double testValue;
     private double lowerBound;
@@ -49,7 +29,7 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
     }
     
     public boolean isTestPassed() {
-        return pValue <= alpha;
+        return !Double.isNaN(pValue) && pValue >= alpha;
     }
     
     public double getTestValue() {
@@ -78,6 +58,7 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         if(alpha < 0d || alpha>1d)
             throw new IllegalArgumentException("Alpha must be within [0;1], but it was "+alpha+"!");
     }
+    
     public double getPValue() {
         return pValue;
     }
@@ -100,9 +81,10 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         testValue = testValue/testSigma;
         testSigma = Math.sqrt(1d/testSigma);
         lowerBound = NormalUtil.invNormCDF(0.5-alpha/2d) * testSigma;
-        pValue = 1d - 2d * NormalUtil.normCDF(testValue/testSigma);
-        if(pValue < 0)
-            pValue = -pValue;
+        double norm = NormalUtil.normCDF(testValue / testSigma);
+        pValue = (testValue<0d)?
+                2d * norm :
+                2d * (1d - norm);
     }
     
     private RankHelper[] createHelpers() {
@@ -142,7 +124,7 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
             int size = values.length;
             Double[] sorted = new Double[size];
             System.arraycopy(values, 0, sorted, 0, size);
-            Arrays.sort(sorted, RANK_COMPARATOR);
+            Arrays.sort(sorted, DoubleComparator.INSTANCE);
             
             int[] ranks = new int[size];
             for(int i=0; i<size; i++) {

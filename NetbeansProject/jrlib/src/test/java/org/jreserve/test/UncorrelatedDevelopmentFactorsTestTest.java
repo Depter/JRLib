@@ -18,7 +18,7 @@ import org.junit.Test;
  */
 public class UncorrelatedDevelopmentFactorsTestTest {
 
-    private final static double[][] MACK_FACTORS = {
+    final static double[][] MACK_FACTORS = {
         {1.6 , 1.32, 1.08, 1.15, 1.2 , 1.11, 1.033, 1.0 , 1.01},
         {40.4, 1.26, 1.98, 1.29, 1.13, 0.99, 1.043, 1.03},
         {2.6 , 1.54, 1.16, 1.16, 1.19, 1.03, 1.026},
@@ -50,11 +50,11 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         assertEquals( 0.06955782, test.getTestValue(), JRLibTestSuite.EPSILON);
         assertEquals(-0.12746658, test.getLowerBound(), JRLibTestSuite.EPSILON);
         assertEquals( 0.12746658, test.getUpperBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.28717553, test.getPValue(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.71282447, test.getPValue(), JRLibTestSuite.EPSILON);
         assertTrue(test.isTestPassed());
         
-        test.setAlpha(0.25);
-        assertEquals( 0.25000000, test.getAlpha(), JRLibTestSuite.EPSILON);
+        test.setAlpha(0.75);
+        assertEquals( 0.75000000, test.getAlpha(), JRLibTestSuite.EPSILON);
         assertEquals(1, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
@@ -68,7 +68,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         assertEquals( 0.28288600, test.getTestValue(), JRLibTestSuite.EPSILON);
         assertEquals(-0.04654421, test.getLowerBound(), JRLibTestSuite.EPSILON);
         assertEquals( 0.04654421, test.getUpperBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.99995858, test.getPValue(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.00004142, test.getPValue(), JRLibTestSuite.EPSILON);
         assertFalse(test.isTestPassed());
         
         test.setAlpha(0.25);

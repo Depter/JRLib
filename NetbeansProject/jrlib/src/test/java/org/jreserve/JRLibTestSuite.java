@@ -12,7 +12,9 @@ import org.junit.runners.Suite;
     AbstractChangeableTest.class,
     AbstractCalculationDataTest.class,
     org.jreserve.triangle.TriangleTestSuite.class,
-    org.jreserve.smoothing.SmoothingTestSuite.class
+    org.jreserve.smoothing.SmoothingTestSuite.class,
+    org.jreserve.factor.FactorTestSuite.class,
+    org.jreserve.test.TestTestSuite.class
 })
 public class JRLibTestSuite {
     
