@@ -11,7 +11,7 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CalendarEffectTest extends AbstractCalculationData<Triangle> {
+public class CalendarEffectTest extends AbstractCalculationData<Triangle> implements Test {
     
     private final static int S = 0;
     private final static int L = 1;
@@ -36,10 +36,12 @@ public class CalendarEffectTest extends AbstractCalculationData<Triangle> {
         doRecalculate();
     }
     
+    @Override
     public boolean isTestPassed() {
         return (!Double.isNaN(pValue)) && pValue >= alpha;
     }
     
+    @Override
     public double getTestValue() {
         return testValue;
     }
@@ -52,6 +54,7 @@ public class CalendarEffectTest extends AbstractCalculationData<Triangle> {
         return upperBound;
     }
     
+    @Override
     public double getAlpha() {
         return alpha;
     }
@@ -67,6 +70,7 @@ public class CalendarEffectTest extends AbstractCalculationData<Triangle> {
             throw new IllegalArgumentException("Alpha must be within [0;1], but it was "+alpha+"!");
     }
     
+    @Override
     public double getPValue() {
         return pValue;
     }

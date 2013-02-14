@@ -10,7 +10,7 @@ import org.jreserve.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<Triangle> {
+public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<Triangle> implements Test {
     
     private double testValue;
     private double lowerBound;
@@ -28,10 +28,12 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         doRecalculate();
     }
     
+    @Override
     public boolean isTestPassed() {
         return !Double.isNaN(pValue) && pValue >= alpha;
     }
     
+    @Override
     public double getTestValue() {
         return testValue;
     }
@@ -44,6 +46,7 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         return -lowerBound;
     }
     
+    @Override
     public double getAlpha() {
         return alpha;
     }
@@ -59,6 +62,7 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
             throw new IllegalArgumentException("Alpha must be within [0;1], but it was "+alpha+"!");
     }
     
+    @Override
     public double getPValue() {
         return pValue;
     }
