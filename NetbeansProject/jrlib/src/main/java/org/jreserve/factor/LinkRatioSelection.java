@@ -1,6 +1,7 @@
 package org.jreserve.factor;
 
 import java.util.Map;
+import org.jreserve.triangle.Triangle;
 
 /**
  * This interface represents the calculation of link ratios, from
@@ -16,7 +17,18 @@ import java.util.Map;
 public interface LinkRatioSelection extends LinkRatio {
     
     @Override
-    public DevelopmentFactors getSource();
+    public Triangle getSource();
+    
+    /**
+     * Returns the weights for each development factor factor.
+     */
+    public Triangle getWeights();
+    
+    /**
+     * Sets the used weights for each development factor.
+     * Setting this value fires a change event.
+     */
+    public void setWeights(Triangle weights);
     
     /**
      * Returns the method used, when no method is specified for

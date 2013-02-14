@@ -40,7 +40,7 @@ public class MaxLRMethodTest {
     @Test
     public void testGetLinkRatios() {
         MaxLRMethod lrs = new MaxLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
+        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
     }
 }

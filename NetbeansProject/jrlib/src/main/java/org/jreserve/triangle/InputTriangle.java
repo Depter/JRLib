@@ -19,6 +19,15 @@ public class InputTriangle extends AbstractTriangle implements Triangle {
         }
     }
     
+    protected void setData(double[][] data) {
+        if(data == null || data.length == 0) {
+            fillEmptyData();
+        } else {
+            fillData(data);
+        }
+        fireChange();
+    }
+    
     private void fillEmptyData() {
         accidents = 0;
         developments = 0;

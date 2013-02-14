@@ -1,5 +1,7 @@
 package org.jreserve.factor;
 
+import org.jreserve.triangle.Triangle;
+
 /**
  *
  * @author Peter Decsi
@@ -8,19 +10,20 @@ package org.jreserve.factor;
 public class AverageLRMethod extends AbstractLRMethod {
 
     @Override
-    protected double getLinkRatio(DevelopmentFactors factors, int accidents, int dev) {
+    protected double getLinkRatio(Triangle factors, Triangle weights, int accidents, int dev) {
         double sum = 0d;
-        int n = 0;
+        double sw = 0d;
     
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);
-            if(!Double.isNaN(factor)) {
-                sum += factor;
-                n++;
+            double weight = weights.getValue(a, dev);
+            if(!Double.isNaN(factor) && !Double.isNaN(weight)) {
+                sum += (weight * factor);
+                sw += weight;
             }
         }
         
-        return  (n>0)? sum/(double)n : Double.NaN;
+        return  (sw != 0d)? sum/sw : Double.NaN;
     }
     
     @Override

@@ -10,7 +10,7 @@ import javax.swing.event.ChangeListener;
  */
 public abstract class AbstractCalculationData<V extends CalculationData> extends AbstractChangeable implements CalculationData {
     
-    private SourceListener sourceListener = new SourceListener();
+    protected SourceListener sourceListener = new SourceListener();
     protected V source;
     private boolean myChange = false;
     

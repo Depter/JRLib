@@ -1,5 +1,7 @@
 package org.jreserve.factor;
 
+import org.jreserve.triangle.Triangle;
+
 /**
  *
  * @author Peter Decsi
@@ -8,14 +10,21 @@ package org.jreserve.factor;
 public class MaxLRMethod extends AbstractLRMethod {
     
     @Override
-    protected double getLinkRatio(DevelopmentFactors factors, int accidents, int dev) {
+    protected double getLinkRatio(Triangle factors, Triangle weights, int accidents, int dev) {
         double max = Double.NaN;
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);
-            if(Double.isNaN(max) || (!Double.isNaN(factor) && factor > max))
+            double weight = weights.getValue(a, dev);
+            if(Double.isNaN(max) || (validValue(factor, weight) && factor > max))
                 max = factor;
         }
         return max;
+    }
+    
+    private boolean validValue(double factor, double weight) {
+        return !Double.isNaN(factor) &&
+               !Double.isNaN(weight) &&
+               weight != 0d;
     }
     
     @Override

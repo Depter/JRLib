@@ -1,5 +1,7 @@
 package org.jreserve.factor;
 
+import org.jreserve.triangle.Triangle;
+
 /**
  *
  * @author Peter Decsi
@@ -8,14 +10,21 @@ package org.jreserve.factor;
 public class MinLRMethod extends AbstractLRMethod {
     
     @Override
-    protected double getLinkRatio(DevelopmentFactors factors, int accidents, int dev) {
+    protected double getLinkRatio(Triangle factors, Triangle weights, int accidents, int dev) {
         double min = Double.NaN;
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);
-            if(Double.isNaN(min) || (!Double.isNaN(factor) && factor < min))
+            double weight = weights.getValue(a, dev);
+            if(Double.isNaN(min) || (validValue(factor, weight) && factor < min))
                 min = factor;
         }
         return min;
+    }
+    
+    private boolean validValue(double factor, double weight) {
+        return !Double.isNaN(factor) &&
+               !Double.isNaN(weight) &&
+               weight != 0d;
     }
     
     @Override

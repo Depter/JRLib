@@ -43,7 +43,7 @@ public class Mack1LRMethodTest {
     public void testGetLinkRatios_Paid() {
         initFactors(TestData.PAID);
         Mack1LRMethod lrs = new Mack1LRMethod();
-        double[] found = lrs.getLinkRatios(factors);
+        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
     }
     
@@ -57,7 +57,7 @@ public class Mack1LRMethodTest {
     public void testGetLinkRatios_Incurred() {
         initFactors(TestData.INCURRED);
         Mack1LRMethod lrs = new Mack1LRMethod();
-        double[] found = lrs.getLinkRatios(factors);
+        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);
     }
 }

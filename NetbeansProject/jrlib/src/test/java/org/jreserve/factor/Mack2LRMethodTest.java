@@ -6,48 +6,43 @@ import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.assertArrayEquals;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
  *
  * @author Peter Decsi
  */
-public class WeightedAverageLRMethodTest {
+public class Mack2LRMethodTest {
         
     private final static double[] EXPECTED_PAID = {
-        1.24694402,
-        1.01584722,
-        1.00946012,
-        1.00954295,
-        1.00347944,
-        1.00335199,
-        1.00191164
+        1.24827794,
+        1.01574956,
+        1.009982493,
+        1.009424947,
+        1.003339383,
+        1.003357418,
+        1.001911639
     };
 
     private final static double[] EXPECTED_INCURRED = {
-        1.19471971,
-        0.99540619,
-        0.99507566,
-        1.01018160,
-        1.00310913,
-        1.00031727,
-        0.98794674
+        1.191052,
+        0.995914252,
+        0.994353693,
+        1.009452314,
+        1.002482127,
+        1.000306664,
+        0.987946735
     };
     
     private DevelopmentFactors factors;
 
-    public WeightedAverageLRMethodTest() {
-    }
-
-    @Before
-    public void setUp() {
+    public Mack2LRMethodTest() {
     }
 
     @Test
     public void testGetLinkRatios_Paid() {
         initFactors(TestData.PAID);
-        WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
+        Mack2LRMethod lrs = new Mack2LRMethod();
         double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
     }
@@ -61,7 +56,7 @@ public class WeightedAverageLRMethodTest {
     @Test
     public void testGetLinkRatios_Incurred() {
         initFactors(TestData.INCURRED);
-        WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
+        Mack2LRMethod lrs = new Mack2LRMethod();
         double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);
     }

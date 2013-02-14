@@ -3,6 +3,7 @@ package org.jreserve.factor;
 import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.AbstractCalculationData;
+import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
 
 /**
@@ -10,17 +11,49 @@ import org.jreserve.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultLinkRatioSelection extends AbstractCalculationData<DevelopmentFactors> implements LinkRatioSelection {
+public class DefaultLinkRatioSelection extends AbstractCalculationData<Triangle> implements LinkRatioSelection {
 
     private LinkRatioMethod[] methods = new LinkRatioMethod[0];
     private LinkRatioMethod defaultMethod = new WeightedAverageLRMethod();
     
     private int developments;
     private double[] values;
+    private Triangle weights = WeightTriangle.getDefault();
     
     public DefaultLinkRatioSelection(DevelopmentFactors source) {
         super(source);
         doRecalculate();
+    }
+    
+    @Override
+    public Triangle getWeights() {
+        return weights;
+    }
+    
+    @Override
+    public void setWeights(Triangle weights) {
+        releaseOldWeight();
+        setNewWeights(weights);
+        doRecalculate();
+        fireChange();
+    }
+    
+    private void releaseOldWeight() {
+        if(weights != null) {
+            weights.removeChangeListener(sourceListener);
+            weights = null;
+        }
+    }
+    
+    private void setNewWeights(Triangle weights) {
+        this.weights = (weights!=null)? weights : WeightTriangle.getDefault();
+        this.weights.addChangeListener(sourceListener);
+    }
+    
+    @Override
+    public void detach() {
+        this.weights.detach();
+        super.detach();
     }
     
     @Override
@@ -109,7 +142,7 @@ public class DefaultLinkRatioSelection extends AbstractCalculationData<Developme
         for(int d=0; d<developments; d++) {
             LinkRatioMethod method = getMethod(d);
             if(!cache.containsKey(method))
-                cache.put(method, method.getLinkRatios(source));
+                cache.put(method, method.getLinkRatios(source, weights));
         }
         return cache;
     }
@@ -125,4 +158,5 @@ public class DefaultLinkRatioSelection extends AbstractCalculationData<Developme
     public double[] toArray() {
         return TriangleUtil.copy(values);
     }
+    
 }

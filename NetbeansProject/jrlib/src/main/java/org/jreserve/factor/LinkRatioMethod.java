@@ -16,12 +16,13 @@ import org.jreserve.triangle.Triangle;
 public interface LinkRatioMethod {
     
     /**
-     * Calculates the link ratios from the given development factors.
+     * Calculates the link ratios from the given development factors and weights.
      * The returned array should be the same lengths as
      * the {@link Triangle#getDevelopmentCount() developmentCount}
-     * of the input.
+     * of the input factors.
      * 
-     * @throws NullPointerException when <i>factors</i> is null.
+     * @throws NullPointerException when <i>factors</i> or <i>weights</i> 
+     * is null.
      */
-    public double[] getLinkRatios(DevelopmentFactors factors);
+    public double[] getLinkRatios(Triangle factors, Triangle weights);
 }

@@ -40,7 +40,7 @@ public class MinLRMethodTest {
     @Test
     public void testGetLinkRatios() {
         MinLRMethod lrs = new MinLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
+        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
     }
 }

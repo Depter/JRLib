@@ -40,7 +40,7 @@ public class AverageLRMethodTest {
     @Test
     public void testGetLinkRatios() {
         AverageLRMethod lrs = new AverageLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
+        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
         assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
     }
 }

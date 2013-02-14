@@ -10,21 +10,21 @@ import org.jreserve.triangle.Triangle;
 public class WeightedAverageLRMethod extends AbstractLRMethod {
 
     @Override
-    protected double getLinkRatio(DevelopmentFactors factors, int accidents, int dev) {
+    protected double getLinkRatio(Triangle factors, Triangle weights, int accidents, int dev) {
         double sum = 0d;
-        double weights = 0d;
+        double sw = 0d;
         
         Triangle source = factors.getSource();
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);
-            double weight = source.getValue(a, dev);
+            double weight = source.getValue(a, dev) * weights.getValue(a, dev);
             if(!Double.isNaN(factor) && !Double.isNaN(weight)) {
                 sum += (factor * weight);
-                weights += weight;
+                sw += weight;
             }
         }
         
-        return  (weights !=0)? sum/weights : Double.NaN;
+        return  (sw != 0d)? sum / sw : Double.NaN;
     }
     
     @Override
