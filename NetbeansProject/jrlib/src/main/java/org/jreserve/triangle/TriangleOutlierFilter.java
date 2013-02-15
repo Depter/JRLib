@@ -54,6 +54,21 @@ public class TriangleOutlierFilter extends AbstractCalculationData<Triangle> {
         return accident>=0 && accident < isOutlier.length;
     }
     
+    public boolean[][] toArray() {
+        int accidents = isOutlier.length;
+        boolean[][] copy = new boolean[accidents][];
+        for(int a=0; a<accidents; a++)
+            copy[a] = toArray(a);
+        return copy;
+    }
+    
+    private boolean[] toArray(int accident) {
+        boolean[] data = isOutlier[accident];
+        boolean[] copy = new boolean[data.length];
+        System.arraycopy(data, 0, copy, 0, data.length);
+        return copy;
+    }
+    
     public boolean isOutlier(int accident, int development) {
         return withinBounds(accident, development) &&
                isOutlier[accident][development];

@@ -4,11 +4,9 @@ import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.junit.AfterClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -108,5 +106,19 @@ public class TriangleOutlierFilterTest {
             assertFalse(filter.isOutlier(a, devs));
         }
         assertFalse(filter.isOutlier(accidents, 0));
+    }
+    
+    @Test
+    public void testToArray() {
+        boolean[][] found = filter.toArray();
+        assertEquals(TRESHOLD_1_5.length, found.length);
+        for(int a=0; a<found.length; a++) {
+            assertEquals(TRESHOLD_1_5[a].length, found[a].length);
+            for(int d=0; d<found[a].length; d++)
+                assertEquals(TRESHOLD_1_5[a][d], found[a][d]);
+        }
+        
+        found[0][0] = !found[0][0];
+        assertNotEquals(found[0][0], filter.isOutlier(0, 0));
     }
 }
