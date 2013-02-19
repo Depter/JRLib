@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.factor.LinkRatio;
+import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
 
 /**
@@ -130,5 +131,15 @@ public class DefaultLinkRatioSmoothing extends AbstractCalculationData<LinkRatio
     @Override
     public double[] toArray() {
         return TriangleUtil.copy(values);
+    }
+
+    @Override
+    public double getMackAlpha(int development) {
+        return source.getMackAlpha(development);
+    }
+
+    @Override
+    public Triangle getDevelopmentFactors() {
+        return source.getDevelopmentFactors();
     }
 }

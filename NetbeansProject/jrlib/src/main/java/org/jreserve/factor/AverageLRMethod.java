@@ -9,21 +9,27 @@ import org.jreserve.triangle.Triangle;
  */
 public class AverageLRMethod extends AbstractLRMethod {
 
+    public final static double MACK_ALPHA = 0d;
+    
     @Override
-    protected double getLinkRatio(Triangle factors, Triangle weights, int accidents, int dev) {
+    protected double getLinkRatio(Triangle factors, int accidents, int dev) {
         double sum = 0d;
-        double sw = 0d;
+        int n = 0;
     
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);
-            double weight = weights.getValue(a, dev);
-            if(!Double.isNaN(factor) && !Double.isNaN(weight)) {
-                sum += (weight * factor);
-                sw += weight;
+            if(!Double.isNaN(factor)) {
+                sum += factor;
+                n++;
             }
         }
         
-        return  (sw != 0d)? sum/sw : Double.NaN;
+        return  (n != 0)? sum/(double)n : Double.NaN;
+    }
+
+    @Override
+    public double getMackAlpha() {
+        return MACK_ALPHA;
     }
     
     @Override

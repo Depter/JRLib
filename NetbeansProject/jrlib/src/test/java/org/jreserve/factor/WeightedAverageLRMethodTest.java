@@ -6,6 +6,7 @@ import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -48,7 +49,7 @@ public class WeightedAverageLRMethodTest {
     public void testGetLinkRatios_Paid() {
         initFactors(TestData.PAID);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
-        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
+        double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
     }
     
@@ -62,7 +63,13 @@ public class WeightedAverageLRMethodTest {
     public void testGetLinkRatios_Incurred() {
         initFactors(TestData.INCURRED);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
-        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
+        double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);
+    }
+    
+    @Test
+    public void testGetMackAlpha() {
+        WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
+        assertEquals(1d, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
     }
 }

@@ -2,7 +2,12 @@ package org.jreserve.factor.curve;
 
 import javax.swing.event.ChangeListener;
 import org.jreserve.CalculationData;
+import org.jreserve.TestData;
+import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.LinkRatio;
+import org.jreserve.triangle.InputTriangle;
+import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.TriangleCummulation;
 
 /**
  *
@@ -11,34 +16,42 @@ import org.jreserve.factor.LinkRatio;
  */
 class FixedLinkRatio implements LinkRatio {
 
+    private static Triangle createDevelopmentFactors(double[][] input) {
+        return new DevelopmentFactors(new TriangleCummulation(new InputTriangle(input)));
+    }
+    
     //Link Ratios based on Paid triangle in JRLibTestSuit, 
     //with weighted average method
     private final static double[] PAID_LR = {
         1.24694402, 1.01584722, 1.00946012, 1.00954295, 
         1.00347944, 1.00335199, 1.00191164
     };
-
+    private final static Triangle PAID_SOURCE = createDevelopmentFactors(TestData.PAID);
+    
     //Link Ratios based on Incurred triangle in JRLibTestSuit, 
     //with weighted average method
     private final static double[] INCURRED_LR = {
         1.19471971, 0.99540619, 0.99507566, 1.01018160, 
         1.00310913, 1.00031727, 0.98794674
     };
+    private final static Triangle INCURRED_SOURCE = createDevelopmentFactors(TestData.INCURRED);
     
     static LinkRatio getPaid() {
-        return new FixedLinkRatio(PAID_LR);
+        return new FixedLinkRatio(PAID_LR, PAID_SOURCE);
     }
     
     static LinkRatio getIncurred() {
-        return new FixedLinkRatio(INCURRED_LR);
+        return new FixedLinkRatio(INCURRED_LR, INCURRED_SOURCE);
     }
 
     private double[] factors;
+    private Triangle source;
     private int size;
     
-    FixedLinkRatio(double[] factors) {
+    FixedLinkRatio(double[] factors, Triangle source) {
         this.factors = factors;
         this.size = factors.length;
+        this.size = size;
     }
 
     @Override
@@ -77,5 +90,15 @@ class FixedLinkRatio implements LinkRatio {
 
     @Override
     public void removeChangeListener(ChangeListener listener) {
+    }
+
+    @Override
+    public Triangle getDevelopmentFactors() {
+        return source;
+    }
+
+    @Override
+    public double getMackAlpha(int development) {
+        return 1d;
     }
 }

@@ -114,7 +114,7 @@ public class DefaultLinkRatioSelectionTest {
         };
         assertArrayEquals(expected, lr.toArray(), JRLibTestSuite.EPSILON);
     }
-
+    
     private class Listener implements ChangeListener {
         private int changeCount;
         

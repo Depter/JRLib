@@ -6,13 +6,14 @@ import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
  *
  * @author Peter Decsi
  */
-public class Mack2LRMethodTest {
+public class MackRegressionLRMethodTest {
         
     private final static double[] EXPECTED_PAID = {
         1.24827794,
@@ -36,14 +37,14 @@ public class Mack2LRMethodTest {
     
     private DevelopmentFactors factors;
 
-    public Mack2LRMethodTest() {
+    public MackRegressionLRMethodTest() {
     }
 
     @Test
     public void testGetLinkRatios_Paid() {
         initFactors(TestData.PAID);
-        Mack2LRMethod lrs = new Mack2LRMethod();
-        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
+        MackRegressionLRMethod lrs = new MackRegressionLRMethod();
+        double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
     }
     
@@ -56,8 +57,14 @@ public class Mack2LRMethodTest {
     @Test
     public void testGetLinkRatios_Incurred() {
         initFactors(TestData.INCURRED);
-        Mack2LRMethod lrs = new Mack2LRMethod();
-        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
+        MackRegressionLRMethod lrs = new MackRegressionLRMethod();
+        double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);
+    }
+    
+    @Test
+    public void testGetMackAlpha() {
+        MackRegressionLRMethod lrs = new MackRegressionLRMethod();
+        assertEquals(2d, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
     }
 }

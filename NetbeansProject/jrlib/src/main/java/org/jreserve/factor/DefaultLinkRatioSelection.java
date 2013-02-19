@@ -5,7 +5,7 @@ import java.util.Map;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
-
+        
 /**
  *
  * @author Peter Decsi
@@ -18,42 +18,15 @@ public class DefaultLinkRatioSelection extends AbstractCalculationData<Triangle>
     
     private int developments;
     private double[] values;
-    private Triangle weights = WeightTriangle.getDefault();
     
-    public DefaultLinkRatioSelection(DevelopmentFactors source) {
+    public DefaultLinkRatioSelection(Triangle source) {
         super(source);
         doRecalculate();
     }
-    
+
     @Override
-    public Triangle getWeights() {
-        return weights;
-    }
-    
-    @Override
-    public void setWeights(Triangle weights) {
-        releaseOldWeight();
-        setNewWeights(weights);
-        doRecalculate();
-        fireChange();
-    }
-    
-    private void releaseOldWeight() {
-        if(weights != null) {
-            weights.removeChangeListener(sourceListener);
-            weights = null;
-        }
-    }
-    
-    private void setNewWeights(Triangle weights) {
-        this.weights = (weights!=null)? weights : WeightTriangle.getDefault();
-        this.weights.addChangeListener(sourceListener);
-    }
-    
-    @Override
-    public void detach() {
-        this.weights.detach();
-        super.detach();
+    public Triangle getDevelopmentFactors() {
+        return getSource();
     }
     
     @Override
@@ -123,10 +96,14 @@ public class DefaultLinkRatioSelection extends AbstractCalculationData<Triangle>
     }
     
     private void doRecalculate() {
-        developments = (source==null)? 0 : source.getDevelopmentCount();
-        values = new double[developments];
+        initState();
         if(developments > 0)
             recalculateLinkRatios();
+    }
+    
+    private void initState() {
+        developments = (source==null)? 0 : source.getDevelopmentCount();
+        values = new double[developments];
     }
     
     private void recalculateLinkRatios() {
@@ -142,16 +119,21 @@ public class DefaultLinkRatioSelection extends AbstractCalculationData<Triangle>
         for(int d=0; d<developments; d++) {
             LinkRatioMethod method = getMethod(d);
             if(!cache.containsKey(method))
-                cache.put(method, method.getLinkRatios(source, weights));
+                cache.put(method, method.getLinkRatios(source));
         }
         return cache;
     }
     
     @Override
     public double getValue(int development) {
-        if(development <0 || development>=developments)
-            return Double.NaN;
-        return values[development];
+        if(withinBound(development))
+            return values[development];
+        return Double.NaN;
+    }
+    
+    private boolean withinBound(int development) {
+        return development >= 0 &&
+               development < developments;
     }
     
     @Override
@@ -159,4 +141,10 @@ public class DefaultLinkRatioSelection extends AbstractCalculationData<Triangle>
         return TriangleUtil.copy(values);
     }
     
+    @Override
+    public double getMackAlpha(int development) {
+        if(withinBound(development))
+            return getMethod(development).getMackAlpha();
+        return Double.NaN;
+    }
 }

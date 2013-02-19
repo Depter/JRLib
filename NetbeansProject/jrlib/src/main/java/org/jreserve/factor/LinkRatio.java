@@ -1,6 +1,7 @@
 package org.jreserve.factor;
 
 import org.jreserve.CalculationData;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -8,6 +9,11 @@ import org.jreserve.CalculationData;
  * @version 1.0
  */
 public interface LinkRatio extends CalculationData {
+    
+    /**
+     * Returns the development factors, used to calculate the link ratios.
+     */
+    public Triangle getDevelopmentFactors();
     
     /**
      * Returns the number of development periods of the source, or
@@ -29,4 +35,11 @@ public interface LinkRatio extends CalculationData {
      */
     public double[] toArray();
 
+    /**
+     * Mack's alpha parameter is used to calculate the scale parameter (sigma)
+     * for the variance of the link ratios.
+     * 
+     * <p>See {@link LinkRatioMethod#getMackAlpha() LinkRatioMethod}.</p>
+     */
+    public double getMackAlpha(int development);
 }

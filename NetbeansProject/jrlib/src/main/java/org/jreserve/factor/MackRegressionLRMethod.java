@@ -14,34 +14,40 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class Mack2LRMethod extends AbstractLRMethod {
+public class MackRegressionLRMethod extends AbstractLRMethod {
 
+    public final static double MACK_ALPHA = 2d;
+    
     @Override
-    protected double getLinkRatio(Triangle factors, Triangle weights, int accidents, int dev) {
+    protected double getLinkRatio(Triangle factors, int accidents, int dev) {
         Triangle source = factors.getSource();
         
         double ss = 0d;
         double s = 0d;
         for(int a=0; a<accidents; a++) {
-            double w = weights.getValue(a, dev);
             double c2 = Math.pow(source.getValue(a, dev), 2d);
             double f = factors.getValue(a, dev);
-            if(!Double.isNaN(c2) && !Double.isNaN(f) && !Double.isNaN(w)) {
-                ss += (w * c2 * f);
-                s += (w * c2);
+            if(!Double.isNaN(c2) && !Double.isNaN(f)) {
+                ss += (c2 * f);
+                s += c2;
             }
         }
         return s==0d? Double.NaN : ss/s;
     }
+
+    @Override
+    public double getMackAlpha() {
+        return MACK_ALPHA;
+    }
     
     @Override
     public boolean equals(Object o) {
-        return (o instanceof Mack1LRMethod);
+        return (o instanceof MackRegressionLRMethod);
     }
     
     @Override
     public int hashCode() {
-        return Mack1LRMethod.class.hashCode();
+        return MackRegressionLRMethod.class.hashCode();
     }
     
     @Override

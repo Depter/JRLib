@@ -6,6 +6,7 @@ import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,7 +41,13 @@ public class MaxLRMethodTest {
     @Test
     public void testGetLinkRatios() {
         MaxLRMethod lrs = new MaxLRMethod();
-        double[] found = lrs.getLinkRatios(factors, WeightTriangle.getDefault());
+        double[] found = lrs.getLinkRatios(factors);
         assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
+    }
+    
+    @Test
+    public void testGetMackAlpha() {
+        MaxLRMethod lrs = new MaxLRMethod();
+        assertEquals(1d, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
     }
 }
