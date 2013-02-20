@@ -9,7 +9,6 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
-    RegressionTest.class,
     InversePowerLRFunctionTest.class,
     ExponentialLRFunctionTest.class,
     PowerLRFunctionTest.class,

@@ -1,37 +1,24 @@
 package org.jreserve.triangle;
 
-import org.jreserve.AbstractCalculationData;
+import org.jreserve.util.AbstractCalculationDataFilter;
+import org.jreserve.util.Filter;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleOutlierFilter extends AbstractCalculationData<Triangle> {
+public class TriangleOutlierFilter extends AbstractCalculationDataFilter<Triangle> {
 
-    private final static double DEFAULT_TRESHOLD = 1.5;
-    
     private boolean[][] isOutlier;
-    private double treshold;
-    
+
     public TriangleOutlierFilter(Triangle source) {
-        this(source, DEFAULT_TRESHOLD);
+        super(source);
     }
 
-    public TriangleOutlierFilter(Triangle source, double treshold) {
-        super(source);
-        this.treshold = (treshold < 0d)? 0d : treshold;
+    public TriangleOutlierFilter(Triangle source, Filter filter) {
+        super(source, filter);
         doRecalculate();
-    }
-    
-    public double getTreshold() {
-        return treshold;
-    }
-    
-    public void setTreshold(double treshold) {
-        this.treshold = (treshold < 0d)? 0d : treshold;
-        recalculateLayer();
-        fireChange();
     }
     
     public int getAccidentCount() {
@@ -86,73 +73,29 @@ public class TriangleOutlierFilter extends AbstractCalculationData<Triangle> {
     }
     
     private void doRecalculate() {
-        double[] means = getMeans();
-        double[] sigmas = getSigmas(means);
-        createData(means, sigmas);
-    }
-    
-    private double[] getMeans() {
-        int developments = source.getDevelopmentCount();
-        double[] means = new double[developments];
+        createOutliers();
+        int developments = source==null? 0 : source.getDevelopmentCount();
         for(int d=0; d<developments; d++)
-            means[d] = getMean(d);
-        return means;
+            fillOutliers(d);
     }
     
-    private double getMean(int development) {
-        double sum = 0d;
-        int n = 0;
-        int a = -1;
-        while(source.getDevelopmentCount(++a) > development) {
-            double value = source.getValue(a, development);
-            if(!Double.isNaN(value)) {
-                sum += value;
-                n++;
-            }
-        }
-        
-        return (n>0)? sum / (double)n : Double.NaN;
-    }
-    
-    private double[] getSigmas(double[] means) {
-        int developments = means.length;
-        double[] sigmas = new double[developments];
-        for(int d=0; d<developments; d++)
-            sigmas[d] = getSigma(d, means[d]);
-        return sigmas;
-    }
-    
-    private double getSigma(int development, double mean) {
-        double sum = 0d;
-        int n = 0;
-        int a=-1;
-        while(source.getDevelopmentCount(++a) > development) {
-            double value = source.getValue(a, development);
-            if(!Double.isNaN(value)) {
-                sum += Math.pow(value - mean, 2d);
-                n++;
-            }
-        }
-        return (--n > 0)? Math.sqrt(sum / (double)n) : Double.NaN;
-    }
-    
-    private void createData(double[] means, double[] sigmas) {
-        int accidents = source.getAccidentCount();
+    private void createOutliers() {
+        int accidents = source==null? 0 : source.getAccidentCount();
         isOutlier = new boolean[accidents][];
-        for(int a=0; a<accidents; a++) {
-            int devs = source.getDevelopmentCount(a);
-            isOutlier[a] = new boolean[devs];
-            for(int d=0; d<devs; d++) {
-                double value = source.getValue(a, d);
-                isOutlier[a][d] = isOutlier(value, means[d], sigmas[d]);
-            }
-        }
+        for(int a=0; a<accidents; a++)
+            isOutlier[a] = new boolean[source.getDevelopmentCount(a)];
     }
     
-    private boolean isOutlier(double value, double mean, double sigma) {
-        return !Double.isNaN(sigma) &&
-               !Double.isNaN(mean) &&
-               !Double.isNaN(value) &&
-               Math.abs(value - mean) > treshold * sigma;
+    private void fillOutliers(int development) {
+        double[] values = TriangleUtil.getAccidentValues(source, development);
+        boolean[] outliers = filter.filter(values);
+        fillOutliers(development, outliers);
+    }
+    
+    private void fillOutliers(int development, boolean[] outliers) {
+        int size = outliers.length;
+        for(int a=0; a<size; a++)
+            if(outliers[a])
+                isOutlier[a][development] = true;
     }
 }

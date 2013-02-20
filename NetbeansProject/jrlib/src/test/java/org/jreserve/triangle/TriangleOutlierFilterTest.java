@@ -1,9 +1,9 @@
 package org.jreserve.triangle;
 
 import org.jreserve.ChangeCounter;
-import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
+import org.jreserve.util.SigmaFilter;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,8 @@ public class TriangleOutlierFilterTest {
     };
     
     private Triangle source;
-    private TriangleOutlierFilter filter;
+    private SigmaFilter filter;
+    private TriangleOutlierFilter triangleFilter;
     private ChangeCounter counter;
     
     public TriangleOutlierFilterTest() {
@@ -45,9 +46,10 @@ public class TriangleOutlierFilterTest {
     @Before
     public void setUp() {
         createSource();
-        filter = new TriangleOutlierFilter(source);
+        filter = new SigmaFilter(1.5);
+        triangleFilter = new TriangleOutlierFilter(source, filter);
         counter = new ChangeCounter();
-        filter.addChangeListener(counter);
+        triangleFilter.addChangeListener(counter);
     }
     
     private void createSource() {
@@ -57,34 +59,20 @@ public class TriangleOutlierFilterTest {
     }
 
     @Test
-    public void testGetTreshold() {
-        //Default treshold is 1.5
-        assertEquals(1.5, filter.getTreshold(), JRLibTestSuite.EPSILON);
-    }
-
-    @Test
-    public void testSetTreshold() {
-        double treshold = 2d;
-        filter.setTreshold(treshold);
-        assertEquals(treshold, filter.getTreshold(), JRLibTestSuite.EPSILON);
-        assertEquals(1, counter.getChangeCount());
-    }
-
-    @Test
     public void testGetAccidentCount() {
-        assertEquals(source.getAccidentCount(), filter.getAccidentCount());
+        assertEquals(source.getAccidentCount(), triangleFilter.getAccidentCount());
     }
 
     @Test
     public void testGetDevelopmentCount_0args() {
-        assertEquals(source.getDevelopmentCount(), filter.getDevelopmentCount());
+        assertEquals(source.getDevelopmentCount(), triangleFilter.getDevelopmentCount());
     }
 
     @Test
     public void testGetDevelopmentCount_int() {
         int accidents = source.getAccidentCount();
         for(int a=-1; a<=accidents; a++)
-            assertEquals(source.getDevelopmentCount(a), filter.getDevelopmentCount(a));
+            assertEquals(source.getDevelopmentCount(a), triangleFilter.getDevelopmentCount(a));
     }
 
     @Test
@@ -93,24 +81,24 @@ public class TriangleOutlierFilterTest {
         for(int a=0; a<accidents; a++) {
             int devs = source.getDevelopmentCount(a);
             for(int d=0; d<devs; d++)
-                assertEquals("At ["+a+"; "+d+"]", TRESHOLD_1_5[a][d], filter.isOutlier(a, d));
-            assertFalse(filter.isOutlier(a, devs));
+                assertEquals("At ["+a+"; "+d+"]", TRESHOLD_1_5[a][d], triangleFilter.isOutlier(a, d));
+            assertFalse(triangleFilter.isOutlier(a, devs));
         }
-        assertFalse(filter.isOutlier(accidents, 0));
+        assertFalse(triangleFilter.isOutlier(accidents, 0));
         
-        filter.setTreshold(1d);
+        triangleFilter.setFilter(new SigmaFilter(1d));
         for(int a=0; a<accidents; a++) {
             int devs = source.getDevelopmentCount(a);
             for(int d=0; d<devs; d++)
-                assertEquals("At ["+a+"; "+d+"]", TRESHOLD_1[a][d], filter.isOutlier(a, d));
-            assertFalse(filter.isOutlier(a, devs));
+                assertEquals("At ["+a+"; "+d+"]", TRESHOLD_1[a][d], triangleFilter.isOutlier(a, d));
+            assertFalse(triangleFilter.isOutlier(a, devs));
         }
-        assertFalse(filter.isOutlier(accidents, 0));
+        assertFalse(triangleFilter.isOutlier(accidents, 0));
     }
     
     @Test
     public void testToArray() {
-        boolean[][] found = filter.toArray();
+        boolean[][] found = triangleFilter.toArray();
         assertEquals(TRESHOLD_1_5.length, found.length);
         for(int a=0; a<found.length; a++) {
             assertEquals(TRESHOLD_1_5[a].length, found[a].length);
@@ -119,6 +107,6 @@ public class TriangleOutlierFilterTest {
         }
         
         found[0][0] = !found[0][0];
-        assertNotEquals(found[0][0], filter.isOutlier(0, 0));
+        assertNotEquals(found[0][0], triangleFilter.isOutlier(0, 0));
     }
 }

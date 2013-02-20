@@ -57,6 +57,14 @@ public class TriangleUtil {
         return count;
     }
     
+    public static double[] getAccidentValues(Triangle triangle, int development) {
+        int accidents = getAccidentCount(triangle, development);
+        double[] result = new double[accidents];
+        for(int a=0; a<accidents; a++)
+            result[a] = triangle.getValue(a, development);
+        return result;
+    }
+    
     private TriangleUtil() {
     }
 }

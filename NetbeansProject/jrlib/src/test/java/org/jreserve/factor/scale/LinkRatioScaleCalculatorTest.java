@@ -1,8 +1,12 @@
-package org.jreserve.factor;
+package org.jreserve.factor.scale;
 
+import org.jreserve.factor.scale.LinkRatioScaleCaclulator;
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
+import org.jreserve.factor.DefaultLinkRatioSelection;
+import org.jreserve.factor.DevelopmentFactors;
+import org.jreserve.factor.LinkRatio;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
@@ -14,7 +18,7 @@ import org.junit.Test;
  *
  * @author Peter Decsi
  */
-public class LinkRatioScaleTest {
+public class LinkRatioScaleCalculatorTest {
     
     private final static double[] EXPECTED = {
         5.09840661, 2.81129417, 3.34113131, 1.55856978, 2.10383801, 1.50026769, 
@@ -29,24 +33,24 @@ public class LinkRatioScaleTest {
     
     private Triangle cik;
     private LinkRatio source;
-    private LinkRatioScale scale;
+    private LinkRatioScaleCaclulator scale;
     private ChangeCounter changeCounter;
     
-    public LinkRatioScaleTest() {
+    public LinkRatioScaleCalculatorTest() {
     }
 
     @Before
     public void setUp() {
         cik = new TriangleCummulation(new InputTriangle(TestData.Q_PAID));
         source = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
-        scale = new LinkRatioScale(source, cik);
+        scale = new LinkRatioScaleCaclulator(source, cik);
         changeCounter = new ChangeCounter();
         scale.addChangeListener(changeCounter);
     }
 
     @Test(expected=NullPointerException.class)
     public void testConstructor_NullCik() {
-        new LinkRatioScale(source, null);
+        new LinkRatioScaleCaclulator(source, null);
     }
     
     @Test

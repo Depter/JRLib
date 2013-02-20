@@ -1,5 +1,6 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.util.RegressionUtil;
 import org.jreserve.factor.LinkRatio;
 
 /**
@@ -19,9 +20,9 @@ public class InversePowerLRFunction implements LinkRatioFunction {
         int devs = lr.getDevelopmentCount();
         double[] x = getXs(devs);
         double[] y = getYs(lr.toArray(), devs);
-        double[] params = Regression.linearRegression(x, y);
-        pa = Math.exp(params[Regression.INTERCEPT]);
-        pb = params[Regression.SLOPE];
+        double[] params = RegressionUtil.linearRegression(x, y);
+        pa = Math.exp(params[RegressionUtil.INTERCEPT]);
+        pb = params[RegressionUtil.SLOPE];
     }
     
     private double[] getXs(int devs) {

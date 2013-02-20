@@ -46,4 +46,11 @@ public class TriangleCorrection extends AbstractTriangleModification {
                this.accident == accident &&
                this.development == development;
     }
+    
+    @Override
+    public String toString() {
+        return String.format(
+            "TriangleCorrection [%d; %d] = %f",
+            accident, development, correction);
+    }
 }

@@ -16,8 +16,8 @@ import org.junit.runners.Suite;
     WeightedAverageLRMethodTest.class,
     MackRegressionLRMethodTest.class,
     DefaultLinkRatioSelectionTest.class,
-    LinkRatioScaleTest.class,
-    org.jreserve.factor.curve.CurvesTestSuite.class
+    org.jreserve.factor.curve.CurvesTestSuite.class,
+    org.jreserve.factor.scale.FactorScaleTestSuite.class
 })
 public class FactorTestSuite {
 }

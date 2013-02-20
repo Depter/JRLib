@@ -1,86 +1,35 @@
 package org.jreserve.factor.curve;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import org.jreserve.AbstractCalculationData;
 import org.jreserve.factor.LinkRatio;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.util.AbstractMethodSelection;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultLinkRatioSmoothing extends AbstractCalculationData<LinkRatio> implements LinkRatioSmoothing {
+public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio, LinkRatioFunction> implements LinkRatioSmoothing {
 
-    private LinkRatioFunction[] functions = new LinkRatioFunction[0];
-    private LinkRatioFunction defaultFunction = new DefaultLRFunction();
-    
     private int developments;
     private double[] values;
     
     public DefaultLinkRatioSmoothing(LinkRatio source) {
-        super(source);
+        this(source, null);
+    }
+    
+    public DefaultLinkRatioSmoothing(LinkRatio source, LinkRatioFunction defaultFunction) {
+        super(source, defaultFunction==null? new DefaultLRFunction() : defaultFunction);
         developments = (source==null)? 0 : source.getDevelopmentCount();
         doRecalculate();
     }
-    
+
     @Override
-    public LinkRatioFunction getDefaultFunction() {
-        return defaultFunction;
-    }
-    
-    @Override
-    public void setDefaultFunction(LinkRatioFunction function) {
-        if(function == null)
-            function = new DefaultLRFunction();
-        this.defaultFunction = function;
-    }
-    
-    @Override
-    public void setFunction(LinkRatioFunction function, int development) {
-        if(development >= 0) {
-            saveFunctionAt(function, development);
-            doRecalculate();
-            fireChange();
-        }
-    }
-    
-    private void saveFunctionAt(LinkRatioFunction function, int development) {
-        if(function == null) {
-            if(development < functions.length)
-                functions[development] = null;
-        } else {
-            setFunctionsSize(development);
-            functions[development] = function;
-        }
-    }
-    
-    private void setFunctionsSize(int development) {
-        if(development >= functions.length) {
-            LinkRatioFunction[] redim = new LinkRatioFunction[development+1];
-            System.arraycopy(functions, 0, redim, 0, functions.length);
-            functions = redim;
-        }
-    }
-    
-    @Override
-    public void setFunctions(Map<Integer, LinkRatioFunction> functions) {
-        for(Integer development : functions.keySet())
-            if(development >= 0)
-                saveFunctionAt(functions.get(development), development);
-        doRecalculate();
-        fireChange();
-    }
-    
-    @Override
-    public LinkRatioFunction getFunction(int development) {
-        if(development < 0)
-            throw new IllegalArgumentException("Development must be at least 0, but was "+development+"!");
-        LinkRatioFunction function = (development<functions.length)? functions[development] : null;
-        return function==null? defaultFunction : function;
+    public void setDefaultMethod(LinkRatioFunction defaultMethod) {
+        if(defaultMethod == null)
+            defaultMethod = new DefaultLRFunction();
+        super.setDefaultMethod(defaultMethod);
     }
     
     @Override
@@ -104,19 +53,12 @@ public class DefaultLinkRatioSmoothing extends AbstractCalculationData<LinkRatio
         values = new double[developments];
         recalculateLinkRatios();
         for(int d=0; d<developments; d++)
-            values[d] = getFunction(d).getValue(d+1);
+            values[d] = getMethod(d).getValue(d+1);
     }
     
     private void recalculateLinkRatios() {
-        Set<LinkRatioFunction> cache = new HashSet<LinkRatioFunction>();
-        for(LinkRatioFunction function : functions) {
-            if(function != null && !cache.contains(function)) {
-                cache.add(function);
-                function.fit(source);
-            }
-        }
-        if(!cache.contains(defaultFunction))
-            defaultFunction.fit(source);
+        for(LinkRatioFunction function : getMethods())
+            function.fit(source);
     }
     
     @Override

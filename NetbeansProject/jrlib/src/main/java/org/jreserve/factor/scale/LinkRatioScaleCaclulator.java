@@ -1,9 +1,10 @@
-package org.jreserve.factor;
+package org.jreserve.factor.scale;
 
 import static java.lang.Double.isNaN;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import org.jreserve.AbstractCalculationData;
+import org.jreserve.factor.LinkRatio;
 import org.jreserve.triangle.Triangle;
 
 /**
@@ -11,13 +12,13 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class LinkRatioScale extends AbstractCalculationData<LinkRatio> {
+public class LinkRatioScaleCaclulator extends AbstractCalculationData<LinkRatio> implements LinkRatioScale {
 
     private int developments;
     private double[] sigmas;
     private Triangle cik;
 
-    public LinkRatioScale(LinkRatio source, Triangle cik) {
+    public LinkRatioScaleCaclulator(LinkRatio source, Triangle cik) {
         super(source);
         initCikTriangle(cik);
         doRecalculate();
@@ -39,16 +40,19 @@ public class LinkRatioScale extends AbstractCalculationData<LinkRatio> {
         fireChange();
     }
     
+    @Override
     public int getDevelopmentCount() {
         return developments;
     }
     
+    @Override
     public double getValue(int development) {
         if(development < 0 || development >= developments)
             return Double.NaN;
         return sigmas[development];
     }
     
+    @Override
     public double[] toArray() {
         double[] result = new double[developments];
         System.arraycopy(sigmas, 0, result, 0, developments);

@@ -1,18 +1,24 @@
-package org.jreserve.factor.curve;
+package org.jreserve.util;
 
 import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.curve.LinkRatioFunction;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class Regression {
+public class RegressionUtil {
 
     public final static int INTERCEPT = 0;
     public final static int SLOPE = 1;
     
-    public static double[] fit(double[] y) {
+    /**
+     * Linear regression wiht x values <i>1, ..., y.length</i>.
+     * 
+     * {@see #linearRegression(double[], double[]) linearRegression()}.
+     */
+    public static double[] linearRegression(double[] y) {
         int size = y.length;
         double[] x = new double[size];
         for(int i=0; i<size; i++)
@@ -87,7 +93,7 @@ public class Regression {
         int usedCount = 0;
         
         for(int i=0; i<size; i++) {
-            if(isReal(x[i]) && isReal(y[i])) {
+            if(MathUtil.isReal(x[i]) && MathUtil.isReal(y[i])) {
                 used[i] = true;
                 usedCount++;
             }
@@ -97,11 +103,6 @@ public class Regression {
             throw new IllegalArgumentException("Less then two rows contains valid values!");
         
         return used;
-    }
-    
-    private static boolean isReal(double value) {
-        return !Double.isNaN(value) &&
-               !Double.isInfinite(value);
     }
     
     private static double mean(double[] x, boolean[] used) {
@@ -174,6 +175,6 @@ public class Regression {
         return result;
     }
     
-    private Regression() {
+    private RegressionUtil() {
     }
 }
