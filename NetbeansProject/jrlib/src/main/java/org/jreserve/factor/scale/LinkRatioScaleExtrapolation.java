@@ -49,9 +49,9 @@ public class LinkRatioScaleExtrapolation implements LinkRatioScaleEstimator {
     }
 
     public double getValue(int development) {
-        if(isEmptyModel)
+        if(isEmptyModel || development<0)
             return Double.NaN;
-        double x = (double) development;
+        double x = (double) (development+1);
         return Math.exp(intercept + slope * x);
     }
 

@@ -1,81 +1,53 @@
 package org.jreserve.factor.scale;
 
-import org.junit.AfterClass;
+import org.jreserve.JRLibTestSuite;
+import org.jreserve.TestData;
+import org.jreserve.factor.DevelopmentFactors;
+import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.SimpleLinkRatio;
+import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.TriangleFactory;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 
 /**
  *
  * @author Peter Decsi
  */
 public class LinkRatioScaleMinMaxEstimateTest {
-
+    
+    private final static double[] EXPECTED = {
+        111.6702265, 55.8828250, 32.6734950, 23.2743446, 
+         19.9898831,  1.0129175, 0.0513261
+    };
+    
+    private LinkRatioScale source;
+    private LinkRatioScaleMinMaxEstimate estimate;
+    
     public LinkRatioScaleMinMaxEstimateTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
     }
 
     @Before
     public void setUp() {
+        createSource();
+        estimate = new LinkRatioScaleMinMaxEstimate();
+    }
+    
+    private void createSource() {
+        Triangle triangle = TriangleFactory.create(TestData.INCURRED).cummulate().build();
+        LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(triangle));
+        source = new LinkRatioScaleCaclulator(lr, triangle);
     }
 
     @Test
     public void testFit() {
-        System.out.println("fit");
-        LinkRatioScale scales = null;
-        LinkRatioScaleMinMaxEstimate instance = new LinkRatioScaleMinMaxEstimate();
-        instance.fit(scales);
-        fail("The test case is a prototype.");
+        estimate.fit(source);
+        
+        int length = EXPECTED.length;
+        assertEquals(Double.NaN, estimate.getValue(-1), JRLibTestSuite.EPSILON);
+        for(int i=0; i<length; i++)
+            assertEquals(EXPECTED[i], estimate.getValue(i), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(length), JRLibTestSuite.EPSILON);
     }
-
-    @Test
-    public void testGetValue() {
-        System.out.println("getValue");
-        int development = 0;
-        LinkRatioScaleMinMaxEstimate instance = new LinkRatioScaleMinMaxEstimate();
-        double expResult = 0.0;
-        double result = instance.getValue(development);
-        assertEquals(expResult, result, 0.0);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testEquals() {
-        System.out.println("equals");
-        Object o = null;
-        LinkRatioScaleMinMaxEstimate instance = new LinkRatioScaleMinMaxEstimate();
-        boolean expResult = false;
-        boolean result = instance.equals(o);
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-        LinkRatioScaleMinMaxEstimate instance = new LinkRatioScaleMinMaxEstimate();
-        int expResult = 0;
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        LinkRatioScaleMinMaxEstimate instance = new LinkRatioScaleMinMaxEstimate();
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        fail("The test case is a prototype.");
-    }
-
 }
