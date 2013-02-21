@@ -8,7 +8,7 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DevelopmentFactors extends AbstractTriangle {
+public class DevelopmentFactors extends AbstractTriangle<Triangle> implements FactorTriangle {
     
     private double[][] factors;
     private int accidents;
@@ -17,6 +17,11 @@ public class DevelopmentFactors extends AbstractTriangle {
     public DevelopmentFactors(Triangle source) {
         super(source);
         doRecalculate();
+    }
+
+    @Override
+    public Triangle getInputTriangle() {
+        return getSource();
     }
     
     @Override

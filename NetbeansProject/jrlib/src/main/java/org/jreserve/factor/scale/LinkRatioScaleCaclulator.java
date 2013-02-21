@@ -4,7 +4,8 @@ import static java.lang.Double.isNaN;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import org.jreserve.AbstractCalculationData;
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.FactorTriangle;
+import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.Triangle;
 
 /**
@@ -16,28 +17,15 @@ public class LinkRatioScaleCaclulator extends AbstractCalculationData<LinkRatio>
 
     private int developments;
     private double[] sigmas;
-    private Triangle cik;
 
-    public LinkRatioScaleCaclulator(LinkRatio source, Triangle cik) {
+    public LinkRatioScaleCaclulator(LinkRatio source) {
         super(source);
-        initCikTriangle(cik);
         doRecalculate();
     }
-    
-    private void initCikTriangle(Triangle cik) {
-        if(cik == null)
-            throw new NullPointerException("C(i,k) triangle is null!");
-        this.cik = cik;
-    }
-    
-    public Triangle getCikTriangle() {
-        return cik;
-    }
-    
-    public void setCikTriangle(Triangle cik) {
-        initCikTriangle(cik);
-        doRecalculate();
-        fireChange();
+
+    @Override
+    public LinkRatio getLinkRatios() {
+        return source;
     }
     
     @Override
@@ -81,7 +69,8 @@ public class LinkRatioScaleCaclulator extends AbstractCalculationData<LinkRatio>
         int n = 0;
         double sDik = 0d;
         
-        Triangle factors = source.getDevelopmentFactors();
+        FactorTriangle factors = source.getInputFactors();
+        Triangle cik = factors.getInputTriangle();
         int accidents = factors.getAccidentCount();
         
         for(int a=0; a<accidents; a++) {

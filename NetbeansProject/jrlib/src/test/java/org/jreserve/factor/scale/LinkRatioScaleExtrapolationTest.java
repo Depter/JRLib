@@ -3,8 +3,8 @@ package org.jreserve.factor.scale;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.LinkRatio;
-import org.jreserve.factor.SimpleLinkRatio;
+import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.factor.linkratio.SimpleLinkRatio;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ public class LinkRatioScaleExtrapolationTest {
     private void createSource() {
         Triangle triangle = TriangleFactory.create(TestData.INCURRED).cummulate().build();
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(triangle));
-        source = new LinkRatioScaleCaclulator(lr, triangle);
+        source = new LinkRatioScaleCaclulator(lr);
     }
 
     @Test

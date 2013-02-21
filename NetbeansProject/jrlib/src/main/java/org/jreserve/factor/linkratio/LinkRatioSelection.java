@@ -1,6 +1,6 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
-import org.jreserve.triangle.Triangle;
+import org.jreserve.factor.FactorTriangle;
 import org.jreserve.util.MethodSelection;
 
 /**
@@ -14,5 +14,5 @@ import org.jreserve.util.MethodSelection;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface LinkRatioSelection extends LinkRatio, MethodSelection<Triangle, LinkRatioMethod> {
+public interface LinkRatioSelection extends LinkRatio, MethodSelection<FactorTriangle, LinkRatioMethod> {
 }

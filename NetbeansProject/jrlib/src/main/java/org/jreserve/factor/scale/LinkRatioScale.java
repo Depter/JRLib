@@ -1,6 +1,7 @@
 package org.jreserve.factor.scale;
 
 import org.jreserve.CalculationData;
+import org.jreserve.factor.linkratio.LinkRatio;
 
 /**
  *
@@ -8,7 +9,9 @@ import org.jreserve.CalculationData;
  * @version 1.0
  */
 public interface LinkRatioScale extends CalculationData {
-
+    
+    public LinkRatio getLinkRatios();
+    
     public int getDevelopmentCount();
     
     public double getValue(int development);

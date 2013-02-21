@@ -2,7 +2,7 @@ package org.jreserve.factor.curve;
 
 import org.jreserve.util.RegressionUtil;
 import static java.lang.Math.*;
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.linkratio.LinkRatio;
 
 /**
  * Link ratio smoothing, based on the Weibul curve:

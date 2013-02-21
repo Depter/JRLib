@@ -1,14 +1,13 @@
 package org.jreserve.factor.curve;
 
-import org.jreserve.factor.LinkRatio;
-import org.jreserve.util.MethodSelection;
+import org.jreserve.factor.linkratio.LinkRatio;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface LinkRatioSmoothing extends LinkRatio, MethodSelection<LinkRatio, LinkRatioFunction> {
+public interface LinkRatioSmoothing extends LinkRatio {
     
     @Override
     public LinkRatio getSource();

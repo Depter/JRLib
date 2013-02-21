@@ -1,6 +1,6 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
-import org.jreserve.triangle.Triangle;
+import org.jreserve.factor.FactorTriangle;
 
 /**
  *
@@ -12,7 +12,7 @@ public class AverageLRMethod extends AbstractLRMethod {
     public final static double MACK_ALPHA = 0d;
     
     @Override
-    protected double getLinkRatio(Triangle factors, int accidents, int dev) {
+    protected double getLinkRatio(FactorTriangle factors, int accidents, int dev) {
         double sum = 0d;
         int n = 0;
     

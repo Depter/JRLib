@@ -1,11 +1,18 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
+import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
+import org.jreserve.factor.linkratio.LinkRatioMethod;
+import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
+import org.jreserve.factor.linkratio.MinLRMethod;
+import org.jreserve.factor.linkratio.AverageLRMethod;
+import org.jreserve.factor.linkratio.MaxLRMethod;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
+import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;

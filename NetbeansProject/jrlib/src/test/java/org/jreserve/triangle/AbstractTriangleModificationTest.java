@@ -12,7 +12,6 @@ import org.junit.Test;
 public class AbstractTriangleModificationTest {
 
     private AbstractTriangleModification data;
-    private AbstractTriangleModification emptyData;
     private Triangle source;
     
     public AbstractTriangleModificationTest() {
@@ -22,34 +21,27 @@ public class AbstractTriangleModificationTest {
     public void setUp() {
         source = InputTriangleTest.createData();
         data = new AbstractTriangleModificationImpl(source);
-        emptyData = new AbstractTriangleModificationImpl();
     }
 
     @Test
     public void testGetAccidentCount() {
         assertEquals(source.getAccidentCount(), data.getAccidentCount());
-        assertEquals(0, emptyData.getAccidentCount());
     }
 
     @Test
     public void testGetDevelopmentCount_0args() {
         assertEquals(source.getDevelopmentCount(), data.getDevelopmentCount());
-        assertEquals(0, emptyData.getDevelopmentCount());
     }
 
     @Test
     public void testGetDevelopmentCount_int() {
         assertEquals(0, data.getDevelopmentCount(-1));
-        assertEquals(0, emptyData.getDevelopmentCount(-1));
         int accidents = source.getAccidentCount();
         
-        for(int a=0; a<accidents; a++) {
+        for(int a=0; a<accidents; a++)
             assertEquals(source.getDevelopmentCount(a), data.getDevelopmentCount(a));
-            assertEquals(0, emptyData.getDevelopmentCount(a));
-        }
         
         assertEquals(0, data.getDevelopmentCount(accidents));
-        assertEquals(0, emptyData.getDevelopmentCount(accidents));
     }
 
     @Test
@@ -67,10 +59,7 @@ public class AbstractTriangleModificationTest {
     
     @Test
     public void testToArray() {
-        double[][] values = emptyData.toArray();
-        assertEquals(0, values.length);
-        
-        values = data.toArray();
+        double[][] values = data.toArray();
         int accidents = source.getAccidentCount();
         assertEquals(accidents, values.length);
         for(int a=0; a<accidents; a++) {
@@ -82,13 +71,10 @@ public class AbstractTriangleModificationTest {
         }
     }
 
-    public class AbstractTriangleModificationImpl extends AbstractTriangleModification {
+    public class AbstractTriangleModificationImpl extends AbstractTriangleModification<Triangle> {
 
         public AbstractTriangleModificationImpl(Triangle source) {
             super(source);
-        }
-
-        public AbstractTriangleModificationImpl() {
         }
         
         @Override

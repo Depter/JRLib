@@ -10,13 +10,9 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
     DevelopmentFactorsTest.class,
-    MinLRMethodTest.class,
-    MaxLRMethodTest.class,
-    AverageLRMethodTest.class,
-    WeightedAverageLRMethodTest.class,
-    MackRegressionLRMethodTest.class,
-    DefaultLinkRatioSelectionTest.class,
-    SimpleLinkRatioTest.class,
+    AbstractFactorTriangleModificationTest.class,
+    FactorTriangleCorrectionTest.class,
+    org.jreserve.factor.linkratio.LinkRatioTestSuite.class,
     org.jreserve.factor.curve.CurvesTestSuite.class,
     org.jreserve.factor.scale.FactorScaleTestSuite.class
 })

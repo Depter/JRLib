@@ -1,6 +1,6 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
-import org.jreserve.triangle.Triangle;
+import org.jreserve.factor.FactorTriangle;
 
 /**
  *
@@ -10,7 +10,7 @@ import org.jreserve.triangle.Triangle;
 public class MaxLRMethod extends AbstractLRMethod {
     
     @Override
-    protected double getLinkRatio(Triangle factors, int accidents, int dev) {
+    protected double getLinkRatio(FactorTriangle factors, int accidents, int dev) {
         double max = Double.NaN;
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);

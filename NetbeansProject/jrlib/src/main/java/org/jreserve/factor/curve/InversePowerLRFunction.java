@@ -1,7 +1,7 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.util.RegressionUtil;
-import org.jreserve.factor.LinkRatio;
 
 /**
  * Link ratio smoothing, based on the inverse power curve:
@@ -21,14 +21,14 @@ public class InversePowerLRFunction implements LinkRatioFunction {
         double[] x = getXs(devs);
         double[] y = getYs(lr.toArray(), devs);
         double[] params = RegressionUtil.linearRegression(x, y);
-        pa = Math.exp(params[RegressionUtil.INTERCEPT]);
-        pb = params[RegressionUtil.SLOPE];
+        pa = Math.exp(params[RegressionUtil.SLOPE]);
+        pb = params[RegressionUtil.INTERCEPT];
     }
     
     private double[] getXs(int devs) {
         double[] x = new double[devs];
         for(int i=0; i<devs; i++)
-            x[i] = Math.log(1d / (double) (i+1));
+            x[i] = Math.log((double) (i+1));
         return x;
     }
     

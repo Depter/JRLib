@@ -1,12 +1,11 @@
 package org.jreserve.factor.scale;
 
-import org.jreserve.factor.scale.LinkRatioScaleCaclulator;
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
-import org.jreserve.factor.DefaultLinkRatioSelection;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
+import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
@@ -43,32 +42,9 @@ public class LinkRatioScaleCalculatorTest {
     public void setUp() {
         cik = new TriangleCummulation(new InputTriangle(TestData.Q_PAID));
         source = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
-        scale = new LinkRatioScaleCaclulator(source, cik);
+        scale = new LinkRatioScaleCaclulator(source);
         changeCounter = new ChangeCounter();
         scale.addChangeListener(changeCounter);
-    }
-
-    @Test(expected=NullPointerException.class)
-    public void testConstructor_NullCik() {
-        new LinkRatioScaleCaclulator(source, null);
-    }
-    
-    @Test
-    public void testGetCikTriangle() {
-        assertEquals(cik, scale.getCikTriangle());
-    }
-
-    @Test(expected=NullPointerException.class)
-    public void testSetCikTriangle_NullCik() {
-        scale.setCikTriangle(null);
-    }
-
-    @Test
-    public void testSetCikTriangle() {
-        Triangle cik2 = new TriangleCummulation(new InputTriangle(TestData.Q_INCURRED));
-        scale.setCikTriangle(cik2);
-        assertEquals(cik2, scale.getCikTriangle());
-        assertEquals(1, changeCounter.getChangeCount());
     }
 
     @Test

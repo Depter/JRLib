@@ -1,32 +1,32 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
 import org.jreserve.AbstractCalculationData;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class SimpleLinkRatio extends AbstractCalculationData<Triangle> implements LinkRatio {
+public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> implements LinkRatio {
 
     private LinkRatioMethod method;
     
     private int developmentCount;
     private double[] values = new double[0];
 
-    public SimpleLinkRatio(Triangle source) {
+    public SimpleLinkRatio(FactorTriangle source) {
         this(source, null);
     }
     
-    public SimpleLinkRatio(Triangle source, LinkRatioMethod method) {
+    public SimpleLinkRatio(FactorTriangle source, LinkRatioMethod method) {
         super(source);
         this.method = (method==null)? new WeightedAverageLRMethod() : method;
         doRecalculate();
     }
     
     @Override
-    public Triangle getDevelopmentFactors() {
+    public FactorTriangle getInputFactors() {
         return getSource();
     }
 

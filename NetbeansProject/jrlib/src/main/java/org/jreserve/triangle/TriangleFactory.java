@@ -1,5 +1,7 @@
 package org.jreserve.triangle;
 
+import org.jreserve.smoothing.TriangleSmoothing;
+
 /**
  *
  * @author Peter Decsi
@@ -45,6 +47,18 @@ public class TriangleFactory {
     public TriangleFactory corrigate(int accident, int development, double correction) {
         checkState();
         triangle = new TriangleCorrection(triangle, accident, development, correction);
+        return this;
+    }
+    
+    public TriangleFactory exclude(int accident, int development) {
+        return corrigate(accident, development, Double.NaN);
+    }
+    
+    public TriangleFactory smooth(TriangleSmoothing smoothing) {
+        checkState();
+        if(smoothing == null)
+            throw new NullPointerException("Smoothing is null!");
+        triangle = new SmoothedTriangle(triangle, smoothing);
         return this;
     }
     

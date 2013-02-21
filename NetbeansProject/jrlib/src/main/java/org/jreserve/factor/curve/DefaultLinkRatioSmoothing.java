@@ -1,7 +1,7 @@
 package org.jreserve.factor.curve;
 
-import org.jreserve.factor.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.factor.FactorTriangle;
+import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.util.AbstractMethodSelection;
 
@@ -10,7 +10,7 @@ import org.jreserve.util.AbstractMethodSelection;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio, LinkRatioFunction> implements LinkRatioSmoothing {
+public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio, LinkRatioFunction> implements LinkRatioSmoothingSelection {
 
     private int developments;
     private double[] values;
@@ -23,6 +23,11 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
         super(source, defaultFunction==null? new DefaultLRFunction() : defaultFunction);
         developments = (source==null)? 0 : source.getDevelopmentCount();
         doRecalculate();
+    }
+    
+    @Override
+    public FactorTriangle getInputFactors() {
+        return source.getInputFactors();
     }
 
     @Override
@@ -78,10 +83,5 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
     @Override
     public double getMackAlpha(int development) {
         return source.getMackAlpha(development);
-    }
-
-    @Override
-    public Triangle getDevelopmentFactors() {
-        return source.getDevelopmentFactors();
     }
 }

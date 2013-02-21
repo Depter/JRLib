@@ -14,8 +14,7 @@ import org.junit.runners.Suite;
     HarmonicMovingAverageTest.class,
     ArithmeticMovingAverageTest.class,
     ExponentialSmoothingTest.class,
-    DoubleExponentialSmoothingTest.class,
-    TriangleSmoothingCalculationDataTest.class
+    DoubleExponentialSmoothingTest.class
 })
 public class SmoothingTestSuite {
 }

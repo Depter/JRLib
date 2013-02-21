@@ -14,6 +14,7 @@ import org.junit.runners.Suite;
     PowerLRFunctionTest.class,
     WeibulLRFunctionTest.class,
     DefaultLRFunctionTest.class,
+    SimpleLinkRatioSmoothingTest.class,
     DefaultLinkRatioSmoothingTest.class
 })
 public class CurvesTestSuite {

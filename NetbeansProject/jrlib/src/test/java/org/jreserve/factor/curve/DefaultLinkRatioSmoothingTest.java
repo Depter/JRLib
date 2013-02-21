@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.JRLibTestSuite;
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.linkratio.LinkRatio;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class DefaultLinkRatioSmoothingTest {
     @Test
     public void testGetValue() {
         double[] expected = {
-            1.15379669, //-> Inverse power 
+            1.10309578, //-> Inverse power 
             1.03672801, //-> Exponential 
             1.01842143, //-> Power
             1.01302400, //-> Weibul

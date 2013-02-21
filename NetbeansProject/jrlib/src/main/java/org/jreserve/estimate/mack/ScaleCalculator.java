@@ -1,6 +1,6 @@
 package org.jreserve.estimate.mack;
 
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.linkratio.LinkRatio;
 
 /**
  *

@@ -5,7 +5,7 @@ package org.jreserve.triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleCummulation extends AbstractTriangleModification {
+public class TriangleCummulation extends AbstractTriangleModification<Triangle> {
 
     private double[][] values;
 

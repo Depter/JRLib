@@ -5,7 +5,7 @@ package org.jreserve.triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleCorrection extends AbstractTriangleModification {
+public class TriangleCorrection extends AbstractTriangleModification<Triangle> {
 
     private final int accident;
     private final int development;

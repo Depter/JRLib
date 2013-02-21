@@ -1,5 +1,6 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
+import org.jreserve.factor.FactorTriangle;
 import org.jreserve.triangle.Triangle;
 
 /**
@@ -23,7 +24,7 @@ public interface LinkRatioMethod {
      * 
      * @throws NullPointerException when <i>factors</i> is null.
      */
-    public double[] getLinkRatios(Triangle factors);
+    public double[] getLinkRatios(FactorTriangle factors);
     
     /**
      * Mack's alpha parameter is used to calculate the scale parameter (sigma)

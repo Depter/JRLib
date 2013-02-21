@@ -4,9 +4,9 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.CalculationData;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.FactorTriangle;
+import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
 
 /**
@@ -16,7 +16,7 @@ import org.jreserve.triangle.TriangleCummulation;
  */
 class FixedLinkRatio implements LinkRatio {
 
-    private static Triangle createDevelopmentFactors(double[][] input) {
+    private static FactorTriangle createDevelopmentFactors(double[][] input) {
         return new DevelopmentFactors(new TriangleCummulation(new InputTriangle(input)));
     }
     
@@ -26,7 +26,7 @@ class FixedLinkRatio implements LinkRatio {
         1.24694402, 1.01584722, 1.00946012, 1.00954295, 
         1.00347944, 1.00335199, 1.00191164
     };
-    private final static Triangle PAID_SOURCE = createDevelopmentFactors(TestData.PAID);
+    private final static FactorTriangle PAID_SOURCE = createDevelopmentFactors(TestData.PAID);
     
     //Link Ratios based on Incurred triangle in JRLibTestSuit, 
     //with weighted average method
@@ -34,7 +34,7 @@ class FixedLinkRatio implements LinkRatio {
         1.19471971, 0.99540619, 0.99507566, 1.01018160, 
         1.00310913, 1.00031727, 0.98794674
     };
-    private final static Triangle INCURRED_SOURCE = createDevelopmentFactors(TestData.INCURRED);
+    private final static FactorTriangle INCURRED_SOURCE = createDevelopmentFactors(TestData.INCURRED);
     
     static LinkRatio getPaid() {
         return new FixedLinkRatio(PAID_LR, PAID_SOURCE);
@@ -45,13 +45,13 @@ class FixedLinkRatio implements LinkRatio {
     }
 
     private double[] factors;
-    private Triangle source;
+    private FactorTriangle source;
     private int size;
     
-    FixedLinkRatio(double[] factors, Triangle source) {
+    FixedLinkRatio(double[] factors, FactorTriangle source) {
         this.factors = factors;
         this.size = factors.length;
-        this.size = size;
+        this.source = source;
     }
 
     @Override
@@ -93,7 +93,7 @@ class FixedLinkRatio implements LinkRatio {
     }
 
     @Override
-    public Triangle getDevelopmentFactors() {
+    public FactorTriangle getInputFactors() {
         return source;
     }
 

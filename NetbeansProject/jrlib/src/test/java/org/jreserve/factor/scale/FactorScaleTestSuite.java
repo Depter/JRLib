@@ -11,7 +11,8 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     LinkRatioScaleCalculatorTest.class,
     LinkRatioScaleExtrapolationTest.class,
-    LinkRatioScaleMinMaxEstimateTest.class
+    LinkRatioScaleMinMaxEstimateTest.class,
+    DefaultLinkRatioScaleSelectionTest.class
 })
 public class FactorScaleTestSuite {
 }

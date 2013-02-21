@@ -1,5 +1,6 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
+import org.jreserve.factor.FactorTriangle;
 import org.jreserve.triangle.Triangle;
 
 /**
@@ -19,13 +20,13 @@ public class MackRegressionLRMethod extends AbstractLRMethod {
     public final static double MACK_ALPHA = 2d;
     
     @Override
-    protected double getLinkRatio(Triangle factors, int accidents, int dev) {
-        Triangle source = factors.getSource();
+    protected double getLinkRatio(FactorTriangle factors, int accidents, int dev) {
+        Triangle weights = factors.getInputTriangle();
         
         double ss = 0d;
         double s = 0d;
         for(int a=0; a<accidents; a++) {
-            double c2 = Math.pow(source.getValue(a, dev), 2d);
+            double c2 = Math.pow(weights.getValue(a, dev), 2d);
             double f = factors.getValue(a, dev);
             if(!Double.isNaN(c2) && !Double.isNaN(f)) {
                 ss += (c2 * f);

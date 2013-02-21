@@ -10,27 +10,37 @@ import static java.lang.Math.sqrt;
  */
 public class LinkRatioScaleMinMaxEstimate implements LinkRatioScaleEstimator {
 
-    private int length = 0;
-    private double[] values ;
+    private double[] source;
+    private int sourceLength;
     
     public void fit(LinkRatioScale scales) {
-        values = scales.toArray();
-        length = values.length;
-        if(length > 2)
-            estimateValues();
+        this.source = scales.toArray();
+        sourceLength = source.length;
+    }
+
+    public double getValue(int development) {
+        if(development < 0)
+            return Double.NaN;
+        if(development < 2)
+            return development < sourceLength? source[development] : Double.NaN;
+        return estimate(development);
     }
     
-    private void estimateValues() {
-        double min2 = values[2];
-        double min1 = values[1];
+    private double estimate(int development) {
+        double min2 = source[0];
+        double min1 = source[1];
+        double current = Double.NaN;
         int index = 1;
-        while(++index < length) {
-            double v = values[index];
-            if(Double.isNaN(v) && canEstimate(min1, min2))
-                values[index] = estimate(min1, min2);
+        
+        while(++index <= development) {
+            current = index<sourceLength? source[index] : Double.NaN;
+            if(Double.isNaN(current) && canEstimate(min1, min2))
+                current = estimate(min1, min2);
             min2 = min1;
-            min1 = v;
+            min1 = current;
         }
+        
+        return current;
     }
     
     private boolean canEstimate(double min1, double min2) {
@@ -43,17 +53,6 @@ public class LinkRatioScaleMinMaxEstimate implements LinkRatioScaleEstimator {
         double min1_2 = min1 * min1;
         double min1_4 = min1_2 * min1_2;
         return sqrt(min(min1_4 / min2_2, min(min2_2, min1_2)));
-    }
-
-    public double getValue(int development) {
-        if(withinBound(development))
-            return values[development];
-        return Double.NaN;
-    }
-    
-    private boolean withinBound(int development) {
-        return development >= 0 &&
-               development < length;
     }
 
     @Override

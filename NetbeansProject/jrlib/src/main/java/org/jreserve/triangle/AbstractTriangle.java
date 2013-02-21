@@ -7,9 +7,9 @@ import org.jreserve.AbstractCalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractTriangle extends AbstractCalculationData<Triangle> implements Triangle {
+public abstract class AbstractTriangle<T extends Triangle> extends AbstractCalculationData<T> implements Triangle {
 
-    protected AbstractTriangle(Triangle source) {
+    protected AbstractTriangle(T source) {
         super(source);
     }
 

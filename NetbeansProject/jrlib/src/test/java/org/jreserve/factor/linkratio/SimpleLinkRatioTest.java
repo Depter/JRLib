@@ -1,14 +1,13 @@
-package org.jreserve.factor;
+package org.jreserve.factor.linkratio;
 
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.factor.DevelopmentFactors;
+import org.jreserve.factor.FactorTriangle;
 import org.jreserve.triangle.TriangleFactory;
-import org.junit.AfterClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -27,7 +26,7 @@ public class SimpleLinkRatioTest {
         1.00373787, 1.00032791, 0.98794674
     };
     
-    private Triangle source;
+    private FactorTriangle source;
     private SimpleLinkRatio lr;
     
     public SimpleLinkRatioTest() {
@@ -41,7 +40,7 @@ public class SimpleLinkRatioTest {
 
     @Test
     public void testGetDevelopmentFactors() {
-        assertTrue(source == lr.getDevelopmentFactors());
+        assertTrue(source == lr.getInputFactors());
     }
 
     @Test

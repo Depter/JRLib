@@ -5,7 +5,7 @@ package org.jreserve.triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class InputTriangle extends AbstractTriangle implements Triangle {
+public class InputTriangle extends AbstractTriangle<Triangle> implements Triangle {
 
     private double[][] data;
     private int accidents;

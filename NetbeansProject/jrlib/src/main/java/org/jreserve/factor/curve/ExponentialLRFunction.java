@@ -1,7 +1,7 @@
 package org.jreserve.factor.curve;
 
 import org.jreserve.util.RegressionUtil;
-import org.jreserve.factor.LinkRatio;
+import org.jreserve.factor.linkratio.LinkRatio;
 
 /**
  * Link ratio smoothing, based on the exponential curve:

@@ -1,5 +1,9 @@
-package org.jreserve.smoothing;
+package org.jreserve.triangle;
 
+import org.jreserve.smoothing.ExponentialSmoothing;
+import org.jreserve.smoothing.SmoothingCell;
+import org.jreserve.smoothing.TriangleSmoothing;
+import org.jreserve.triangle.SmoothedTriangle;
 import static org.jreserve.JRLibTestSuite.EPSILON;
 import org.jreserve.triangle.InputTriangleTest;
 import org.jreserve.triangle.Triangle;
@@ -11,7 +15,7 @@ import org.junit.Test;
  *
  * @author Peter Decsi
  */
-public class TriangleSmoothingCalculationDataTest {
+public class SmoothedTriangleTest {
 
     private final static SmoothingCell[] CELLS = {
         new SmoothingCell(0, 0, false), 
@@ -22,14 +26,14 @@ public class TriangleSmoothingCalculationDataTest {
     private Triangle source;
     private Triangle smoothed;
     
-    public TriangleSmoothingCalculationDataTest() {
+    public SmoothedTriangleTest() {
     }
 
     @Before
     public void setUp() {
         source = InputTriangleTest.createData();
         TriangleSmoothing smoothing = new ExponentialSmoothing(CELLS, 0d);
-        smoothed = new TriangleSmoothingCalculationData(source, smoothing);
+        smoothed = new SmoothedTriangle(source, smoothing);
     }
 
     @Test
