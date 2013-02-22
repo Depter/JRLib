@@ -15,14 +15,16 @@ public class DefaultLRFunction implements LinkRatioFunction {
     private double[] lrs;
     private int developments;
     
+    @Override
     public void fit(LinkRatio lr) {
         this.lrs = lr.toArray();
         this.developments = lrs.length;
     }
 
+    @Override
     public double getValue(int development) {
-        if(development>0 && development <= developments)
-            return lrs[development-1];
+        if(development >= 0 && development < developments)
+            return lrs[development];
         return 1d;
     }
     

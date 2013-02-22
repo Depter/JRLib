@@ -1,5 +1,8 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
+import org.jreserve.factor.standarderror.LinkRatioScale;
+import org.jreserve.factor.standarderror.LinkRatioScaleExtrapolation;
+import org.jreserve.factor.standarderror.LinkRatioScaleCaclulator;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
@@ -15,23 +18,23 @@ import org.junit.Test;
  *
  * @author Peter Decsi
  */
-public class LinkRatioScaleMinMaxEstimateTest {
+public class LinkRatioScaleExtrapolationTest {
     
     private final static double[] EXPECTED = {
-        111.6702265, 55.8828250, 32.6734950, 23.2743446, 
-         19.9898831,  1.0129175, 0.0513261
+        146.57349699, 67.89088652, 31.44615205, 14.56543771, 
+          6.74651625,  3.12489623,  1.44741021, 0.67042108
     };
     
     private LinkRatioScale source;
-    private LinkRatioScaleMinMaxEstimate estimate;
-    
-    public LinkRatioScaleMinMaxEstimateTest() {
+    private LinkRatioScaleExtrapolation estimate;
+
+    public LinkRatioScaleExtrapolationTest() {
     }
 
     @Before
     public void setUp() {
         createSource();
-        estimate = new LinkRatioScaleMinMaxEstimate();
+        estimate = new LinkRatioScaleExtrapolation();
     }
     
     private void createSource() {

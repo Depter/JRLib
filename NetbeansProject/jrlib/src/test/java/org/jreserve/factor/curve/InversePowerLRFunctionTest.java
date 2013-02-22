@@ -1,5 +1,6 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.factor.linkratio.FixedLinkRatio;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
@@ -61,12 +62,12 @@ public class InversePowerLRFunctionTest {
     @Test
     public void testGetValue() {
         for(int d=1; d<10; d++)
-            assertEquals(1d+(double)d, ip.getValue(d), JRLibTestSuite.EPSILON);
+            assertEquals(1d+(double)d, ip.getValue(d-1), JRLibTestSuite.EPSILON);
     
         Triangle cik = TriangleFactory.create(TestData.PAID).cummulate().build();
         ip.fit(new SimpleLinkRatio(new DevelopmentFactors(cik)));
         for(int d=0; d<EXPCETD_PAID.length; d++)
-            assertEquals(EXPCETD_PAID[d], ip.getValue(d+1), JRLibTestSuite.EPSILON);
+            assertEquals(EXPCETD_PAID[d], ip.getValue(d), JRLibTestSuite.EPSILON);
     }
 
     @Test

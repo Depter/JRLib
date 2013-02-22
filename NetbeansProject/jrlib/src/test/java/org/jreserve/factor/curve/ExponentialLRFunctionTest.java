@@ -1,5 +1,6 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.factor.linkratio.FixedLinkRatio;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.factor.linkratio.LinkRatio;
 import static org.junit.Assert.*;
@@ -57,7 +58,7 @@ public class ExponentialLRFunctionTest {
         
         };
         for(int d=0; d<7; d++)
-            assertEquals(expected[d], ef.getValue(d+1), JRLibTestSuite.EPSILON);
+            assertEquals(expected[d], ef.getValue(d), JRLibTestSuite.EPSILON);
     }
 
     @Test

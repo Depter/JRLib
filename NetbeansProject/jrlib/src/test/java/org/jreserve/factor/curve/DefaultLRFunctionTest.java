@@ -1,6 +1,7 @@
 package org.jreserve.factor.curve;
 
 import org.jreserve.JRLibTestSuite;
+import org.jreserve.factor.linkratio.FixedLinkRatio;
 import org.jreserve.factor.linkratio.LinkRatio;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -29,8 +30,8 @@ public class DefaultLRFunctionTest {
         df.fit(lr);
         double[] lrs = lr.toArray();
         for(int d=0; d<lrs.length; d++)
-            assertEquals(lrs[d], df.getValue(d+1), JRLibTestSuite.EPSILON);
-        assertEquals(1d, df.getValue(lrs.length+1), JRLibTestSuite.EPSILON);
+            assertEquals(lrs[d], df.getValue(d), JRLibTestSuite.EPSILON);
+        assertEquals(1d, df.getValue(lrs.length), JRLibTestSuite.EPSILON);
     }
 
     @Test
@@ -39,8 +40,8 @@ public class DefaultLRFunctionTest {
         df.fit(lr);
         double[] lrs = lr.toArray();
         for(int d=0; d<lrs.length; d++)
-            assertEquals(lrs[d], df.getValue(d+1), JRLibTestSuite.EPSILON);
-        assertEquals(1d, df.getValue(lrs.length+1), JRLibTestSuite.EPSILON);
+            assertEquals(lrs[d], df.getValue(d), JRLibTestSuite.EPSILON);
+        assertEquals(1d, df.getValue(lrs.length), JRLibTestSuite.EPSILON);
     }
 
     @Test

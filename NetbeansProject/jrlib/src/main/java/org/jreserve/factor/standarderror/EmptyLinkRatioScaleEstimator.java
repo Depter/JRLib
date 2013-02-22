@@ -1,4 +1,4 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
 /**
  *

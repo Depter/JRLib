@@ -1,4 +1,4 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
 import static java.lang.Double.isNaN;
 import static java.lang.Math.pow;

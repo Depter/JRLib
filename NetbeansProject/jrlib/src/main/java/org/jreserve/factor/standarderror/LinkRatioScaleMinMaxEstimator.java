@@ -1,4 +1,4 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
 import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
@@ -8,7 +8,7 @@ import static java.lang.Math.sqrt;
  * @author Peter Decsi
  * @version 1.0
  */
-public class LinkRatioScaleMinMaxEstimate implements LinkRatioScaleEstimator {
+public class LinkRatioScaleMinMaxEstimator implements LinkRatioScaleEstimator {
 
     private double[] source;
     private int sourceLength;
@@ -57,16 +57,16 @@ public class LinkRatioScaleMinMaxEstimate implements LinkRatioScaleEstimator {
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof LinkRatioScaleMinMaxEstimate);
+        return (o instanceof LinkRatioScaleMinMaxEstimator);
     }
     
     @Override
     public int hashCode() {
-        return LinkRatioScaleMinMaxEstimate.class.hashCode();
+        return LinkRatioScaleMinMaxEstimator.class.hashCode();
     }
     
     @Override
     public String toString() {
-        return "LinkRatioScaleMinMaxEstimate";
+        return "LinkRatioScaleMinMaxEstimator";
     }
 }

@@ -14,6 +14,8 @@ import org.junit.runners.Suite;
     AverageLRMethodTest.class,
     WeightedAverageLRMethodTest.class,
     MackRegressionLRMethodTest.class,
+    AbstractVectorUserInputTest.class,
+    UserInputLRMethodTest.class,
     DefaultLinkRatioSelectionTest.class,
     SimpleLinkRatioTest.class
 })

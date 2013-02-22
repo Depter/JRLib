@@ -13,9 +13,6 @@ import org.jreserve.factor.linkratio.LinkRatio;
  */
 public class PowerLRFunction implements LinkRatioFunction {
     
-    private final static int INDEX_A = 0;
-    private final static int INDEX_B = 1;
-    
     private double pa = 1d;
     private double pb = 1d;
     
@@ -54,6 +51,7 @@ public class PowerLRFunction implements LinkRatioFunction {
 
     @Override
     public double getValue(int development) {
+        development++;
         return pow(pa, pow(pb, (double) development));
     }
     

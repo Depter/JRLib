@@ -87,7 +87,7 @@ public class SimpleLinkRatioSmoothing extends AbstractCalculationData<LinkRatio>
         function.fit(source);
         for(int d=0; d<developments; d++) {
             double s = source.getValue(d);
-            values[d] = Double.isNaN(s)? function.getValue(d+1) : s;
+            values[d] = Double.isNaN(s)? function.getValue(d) : s;
         }
     }
     

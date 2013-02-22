@@ -1,5 +1,12 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
+import org.jreserve.factor.standarderror.LinkRatioScale;
+import org.jreserve.factor.standarderror.LinkRatioScaleExtrapolation;
+import org.jreserve.factor.standarderror.LinkRatioScaleEstimator;
+import org.jreserve.factor.standarderror.DefaultLinkRatioScaleSelection;
+import org.jreserve.factor.standarderror.EmptyLinkRatioScaleEstimator;
+import org.jreserve.factor.standarderror.LinkRatioScaleCaclulator;
+import org.jreserve.factor.standarderror.LinkRatioScaleMinMaxEstimator;
 import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.ChangeCounter;
@@ -74,7 +81,7 @@ public class DefaultLinkRatioScaleSelectionTest {
     public void testGetValue() {
         Map<Integer, LinkRatioScaleEstimator> estimators = new HashMap<Integer, LinkRatioScaleEstimator>(2);
         estimators.put(6, new LinkRatioScaleExtrapolation());
-        estimators.put(7, new LinkRatioScaleMinMaxEstimate());
+        estimators.put(7, new LinkRatioScaleMinMaxEstimator());
         selection.setMethods(estimators);
         selection.setDevelopmentCount(EXPECTED.length);
         
@@ -87,7 +94,7 @@ public class DefaultLinkRatioScaleSelectionTest {
     public void testToArray() {
         Map<Integer, LinkRatioScaleEstimator> estimators = new HashMap<Integer, LinkRatioScaleEstimator>(2);
         estimators.put(6, new LinkRatioScaleExtrapolation());
-        estimators.put(7, new LinkRatioScaleMinMaxEstimate());
+        estimators.put(7, new LinkRatioScaleMinMaxEstimator());
         selection.setMethods(estimators);
         selection.setDevelopmentCount(EXPECTED.length);
         

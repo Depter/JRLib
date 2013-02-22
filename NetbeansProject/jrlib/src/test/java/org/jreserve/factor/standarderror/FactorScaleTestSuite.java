@@ -1,4 +1,4 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -12,7 +12,8 @@ import org.junit.runners.Suite;
     LinkRatioScaleCalculatorTest.class,
     LinkRatioScaleExtrapolationTest.class,
     LinkRatioScaleMinMaxEstimateTest.class,
-    DefaultLinkRatioScaleSelectionTest.class
+    DefaultLinkRatioScaleSelectionTest.class,
+    DefaultLinkRatioSEFunctionTest.class
 })
 public class FactorScaleTestSuite {
 }

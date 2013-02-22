@@ -1,5 +1,6 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.factor.linkratio.FixedLinkRatio;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.factor.linkratio.LinkRatio;
 import static org.junit.Assert.*;

@@ -58,7 +58,7 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
         values = new double[developments];
         recalculateLinkRatios();
         for(int d=0; d<developments; d++)
-            values[d] = getMethod(d).getValue(d+1);
+            values[d] = getMethod(d).getValue(d);
     }
     
     private void recalculateLinkRatios() {

@@ -1,5 +1,6 @@
 package org.jreserve.factor.curve;
 
+import org.jreserve.factor.linkratio.FixedLinkRatio;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.ChangeEvent;

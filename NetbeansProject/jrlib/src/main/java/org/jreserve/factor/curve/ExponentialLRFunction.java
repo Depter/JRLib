@@ -50,6 +50,7 @@ public class ExponentialLRFunction implements LinkRatioFunction {
 
     @Override
     public double getValue(int development) {
+        development++;
         return 1d + pa * Math.exp(-pb * (double) development);
     }
     

@@ -1,5 +1,6 @@
-package org.jreserve.factor.scale;
+package org.jreserve.factor.standarderror;
 
+import org.jreserve.factor.standarderror.LinkRatioScaleCaclulator;
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;

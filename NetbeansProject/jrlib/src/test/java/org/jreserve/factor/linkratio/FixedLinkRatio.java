@@ -1,11 +1,10 @@
-package org.jreserve.factor.curve;
+package org.jreserve.factor.linkratio;
 
 import javax.swing.event.ChangeListener;
 import org.jreserve.CalculationData;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
-import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.TriangleCummulation;
 
@@ -14,7 +13,7 @@ import org.jreserve.triangle.TriangleCummulation;
  * @author Peter Decsi
  * @version 1.0
  */
-class FixedLinkRatio implements LinkRatio {
+public class FixedLinkRatio implements LinkRatio {
 
     private static FactorTriangle createDevelopmentFactors(double[][] input) {
         return new DevelopmentFactors(new TriangleCummulation(new InputTriangle(input)));
@@ -36,11 +35,11 @@ class FixedLinkRatio implements LinkRatio {
     };
     private final static FactorTriangle INCURRED_SOURCE = createDevelopmentFactors(TestData.INCURRED);
     
-    static LinkRatio getPaid() {
+    public static LinkRatio getPaid() {
         return new FixedLinkRatio(PAID_LR, PAID_SOURCE);
     }
     
-    static LinkRatio getIncurred() {
+    public static LinkRatio getIncurred() {
         return new FixedLinkRatio(INCURRED_LR, INCURRED_SOURCE);
     }
 
@@ -48,7 +47,7 @@ class FixedLinkRatio implements LinkRatio {
     private FactorTriangle source;
     private int size;
     
-    FixedLinkRatio(double[] factors, FactorTriangle source) {
+    public FixedLinkRatio(double[] factors, FactorTriangle source) {
         this.factors = factors;
         this.size = factors.length;
         this.source = source;

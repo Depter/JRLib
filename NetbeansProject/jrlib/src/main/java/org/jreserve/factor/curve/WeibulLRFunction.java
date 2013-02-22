@@ -1,8 +1,8 @@
 package org.jreserve.factor.curve;
 
-import org.jreserve.util.RegressionUtil;
 import static java.lang.Math.*;
 import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.util.RegressionUtil;
 
 /**
  * Link ratio smoothing, based on the Weibul curve:
@@ -51,6 +51,7 @@ public class WeibulLRFunction implements LinkRatioFunction {
 
     @Override
     public double getValue(int development) {
+        development++;
         return 1d / (1d - exp(-pa * pow(pb, (double)development)));
     }
     

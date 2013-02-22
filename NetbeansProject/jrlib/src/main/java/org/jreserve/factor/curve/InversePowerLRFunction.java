@@ -50,6 +50,7 @@ public class InversePowerLRFunction implements LinkRatioFunction {
 
     @Override
     public double getValue(int development) {
+        development++;
         return 1d + pa * Math.pow(development, pb);
     }
     

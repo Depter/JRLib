@@ -7,13 +7,10 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleFactory;
-import org.junit.AfterClass;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
 
 /**
  *
