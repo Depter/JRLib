@@ -1,13 +1,11 @@
 package org.jreserve.factor.linkratio;
 
-import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleCummulation;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,8 +49,13 @@ public class WeightedAverageLRMethodTest {
     public void testGetLinkRatios_Paid() {
         initFactors(TestData.PAID);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
-        assertArrayEquals(EXPECTED_PAID, found, JRLibTestSuite.EPSILON);
+        lrs.fit(factors);
+        
+        int length = EXPECTED_PAID.length;
+        assertEquals(Double.NaN, lrs.getValue(-1), JRLibTestSuite.EPSILON);
+        for(int d=0; d<length; d++)
+            assertEquals(EXPECTED_PAID[d], lrs.getValue(d), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, lrs.getValue(length), JRLibTestSuite.EPSILON);
     }
     
     private void initFactors(double[][] data) {
@@ -65,8 +68,13 @@ public class WeightedAverageLRMethodTest {
     public void testGetLinkRatios_Incurred() {
         initFactors(TestData.INCURRED);
         WeightedAverageLRMethod lrs = new WeightedAverageLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
-        assertArrayEquals(EXPECTED_INCURRED, found, JRLibTestSuite.EPSILON);
+        lrs.fit(factors);
+        
+        int length = EXPECTED_INCURRED.length;
+        assertEquals(Double.NaN, lrs.getValue(-1), JRLibTestSuite.EPSILON);
+        for(int d=0; d<length; d++)
+            assertEquals(EXPECTED_INCURRED[d], lrs.getValue(d), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, lrs.getValue(length), JRLibTestSuite.EPSILON);
     }
     
     @Test

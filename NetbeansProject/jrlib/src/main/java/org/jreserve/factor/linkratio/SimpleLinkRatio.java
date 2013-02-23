@@ -13,7 +13,6 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     private LinkRatioMethod method;
     
     private int developmentCount;
-    private double[] values = new double[0];
 
     public SimpleLinkRatio(FactorTriangle source) {
         this(source, null);
@@ -38,14 +37,15 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     @Override
     public double getValue(int development) {
         if(development>=0 && development < developmentCount)
-            return values[development];
+            return method.getValue(development);
         return Double.NaN;
     }
 
     @Override
     public double[] toArray() {
         double[] result = new double[developmentCount];
-        System.arraycopy(values, 0, result, 0, developmentCount);
+        for(int d=0; d<developmentCount; d++)
+            result[d] = method.getValue(d);
         return result;
     }
 
@@ -62,10 +62,9 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     private void doRecalculate() {
         if(source == null) {
             developmentCount = 0;
-            values = new double[0];
         } else {
             developmentCount = source.getDevelopmentCount();
-            values = method.getLinkRatios(source);
+            method.fit(source);
         }
     }
 }

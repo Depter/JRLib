@@ -91,4 +91,11 @@ public abstract class AbstractMethodSelection<C extends CalculationData, M> exte
             result.add(defaultMethod);
         return result;
     }
+    
+    protected int getSize() {
+        int index = methods.length - 1;
+        while(index >= 0 && methods[index] == null)
+            index--;
+        return index+1;
+    }
 }

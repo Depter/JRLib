@@ -43,8 +43,13 @@ public class MaxLRMethodTest {
     @Test
     public void testGetLinkRatios() {
         MaxLRMethod lrs = new MaxLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
-        assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
+        lrs.fit(factors);
+        
+        int length = EXPECTED.length;
+        assertEquals(Double.NaN, lrs.getValue(-1), JRLibTestSuite.EPSILON);
+        for(int d=0; d<length; d++)
+            assertEquals(EXPECTED[d], lrs.getValue(d), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, lrs.getValue(length), JRLibTestSuite.EPSILON);
     }
     
     @Test

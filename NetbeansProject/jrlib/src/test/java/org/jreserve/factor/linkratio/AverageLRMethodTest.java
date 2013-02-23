@@ -1,6 +1,5 @@
 package org.jreserve.factor.linkratio;
 
-import org.jreserve.factor.linkratio.AverageLRMethod;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
@@ -43,8 +42,13 @@ public class AverageLRMethodTest {
     @Test
     public void testGetLinkRatios() {
         AverageLRMethod lrs = new AverageLRMethod();
-        double[] found = lrs.getLinkRatios(factors);
-        assertArrayEquals(EXPECTED, found, JRLibTestSuite.EPSILON);
+        lrs.fit(factors);
+        
+        int length = EXPECTED.length;
+        assertEquals(Double.NaN, lrs.getValue(-1), JRLibTestSuite.EPSILON);
+        for(int d=0; d<length; d++)
+            assertEquals(EXPECTED[d], lrs.getValue(d), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, lrs.getValue(length), JRLibTestSuite.EPSILON);
     }
     
     @Test

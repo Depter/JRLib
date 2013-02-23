@@ -1,7 +1,6 @@
 package org.jreserve.factor.linkratio;
 
 import org.jreserve.factor.FactorTriangle;
-import org.jreserve.triangle.Triangle;
 
 /**
  * This interface represents methods, that can calculate the 
@@ -18,13 +17,16 @@ public interface LinkRatioMethod {
     
     /**
      * Calculates the link ratios from the given development factors.
-     * The returned array should be the same lengths as
-     * the {@link Triangle#getDevelopmentCount() developmentCount}
-     * of the input factors.
      * 
      * @throws NullPointerException when <i>factors</i> is null.
      */
-    public double[] getLinkRatios(FactorTriangle factors);
+    public void fit(FactorTriangle factors);
+    
+    /**
+     * Returns the link ratio for the given development period, or Double.NaN
+     * if it can not be calculated.
+     */
+    public double getValue(int development);
     
     /**
      * Mack's alpha parameter is used to calculate the scale parameter (sigma)

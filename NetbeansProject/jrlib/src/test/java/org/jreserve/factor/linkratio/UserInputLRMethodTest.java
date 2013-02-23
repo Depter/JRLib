@@ -3,14 +3,13 @@ package org.jreserve.factor.linkratio;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.FactorTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleFactory;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -42,12 +41,11 @@ public class UserInputLRMethodTest {
         
         Triangle cik = TriangleFactory.create(TestData.PAID).cummulate().build();
         DevelopmentFactors factors = new DevelopmentFactors(cik);
-        double[] found = ui.getLinkRatios(factors);
-        assertEquals(found.length, factors.getDevelopmentCount());
+        ui.fit(factors);
         
-        for(int d=0; d<found.length; d++) {
+        for(int d=0; d<(userValueIndex+2); d++) {
             double expected = (d==userValueIndex)? userValue : Double.NaN;
-            assertEquals(expected, found[d], JRLibTestSuite.EPSILON);
+            assertEquals(expected, ui.getValue(d), JRLibTestSuite.EPSILON);
         }
     }
 

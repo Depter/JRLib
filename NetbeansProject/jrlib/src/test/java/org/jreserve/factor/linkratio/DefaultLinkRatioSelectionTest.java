@@ -1,11 +1,5 @@
 package org.jreserve.factor.linkratio;
 
-import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
-import org.jreserve.factor.linkratio.LinkRatioMethod;
-import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.factor.linkratio.MinLRMethod;
-import org.jreserve.factor.linkratio.AverageLRMethod;
-import org.jreserve.factor.linkratio.MaxLRMethod;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.event.ChangeEvent;
@@ -106,6 +100,15 @@ public class DefaultLinkRatioSelectionTest {
         int expected = factors.getDevelopmentCount();
         int found = lr.getDevelopmentCount();
         assertEquals(expected, found);
+    }
+    
+    @Test
+    public void testGetDevelopmentCount_Tail() {
+        int tailDev = factors.getDevelopmentCount();
+        UserInputLRMethod uiLR = new UserInputLRMethod();
+        uiLR.setValue(tailDev, 1.05);
+        lr.setMethod(uiLR, tailDev);
+        assertEquals(tailDev+1, lr.getDevelopmentCount());
     }
 
     @Test

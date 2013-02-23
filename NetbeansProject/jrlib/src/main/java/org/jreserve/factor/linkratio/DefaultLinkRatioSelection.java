@@ -1,7 +1,5 @@
 package org.jreserve.factor.linkratio;
 
-import java.util.HashMap;
-import java.util.Map;
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.util.AbstractMethodSelection;
@@ -39,7 +37,7 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     
     @Override
     public int getDevelopmentCount() {
-        return source==null? 0 : source.getDevelopmentCount();
+        return source==null? 0 : developments;
     }
     
     @Override
@@ -55,25 +53,21 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     
     private void initState() {
         developments = (source==null)? 0 : source.getDevelopmentCount();
+        int methodSize = super.getSize();
+        if(methodSize > developments)
+            developments = methodSize;
         values = new double[developments];
     }
     
     private void recalculateLinkRatios() {
-        Map<LinkRatioMethod, double[]> cahce = cahceLRs();
-        for(int d=0; d<developments; d++) {
-            LinkRatioMethod method = getMethod(d);
-            values[d] = cahce.get(method)[d];
-        }
+        cahceLRs();
+        for(int d=0; d<developments; d++)
+            values[d] = getMethod(d).getValue(d);
     }
     
-    private Map<LinkRatioMethod, double[]> cahceLRs() {
-        Map<LinkRatioMethod, double[]> cache = new HashMap<LinkRatioMethod, double[]>();
-        for(int d=0; d<developments; d++) {
-            LinkRatioMethod method = getMethod(d);
-            if(!cache.containsKey(method))
-                cache.put(method, method.getLinkRatios(source));
-        }
-        return cache;
+    private void cahceLRs() {
+        for(LinkRatioMethod method : getMethods())
+            method.fit(source);
     }
     
     @Override

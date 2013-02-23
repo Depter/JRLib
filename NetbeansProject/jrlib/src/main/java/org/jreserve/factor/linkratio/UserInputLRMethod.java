@@ -1,6 +1,5 @@
 package org.jreserve.factor.linkratio;
 
-import java.util.Arrays;
 import org.jreserve.factor.FactorTriangle;
 
 /**
@@ -20,22 +19,14 @@ public class UserInputLRMethod extends AbstractVectorUserInput implements LinkRa
     }
     
     @Override
-    public double[] getLinkRatios(FactorTriangle factors) {
-        int developments = factors.getDevelopmentCount();
-        double[] result = createValues(developments);
-        fillValues(result);
-        return result;
+    public void fit(FactorTriangle factors) {
     }
     
-    private double[] createValues(int developments) {
-        double[] result = new double[developments];
-        Arrays.fill(result, Double.NaN);
-        return result;
-    }
-
-    private void fillValues(double[] result) {
-        int maxDev = Math.min(values.length, result.length);
-        System.arraycopy(values, 0, result, 0, maxDev);
+    @Override
+    public double getValue(int development) {
+        if(development < 0 || development >= values.length)
+            return Double.NaN;
+        return values[development];
     }
     
     @Override

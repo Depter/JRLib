@@ -19,4 +19,10 @@ public interface Estimate extends CalculationData{
     public double getValue(int accident, int development);
     
     public double[][] toArray();
+    
+    public double getReserve(int accident);
+    
+    public double getReserve();
+    
+    public double[] toArrayReserve();
 }
