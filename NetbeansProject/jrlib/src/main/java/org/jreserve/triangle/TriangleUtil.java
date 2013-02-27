@@ -7,6 +7,17 @@ package org.jreserve.triangle;
  */
 public class TriangleUtil {
 
+    public static boolean isSameGeometry(Triangle t1, Triangle t2) {
+        int accidents = t1.getAccidentCount();
+        if(accidents != t2.getAccidentCount())
+            return false;
+        
+        for(int a=0; a<accidents; a++)
+            if(t1.getDevelopmentCount(a) != t2.getDevelopmentCount(a))
+                return false;
+        return true;
+    }
+    
     public static double[][] copy(double[][] values) {
         if(values == null)
             return null;

@@ -1,12 +1,9 @@
 package org.jreserve.triangle;
 
+import static org.jreserve.JRLibTestSuite.EPSILON;
 import org.jreserve.smoothing.ExponentialSmoothing;
 import org.jreserve.smoothing.SmoothingCell;
 import org.jreserve.smoothing.TriangleSmoothing;
-import org.jreserve.triangle.SmoothedTriangle;
-import static org.jreserve.JRLibTestSuite.EPSILON;
-import org.jreserve.triangle.InputTriangleTest;
-import org.jreserve.triangle.Triangle;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;

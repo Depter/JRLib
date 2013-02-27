@@ -17,7 +17,8 @@ import org.junit.runners.Suite;
     TriangleCorrectionTest.class,
     SmoothedTriangleTest.class,
     TriangleCummulationTest.class,
-    TriangleOutlierFilterTest.class
+    TriangleOutlierFilterTest.class,
+    CompositeTriangleTest.class
 })
 public class TriangleTestSuite {
 }

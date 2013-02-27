@@ -11,6 +11,7 @@ import org.junit.runners.Suite;
 @Suite.SuiteClasses({
     AbstractChangeableTest.class,
     AbstractCalculationDataTest.class,
+    AbstractDoubleInputCalculationDataTest.class,
     org.jreserve.util.UtilTestSuite.class,
     org.jreserve.vector.VectorTestSuite.class,
     org.jreserve.triangle.TriangleTestSuite.class,

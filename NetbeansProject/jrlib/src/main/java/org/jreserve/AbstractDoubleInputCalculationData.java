@@ -8,33 +8,38 @@ import javax.swing.event.ChangeListener;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractCalculationData<V extends CalculationData> extends AbstractChangeable implements CalculationData {
-    
+public abstract class AbstractDoubleInputCalculationData<P extends CalculationData, S extends CalculationData> extends AbstractChangeable implements CalculationData {
+
     private SourceListener sourceListener = new SourceListener();
-    protected V source;
+    protected P primary;
+    protected S secondary;
     private boolean myChange = false;
     
-    protected AbstractCalculationData() {
-    }
-    
-    protected AbstractCalculationData(V source) {
-        this.source = source;
-        this.source.addChangeListener(sourceListener);
+    protected AbstractDoubleInputCalculationData(P primary, S secondary) {
+        this.primary = primary;
+        this.primary.addChangeListener(sourceListener);
+        this.secondary = secondary;
+        this.secondary.addChangeListener(sourceListener);
     }
     
     @Override
-    public V getSource() {
-        return source;
+    public P getSource() {
+        return primary;
+    }
+    
+    public S getSecondarySource() {
+        return secondary;
     }
 
     @Override
     public void recalculate() {
-        recalculateSource();
+        recalculateSource(primary);
+        recalculateSource(secondary);
         recalculateLayer();
         fireChange();
     }
     
-    private void recalculateSource() {
+    private void recalculateSource(CalculationData source) {
         if(source != null) {
             myChange = true;
             source.recalculate();
@@ -43,13 +48,18 @@ public abstract class AbstractCalculationData<V extends CalculationData> extends
     }
 
     protected abstract void recalculateLayer();
-    
-    @Override
+
     public void detach() {
-        if(source != null)
-            source.detach();
+        detachSources();
         listeners = null;
         sourceListener = null;
+    }
+    
+    private void detachSources() {
+        if(primary != null)
+            primary.detach();
+        if(secondary != null)
+            secondary.detach();
     }
     
     private class SourceListener implements ChangeListener {
