@@ -17,7 +17,8 @@ import org.junit.runners.Suite;
     org.jreserve.triangle.TriangleTestSuite.class,
     org.jreserve.smoothing.SmoothingTestSuite.class,
     org.jreserve.factor.FactorTestSuite.class,
-    org.jreserve.test.TestTestSuite.class
+    org.jreserve.test.TestTestSuite.class,
+    org.jreserve.estimate.EstimateTestSuite.class
 })
 public class JRLibTestSuite {
     
