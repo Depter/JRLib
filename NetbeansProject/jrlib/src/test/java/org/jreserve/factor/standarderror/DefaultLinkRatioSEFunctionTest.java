@@ -6,7 +6,6 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.SimpleLinkRatio;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -26,7 +25,7 @@ public class DefaultLinkRatioSEFunctionTest {
 
     @Test
     public void testFit() {
-        LinkRatioScale scales = createScales(TestData.MACK_DATA);
+        LinkRatioScale scales = createScales();
         DefaultLinkRatioSEFunction se = new DefaultLinkRatioSEFunction();
         se.fit(scales);
         
@@ -37,8 +36,8 @@ public class DefaultLinkRatioSEFunctionTest {
         assertEquals(Double.NaN, se.getValue(length), JRLibTestSuite.EPSILON);
     }
     
-    private LinkRatioScale createScales(double[][] data) {
-        Triangle cik = TriangleFactory.create(TestData.MACK_DATA).cummulate().build();
+    private LinkRatioScale createScales() {
+        Triangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(cik));
         LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(new LinkRatioScaleCaclulator(lr));
         int developments = lr.getDevelopmentCount();

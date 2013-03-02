@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.CalculationData;
 import org.jreserve.ChangeCounter;
-import org.jreserve.TestData;
+import static org.jreserve.TestData.EXPOSURE;
+import static org.jreserve.TestData.getCachedVector;
 import org.jreserve.triangle.Cell;
 import org.jreserve.vector.InputVector;
 import static org.junit.Assert.*;
@@ -26,7 +27,7 @@ public class AbstractMethodSelectionTest {
 
     @Before
     public void setUp() {
-        InputVector source = new InputVector(TestData.EXPOSURE);
+        InputVector source = new InputVector(getCachedVector(EXPOSURE));
         selection = new AbstractOutputSelectionImpl(source, DEFAULT);
         counter = new ChangeCounter();
         selection.addChangeListener(counter);
@@ -34,7 +35,7 @@ public class AbstractMethodSelectionTest {
     
     @Test(expected=NullPointerException.class)
     public void testConstructor_NullMethod() {
-        InputVector source = new InputVector(TestData.EXPOSURE);
+        InputVector source = new InputVector(getCachedVector(EXPOSURE));
         selection = new AbstractOutputSelectionImpl(source, null);
     }
     

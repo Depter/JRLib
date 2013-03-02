@@ -7,7 +7,6 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +35,7 @@ public class SimpleLinkRatioSmoothingTest {
 
     @Before
     public void setUp() {
-        factors = new DevelopmentFactors(TriangleFactory.create(TestData.PAID).cummulate().build());
+        factors = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.PAID));
         source = new SimpleLinkRatio(factors);
         smoothing = new SimpleLinkRatioSmoothing(source, DEVELOPMENTS, new InversePowerLRFunction());
         counter = new ChangeCounter();

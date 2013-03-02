@@ -5,7 +5,6 @@ import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +27,7 @@ public class FactorTriangleCorrectionTest {
 
     @Before
     public void setUp() {
-        Triangle cik = TriangleFactory.create(TestData.PAID).cummulate().build();
+        Triangle cik = TestData.getCummulatedTriangle(TestData.PAID);
         source = new DevelopmentFactors(cik);
         correction = new FactorTriangleCorrection(source, CELL, CORRECTION);
         changeCounter = new ChangeCounter();

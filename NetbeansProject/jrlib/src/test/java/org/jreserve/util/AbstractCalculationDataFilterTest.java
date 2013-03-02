@@ -3,7 +3,8 @@ package org.jreserve.util;
 import org.jreserve.CalculationData;
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
-import org.jreserve.TestData;
+import static org.jreserve.TestData.EXPOSURE;
+import static org.jreserve.TestData.getCachedVector;
 import org.jreserve.vector.InputVector;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -24,7 +25,7 @@ public class AbstractCalculationDataFilterTest {
 
     @Before
     public void setUp() {
-        source = new InputVector(TestData.EXPOSURE);
+        source = new InputVector(getCachedVector(EXPOSURE));
         filter = new AbstractCalculationDataFilterImpl(source);
         counter = new ChangeCounter();
         filter.addChangeListener(counter);
@@ -32,7 +33,7 @@ public class AbstractCalculationDataFilterTest {
 
     @Test(expected=NullPointerException.class)
     public void testContructor_NullFilter() {
-        new AbstractCalculationDataFilterImpl(source, null);
+        filter = new AbstractCalculationDataFilterImpl(source, null);
     }
 
     @Test

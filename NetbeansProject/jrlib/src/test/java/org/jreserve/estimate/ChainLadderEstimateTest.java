@@ -3,14 +3,9 @@ package org.jreserve.estimate;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.LinkRatioSelection;
-import org.jreserve.factor.linkratio.UserInputLRMethod;
-import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
+import org.jreserve.factor.linkratio.*;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,7 +44,7 @@ public class ChainLadderEstimateTest {
 
     @Before
     public void setUp() {
-        cik = TriangleFactory.create(TestData.INCURRED).cummulate().build();
+        cik = TestData.getCummulatedTriangle(TestData.INCURRED);
         this.lrs = createLinkRatios();
         cl = new ChainLadderEstimate(lrs);
     }

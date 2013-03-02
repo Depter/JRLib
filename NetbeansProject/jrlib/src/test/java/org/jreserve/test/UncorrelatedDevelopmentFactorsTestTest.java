@@ -7,7 +7,6 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.test.UncorrelatedDevelopmentFactorsTest.RankHelper;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,7 +60,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
 
     @Test
     public void testTest_Quarterly() {
-        Triangle triangle = new DevelopmentFactors(new TriangleCummulation(new InputTriangle(TestData.Q_PAID)));
+        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
         test = new UncorrelatedDevelopmentFactorsTest(triangle);
         test.addChangeListener(counter);
         assertEquals( 0.50000000, test.getAlpha(), JRLibTestSuite.EPSILON);
@@ -123,7 +122,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
             true, true, true, true, true, true, true, true, true, false, 
             false, false, false, false
         };
-        Triangle triangle = new DevelopmentFactors(new TriangleCummulation(new InputTriangle(TestData.Q_PAID)));
+        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
         for(int d=0; d<expectedN.length; d++) {
             RankHelper helper = new RankHelper(d, triangle);
             assertEquals(expectedUsed[d], helper.shouldUse());

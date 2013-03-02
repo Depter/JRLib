@@ -3,10 +3,6 @@ package org.jreserve.factor.linkratio;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -54,10 +50,8 @@ public class MackRegressionLRMethodTest {
         assertEquals(Double.NaN, lrs.getValue(length), JRLibTestSuite.EPSILON);
     }
     
-    private void initFactors(double[][] data) {
-        Triangle source = new InputTriangle(data);
-        source = new TriangleCummulation(source);
-        factors = new DevelopmentFactors(source);
+    private void initFactors(String path) {
+        factors = new DevelopmentFactors(TestData.getCummulatedTriangle(path));
     }
 
     @Test

@@ -2,7 +2,6 @@ package org.jreserve.factor;
 
 import org.jreserve.TestData;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,7 @@ public class AbstractFactorTriangleModificationTest {
 
     @Before
     public void setUp() {
-        cik = TriangleFactory.create(TestData.INCURRED).cummulate().build();
+        cik = TestData.getCummulatedTriangle(TestData.INCURRED);
         FactorTriangle source =  new DevelopmentFactors(cik);
         factors = new AbstractFactorTriangleModificationImpl(source);
     }

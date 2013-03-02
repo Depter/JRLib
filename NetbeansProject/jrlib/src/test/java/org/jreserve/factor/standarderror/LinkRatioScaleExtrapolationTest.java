@@ -1,15 +1,11 @@
 package org.jreserve.factor.standarderror;
 
-import org.jreserve.factor.standarderror.LinkRatioScale;
-import org.jreserve.factor.standarderror.LinkRatioScaleExtrapolation;
-import org.jreserve.factor.standarderror.LinkRatioScaleCaclulator;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.SimpleLinkRatio;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +34,7 @@ public class LinkRatioScaleExtrapolationTest {
     }
     
     private void createSource() {
-        Triangle triangle = TriangleFactory.create(TestData.INCURRED).cummulate().build();
+        Triangle triangle = TestData.getCummulatedTriangle(TestData.INCURRED);
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(triangle));
         source = new LinkRatioScaleCaclulator(lr);
     }

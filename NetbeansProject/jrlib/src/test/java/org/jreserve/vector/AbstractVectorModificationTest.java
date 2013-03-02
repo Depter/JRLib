@@ -1,7 +1,8 @@
 package org.jreserve.vector;
 
 import org.jreserve.JRLibTestSuite;
-import org.jreserve.TestData;
+import static org.jreserve.TestData.EXPOSURE;
+import static org.jreserve.TestData.getCachedVector;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class AbstractVectorModificationTest {
 
     @Before
     public void setUp() {
-        source = new InputVector(TestData.EXPOSURE);
+        source = new InputVector(getCachedVector(EXPOSURE));
         vector = new AbstractVectorModificationImpl(source);
     }
 

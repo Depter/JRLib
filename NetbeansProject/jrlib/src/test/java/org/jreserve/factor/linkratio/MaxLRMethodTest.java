@@ -1,13 +1,8 @@
 package org.jreserve.factor.linkratio;
 
-import org.jreserve.factor.linkratio.MaxLRMethod;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,9 +30,7 @@ public class MaxLRMethodTest {
 
     @Before
     public void setUp() {
-        Triangle source = new InputTriangle(TestData.PAID);
-        source = new TriangleCummulation(source);
-        factors = new DevelopmentFactors(source);
+        factors = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.PAID));
     }
 
     @Test

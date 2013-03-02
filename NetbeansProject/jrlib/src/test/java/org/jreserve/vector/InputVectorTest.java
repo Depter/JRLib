@@ -2,7 +2,8 @@ package org.jreserve.vector;
 
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
-import org.jreserve.TestData;
+import static org.jreserve.TestData.EXPOSURE;
+import static org.jreserve.TestData.getCachedVector;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,12 +17,14 @@ public class InputVectorTest {
     private InputVector vector;
     private ChangeCounter changeCounter;
     
+    private final static double[] INPUT = getCachedVector(EXPOSURE);
+    
     public InputVectorTest() {
     }
 
     @Before
     public void setUp() {
-        vector = new InputVector(TestData.EXPOSURE);
+        vector = new InputVector(INPUT);
         changeCounter = new ChangeCounter();
         vector.addChangeListener(changeCounter);
     }
@@ -52,15 +55,14 @@ public class InputVectorTest {
 
     @Test
     public void testGetLength() {
-        assertEquals(TestData.EXPOSURE.length, vector.getLength());
+        assertEquals(INPUT.length, vector.getLength());
     }
 
     @Test
     public void testGetValue() {
         assertEquals(Double.NaN, vector.getValue(-1), JRLibTestSuite.EPSILON);
-        for(int i=0; i<TestData.EXPOSURE.length; i++)
-            assertEquals(TestData.EXPOSURE[i], vector.getValue(i), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, vector.getValue(TestData.EXPOSURE.length), JRLibTestSuite.EPSILON);
+        for(int i=0; i<INPUT.length; i++)
+            assertEquals(INPUT[i], vector.getValue(i), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, vector.getValue(INPUT.length), JRLibTestSuite.EPSILON);
     }
-
 }

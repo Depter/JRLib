@@ -6,9 +6,7 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.linkratio.FixedLinkRatio;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -39,7 +37,7 @@ public class EstimateUtilTest {
 
     @Test
     public void testCompleteTriangle() {
-        Triangle cik = TriangleFactory.create(TestData.MACK_DATA).cummulate().build();
+        Triangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lrs = new FixedLinkRatio(LRS, new DevelopmentFactors(cik));
         
         assertEquals(cik.getDevelopmentCount(), lrs.getDevelopmentCount());

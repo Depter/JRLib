@@ -53,8 +53,7 @@ public class TriangleOutlierFilterTest {
     }
     
     private void createSource() {
-        source = new InputTriangle(TestData.INCURRED);
-        source = new TriangleCummulation(source);
+        source = TestData.getCummulatedTriangle(TestData.INCURRED);
         source = new DevelopmentFactors(source);
     }
 

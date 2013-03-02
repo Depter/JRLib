@@ -46,7 +46,7 @@ public class SigmaFilterTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_NaN() {
-        new SigmaFilter(Double.NaN);
+        filter = new SigmaFilter(Double.NaN);
     }
 
     @Test

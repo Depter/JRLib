@@ -9,7 +9,6 @@ import org.jreserve.factor.linkratio.UserInputLRMethod;
 import org.jreserve.factor.standarderror.*;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,7 +56,7 @@ public class MackEstimateTest {
 
     @Before
     public void setUp() {
-        cik = TriangleFactory.create(TestData.MACK_DATA).cummulate().build();
+        cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatioSelection lrs = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
         UserInputLRMethod uiLR = new UserInputLRMethod();
         uiLR.setValue(8, 1.05);

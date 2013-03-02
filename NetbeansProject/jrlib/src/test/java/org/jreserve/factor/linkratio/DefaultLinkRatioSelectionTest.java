@@ -7,9 +7,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,8 +27,7 @@ public class DefaultLinkRatioSelectionTest {
 
     @Before
     public void setUp() {
-        Triangle triangle = new InputTriangle(TestData.PAID);
-        triangle = new TriangleCummulation(triangle);
+        Triangle triangle = TestData.getCummulatedTriangle(TestData.PAID);
         factors = new DevelopmentFactors(triangle);
         lr = new DefaultLinkRatioSelection(factors);
         

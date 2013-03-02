@@ -31,7 +31,7 @@ public class TriangleCummulationTest {
 
     @Before
     public void setUp() {
-        triangle = new InputTriangle(TestData.INCURRED);
+        triangle = TestData.getTriangle(TestData.INCURRED);
         triangle = new TriangleCummulation(triangle);
     }
 

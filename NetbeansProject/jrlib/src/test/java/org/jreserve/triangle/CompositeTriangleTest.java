@@ -33,8 +33,8 @@ public class CompositeTriangleTest {
 
     @Before
     public void setUp() {
-        paid = TriangleFactory.create(TestData.PAID).cummulate().build();
-        count = TriangleFactory.create(TestData.NoC).cummulate().build();
+        paid = TestData.getCummulatedTriangle(TestData.PAID);
+        count = TestData.getCummulatedTriangle(TestData.NoC);
         triangle = new CompositeTriangle(paid, count, TriangleOperation.DIVIDE);
     }
 

@@ -4,7 +4,6 @@ import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class UserInputLRMethodTest {
         double userValue = 5d;
         ui.setValue(userValueIndex, userValue);
         
-        Triangle cik = TriangleFactory.create(TestData.PAID).cummulate().build();
+        Triangle cik = TestData.getCummulatedTriangle(TestData.PAID);
         DevelopmentFactors factors = new DevelopmentFactors(cik);
         ui.fit(factors);
         

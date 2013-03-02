@@ -4,7 +4,6 @@ import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,7 +33,7 @@ public class SimpleLinkRatioTest {
 
     @Before
     public void setUp() {
-        source = new DevelopmentFactors(TriangleFactory.create(TestData.INCURRED).cummulate().build());
+        source = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.INCURRED));
         lr = new SimpleLinkRatio(source);
     }
 

@@ -5,8 +5,6 @@ import org.jreserve.CalculationData;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
-import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.TriangleCummulation;
 
 /**
  *
@@ -15,8 +13,8 @@ import org.jreserve.triangle.TriangleCummulation;
  */
 public class FixedLinkRatio implements LinkRatio {
 
-    private static FactorTriangle createDevelopmentFactors(double[][] input) {
-        return new DevelopmentFactors(new TriangleCummulation(new InputTriangle(input)));
+    private static FactorTriangle createDevelopmentFactors(String path) {
+        return new DevelopmentFactors(TestData.getCummulatedTriangle(path));
     }
     
     //Link Ratios based on Paid triangle in JRLibTestSuit, 

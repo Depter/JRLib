@@ -1,15 +1,12 @@
 package org.jreserve.factor.standarderror;
 
-import org.jreserve.factor.standarderror.LinkRatioScaleCaclulator;
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
 import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +38,7 @@ public class LinkRatioScaleCalculatorTest {
 
     @Before
     public void setUp() {
-        cik = new TriangleCummulation(new InputTriangle(TestData.Q_PAID));
+        cik = TestData.getCummulatedTriangle(TestData.Q_PAID);
         source = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
         scale = new LinkRatioScaleCaclulator(source);
         changeCounter = new ChangeCounter();

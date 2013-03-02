@@ -1,12 +1,5 @@
 package org.jreserve.factor.standarderror;
 
-import org.jreserve.factor.standarderror.LinkRatioScale;
-import org.jreserve.factor.standarderror.LinkRatioScaleExtrapolation;
-import org.jreserve.factor.standarderror.LinkRatioScaleEstimator;
-import org.jreserve.factor.standarderror.DefaultLinkRatioScaleSelection;
-import org.jreserve.factor.standarderror.EmptyLinkRatioScaleEstimator;
-import org.jreserve.factor.standarderror.LinkRatioScaleCaclulator;
-import org.jreserve.factor.standarderror.LinkRatioScaleMinMaxEstimator;
 import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.ChangeCounter;
@@ -16,7 +9,6 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.SimpleLinkRatio;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleFactory;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +33,7 @@ public class DefaultLinkRatioScaleSelectionTest {
 
     @Before
     public void setUp() {
-        Triangle cik = TriangleFactory.create(TestData.INCURRED).cummulate().build();
+        Triangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA2);
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(cik));
         source = new LinkRatioScaleCaclulator(lr);
         selection = new DefaultLinkRatioScaleSelection(source);

@@ -25,7 +25,7 @@ public class VectorCorrectionTest {
 
     @Before
     public void setUp() {
-        source = new InputVector(TestData.EXPOSURE);
+        source = new InputVector(TestData.getCachedVector(TestData.EXPOSURE));
         corrigated = new VectorCorrection(source, INDEX, CORRECTION);
         outsider = new VectorCorrection(source, source.getLength(), CORRECTION);
     }

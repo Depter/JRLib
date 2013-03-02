@@ -7,7 +7,6 @@ import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.test.CalendarEffectTest.DiagonalHelper;
 import org.jreserve.triangle.InputTriangle;
 import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -45,7 +44,7 @@ public class CalendarEffectTestTest {
 
     @Test
     public void testTest_Quarterly() {
-        Triangle triangle = new DevelopmentFactors(new TriangleCummulation(new InputTriangle(TestData.Q_PAID)));
+        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
         CalendarEffectTest test = new CalendarEffectTest(triangle);
         ChangeCounter counter = new ChangeCounter();
         test.addChangeListener(counter);
@@ -139,7 +138,7 @@ public class CalendarEffectTestTest {
             true, true, true, true, true, true, true, true, true, 
             true, true, true, true, true, true, true, true, true
         };
-        Triangle triangle = new DevelopmentFactors(new TriangleCummulation(new InputTriangle(TestData.Q_PAID)));
+        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
         for(int d=0; d<expectedEZ.length; d++) {
             DiagonalHelper helper = new DiagonalHelper(sl, d, triangle);
             assertEquals(expectedUsed[d], helper.shouldUse());
