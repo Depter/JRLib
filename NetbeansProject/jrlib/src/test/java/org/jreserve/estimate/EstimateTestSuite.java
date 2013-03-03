@@ -10,8 +10,11 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+    AbstractEstimateTest.class,
     EstimateUtilTest.class,
     ChainLadderEstimateTest.class,
+    ExpectedLossRatioEstimateTest.class,
+    BornhuetterFergusonEstimateTest.class,
     MackEstimateTest.class
 })
 public class EstimateTestSuite {

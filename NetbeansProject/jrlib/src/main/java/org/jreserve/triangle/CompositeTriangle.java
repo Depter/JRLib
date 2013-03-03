@@ -1,6 +1,6 @@
 package org.jreserve.triangle;
 
-import org.jreserve.AbstractDoubleInputCalculationData;
+import org.jreserve.AbstractCalculationData;
 
 //TODO add javadoc
 /**
@@ -8,17 +8,24 @@ import org.jreserve.AbstractDoubleInputCalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CompositeTriangle extends AbstractDoubleInputCalculationData<Triangle, Triangle> implements Triangle {
+public class CompositeTriangle extends AbstractCalculationData<Triangle> implements Triangle {
 
+    private Triangle secondary;
     private TriangleOperation operation;
     private int accidents;
     private int developments;
     private double[][] values;
     
     public CompositeTriangle(Triangle primary, Triangle secondary, TriangleOperation operation) {
-        super(primary, secondary);
+        super(primary);
+        initSecondary(secondary);
         initOperation(operation);
         doRecalculate();
+    }
+    
+    private void initSecondary(Triangle secondary) {
+        attachSource(secondary);
+        this.secondary = secondary;
     }
     
     private void initOperation(TriangleOperation operation) {
@@ -80,6 +87,17 @@ public class CompositeTriangle extends AbstractDoubleInputCalculationData<Triang
         return result;
     }
 
+    @Override
+    protected void detachSource() {
+        detachSource(source);
+        detachSource(secondary);
+    }
+    
+    @Override
+    protected void recalculateSource() {
+        recalculateSource(source);
+        recalculateSource(secondary);
+    }
     
     @Override
     protected void recalculateLayer() {
@@ -93,13 +111,13 @@ public class CompositeTriangle extends AbstractDoubleInputCalculationData<Triang
     }
     
     private void initAccidents() {
-        int a1 = primary.getAccidentCount();
+        int a1 = source.getAccidentCount();
         int a2 = secondary.getAccidentCount();
         this.accidents = (a1<a2)? a1 : a2;
     }
     
     private void initDevelopments() {
-        int d1 = primary.getDevelopmentCount();
+        int d1 = source.getDevelopmentCount();
         int d2 = secondary.getDevelopmentCount();
         this.developments = (d1<d2)? d1 : d2;
     }
@@ -119,13 +137,13 @@ public class CompositeTriangle extends AbstractDoubleInputCalculationData<Triang
     }
     
     private int getDevelopments(int accident) {
-        int d1 = primary.getDevelopmentCount(accident);
+        int d1 = source.getDevelopmentCount(accident);
         int d2 = secondary.getDevelopmentCount(accident);
         return (d1<d2)? d1 : d2;
     }
     
     private double recalculateCell(int accident, int development) {
-        double v1 = primary.getValue(accident, development);
+        double v1 = source.getValue(accident, development);
         double v2 = secondary.getValue(accident, development);
         return operation.operate(v1, v2);
     }
