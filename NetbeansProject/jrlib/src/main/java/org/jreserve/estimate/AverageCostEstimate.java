@@ -1,6 +1,5 @@
 package org.jreserve.estimate;
 
-import org.jreserve.CalculationData;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.Triangle;
 
@@ -11,54 +10,86 @@ import org.jreserve.triangle.Triangle;
  */
 public class AverageCostEstimate extends AbstractEstimate {
     
-    private LinkRatio nLrs;
-    private Triangle nCik;
-    private LinkRatio cLrs;
-    private Triangle cCik;
+    private LinkRatio numberLrs;
+    private Triangle numberCik;
+    private LinkRatio costLrs;
+    private Triangle costCik;
     
-    public AverageCostEstimate(LinkRatio nLrs, LinkRatio cLrs) {
-        initSources(nLrs, cLrs);
+    public AverageCostEstimate(LinkRatio numberLrs, LinkRatio costLrs) {
+        initSources(numberLrs, costLrs);
         attachSources();
+        doRecalculate();
     }
     
     private void initSources(LinkRatio nLrs, LinkRatio cLrs) {
-        this.nLrs = nLrs;
-        this.nCik = nLrs.getInputFactors().getInputTriangle();
-        this.cLrs = cLrs;
-        this.cCik = cLrs.getInputFactors().getInputTriangle();
+        this.numberLrs = nLrs;
+        this.numberCik = nLrs.getInputFactors().getInputTriangle();
+        this.costLrs = cLrs;
+        this.costCik = cLrs.getInputFactors().getInputTriangle();
     }
     
     private void attachSources() {
-        attachSource(nLrs);
-        attachSource(cLrs);
-    }
-    
-    private void checkSources() {
-        //TODO check sources
+        attachSource(numberLrs);
+        attachSource(costLrs);
     }
     
     @Override
     protected int getObservedDevelopmentCount(int accident) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return numberCik.getDevelopmentCount(accident);
     }
 
     @Override
     protected void recalculateSource() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    protected void recalculateLayer() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        recalculateSource(numberLrs);
+        recalculateSource(costLrs);
     }
 
     @Override
     protected void detachSource() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        detachSource(numberLrs);
+        detachSource(costLrs);
     }
 
-    public CalculationData getSource() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Override
+    public LinkRatio getSource() {
+        return costLrs;
+    }
+    
+    public LinkRatio getNumberLinkRatios() {
+        return numberLrs;
     }
 
+    @Override
+    protected void recalculateLayer() {
+        doRecalculate();
+    }
+    
+    private void doRecalculate() {
+        initValues();
+        double[][] number = EstimateUtil.completeTriangle(numberCik, numberLrs);
+        double[][] cost = EstimateUtil.completeTriangle(costCik, costLrs);
+        
+        for(int a=0; a<accidents; a++)
+            for(int d=0; d<developments; d++)
+                values[a][d] = number[a][d] * cost[a][d];
+    }
+    
+    private void initValues() {
+        initAccidents();
+        initDevelopments();
+        values = new double[accidents][developments];
+    }
+    
+    private void initAccidents() {
+        int numberAccidents = numberCik.getAccidentCount();
+        int costAccidents = costCik.getAccidentCount();
+        accidents = (numberAccidents < costAccidents)? numberAccidents : costAccidents;
+    }
+    
+    private void initDevelopments() {
+        int numberDevs = numberLrs.getDevelopmentCount();
+        int costDevs = costLrs.getDevelopmentCount();
+        developments = (numberDevs < costDevs)? numberDevs : costDevs;
+        developments++;
+    }
 }

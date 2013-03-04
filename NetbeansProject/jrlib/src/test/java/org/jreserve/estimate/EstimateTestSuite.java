@@ -14,6 +14,7 @@ import org.junit.runners.Suite;
     EstimateUtilTest.class,
     ChainLadderEstimateTest.class,
     ExpectedLossRatioEstimateTest.class,
+    AverageCostEstimateTest.class,
     BornhuetterFergusonEstimateTest.class,
     MackEstimateTest.class
 })
