@@ -22,12 +22,12 @@ public abstract class AbstractCalculationData<V extends CalculationData> extends
         return source;
     }
     
+    @Override
     protected void recalculateSource() {
         recalculateSource(source);
     }
-
-    protected abstract void recalculateLayer();
     
+    @Override
     protected void detachSource() {
         detachSource(source);
     }
