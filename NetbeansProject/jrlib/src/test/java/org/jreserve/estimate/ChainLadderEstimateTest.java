@@ -3,7 +3,12 @@ package org.jreserve.estimate;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.*;
+import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.factor.linkratio.SimpleLinkRatio;
+import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
+import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
+import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
+import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.Triangle;
 import static org.junit.Assert.*;
@@ -50,11 +55,13 @@ public class ChainLadderEstimateTest {
     }
     
     private LinkRatio createLinkRatios() {
-        LinkRatioSelection lrSelection = new DefaultLinkRatioSelection(new DevelopmentFactors(cik), new WeightedAverageLRMethod());
-        UserInputLRMethod tail = new UserInputLRMethod();
+        LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(cik), new WeightedAverageLRMethod());
+        LinkRatioSmoothingSelection smoothing = new DefaultLinkRatioSmoothing(lr);
+        UserInputLRFunction tail = new UserInputLRFunction();
         tail.setValue(7, 1.05);
-        lrSelection.setMethod(tail, 7);
-        return lrSelection;
+        smoothing.setDevelopmentCount(8);
+        smoothing.setMethod(tail, 7);
+        return smoothing;
     }
 
     @Test

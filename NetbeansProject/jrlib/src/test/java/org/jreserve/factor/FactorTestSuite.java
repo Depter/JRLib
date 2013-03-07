@@ -12,9 +12,7 @@ import org.junit.runners.Suite;
     DevelopmentFactorsTest.class,
     AbstractFactorTriangleModificationTest.class,
     FactorTriangleCorrectionTest.class,
-    org.jreserve.factor.linkratio.LinkRatioTestSuite.class,
-    org.jreserve.factor.curve.CurvesTestSuite.class,
-    org.jreserve.factor.standarderror.FactorScaleTestSuite.class
+    org.jreserve.factor.linkratio.LinkRatioTestSuite.class
 })
 public class FactorTestSuite {
 }

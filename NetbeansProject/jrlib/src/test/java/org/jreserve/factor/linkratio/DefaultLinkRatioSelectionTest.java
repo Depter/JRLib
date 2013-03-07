@@ -101,11 +101,11 @@ public class DefaultLinkRatioSelectionTest {
     
     @Test
     public void testGetDevelopmentCount_Tail() {
-        int tailDev = factors.getDevelopmentCount();
+        int expected = lr.getDevelopmentCount();
         UserInputLRMethod uiLR = new UserInputLRMethod();
-        uiLR.setValue(tailDev, 1.05);
-        lr.setMethod(uiLR, tailDev);
-        assertEquals(tailDev+1, lr.getDevelopmentCount());
+        uiLR.setValue(expected, 1.05);
+        lr.setMethod(uiLR, expected);
+        assertEquals(expected, lr.getDevelopmentCount());
     }
 
     @Test

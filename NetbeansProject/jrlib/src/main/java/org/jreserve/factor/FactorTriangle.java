@@ -13,5 +13,5 @@ public interface FactorTriangle extends Triangle {
      * Returns the {@link Triangle Triangle} containing the
      * input claims for the calculations.
      */
-    public Triangle getInputTriangle();
+    public Triangle getSourceTriangle();
 }

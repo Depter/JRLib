@@ -20,8 +20,8 @@ public class DevelopmentFactors extends AbstractTriangle<Triangle> implements Fa
     }
 
     @Override
-    public Triangle getInputTriangle() {
-        return getSource();
+    public Triangle getSourceTriangle() {
+        return source;
     }
     
     @Override

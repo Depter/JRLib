@@ -20,12 +20,13 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     
     public DefaultLinkRatioSelection(FactorTriangle source, LinkRatioMethod defaultMethod) {
         super(source, defaultMethod==null? new WeightedAverageLRMethod() : defaultMethod);
+        developments = (source==null)? 0 : source.getDevelopmentCount();
         doRecalculate();
     }
     
     @Override
-    public FactorTriangle getInputFactors() {
-        return getSource();
+    public FactorTriangle getSourceFactors() {
+        return source;
     }
 
     @Override
@@ -46,28 +47,8 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     }
     
     private void doRecalculate() {
-        initState();
-        if(developments > 0)
-            recalculateLinkRatios();
-    }
-    
-    private void initState() {
-        developments = (source==null)? 0 : source.getDevelopmentCount();
-        int methodSize = super.getSize();
-        if(methodSize > developments)
-            developments = methodSize;
-        values = new double[developments];
-    }
-    
-    private void recalculateLinkRatios() {
-        cahceLRs();
-        for(int d=0; d<developments; d++)
-            values[d] = getMethod(d).getValue(d);
-    }
-    
-    private void cahceLRs() {
-        for(LinkRatioMethod method : getMethods())
-            method.fit(source);
+        super.fitMethods();
+        values = super.getFittedValues(developments);
     }
     
     @Override
@@ -92,5 +73,11 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
         if(withinBound(development))
             return getMethod(development).getMackAlpha();
         return Double.NaN;
+    }
+    
+    @Override
+    public double getWeight(int accident, int development) {
+        LinkRatioMethod method = getMethod(development);
+        return method.getWeight(accident, development);
     }
 }

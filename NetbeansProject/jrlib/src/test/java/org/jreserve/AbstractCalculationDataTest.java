@@ -25,12 +25,6 @@ public class AbstractCalculationDataTest {
     }
 
     @Test
-    public void testGetSource() {
-        assertEquals(null, source.getSource());
-        assertTrue(source == data.getSource());
-    }
-
-    @Test
     public void testRecalculate_Source() {
         source.recalculate();
         assertEquals(1, source.recalculateCount);

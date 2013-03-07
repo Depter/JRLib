@@ -18,7 +18,7 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate {
     
     public ExpectedLossRatioEstimate(LinkRatio lrs, Vector exposure, Vector lossRatio) {
         this.lrs = lrs;
-        this.ciks = lrs.getInputFactors().getInputTriangle();
+        this.ciks = lrs.getSourceFactors().getSourceTriangle();
         this.exposure = exposure;
         this.lossRatio = lossRatio;
         checkInput();
@@ -65,9 +65,16 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate {
         detachSource(lossRatio);
     }
 
-    @Override
-    public LinkRatio getSource() {
+    public LinkRatio getSourceLinkRatios() {
         return lrs;
+    }
+    
+    public Vector getSourceExposure() {
+        return exposure;
+    }
+    
+    public Vector getSourceLossRatios() {
+        return lossRatio;
     }
 
     @Override

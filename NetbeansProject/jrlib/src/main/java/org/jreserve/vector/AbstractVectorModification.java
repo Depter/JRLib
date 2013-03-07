@@ -5,7 +5,7 @@ package org.jreserve.vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractVectorModification extends AbstractVector {
+public abstract class AbstractVectorModification extends AbstractVector implements ModifiedVector {
 
     protected AbstractVectorModification() {
     }
@@ -14,6 +14,11 @@ public abstract class AbstractVectorModification extends AbstractVector {
         super(source);
     }
 
+    @Override
+    public Vector getSourceVector() {
+        return source;
+    }
+    
     @Override
     public int getLength() {
         return source==null? 0 : source.getLength();

@@ -3,8 +3,8 @@ package org.jreserve.estimate;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.standarderror.LinkRatioSE;
-import org.jreserve.factor.standarderror.LinkRatioScale;
+import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
+import org.jreserve.factor.linkratio.scale.LinkRatioScale;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
@@ -127,10 +127,10 @@ public class MackEstimate extends AbstractCalculationData<LinkRatioSE> implement
     }
     
     private void initState() {
-        scales = source.getLinkRatioScales();
-        lrs = scales.getLinkRatios();
-        fiks = lrs.getInputFactors();
-        ciks = fiks.getInputTriangle();
+        scales = source.getSourceLRScales();
+        lrs = scales.getSourceLinkRatios();
+        fiks = lrs.getSourceFactors();
+        ciks = fiks.getSourceTriangle();
         accidents = ciks.getAccidentCount();
         developments = lrs.getDevelopmentCount() + 1;
     }

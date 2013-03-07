@@ -1,7 +1,9 @@
 package org.jreserve.factor.linkratio;
 
 import org.jreserve.AbstractCalculationData;
+import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -11,9 +13,16 @@ import org.jreserve.factor.FactorTriangle;
 public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> implements LinkRatio {
 
     private LinkRatioMethod method;
-    
     private int developmentCount;
 
+    public SimpleLinkRatio(Triangle triangle) {
+        this(new DevelopmentFactors(triangle), null);
+    }
+
+    public SimpleLinkRatio(Triangle triangle, LinkRatioMethod method) {
+        this(new DevelopmentFactors(triangle), method);
+    }
+    
     public SimpleLinkRatio(FactorTriangle source) {
         this(source, null);
     }
@@ -25,8 +34,8 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     }
     
     @Override
-    public FactorTriangle getInputFactors() {
-        return getSource();
+    public FactorTriangle getSourceFactors() {
+        return source;
     }
 
     @Override
@@ -52,6 +61,11 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     @Override
     public double getMackAlpha(int development) {
         return method.getMackAlpha();
+    }
+    
+    @Override
+    public double getWeight(int accident, int development) {
+        return method.getWeight(accident, development);
     }
 
     @Override

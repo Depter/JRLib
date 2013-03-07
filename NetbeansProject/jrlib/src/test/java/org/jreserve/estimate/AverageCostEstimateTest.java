@@ -9,11 +9,9 @@ import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
 import org.jreserve.triangle.CompositeTriangle;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleOperation;
-import org.junit.AfterClass;
-import org.junit.Test;
 import static org.junit.Assert.*;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -78,13 +76,13 @@ public class AverageCostEstimateTest {
     }
 
     @Test
-    public void testGetSource() {
-        assertEquals(costLrs, estiamte.getSource());
+    public void testGetSourceCostLinkRatios() {
+        assertEquals(costLrs, estiamte.getSourceCostLinkRatios());
     }
 
     @Test
-    public void testGetNumberLinkRatios() {
-        assertEquals(numberLrs, estiamte.getNumberLinkRatios());
+    public void testGetSourceNumberLinkRatios() {
+        assertEquals(numberLrs, estiamte.getSourceNumberLinkRatios());
     }
 
     @Test

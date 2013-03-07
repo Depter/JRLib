@@ -8,7 +8,7 @@ import org.jreserve.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface MethodSelection<C extends CalculationData, M> extends CalculationData {
+public interface MethodSelection<T, M extends SelectableMethod<T>> extends CalculationData {
 
     /**
      * Returns the method used, when no method is specified for

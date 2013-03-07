@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.CalculationData;
 import org.jreserve.ChangeCounter;
+import org.jreserve.JRLibTestSuite;
 import static org.jreserve.TestData.EXPOSURE;
 import static org.jreserve.TestData.getCachedVector;
-import org.jreserve.triangle.Cell;
 import org.jreserve.vector.InputVector;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -18,7 +18,7 @@ import org.junit.Test;
  */
 public class AbstractMethodSelectionTest {
 
-    private final static Cell DEFAULT = new Cell(0, 0);
+    private final static Method DEFAULT = new Method(Double.NaN);
     private AbstractOutputSelectionImpl selection;
     private ChangeCounter counter;
     
@@ -46,7 +46,7 @@ public class AbstractMethodSelectionTest {
 
     @Test
     public void testSetDefaultMethod() {
-        Cell method = new Cell(1,1);
+        Method method = new Method(1d);
         selection.setDefaultMethod(method);
         assertEquals(method, selection.getDefaultMethod());
     }
@@ -64,7 +64,7 @@ public class AbstractMethodSelectionTest {
 
     @Test
     public void testSetMethod() {
-        Cell method = new Cell(1, 1);
+        Method method = new Method(1d);
         selection.setMethod(method, 1);
         assertEquals(method, selection.getMethod(1));
         assertEquals(1, counter.getChangeCount());
@@ -77,27 +77,44 @@ public class AbstractMethodSelectionTest {
 
     @Test
     public void testSetMethods() {
-        Map<Integer, Cell> methods = new HashMap<Integer, Cell>();
-        methods.put(1, new Cell(1, 1));
-        methods.put(2, new Cell(1, 2));
-        methods.put(3, new Cell(1, 3));
+        Map<Integer, Method> methods = new HashMap<Integer, Method>();
+        methods.put(1, new Method(1d));
+        methods.put(2, new Method(2d));
+        methods.put(3, new Method(3d));
         selection.setMethods(methods);
         assertEquals(1, counter.getChangeCount());
         
         for(int i=1; i<4; i++) {
-            Cell cell = selection.getMethod(i);
-            assertEquals(i, cell.getDevelopment());
+            Method method = selection.getMethod(i);
+            assertEquals((double)i, method.getValue(i), JRLibTestSuite.EPSILON);
         }
     }
 
-    public class AbstractOutputSelectionImpl extends AbstractMethodSelection<CalculationData, Cell> {
+    public class AbstractOutputSelectionImpl extends AbstractMethodSelection<CalculationData, Method> {
 
-        public AbstractOutputSelectionImpl(CalculationData source, Cell defaultCell) {
-            super(source, defaultCell);
+        public AbstractOutputSelectionImpl(CalculationData source, Method defaultMethod) {
+            super(source, defaultMethod);
         }
 
         @Override
         protected void recalculateLayer() {
         }
+    }
+    
+    private static class Method implements SelectableMethod<CalculationData> {
+
+        private double value;
+        
+        private Method(double value) {
+            this.value = value;
+        }
+        
+        public void fit(CalculationData source) {
+        }
+
+        public double getValue(int index) {
+            return value;
+        }
+    
     }
 }

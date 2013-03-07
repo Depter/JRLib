@@ -1,7 +1,6 @@
 package org.jreserve.factor.linkratio;
 
 import javax.swing.event.ChangeListener;
-import org.jreserve.CalculationData;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
@@ -69,11 +68,6 @@ public class FixedLinkRatio implements LinkRatio {
     }
 
     @Override
-    public CalculationData getSource() {
-        return null;
-    }
-
-    @Override
     public void recalculate() {
     }
 
@@ -90,12 +84,19 @@ public class FixedLinkRatio implements LinkRatio {
     }
 
     @Override
-    public FactorTriangle getInputFactors() {
+    public FactorTriangle getSourceFactors() {
         return source;
     }
 
     @Override
     public double getMackAlpha(int development) {
         return 1d;
+    }
+    
+    @Override
+    public double getWeight(int accident, int development) {
+        double fik = source.getValue(accident, development);
+        if(Double.isNaN(fik)) return Double.NaN;
+        return source.getSourceTriangle().getValue(accident, development);
     }
 }

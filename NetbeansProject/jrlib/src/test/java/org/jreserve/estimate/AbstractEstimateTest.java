@@ -151,11 +151,6 @@ public class AbstractEstimateTest {
         @Override
         protected void detachSource() {
         }
-
-        @Override
-        public CalculationData getSource() {
-            return null;
-        }
     }
 
 }

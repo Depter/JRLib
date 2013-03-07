@@ -48,6 +48,6 @@ public class MaxLRMethodTest {
     @Test
     public void testGetMackAlpha() {
         MaxLRMethod lrs = new MaxLRMethod();
-        assertEquals(1d, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
+        assertEquals(AbstractLRMethod.DEFAULT_MACK_ALPHA, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
     }
 }

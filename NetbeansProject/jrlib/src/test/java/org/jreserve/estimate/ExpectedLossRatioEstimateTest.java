@@ -4,8 +4,10 @@ import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.factor.linkratio.LinkRatioSelection;
-import org.jreserve.factor.linkratio.UserInputLRMethod;
+import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
+import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
+import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.vector.InputVector;
 import org.jreserve.vector.Vector;
@@ -42,7 +44,7 @@ public class ExpectedLossRatioEstimateTest {
     };
     
     private ExpectedLossRatioEstimate estiamte;
-    private LinkRatioSelection lrs;
+    private LinkRatio lrs;
     private Vector exposure;
     private Vector lossRatios;
     
@@ -60,14 +62,19 @@ public class ExpectedLossRatioEstimateTest {
     private void createLrs() {
         Triangle cik = TestData.getCummulatedTriangle(TestData.INCURRED);
         lrs = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
-        UserInputLRMethod ui = new UserInputLRMethod();
-        ui.setValue(7, 1.05);
-        lrs.setMethod(ui, 7);
+        
+        LinkRatioSmoothingSelection smoothing = new DefaultLinkRatioSmoothing(lrs);
+        UserInputLRFunction tail = new UserInputLRFunction();
+        tail.setValue(7, 1.05);
+        smoothing.setDevelopmentCount(8);
+        smoothing.setMethod(tail, 7);
+        
+        lrs = smoothing;
     }
 
     @Test
     public void testGetObservedDevelopmentCount() {
-        Triangle cik = lrs.getInputFactors().getInputTriangle();
+        Triangle cik = lrs.getSourceFactors().getSourceTriangle();
         int accidents = estiamte.getDevelopmentCount();
         for(int a=0; a<accidents; a++)
             assertEquals(cik.getDevelopmentCount(a), estiamte.getObservedDevelopmentCount(a));

@@ -39,7 +39,7 @@ public class SimpleLinkRatioTest {
 
     @Test
     public void testGetDevelopmentFactors() {
-        assertTrue(source == lr.getInputFactors());
+        assertTrue(source == lr.getSourceFactors());
     }
 
     @Test

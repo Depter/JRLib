@@ -11,12 +11,12 @@ import org.jreserve.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractMethodSelection<C extends CalculationData, M> extends AbstractCalculationData<C> implements MethodSelection<C, M> {
+public abstract class AbstractMethodSelection<T extends CalculationData, M extends SelectableMethod<T>> extends AbstractCalculationData<T> implements MethodSelection<T, M> {
 
-    private Object[] methods = new Object[0];
+    private SelectableMethod[] methods = new SelectableMethod[0];
     private M defaultMethod;
 
-    protected AbstractMethodSelection(C source, M defaultMethod) {
+    protected AbstractMethodSelection(T source, M defaultMethod) {
         super(source);
         initDefaultMethod(defaultMethod);
     }
@@ -58,7 +58,7 @@ public abstract class AbstractMethodSelection<C extends CalculationData, M> exte
 
     private void setMethodsSize(int index) {
         if(index >= methods.length) {
-            Object[] redim = new Object[index + 1];
+            SelectableMethod[] redim = new SelectableMethod[index + 1];
             System.arraycopy(methods, 0, redim, 0, methods.length);
             methods = redim;
         }
@@ -81,14 +81,25 @@ public abstract class AbstractMethodSelection<C extends CalculationData, M> exte
         return method == null ? defaultMethod : (M) method;
     }
     
-    protected Set<M> getMethods() {
-        Set<M> result = new HashSet<M>();
-        for(Object o : methods) {
-            if(o != null && !result.contains(o))
-                result.add((M) o);
+    protected void fitMethods() {
+        Set<SelectableMethod> recalculated = new HashSet<SelectableMethod>();
+        for(SelectableMethod m : methods)
+            if(m != null && !recalculated.contains(m))
+                fitMethod(recalculated, m);
+        fitMethod(recalculated, defaultMethod);
+    }
+    
+    private void fitMethod(Set<SelectableMethod> recalculated, SelectableMethod m) {
+        if(m != null && !recalculated.contains(m)) {
+            recalculated.add(m);
+            m.fit(source);
         }
-        if(!result.contains(defaultMethod))
-            result.add(defaultMethod);
+    }
+    
+    protected double[] getFittedValues(int length) {
+        double[] result = new double[length];
+        for(int i=0; i<length; i++)
+            result[i] = getMethod(i).getValue(i);
         return result;
     }
     
@@ -98,4 +109,6 @@ public abstract class AbstractMethodSelection<C extends CalculationData, M> exte
             index--;
         return index+1;
     }
+    
+    
 }

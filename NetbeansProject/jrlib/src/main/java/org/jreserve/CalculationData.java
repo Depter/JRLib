@@ -7,8 +7,6 @@ package org.jreserve;
  */
 public interface CalculationData extends Changeable {
     
-    public CalculationData getSource();
-    
     public void recalculate();
     
     public void detach();

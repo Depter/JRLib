@@ -23,9 +23,9 @@ public class AverageCostEstimate extends AbstractEstimate {
     
     private void initSources(LinkRatio nLrs, LinkRatio cLrs) {
         this.numberLrs = nLrs;
-        this.numberCik = nLrs.getInputFactors().getInputTriangle();
+        this.numberCik = nLrs.getSourceFactors().getSourceTriangle();
         this.costLrs = cLrs;
-        this.costCik = cLrs.getInputFactors().getInputTriangle();
+        this.costCik = cLrs.getSourceFactors().getSourceTriangle();
     }
     
     private void attachSources() {
@@ -50,12 +50,11 @@ public class AverageCostEstimate extends AbstractEstimate {
         detachSource(costLrs);
     }
 
-    @Override
-    public LinkRatio getSource() {
+    public LinkRatio getSourceCostLinkRatios() {
         return costLrs;
     }
     
-    public LinkRatio getNumberLinkRatios() {
+    public LinkRatio getSourceNumberLinkRatios() {
         return numberLrs;
     }
 

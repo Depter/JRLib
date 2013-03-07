@@ -1,0 +1,12 @@
+window_sizes 1600 851 375 1125 600 82
+diagrams
+  active  classdiagram_ref 128002 // cdm_System
+    1219 695 100 3 0 0
+end
+show_stereotypes
+selected class_ref 131202 // LinkRatioSEFunction
+open
+  classview_ref 129410 // classes
+  classview_ref 128386 // System
+end
+end

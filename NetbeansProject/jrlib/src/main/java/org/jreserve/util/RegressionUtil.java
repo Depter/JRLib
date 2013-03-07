@@ -1,6 +1,6 @@
 package org.jreserve.util;
 
-import org.jreserve.factor.curve.LinkRatioFunction;
+import org.jreserve.factor.linkratio.curve.LinkRatioFunction;
 import org.jreserve.factor.linkratio.LinkRatio;
 
 /**

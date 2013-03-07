@@ -17,7 +17,10 @@ import org.junit.runners.Suite;
     AbstractVectorUserInputTest.class,
     UserInputLRMethodTest.class,
     DefaultLinkRatioSelectionTest.class,
-    SimpleLinkRatioTest.class
+    SimpleLinkRatioTest.class,
+    org.jreserve.factor.linkratio.curve.CurvesTestSuite.class,
+    org.jreserve.factor.linkratio.scale.LinkRatioScaleTestSuite.class,
+    org.jreserve.factor.linkratio.standarderror.LRSETestSuite.class
 })
 public class LinkRatioTestSuite {
 }

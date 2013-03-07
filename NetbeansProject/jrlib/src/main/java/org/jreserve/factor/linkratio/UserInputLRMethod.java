@@ -9,7 +9,7 @@ import org.jreserve.factor.FactorTriangle;
  */
 public class UserInputLRMethod extends AbstractVectorUserInput implements LinkRatioMethod {
     
-    public final static double MACK_ALPHA = 1d;
+    public final static double MACK_ALPHA = 0d;
     
     public UserInputLRMethod() {
     }
@@ -32,5 +32,9 @@ public class UserInputLRMethod extends AbstractVectorUserInput implements LinkRa
     @Override
     public double getMackAlpha() {
         return MACK_ALPHA;
+    }
+
+    public double getWeight(int accident, int development) {
+        return 1d;
     }
 }

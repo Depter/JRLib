@@ -26,8 +26,8 @@ public class AbstractFactorTriangleModificationTest {
     }
 
     @Test
-    public void testGetInputTriangle() {
-        assertEquals(cik, factors.getInputTriangle());
+    public void testGetSourceTriangle() {
+        assertEquals(cik, factors.getSourceTriangle());
     }
 
     private class AbstractFactorTriangleModificationImpl extends AbstractFactorTriangleModification {

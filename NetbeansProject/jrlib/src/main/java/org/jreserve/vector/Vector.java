@@ -8,9 +8,6 @@ import org.jreserve.CalculationData;
  * @version 1.0
  */
 public interface Vector extends CalculationData {
-
-    @Override
-    public Vector getSource();
     
     public int getLength();
     

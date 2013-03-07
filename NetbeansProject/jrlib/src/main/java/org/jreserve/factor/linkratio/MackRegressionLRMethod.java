@@ -21,7 +21,7 @@ public class MackRegressionLRMethod extends AbstractLRMethod {
     
     @Override
     protected double getLinkRatio(FactorTriangle factors, int accidents, int dev) {
-        Triangle weights = factors.getInputTriangle();
+        Triangle weights = factors.getSourceTriangle();
         
         double ss = 0d;
         double s = 0d;

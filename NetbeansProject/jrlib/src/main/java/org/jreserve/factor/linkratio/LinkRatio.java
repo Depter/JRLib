@@ -13,7 +13,7 @@ public interface LinkRatio extends CalculationData {
     /**
      * Returns the development factors, used for the calculation.
      */
-    public FactorTriangle getInputFactors();
+    public FactorTriangle getSourceFactors();
     
     /**
      * Returns the number of development periods of the source, or
@@ -42,4 +42,11 @@ public interface LinkRatio extends CalculationData {
      * <p>See {@link LinkRatioMethod#getMackAlpha() LinkRatioMethod}.</p>
      */
     public double getMackAlpha(int development);
+
+    /**
+     * Returns the weight for the development factor at the given location.
+     * 
+     * <p>See {@link LinkRatioMethod#getWeight(int, int) LinkRatioMethod.getWeight()}.
+     */
+    public double getWeight(int accident, int development);
 }

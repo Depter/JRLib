@@ -71,7 +71,7 @@ public class AbstractTriangleModificationTest {
         }
     }
 
-    public class AbstractTriangleModificationImpl extends AbstractTriangleModification<Triangle> {
+    public class AbstractTriangleModificationImpl extends AbstractTriangleModification {
 
         public AbstractTriangleModificationImpl(Triangle source) {
             super(source);

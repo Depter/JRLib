@@ -50,6 +50,6 @@ public class MinLRMethodTest {
     @Test
     public void testGetMackAlpha() {
         MinLRMethod lrs = new MinLRMethod();
-        assertEquals(1d, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
+        assertEquals(AbstractLRMethod.DEFAULT_MACK_ALPHA, lrs.getMackAlpha(), JRLibTestSuite.EPSILON);
     }
 }

@@ -8,9 +8,6 @@ import org.jreserve.CalculationData;
  * @version 1.0
  */
 public interface Triangle extends CalculationData {
-
-    @Override
-    public Triangle getSource();
     
     public int getAccidentCount();
     

@@ -1,12 +1,22 @@
 package org.jreserve.estimate;
 
+import org.jreserve.factor.linkratio.standarderror.DefaultLinkRatioSESelection;
+import org.jreserve.factor.linkratio.standarderror.LinkRatioSESelection;
+import org.jreserve.factor.linkratio.standarderror.UserInputLinkRatioSEFunction;
+import org.jreserve.factor.linkratio.scale.DefaultLinkRatioScaleSelection;
+import org.jreserve.factor.linkratio.scale.LinkRatioScaleCaclulator;
+import org.jreserve.factor.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.factor.linkratio.scale.LinkRatioScaleMinMaxEstimator;
+import org.jreserve.factor.linkratio.scale.UserInputLinkRatioScaleEstimator;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.factor.linkratio.LinkRatioSelection;
-import org.jreserve.factor.linkratio.UserInputLRMethod;
-import org.jreserve.factor.standarderror.*;
+import org.jreserve.factor.linkratio.*;
+import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
+import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
+import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
+import org.jreserve.factor.linkratio.scale.*;
+import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.Triangle;
 import static org.junit.Assert.*;
@@ -57,22 +67,37 @@ public class MackEstimateTest {
     @Before
     public void setUp() {
         cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
-        LinkRatioSelection lrs = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
-        UserInputLRMethod uiLR = new UserInputLRMethod();
-        uiLR.setValue(8, 1.05);
-        lrs.setMethod(uiLR, 8);
-        
-        LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(new LinkRatioScaleCaclulator(lrs), new LinkRatioScaleMinMaxEstimator());
-        UserInputLinkRatioScaleEstimator uiScale = new UserInputLinkRatioScaleEstimator();
-        uiScale.setValue(8, 71d);
-        scales.setMethod(uiScale, 8);
-        
+        LinkRatioSE lrSe = createLinkRatioSE();
+        estimate = new MackEstimate(lrSe);
+    }
+    
+    private LinkRatioSE createLinkRatioSE() {
+        LinkRatioScale scales= createLRScales();
         LinkRatioSESelection lrSe = new DefaultLinkRatioSESelection(scales);
         UserInputLinkRatioSEFunction uiSE = new UserInputLinkRatioSEFunction();
         uiSE.setValue(8, 0.02);
         lrSe.setMethod(uiSE, 8);
+        return lrSe;
+    }
+    
+    private LinkRatioScale createLRScales() {
+        LinkRatio lrs = createLinkRatios();
+        LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(new LinkRatioScaleCaclulator(lrs), new LinkRatioScaleMinMaxEstimator());
+        UserInputLinkRatioScaleEstimator uiScale = new UserInputLinkRatioScaleEstimator();
+        uiScale.setValue(8, 71d);
+        scales.setMethod(uiScale, 8);
+        return scales;
+    }
+    
+    private LinkRatio createLinkRatios() {
+        LinkRatio lrs = new SimpleLinkRatio(new DevelopmentFactors(cik));
         
-        estimate = new MackEstimate(lrSe);
+        LinkRatioSmoothingSelection smoothing = new DefaultLinkRatioSmoothing(lrs);
+        UserInputLRFunction tail = new UserInputLRFunction();
+        tail.setValue(8, 1.05);
+        smoothing.setDevelopmentCount(9);
+        smoothing.setMethod(tail, 8);
+        return smoothing;
     }
 
     @Test

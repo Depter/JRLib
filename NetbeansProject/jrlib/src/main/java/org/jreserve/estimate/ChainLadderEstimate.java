@@ -21,7 +21,7 @@ public class ChainLadderEstimate extends AbstractEstimate {
     private void initLinkRatios(LinkRatio lrs) {
         attachSource(lrs);
         this.lrs = lrs;
-        this.ciks = lrs.getInputFactors().getInputTriangle();
+        this.ciks = lrs.getSourceFactors().getSourceTriangle();
     }
 
     @Override
@@ -39,8 +39,7 @@ public class ChainLadderEstimate extends AbstractEstimate {
         detachSource(lrs);
     }
 
-    @Override
-    public LinkRatio getSource() {
+    public LinkRatio getSourceLinkRatios() {
         return lrs;
     }
 

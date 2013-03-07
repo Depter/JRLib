@@ -10,12 +10,14 @@ import org.jreserve.triangle.Triangle;
  */
 public class WeightedAverageLRMethod extends AbstractLRMethod {
 
+    public final static double MACK_ALPHA = 1d;
+    
     @Override
     protected double getLinkRatio(FactorTriangle factors, int accidents, int dev) {
         double sum = 0d;
         double sw = 0d;
         
-        Triangle weights = factors.getInputTriangle();
+        Triangle weights = factors.getSourceTriangle();
         for(int a=0; a<accidents; a++) {
             double factor = factors.getValue(a, dev);
             double weight = weights.getValue(a, dev);
@@ -26,6 +28,11 @@ public class WeightedAverageLRMethod extends AbstractLRMethod {
         }
         
         return  (sw != 0d)? sum / sw : Double.NaN;
+    }
+
+    @Override
+    public double getMackAlpha() {
+        return MACK_ALPHA;
     }
     
     @Override
