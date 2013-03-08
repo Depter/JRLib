@@ -23,6 +23,7 @@ public class TestData {
     public final static String EXPOSURE = "/org/jrlib/testdata/apc_exposure.csv";
     public final static String MACK_DATA = "/org/jrlib/testdata/mack_data.csv";
     public final static String MACK_DATA2 = "/org/jrlib/testdata/mack_data2.csv";
+    public final static String MACK_DATA3 = "/org/jrlib/testdata/mack_data3.csv";
     public final static String Q_INCURRED = "/org/jrlib/testdata/q_incurred.csv";
     public final static String Q_PAID = "/org/jrlib/testdata/q_paid.csv";
 

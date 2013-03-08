@@ -176,19 +176,19 @@ public class MackEstimateTest {
     @Test
     public void testGetStandardError_int() {
         int length = EXPECTED_SEI.length;
-        assertEquals(Double.NaN, estimate.getStandardError(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getSE(-1), JRLibTestSuite.EPSILON);
         for(int a=0; a<length; a++)
-            assertEquals(EXPECTED_SEI[a], estimate.getStandardError(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getStandardError(length), JRLibTestSuite.EPSILON);
+            assertEquals(EXPECTED_SEI[a], estimate.getSE(a), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getSE(length), JRLibTestSuite.EPSILON);
     }
     
     @Test
     public void testToArrayStandardError() {
-        assertArrayEquals(EXPECTED_SEI, estimate.toArrayStandardError(), JRLibTestSuite.EPSILON);
+        assertArrayEquals(EXPECTED_SEI, estimate.toArraySE(), JRLibTestSuite.EPSILON);
     }
     
     @Test
     public void testGetStandardError() {
-        assertEquals(EXPECTED_SE, estimate.getStandardError(), JRLibTestSuite.EPSILON);
+        assertEquals(EXPECTED_SE, estimate.getSE(), JRLibTestSuite.EPSILON);
     }
 }

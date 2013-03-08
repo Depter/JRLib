@@ -1,185 +1,131 @@
 package org.jreserve.estimate;
 
-import org.jreserve.AbstractCalculationData;
-import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
 import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.triangle.Cell;
+import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
-        
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class MackEstimate extends AbstractCalculationData<LinkRatioSE> implements Estimate {
-
-    private int accidents;
-    private int developments;
-    private double[][] values;
-    private double seRi[];
-    private double seR;
+public class MackEstimate extends AbstractEstimate {
     
-    private Triangle ciks;
-    private FactorTriangle fiks;
-    private LinkRatio lrs;
-    private LinkRatioScale scales;
+    private Triangle cik;
+    private LinkRatioSE lrSE;
+    private double[] procSEs;
+    private double procSE;
+    private double[] paramSEs;
+    private double paramSE;
+    private double[] SEs;
+    private double SE;
     
-    public MackEstimate(LinkRatioSE source) {
-        super(source);
+    public MackEstimate(LinkRatioSE lrSE) {
+        this.lrSE = lrSE;
+        attachSource(lrSE);
+        this.cik = lrSE.getSourceLRScales().getSourceLinkRatios().getSourceFactors().getSourceTriangle();
         doRecalculate();
     }
     
-    @Override
-    public int getAccidentCount() {
-        return accidents;
-    }
-
-    @Override
-    public int getDevelopmentCount() {
-        return developments;
-    }
-
-    @Override
-    public double getValue(Cell cell) {
-        return getValue(cell.getAccident(), cell.getDevelopment());
-    }
-
-    @Override
-    public double getValue(int accident, int development) {
-        if(withinBounds(accident, development))
-            return values[accident][development];
-        return Double.NaN;
+    public LinkRatioSE getSourceLinkRatioSE() {
+        return lrSE;
     }
     
-    private boolean withinBounds(int accident, int development) {
-        return accident >= 0 && accident < accidents &&
-               development >= 0 && development < developments;
-    }
-
-    @Override
-    public double[][] toArray() {
-        double[][] result = new double[accidents][];
-        for(int a=0; a<accidents; a++)
-            result[a] = toArray(a);
-        return result;
+    public double getSE() {
+        return SE;
     }
     
-    private double[] toArray(int accident) {
-        double[] result = new double[developments];
-        System.arraycopy(values[accident], 0, result, 0, developments);
-        return result;
-    }
-
-    @Override
-    public double getReserve(int accident) {
-        int dLast = ciks.getDevelopmentCount(accident)-1;
-        double lastObserved = getValue(accident, dLast);
-        double lastEstimated = getValue(accident, developments-1);
-        return lastEstimated - lastObserved;
-    }
-
-    @Override
-    public double[] toArrayReserve() {
-        double[] result = new double[accidents];
-        for(int a=0; a<accidents; a++)
-            result[a] = getReserve(a);
-        return result;
-    }
-
-    @Override
-    public double getReserve() {
-        double sum = 0d;
-        for(int a=0; a<accidents; a++) {
-            double r = getReserve(a);
-            if(!Double.isNaN(r))
-                sum += r;
-        }
-        return sum;
+    public double getSE(int accident) {
+        return getSE(accident, SEs);
     }
     
-    public double getStandardError(int accident) {
+    private double getSE(int accident, double[] ses) {
         if(accident < 0 || accident >= accidents)
             return Double.NaN;
-        return seRi[accident];
+        return ses[accident];
+    } 
+    
+    public double[] toArraySE() {
+        return TriangleUtil.copy(SEs);
     }
     
-    public double[] toArrayStandardError() {
-        return TriangleUtil.copy(seRi);
+    public double getParameterSE() {
+        return paramSE;
     }
     
-    public double getStandardError() {
-        return seR;
+    public double getParameterSE(int accident) {
+        return getSE(accident, paramSEs);
+    }
+    
+    public double[] toArrayParameterSE() {
+        return TriangleUtil.copy(paramSEs);
+    }
+    
+    public double getProcessSE() {
+        return procSE;
+    }
+    
+    public double getProcessSE(int accident) {
+        return getSE(accident, procSEs);
+    }
+    
+    public double[] toArrayProcessSE() {
+        return TriangleUtil.copy(procSEs);
+    }
+    
+    @Override
+    protected int getObservedDevelopmentCount(int accident) {
+        return cik.getDevelopmentCount(accident);
+    }
+
+    @Override
+    protected void recalculateSource() {
+        lrSE.recalculate();
+    }
+
+    @Override
+    protected void detachSource() {
+        lrSE.detach();
     }
 
     @Override
     protected void recalculateLayer() {
         doRecalculate();
     }
-    
+
     private void doRecalculate() {
         initState();
-        values = EstimateUtil.completeTriangle(ciks, lrs);
-        calculateSeRi();
-        calculateSeR();
+        calculateProcessSDs();
+        calculateParameterSDs();
+        sumSDs();
     }
     
     private void initState() {
-        scales = source.getSourceLRScales();
-        lrs = scales.getSourceLinkRatios();
-        fiks = lrs.getSourceFactors();
-        ciks = fiks.getSourceTriangle();
-        accidents = ciks.getAccidentCount();
-        developments = lrs.getDevelopmentCount() + 1;
+        super.accidents = cik.getAccidentCount();
+        super.developments = lrSE.getDevelopmentCount()+1;
+        LinkRatio lrs = lrSE.getSourceLRScales().getSourceLinkRatios();
+        super.values = EstimateUtil.completeTriangle(cik, lrs);
     }
     
-    private void calculateSeRi() {
-        seRi = new double[accidents];
+    private void calculateProcessSDs() {
+        LinkRatioScale scales = lrSE.getSourceLRScales();
+        MackProcessVarianceUtil util = new MackProcessVarianceUtil(scales, values);
+        this.procSEs = util.getProcessSDs();
+        this.procSE = util.getProcessSD();
+    }
+    
+    private void calculateParameterSDs() {
+        MackParameterVarianceUtil util = new MackParameterVarianceUtil(lrSE, values);
+        this.paramSEs = util.getParameterSDs();
+        this.paramSE = util.getParameterSD();
+    }
+    
+    private void sumSDs() {
+        SEs = new double[accidents];
         for(int a=0; a<accidents; a++)
-            seRi[a] = calculateSeRi(a);
-    }
-    
-    private double calculateSeRi(int accident) {
-        double se = 0d;
-        
-        for(int d=ciks.getDevelopmentCount(accident); d<developments; d++) {
-            //seR(i, k+1) = (C(i,k)^2 * (sigma(k)^2/C(i,k) + seF(k)^2) + (seR(i,k) * lr(k))^2) ^ 0.5
-            double v = square(values[accident][d-1]);
-            double seFik = square(scales.getValue(d-1)) / values[accident][d-1];
-            v *= (seFik + square(source.getValue(d-1)));
-            v += square(se * lrs.getValue(d-1));
-            se = Math.sqrt(v);
-        }
-        
-        return se;
-    }
-    
-    private double square(double v) {
-        return v * v;
-    }
-    
-    private void calculateSeR() {
-        seR = 0d;
-        
-        for(int d=1; d<developments; d++) { 
-            double sCik = sumCikLast(d-1);
-            //seR(i,k+1) = ((seR(i,k)*lr(k))^2 + sCik * sigma(k)^2 + (sCik * seF(k))^2)^0.5
-            double sigma = square(scales.getValue(d-1));
-            double seF = source.getValue(d-1);
-            seR = square(seR * lrs.getValue(d-1)) + sCik*sigma + square(sCik * seF);
-            seR = Math.sqrt(seR);
-        }
-    }
-    
-    private double sumCikLast(int development) {
-        double sum = 0d;
-        for(int a=0; a<accidents; a++) {
-            int last = ciks.getDevelopmentCount(a)-1;
-            if(development >= last)
-                sum += values[a][development];
-        }
-        return sum;
+            SEs[a] = Math.sqrt(Math.pow(procSEs[a], 2) + Math.pow(paramSEs[a], 2));
+        SE = Math.sqrt(Math.pow(procSE, 2) + Math.pow(paramSE, 2));
     }
 }

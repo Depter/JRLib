@@ -1,6 +1,8 @@
 package org.jreserve.factor.linkratio;
 
+import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
+import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.util.AbstractMethodSelection;
         
@@ -13,6 +15,14 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     
     private int developments;
     private double[] values;
+    
+    public DefaultLinkRatioSelection(Triangle triangle) {
+        this(new DevelopmentFactors(triangle), null);
+    }
+    
+    public DefaultLinkRatioSelection(Triangle triangle, LinkRatioMethod defaultMethod) {
+        this(new DevelopmentFactors(triangle), defaultMethod);
+    }
     
     public DefaultLinkRatioSelection(FactorTriangle source) {
         this(source, null);
