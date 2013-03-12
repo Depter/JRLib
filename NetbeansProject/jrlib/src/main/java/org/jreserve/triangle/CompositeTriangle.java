@@ -1,6 +1,6 @@
 package org.jreserve.triangle;
 
-import org.jreserve.AbstractCalculationData;
+import org.jreserve.AbstractMultiSourceCalculationData;
 
 //TODO add javadoc
 /**
@@ -8,24 +8,28 @@ import org.jreserve.AbstractCalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CompositeTriangle extends AbstractCalculationData<Triangle> implements Triangle {
+public class CompositeTriangle extends AbstractMultiSourceCalculationData<Triangle> implements Triangle {
 
-    private Triangle secondary;
+    private final static int PRIMARY = 0;
+    private final static int SECONDARY = 1;
+    
     private TriangleOperation operation;
+    private Triangle primary;
+    private Triangle secondary;
     private int accidents;
     private int developments;
     private double[][] values;
     
     public CompositeTriangle(Triangle primary, Triangle secondary, TriangleOperation operation) {
-        super(primary);
-        initSecondary(secondary);
+        super(primary, secondary);
+        initState();
         initOperation(operation);
         doRecalculate();
     }
     
-    private void initSecondary(Triangle secondary) {
-        attachSource(secondary);
-        this.secondary = secondary;
+    private void initState() {
+        primary = sources[PRIMARY];
+        secondary = sources[SECONDARY];
     }
     
     private void initOperation(TriangleOperation operation) {
@@ -86,18 +90,6 @@ public class CompositeTriangle extends AbstractCalculationData<Triangle> impleme
         System.arraycopy(values[accident], 0, result, 0, devs);
         return result;
     }
-
-    @Override
-    protected void detachSource() {
-        detachSource(source);
-        detachSource(secondary);
-    }
-    
-    @Override
-    protected void recalculateSource() {
-        recalculateSource(source);
-        recalculateSource(secondary);
-    }
     
     @Override
     protected void recalculateLayer() {
@@ -111,13 +103,13 @@ public class CompositeTriangle extends AbstractCalculationData<Triangle> impleme
     }
     
     private void initAccidents() {
-        int a1 = source.getAccidentCount();
+        int a1 = primary.getAccidentCount();
         int a2 = secondary.getAccidentCount();
         this.accidents = (a1<a2)? a1 : a2;
     }
     
     private void initDevelopments() {
-        int d1 = source.getDevelopmentCount();
+        int d1 = primary.getDevelopmentCount();
         int d2 = secondary.getDevelopmentCount();
         this.developments = (d1<d2)? d1 : d2;
     }
@@ -137,13 +129,13 @@ public class CompositeTriangle extends AbstractCalculationData<Triangle> impleme
     }
     
     private int getDevelopments(int accident) {
-        int d1 = source.getDevelopmentCount(accident);
+        int d1 = primary.getDevelopmentCount(accident);
         int d2 = secondary.getDevelopmentCount(accident);
         return (d1<d2)? d1 : d2;
     }
     
     private double recalculateCell(int accident, int development) {
-        double v1 = source.getValue(accident, development);
+        double v1 = primary.getValue(accident, development);
         double v2 = secondary.getValue(accident, development);
         return operation.operate(v1, v2);
     }

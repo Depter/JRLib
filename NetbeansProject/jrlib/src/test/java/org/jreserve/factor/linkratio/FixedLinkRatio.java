@@ -4,6 +4,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.TestData;
 import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.factor.FactorTriangle;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -86,6 +87,11 @@ public class FixedLinkRatio implements LinkRatio {
     @Override
     public FactorTriangle getSourceFactors() {
         return source;
+    }
+
+    @Override
+    public Triangle getSourceTriangle() {
+        return source.getSourceTriangle();
     }
 
     @Override

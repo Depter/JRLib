@@ -1,5 +1,6 @@
 package org.jreserve.estimate;
 
+import org.jreserve.CalculationData;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.vector.Vector;
@@ -9,35 +10,25 @@ import org.jreserve.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CapeCodEstiamte extends AbstractEstimate {
+public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
+    
+    private final static int LRS = 0;
+    private final static int EXPOSURE = 1;
     
     private Vector exposure;
     private LinkRatio lrs;
     private Triangle cik;
     
     public CapeCodEstiamte(LinkRatio lrs, Vector exposure) {
-        this.lrs = lrs;
-        this.cik = lrs.getSourceFactors().getSourceTriangle();
-        this.exposure = exposure;
-        attachSources();
+        super(lrs, exposure);
+        initState();
         doRecalculate();
     }
     
-    private void attachSources() {
-        attachSource(lrs);
-        attachSource(exposure);
-    }
-
-    @Override
-    protected void recalculateSource() {
-        lrs.recalculate();
-        exposure.recalculate();
-    }
-
-    @Override
-    protected void detachSource() {
-        lrs.detach();
-        exposure.detach();
+    private void initState() {
+        this.lrs = (LinkRatio) sources[LRS];
+        this.cik = lrs.getSourceTriangle();
+        this.exposure = (Vector) sources[EXPOSURE];
     }
     
     @Override

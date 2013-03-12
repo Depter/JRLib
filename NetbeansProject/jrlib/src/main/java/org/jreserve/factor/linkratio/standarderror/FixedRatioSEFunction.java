@@ -31,7 +31,7 @@ public class FixedRatioSEFunction implements LinkRatioSEFunction {
     }
     
     public void fit(LinkRatioSE ses) {
-        lrs = ses.getSourceLRScales().getSourceLinkRatios();
+        lrs = ses.getSourceLinkRatios();
         int developments = ses.getDevelopmentCount();
         
         int n = 0;

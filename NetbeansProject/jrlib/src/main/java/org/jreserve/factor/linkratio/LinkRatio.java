@@ -2,6 +2,7 @@ package org.jreserve.factor.linkratio;
 
 import org.jreserve.CalculationData;
 import org.jreserve.factor.FactorTriangle;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -14,6 +15,11 @@ public interface LinkRatio extends CalculationData {
      * Returns the development factors, used for the calculation.
      */
     public FactorTriangle getSourceFactors();
+    
+    /**
+     * Returns the claim triangle, which is the input for this calculation.
+     */
+    public Triangle getSourceTriangle();
     
     /**
      * Returns the number of development periods of the source, or

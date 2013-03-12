@@ -8,35 +8,21 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ChainLadderEstimate extends AbstractEstimate {
+public class ChainLadderEstimate extends AbstractEstimate<LinkRatio> {
 
     private LinkRatio lrs;
     private Triangle ciks;
 
     public ChainLadderEstimate(LinkRatio lrs) {
-        initLinkRatios(lrs);
-        doRecalculate();
-    }
-    
-    private void initLinkRatios(LinkRatio lrs) {
-        attachSource(lrs);
+        super(lrs);
         this.lrs = lrs;
-        this.ciks = lrs.getSourceFactors().getSourceTriangle();
+        this.ciks = lrs.getSourceTriangle();
+        doRecalculate();
     }
 
     @Override
     protected int getObservedDevelopmentCount(int accident) {
         return ciks.getDevelopmentCount(accident);
-    }
-
-    @Override
-    protected void recalculateSource() {
-        recalculateSource(lrs);
-    }
-
-    @Override
-    protected void detachSource() {
-        detachSource(lrs);
     }
 
     public LinkRatio getSourceLinkRatios() {

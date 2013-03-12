@@ -1,7 +1,10 @@
 package org.jreserve.factor.linkratio.standarderror;
 
 import org.jreserve.CalculationData;
+import org.jreserve.factor.FactorTriangle;
+import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.scale.LinkRatioScale;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -11,6 +14,12 @@ import org.jreserve.factor.linkratio.scale.LinkRatioScale;
 public interface LinkRatioSE extends CalculationData {
     
     public LinkRatioScale getSourceLRScales();
+    
+    public LinkRatio getSourceLinkRatios();
+    
+    public FactorTriangle getSourceFactors();
+    
+    public Triangle getSourceTriangle();
     
     public int getDevelopmentCount();
     

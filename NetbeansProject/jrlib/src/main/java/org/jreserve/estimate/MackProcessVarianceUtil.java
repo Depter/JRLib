@@ -31,7 +31,7 @@ class MackProcessVarianceUtil {
         this.estimates = estimates;
         this.scales = scales;
         lrs = scales.getSourceLinkRatios();
-        cik = lrs.getSourceFactors().getSourceTriangle();
+        cik = lrs.getSourceTriangle();
         accidents = cik.getAccidentCount();
         procSDs = new double[accidents];
         procSD = 0d;

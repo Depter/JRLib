@@ -14,7 +14,7 @@ public class LogLinearRatioSEFunction extends AbstractLinearRegression<LinkRatio
     
     @Override
     protected double[] getYs(LinkRatioSE source) {
-        lrs = source.getSourceLRScales().getSourceLinkRatios();
+        lrs = source.getSourceLinkRatios();
         
         int developments = source.getDevelopmentCount();
         double[] y = new double[developments];

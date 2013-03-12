@@ -38,6 +38,11 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     public FactorTriangle getSourceFactors() {
         return source;
     }
+    
+    @Override
+    public Triangle getSourceTriangle() {
+        return source.getSourceTriangle();
+    }
 
     @Override
     public void setDefaultMethod(LinkRatioMethod defaultMethod) {

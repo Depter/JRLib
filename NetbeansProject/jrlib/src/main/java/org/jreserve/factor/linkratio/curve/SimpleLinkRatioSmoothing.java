@@ -3,6 +3,7 @@ package org.jreserve.factor.linkratio.curve;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -40,13 +41,18 @@ public class SimpleLinkRatioSmoothing extends AbstractCalculationData<LinkRatio>
     }
     
     @Override
+    public LinkRatio getSourceLinkRatios() {
+        return source;
+    }
+    
+    @Override
     public FactorTriangle getSourceFactors() {
         return source.getSourceFactors();
     }
     
     @Override
-    public LinkRatio getSourceLinkRatios() {
-        return source;
+    public Triangle getSourceTriangle() {
+        return source.getSourceTriangle();
     }
 
     @Override

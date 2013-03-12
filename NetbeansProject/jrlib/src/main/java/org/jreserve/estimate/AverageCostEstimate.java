@@ -8,7 +8,10 @@ import org.jreserve.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AverageCostEstimate extends AbstractEstimate {
+public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
+    
+    private final static int NUMBERS = 0;
+    private final static int COSTS = 1;
     
     private LinkRatio numberLrs;
     private Triangle numberCik;
@@ -16,38 +19,21 @@ public class AverageCostEstimate extends AbstractEstimate {
     private Triangle costCik;
     
     public AverageCostEstimate(LinkRatio numberLrs, LinkRatio costLrs) {
-        initSources(numberLrs, costLrs);
-        attachSources();
+        super(numberLrs, costLrs);
+        initSources();
         doRecalculate();
     }
     
-    private void initSources(LinkRatio nLrs, LinkRatio cLrs) {
-        this.numberLrs = nLrs;
-        this.numberCik = nLrs.getSourceFactors().getSourceTriangle();
-        this.costLrs = cLrs;
-        this.costCik = cLrs.getSourceFactors().getSourceTriangle();
-    }
-    
-    private void attachSources() {
-        attachSource(numberLrs);
-        attachSource(costLrs);
+    private void initSources() {
+        this.numberLrs = sources[NUMBERS];
+        this.numberCik = numberLrs.getSourceTriangle();
+        this.costLrs = sources[COSTS];
+        this.costCik = costLrs.getSourceTriangle();
     }
     
     @Override
     protected int getObservedDevelopmentCount(int accident) {
         return numberCik.getDevelopmentCount(accident);
-    }
-
-    @Override
-    protected void recalculateSource() {
-        recalculateSource(numberLrs);
-        recalculateSource(costLrs);
-    }
-
-    @Override
-    protected void detachSource() {
-        detachSource(numberLrs);
-        detachSource(costLrs);
     }
 
     public LinkRatio getSourceCostLinkRatios() {

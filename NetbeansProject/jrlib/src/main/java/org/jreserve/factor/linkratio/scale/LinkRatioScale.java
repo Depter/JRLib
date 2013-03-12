@@ -1,7 +1,9 @@
 package org.jreserve.factor.linkratio.scale;
 
 import org.jreserve.CalculationData;
+import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -11,6 +13,10 @@ import org.jreserve.factor.linkratio.LinkRatio;
 public interface LinkRatioScale extends CalculationData {
     
     public LinkRatio getSourceLinkRatios();
+    
+    public FactorTriangle getSourceFactors();
+    
+    public Triangle getSourceTriangle();
     
     public int getDevelopmentCount();
     

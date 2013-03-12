@@ -1,5 +1,6 @@
 package org.jreserve.estimate;
 
+import org.jreserve.CalculationData;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.vector.Vector;
@@ -9,21 +10,29 @@ import org.jreserve.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class BornhuetterFergusonEstimate extends AbstractEstimate {
+public class BornhuetterFergusonEstimate extends AbstractEstimate<CalculationData> {
 
+    private final static int LRS = 0;
+    private final static int EXPOSURES = 1;
+    private final static int LOSS_RATIOS = 2;
+    
     private LinkRatio lrs;
     private Triangle ciks;
     private Vector exposure;
     private Vector lossRatio;
     
     public BornhuetterFergusonEstimate(LinkRatio lrs, Vector exposure, Vector lossRatio) {
-        this.lrs = lrs;
-        this.ciks = lrs.getSourceFactors().getSourceTriangle();
-        this.exposure = exposure;
-        this.lossRatio = lossRatio;
+        super(lrs, exposure, lossRatio);
+        initState();
         checkInput();
-        attachSources();
         doRecalculate();
+    }
+    
+    private void initState() {
+        this.lrs = (LinkRatio) sources[LRS];
+        this.ciks = lrs.getSourceTriangle();
+        this.exposure = (Vector) sources[EXPOSURES];
+        this.lossRatio = (Vector) sources[LOSS_RATIOS];
     }
     
     private void checkInput() {
@@ -43,26 +52,6 @@ public class BornhuetterFergusonEstimate extends AbstractEstimate {
         String msg = "Accident count in claims [%d] is more then the accident count in the loss ratios [%d]!";
         msg = String.format(msg, ciks.getAccidentCount(), exposure.getLength());
         return new IllegalArgumentException(msg);
-    }
-    
-    private void attachSources() {
-        attachSource(lrs);
-        attachSource(exposure);
-        attachSource(lossRatio);
-    }
-    
-    @Override
-    protected void recalculateSource() {
-        recalculateSource(lrs);
-        recalculateSource(exposure);
-        recalculateSource(lossRatio);
-    }
-
-    @Override
-    protected void detachSource() {
-        detachSource(lrs);
-        detachSource(exposure);
-        detachSource(lossRatio);
     }
 
     public LinkRatio getSourceLinkRatios() {

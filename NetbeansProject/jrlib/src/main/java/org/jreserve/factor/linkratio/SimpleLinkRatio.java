@@ -32,12 +32,17 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
         this.method = (method==null)? new WeightedAverageLRMethod() : method;
         doRecalculate();
     }
-    
+
     @Override
     public FactorTriangle getSourceFactors() {
         return source;
     }
 
+    @Override
+    public Triangle getSourceTriangle() {
+        return source.getSourceTriangle();
+    }
+    
     @Override
     public int getDevelopmentCount() {
         return developmentCount;

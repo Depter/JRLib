@@ -138,18 +138,10 @@ public class AbstractEstimateTest {
         }
 
         @Override
-        protected void recalculateSource() {
-        }
-
-        @Override
         protected void recalculateLayer() {
             accidents = EXPECTED.length;
             developments = EXPECTED[0].length;
             values = EXPECTED;
-        }
-
-        @Override
-        protected void detachSource() {
         }
     }
 

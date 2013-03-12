@@ -6,6 +6,7 @@ import static java.lang.Math.sqrt;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.triangle.Triangle;
 
 /**
  *
@@ -25,6 +26,16 @@ public class LinkRatioScaleCaclulator extends AbstractCalculationData<LinkRatio>
     @Override
     public LinkRatio getSourceLinkRatios() {
         return source;
+    }
+
+    @Override
+    public FactorTriangle getSourceFactors() {
+        return source.getSourceFactors();
+    }
+
+    @Override
+    public Triangle getSourceTriangle() {
+        return source.getSourceTriangle();
     }
     
     @Override

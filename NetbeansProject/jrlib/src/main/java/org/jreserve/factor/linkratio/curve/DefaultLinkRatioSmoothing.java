@@ -2,6 +2,7 @@ package org.jreserve.factor.linkratio.curve;
 
 import org.jreserve.factor.FactorTriangle;
 import org.jreserve.factor.linkratio.LinkRatio;
+import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.util.AbstractMethodSelection;
 
@@ -24,15 +25,20 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
         developments = (source==null)? 0 : source.getDevelopmentCount();
         doRecalculate();
     }
+
+    @Override
+    public LinkRatio getSourceLinkRatios() {
+        return source;
+    }
     
     @Override
     public FactorTriangle getSourceFactors() {
         return source.getSourceFactors();
     }
-
+    
     @Override
-    public LinkRatio getSourceLinkRatios() {
-        return source;
+    public Triangle getSourceTriangle() {
+        return source.getSourceTriangle();
     }
     
     @Override

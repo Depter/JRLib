@@ -28,8 +28,8 @@ class MackParameterVarianceUtil {
     
     private void initState(LinkRatioSE lrSE, double[][] estimates) {
         this.lrSE = lrSE;
-        this.lrs = lrSE.getSourceLRScales().getSourceLinkRatios();
-        this.cik = lrs.getSourceFactors().getSourceTriangle();
+        this.lrs = lrSE.getSourceLinkRatios();
+        this.cik = lrs.getSourceTriangle();
         this.accidents = cik.getAccidentCount();
         this.estimates = estimates;
         this.paramSDs = new double[accidents];

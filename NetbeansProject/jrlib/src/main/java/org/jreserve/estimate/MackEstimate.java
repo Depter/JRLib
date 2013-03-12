@@ -11,10 +11,11 @@ import org.jreserve.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MackEstimate extends AbstractEstimate {
+public class MackEstimate extends AbstractEstimate<LinkRatioSE> {
     
     private Triangle cik;
     private LinkRatioSE lrSE;
+    
     private double[] procSEs;
     private double procSE;
     private double[] paramSEs;
@@ -23,9 +24,9 @@ public class MackEstimate extends AbstractEstimate {
     private double SE;
     
     public MackEstimate(LinkRatioSE lrSE) {
+        super(lrSE);
         this.lrSE = lrSE;
-        attachSource(lrSE);
-        this.cik = lrSE.getSourceLRScales().getSourceLinkRatios().getSourceFactors().getSourceTriangle();
+        this.cik = lrSE.getSourceTriangle();
         doRecalculate();
     }
     
@@ -78,16 +79,6 @@ public class MackEstimate extends AbstractEstimate {
     @Override
     protected int getObservedDevelopmentCount(int accident) {
         return cik.getDevelopmentCount(accident);
-    }
-
-    @Override
-    protected void recalculateSource() {
-        lrSE.recalculate();
-    }
-
-    @Override
-    protected void detachSource() {
-        lrSE.detach();
     }
 
     @Override

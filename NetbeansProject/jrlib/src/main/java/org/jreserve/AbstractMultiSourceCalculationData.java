@@ -8,49 +8,51 @@ import javax.swing.event.ChangeListener;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractMultiSourceCalculationData extends AbstractChangeable implements CalculationData {
+public abstract class AbstractMultiSourceCalculationData<T extends CalculationData> extends AbstractChangeable implements CalculationData {
     
     private SourceListener sourceListener = new SourceListener();
     private boolean myChange = false;
     
-    protected AbstractMultiSourceCalculationData() {
+    protected T[] sources;
+    private int sourceCount;
+    
+    protected AbstractMultiSourceCalculationData(T... sources) {
+        sourceCount = sources.length;
+        this.sources = sources;
+        attachSources();
     }
     
-    protected final void attachSource(CalculationData data) {
-        data.addChangeListener(sourceListener);
+    private void attachSources() {
+        for(int i=0; i<sourceCount; i++)
+            sources[i].addChangeListener(sourceListener);
     }
 
     @Override
     public final void recalculate() {
-        recalculateSource();
+        recalculateSources();
         recalculateLayer();
         fireChange();
     }
     
-    protected abstract void recalculateSource();
-    
-    protected final void recalculateSource(CalculationData data) {
-        if(data != null) {
-            myChange = true;
-            data.recalculate();
-            myChange = false;
-        }
+    private void recalculateSources() {
+        myChange = true;
+        for(int i=0; i<sourceCount; i++)
+            sources[i].recalculate();
+        myChange = false;
     }
 
     protected abstract void recalculateLayer();
     
     @Override
     public final void detach() {
-        detachSource();
+        detachSources();
         listeners = null;
         sourceListener = null;
     }
     
-    protected abstract void detachSource();
-    
-    protected final void detachSource(CalculationData data) {
-        if(data != null)
-            data.detach();
+    private void detachSources() {
+        for(int i=0; i<sourceCount; i++)
+            sources[i].detach();
     }
     
     private class SourceListener implements ChangeListener {
