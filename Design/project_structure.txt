@@ -1,0 +1,23 @@
+Project
+    |- jreserve.xml 				=> Project description, creation date
+    |- Input Data				=> Contains the unmodified data
+        |- APC - PAID.xml
+        |- APC - Incurred.xml
+        |- APC - Burning cost.xml
+    |- data					=> Contains the triangles/vectors for the calculations
+        |- APC - PAID-unmodified.xml
+        |- APC - PAID-smoothed.xml
+        |- APC - INCURRED-unmodified.xml
+        |- APC - Burning cost.xml
+    |- Link ratios				=> Contains Link ratios, maybe used for different methods
+        |- APC - LR-PAID-smoothed.xml
+        |- APC - LR-INCURRED-unmodified.xml
+    |- Estimates				=> Contains the estimates
+        |- APC - CL-PAID-smoothed.xml
+        |- APC - Mack-INCURRED-unmodified.xml
+    |- Bootstrap				=> Contains the bootstrap settings
+    |- Saves
+        |- Save - 0				=> 
+            |- save.xml				=> Contains user-info, save date, commit message, pathes to changed items, path structue is similr to the original, and contains the old version of the modified items. First save is empty
+        |- Save - 2				=> 
+            |- save.xml				=> Contains user-info, save date, commit message, pathes to changed items, path structue is similr to the original, and contains the old version of the modified items.
