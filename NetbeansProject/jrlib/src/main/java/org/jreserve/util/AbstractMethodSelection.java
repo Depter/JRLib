@@ -41,8 +41,7 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
     public void setMethod(M method, int index) {
         if(index >= 0) {
             saveMethodAt(method, index);
-            recalculateLayer();
-            fireChange();
+            methodsChanged();
         }
     }
 
@@ -63,14 +62,26 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
             methods = redim;
         }
     }
+    
+    private void methodsChanged() {
+        recalculateLayer();
+        fireChange();
+    }
+    
+    @Override
+    public void setMethod(M method, int... indices) {
+        if(indices.length == 0) return;
+        for(int index : indices)
+            saveMethodAt(method, index);
+        methodsChanged();
+    }
 
     @Override
     public void setMethods(Map<Integer, M> methods) {
         for(Integer index : methods.keySet())
             if(index >= 0)
                 saveMethodAt(methods.get(index), index);
-        recalculateLayer();
-        fireChange();
+        methodsChanged();
     }
 
     @Override

@@ -17,4 +17,18 @@ public class EmptyLinkRatioScaleEstimator implements LinkRatioScaleEstimator {
         return scales==null? 0 : scales.getValue(development);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof EmptyLinkRatioScaleEstimator);
+    }
+    
+    @Override
+    public int hashCode() {
+        return EmptyLinkRatioScaleEstimator.class.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return "EmptyLinkRatioScaleEstimator";
+    }
 }

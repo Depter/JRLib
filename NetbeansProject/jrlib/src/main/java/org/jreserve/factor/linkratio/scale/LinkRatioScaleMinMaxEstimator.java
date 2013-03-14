@@ -13,11 +13,13 @@ public class LinkRatioScaleMinMaxEstimator implements LinkRatioScaleEstimator {
     private double[] source;
     private int sourceLength;
     
+    @Override
     public void fit(LinkRatioScale scales) {
         this.source = scales.toArray();
         sourceLength = source.length;
     }
 
+    @Override
     public double getValue(int development) {
         if(development < 0)
             return Double.NaN;

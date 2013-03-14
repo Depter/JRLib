@@ -16,7 +16,8 @@ import org.junit.runners.Suite;
     ExpectedLossRatioEstimateTest.class,
     AverageCostEstimateTest.class,
     BornhuetterFergusonEstimateTest.class,
-    MackEstimateTest.class
+    MackEstimateTest.class,
+    org.jreserve.estimate.mcl.MclTestSuite.class
 })
 public class EstimateTestSuite {
 }

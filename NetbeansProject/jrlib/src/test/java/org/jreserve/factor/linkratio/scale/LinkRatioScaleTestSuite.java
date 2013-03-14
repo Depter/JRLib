@@ -13,7 +13,8 @@ import org.junit.runners.Suite;
     LinkRatioScaleExtrapolationTest.class,
     LinkRatioScaleMinMaxEstimateTest.class,
     SimpleLinkRatioScaleTest.class,
-    DefaultLinkRatioScaleSelectionTest.class
+    DefaultLinkRatioScaleSelectionTest.class,
+    LinkRatioScaleErrorTriangleTest.class
 })
 public class LinkRatioScaleTestSuite {
 }

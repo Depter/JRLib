@@ -1,13 +1,15 @@
 package org.jreserve.estimate.mcl;
 
+import javax.swing.event.ChangeListener;
 import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.TriangleUtil;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class RhoCalculator  {
+class MclRhoCalculator implements MclRho {
     
     private Triangle numerator;
     private Triangle denominator;
@@ -17,29 +19,65 @@ class RhoCalculator  {
     private int developments;
     private int accidents;
 
-    RhoCalculator(Triangle numerator, Triangle denominator) {
+    MclRhoCalculator(Triangle numerator, Triangle denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
         recalculate();
     }
     
-    int getDevelopmentCount() {
+    @Override
+    public void detach() {
+    }
+    
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+    }
+    
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+    }
+    
+    @Override
+    public Triangle getNumerator() {
+        return numerator;
+    }
+    
+    @Override
+    public Triangle getDenominator() {
+        return denominator;
+    }
+    
+    @Override
+    public int getDevelopmentCount() {
         return developments;
     }
     
-    double getRatio(int development) {
+    @Override
+    public double getRatio(int development) {
         if(development < 0 || development >= developments)
             return Double.NaN;
         return ratios[development];
     }
     
-    double getRho(int development) {
+    @Override
+    public double[] ratiosToArray() {
+        return TriangleUtil.copy(ratios);
+    }
+    
+    @Override
+    public double getRho(int development) {
         if(development < 0 || development >= developments)
             return Double.NaN;
         return rhos[development];
     }
     
-    final void recalculate() {
+    @Override
+    public double[] rhosToArray() {
+        return TriangleUtil.copy(rhos);
+    }
+    
+    @Override
+    public final void recalculate() {
         initState();
         calculateRatios();
         calculateRhos();

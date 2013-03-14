@@ -23,7 +23,7 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
     }
     
     @Override
-    public final void recalculate() {
+    public void recalculate() {
         recalculateSource();
         recalculateLayer();
         fireChange();

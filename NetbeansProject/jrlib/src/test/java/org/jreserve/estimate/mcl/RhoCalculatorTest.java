@@ -37,7 +37,7 @@ public class RhoCalculatorTest {
     
     private static Triangle paid;
     private static Triangle incurred;
-    private RhoCalculator calculator;
+    private MclRhoCalculator calculator;
     
     public RhoCalculatorTest() {
     }
@@ -56,7 +56,7 @@ public class RhoCalculatorTest {
 
     @Test
     public void testIperP() {
-        calculator = new RhoCalculator(incurred, paid);
+        calculator = new MclRhoCalculator(incurred, paid);
         int devs = RATIO_IP.length;
         assertEquals(devs, calculator.getDevelopmentCount());
         
@@ -72,7 +72,7 @@ public class RhoCalculatorTest {
 
     @Test
     public void testPperI() {
-        calculator = new RhoCalculator(paid, incurred);
+        calculator = new MclRhoCalculator(paid, incurred);
         int devs = RATIO_PI.length;
         assertEquals(devs, calculator.getDevelopmentCount());
         

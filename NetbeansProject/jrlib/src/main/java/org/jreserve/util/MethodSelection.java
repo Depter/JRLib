@@ -35,6 +35,20 @@ public interface MethodSelection<T, M extends SelectableMethod<T>> extends Calcu
      */
     public void setMethod(M method, int index);
     
+    
+    /**
+     * Sets the method used for the given development periods. 
+     * Implementations shoudl allow setting methods the more 
+     * development periods then the actual development periods 
+     * found in the source.
+     * 
+     * <p>If method is null, then the default method should be
+     * used for the given develoment period.</p>
+     * 
+     * <p>Calling this method should fire a change event.</p>
+     */
+    public void setMethod(M method, int... indices);
+    
     /**
      * Sets multiple methods for the given development periods. This
      * method enables to set multiple methods, but fire only on change

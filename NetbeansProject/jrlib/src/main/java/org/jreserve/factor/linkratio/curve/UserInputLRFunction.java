@@ -17,6 +17,10 @@ public class UserInputLRFunction extends AbstractVectorUserInput implements Link
         super(values);
     }
     
+    public UserInputLRFunction(int development, double value) {
+        super.setValue(development, value);
+    }
+    
     @Override
     public void fit(LinkRatio lr) {
     }
