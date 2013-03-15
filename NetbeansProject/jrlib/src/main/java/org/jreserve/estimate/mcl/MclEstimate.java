@@ -1,6 +1,5 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.AbstractMultiSourceCalculationData;
 import org.jreserve.CalculationData;
 import org.jreserve.estimate.AbstractEstimate;
 import org.jreserve.factor.linkratio.LinkRatio;
@@ -21,9 +20,6 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
     private MclEstimateDelegate paid;
     private MclEstimateDelegate incurred;
     
-    private double[][] paidValues;
-    private double[][] incurredValues;
-    
     public MclEstimate(LinkRatioScale paidScale, LinkRatioScale incurredScale) {
         super(paidScale, incurredScale);
         initState();
@@ -31,7 +27,6 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
     }
     
     private void initState() {
-        incurred = new MclEstimateDelegate();
         initPaidState();
         initIncurredState();
         paid.rho = createRho(incurred.lrs, paid.lrs);
@@ -48,6 +43,7 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
     }
     
     private void initIncurredState() {
+        incurred = new MclEstimateDelegate();
         incurred.scale = (LinkRatioScale) sources[INCURRED];
         incurred.lrs = incurred.scale.getSourceLinkRatios();
         incurred.cik = incurred.scale.getSourceTriangle();
@@ -98,54 +94,34 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
         if(developments < 1)
             return;
         
-        paidValues = paid.getValues();
-        incurredValues = incurred.getValues();
-        
         for(int a=0; a<accidents; a++) {
-            paidValues[a][0] = paid.cik.getValue(a, 0);
-            incurredValues[a][0] = incurred.cik.getValue(a, 0);
+            paid.fillCellFromCik(a, 0);
+            incurred.fillCellFromCik(a, 0);
             
             int paidDevCount = paid.cik.getDevelopmentCount(a);
             int incurredDevCount = incurred.cik.getDevelopmentCount(a);
             
             for(int d=1; d<developments; d++) {
-                paidValues[a][d] = d<paidDevCount? paid.cik.getValue(a, d) : calculatePaidClaim(a, d, paidLPSR[d-1]);
-                incurredValues[a][d] = d<incurredDevCount? incurred.cik.getValue(a, d) : calculateIncurredClaim(a, d, incurredLPSR[d-1]);
+                if(d<paidDevCount) {
+                    paid.fillCellFromCik(a, d);
+                } else {
+                    paid.estimateCell(incurred, a, d, paidLPSR[d-1]);
+                }
+                
+                if(d<incurredDevCount) {
+                    incurred.fillCellFromCik(a, d);
+                } else {
+                    incurred.estimateCell(paid, a, d, incurredLPSR[d-1]);
+                }
             }
         }
-    }
-    
-    private double calculatePaidClaim(int accident, int development, double lpsr) {
-        int prevDev = development-1;
-        double p = paidValues[accident][prevDev];
-        double i = incurredValues[accident][prevDev];
-        double lr = paid.lrs.getValue(prevDev);
-        double rate = paid.rho.getRatio(prevDev);
-        
-        if(Double.isNaN(p) || Double.isNaN(i) ||
-           Double.isNaN(lr) || Double.isNaN(rate) || p == 0d)
-            return Double.NaN;
-        return p * (lr + lpsr * (i / p - rate));
-    }
-    
-    private double calculateIncurredClaim(int accident, int development, double lpsr) {
-        int prevDev = development-1;
-        double p = paidValues[accident][prevDev];
-        double i = incurredValues[accident][prevDev];
-        double lr = incurred.lrs.getValue(prevDev);
-        double rate = incurred.rho.getRatio(prevDev);
-        
-        if(Double.isNaN(p) || Double.isNaN(i) ||
-           Double.isNaN(lr) || Double.isNaN(rate) || i == 0d)
-            return Double.NaN;
-        return i * (lr + lpsr * (p / i - rate));
     }
     
     private void fillRatios() {
         for(int a=0; a<accidents; a++) {
             for(int d=0; d<developments; d++) {
-                double p = paidValues[a][d];
-                double i = incurredValues[a][d];
+                double p = paid.getValue(a, d);
+                double i = incurred.getValue(a, d);
                 values[a][d] = (p==0)? Double.NaN : p/i;
             }
         }
@@ -174,11 +150,12 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
         private MclRhoSelection rho;
         private MclLambdaCalculator lambda;
         
-//        private void setEstimatedValues(int accidents, int developments, double[][] values) {
-//            super.accidents = accidents;
-//            super.developments = developments;
-//            super.values = values;
-//        }
+        
+        void initValues() {
+            super.accidents = MclEstimate.this.accidents;
+            super.developments = MclEstimate.this.developments;
+            values = new double[accidents][developments];
+        }
         
         double[] calculateLPSR() {
             double l = lambda.getLambda();
@@ -197,10 +174,22 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
             return lambda * scale / rho;
         }
         
-        void initValues() {
-            super.accidents = MclEstimate.this.accidents;
-            super.developments = MclEstimate.this.developments;
-            values = new double[accidents][developments];
+        void fillCellFromCik(int accident, int development) {
+            values[accident][development] = cik.getValue(accident, development);
+        }
+        
+        void estimateCell(MclEstimateDelegate other, int accident, int development, double lpsr) {
+            int prevDev = development-1;
+            double c = values[accident][prevDev];
+            double oc = other.values[accident][prevDev];
+            double lr = lrs.getValue(prevDev);
+            double rate = rho.getRatio(prevDev);
+        
+            if(Double.isNaN(c) || Double.isNaN(oc) || Double.isNaN(lr) ||
+               Double.isNaN(lpsr) || Double.isNaN(rate) || c == 0d)
+                 values[accident][development] = Double.NaN;
+            else
+                values[accident][development] = c * (lr + lpsr * (oc / c - rate));
         }
         
         double[][] getValues() {

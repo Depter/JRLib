@@ -1,10 +1,8 @@
 package org.jreserve.estimate.mcl;
 
-import junit.framework.Assert;
 import org.jreserve.JRLibTestSuite;
 import org.jreserve.TestData;
 import org.jreserve.estimate.Estimate;
-import org.jreserve.estimate.mcl.MclEstimate.MclEstimateDelegate;
 import org.jreserve.factor.linkratio.LinkRatio;
 import org.jreserve.factor.linkratio.SimpleLinkRatio;
 import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
@@ -16,10 +14,10 @@ import org.jreserve.factor.linkratio.scale.LinkRatioScale;
 import org.jreserve.factor.linkratio.scale.LinkRatioScaleMinMaxEstimator;
 import org.jreserve.factor.linkratio.scale.LinkRatioScaleSelection;
 import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 /**
  *
@@ -79,7 +77,7 @@ public class MclEstimateTest {
         smoothing.setMethod(createTail(lr7, lr8), 7, 8);
         
         LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(smoothing);
-        scales.setMethod(new LinkRatioScaleMinMaxEstimator(), 7, 8);
+        scales.setMethod(new LinkRatioScaleMinMaxEstimator(), 6, 7, 8);
         return scales;
     }
     
