@@ -36,11 +36,10 @@ public class ConstantScaleODPResidualTriangle extends AbstractODPResidualTriangl
             for(int d=0; d<devs; d++) {
                 double r = source.getValue(a, d);
                 if(!Double.isNaN(r))
-                    scale += Math.pow(correction * r, 2d);
+                    scale += Math.pow(r, 2d);
             }
         }
         
         scale = scale / (double) n;
-        
     }
 }
