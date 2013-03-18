@@ -1,13 +1,14 @@
 package org.jreserve.triangle;
 
 import org.jreserve.AbstractCalculationData;
+import org.jreserve.CalculationData;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractTriangle<T extends Triangle> extends AbstractCalculationData<T> implements Triangle {
+public abstract class AbstractTriangle<T extends CalculationData> extends AbstractCalculationData<T> implements Triangle {
 
     protected AbstractTriangle(T source) {
         super(source);
