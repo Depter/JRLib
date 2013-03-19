@@ -21,7 +21,7 @@ public class ChainLadderEstimate extends AbstractEstimate<LinkRatio> {
     }
 
     @Override
-    protected int getObservedDevelopmentCount(int accident) {
+    public int getObservedDevelopmentCount(int accident) {
         return ciks.getDevelopmentCount(accident);
     }
 

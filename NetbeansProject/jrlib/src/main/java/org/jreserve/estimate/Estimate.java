@@ -14,6 +14,8 @@ public interface Estimate extends CalculationData{
     
     public int getDevelopmentCount();
     
+    public int getObservedDevelopmentCount(int accident);
+    
     public double getValue(Cell cell);
     
     public double getValue(int accident, int development);

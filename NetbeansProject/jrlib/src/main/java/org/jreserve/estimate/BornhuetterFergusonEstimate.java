@@ -67,7 +67,7 @@ public class BornhuetterFergusonEstimate extends AbstractEstimate<CalculationDat
     }
 
     @Override
-    protected int getObservedDevelopmentCount(int accident) {
+    public int getObservedDevelopmentCount(int accident) {
         return ciks.getDevelopmentCount(accident);
     }
 

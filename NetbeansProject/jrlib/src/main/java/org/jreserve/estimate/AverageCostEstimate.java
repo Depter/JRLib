@@ -32,7 +32,7 @@ public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
     }
     
     @Override
-    protected int getObservedDevelopmentCount(int accident) {
+    public int getObservedDevelopmentCount(int accident) {
         return numberCik.getDevelopmentCount(accident);
     }
 

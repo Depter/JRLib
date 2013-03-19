@@ -136,7 +136,7 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
     }
 
     @Override
-    protected int getObservedDevelopmentCount(int accident) {
+    public int getObservedDevelopmentCount(int accident) {
         int op = paid.getObservedDevelopmentCount(accident);
         int oi = incurred.getObservedDevelopmentCount(accident);
         return op < oi? op : oi;
@@ -221,7 +221,7 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
         }
         
         @Override
-        protected int getObservedDevelopmentCount(int accident) {
+        public int getObservedDevelopmentCount(int accident) {
             return cik.getDevelopmentCount(accident);
         }
 

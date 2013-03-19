@@ -32,7 +32,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
     }
     
     @Override
-    protected int getObservedDevelopmentCount(int accident) {
+    public int getObservedDevelopmentCount(int accident) {
         return cik.getDevelopmentCount(accident);
     }
 

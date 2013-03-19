@@ -77,7 +77,7 @@ public class MackEstimate extends AbstractEstimate<LinkRatioSE> {
     }
     
     @Override
-    protected int getObservedDevelopmentCount(int accident) {
+    public int getObservedDevelopmentCount(int accident) {
         return cik.getDevelopmentCount(accident);
     }
 

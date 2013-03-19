@@ -62,8 +62,6 @@ public abstract class AbstractEstimate<T extends CalculationData> extends Abstra
         double lastEstimated = getValue(accident, developments-1);
         return lastEstimated - lastObserved;
     }
-    
-    protected abstract int getObservedDevelopmentCount(int accident);
 
     @Override
     public double getReserve() {
