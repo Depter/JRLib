@@ -1,25 +1,24 @@
 package org.jreserve.estimate.mcl;
 
 import org.jreserve.triangle.AbstractTriangle;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class MclRhoErrorTriangle extends AbstractTriangle<Triangle> {
+public class MclRhoErrorTriangle extends AbstractTriangle<MclRho> {
 
-    private MclRho rhos;
-    private Triangle numerator;
-    private Triangle denominator;
+    private ClaimTriangle numerator;
+    private ClaimTriangle denominator;
     
     private int accidents;
     private int developments;
     private double[][] values;
     
     public MclRhoErrorTriangle(MclRho rhos) {
-        this.rhos = rhos;
+        super(rhos);
         this.numerator = rhos.getNumerator();
         this.denominator = rhos.getDenominator();
         doRecalculate();
@@ -73,8 +72,8 @@ public class MclRhoErrorTriangle extends AbstractTriangle<Triangle> {
     private double calculateError(int accident, int development) {
         double n = numerator.getValue(accident, development);
         double d = denominator.getValue(accident, development);
-        double ratio = rhos.getRatio(development);
-        double rho = rhos.getRho(development);
+        double ratio = source.getRatio(development);
+        double rho = source.getRho(development);
         return (Math.sqrt(d) * (n / d - ratio)) / rho;
     }
 }

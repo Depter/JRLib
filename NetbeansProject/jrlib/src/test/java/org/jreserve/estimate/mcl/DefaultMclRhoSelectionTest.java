@@ -1,16 +1,16 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.LinkRatioSelection;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.DefaultLinkRatioSelection;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.LinkRatioSelection;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,14 +82,14 @@ public class DefaultMclRhoSelectionTest {
         int devs = RATIO_IP.length;
         assertEquals(devs, rhos.getDevelopmentCount());
         
-        assertEquals(Double.NaN, rhos.getRatio(-1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, rhos.getRho(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, rhos.getRatio(-1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, rhos.getRho(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++) {
-            assertEquals(RATIO_IP[d], rhos.getRatio(d), JRLibTestSuite.EPSILON);
-            assertEquals(RHO_IP[d], rhos.getRho(d), JRLibTestSuite.EPSILON);
+            assertEquals(RATIO_IP[d], rhos.getRatio(d), JRLibTestUtl.EPSILON);
+            assertEquals(RHO_IP[d], rhos.getRho(d), JRLibTestUtl.EPSILON);
         }
-        assertEquals(Double.NaN, rhos.getRatio(devs), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, rhos.getRho(devs), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, rhos.getRatio(devs), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, rhos.getRho(devs), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -102,13 +102,13 @@ public class DefaultMclRhoSelectionTest {
         int devs = RATIO_PI.length;
         assertEquals(devs, rhos.getDevelopmentCount());
         
-        assertEquals(Double.NaN, rhos.getRatio(-1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, rhos.getRho(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, rhos.getRatio(-1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, rhos.getRho(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++) {
-            assertEquals(RATIO_PI[d], rhos.getRatio(d), JRLibTestSuite.EPSILON);
-            assertEquals(RHO_PI[d], rhos.getRho(d), JRLibTestSuite.EPSILON);
+            assertEquals(RATIO_PI[d], rhos.getRatio(d), JRLibTestUtl.EPSILON);
+            assertEquals(RHO_PI[d], rhos.getRho(d), JRLibTestUtl.EPSILON);
         }
-        assertEquals(Double.NaN, rhos.getRatio(devs), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, rhos.getRho(devs), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, rhos.getRatio(devs), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, rhos.getRho(devs), JRLibTestUtl.EPSILON);
     }
 }

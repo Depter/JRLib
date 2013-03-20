@@ -1,6 +1,6 @@
 package org.jreserve.vector;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +34,10 @@ public class AbstractVectorTest {
     @Test
     public void testToArray() {
         double[] found = vector.toArray();
-        assertArrayEquals(DUMMY_DATA, found, JRLibTestSuite.EPSILON);
+        assertArrayEquals(DUMMY_DATA, found, JRLibTestUtl.EPSILON);
         
         found[1] = 3.5d;
-        assertNotEquals(found[1], vector.data[1], JRLibTestSuite.EPSILON);
+        assertNotEquals(found[1], vector.data[1], JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -66,6 +66,10 @@ public class AbstractVectorTest {
             return withinBound(index) ?
                     data[index] :
                     Double.NaN;
+        }
+
+        public Vector copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

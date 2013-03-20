@@ -1,8 +1,8 @@
 package org.jreserve.estimate;
 
 import org.jreserve.CalculationData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.Vector;
 
 /**
@@ -17,7 +17,7 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate<CalculationData>
     private final static int LOSS_RATIOS = 2;
 
     private LinkRatio lrs;
-    private Triangle ciks;
+    private ClaimTriangle ciks;
     private Vector exposure;
     private Vector lossRatio;
     
@@ -117,5 +117,12 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate<CalculationData>
         for(int a=0; a<accidents; a++)
             ultimates[a] = exposure.getValue(a) * lossRatio.getValue(a);
         return ultimates;
+    }
+    
+    @Override
+    public ExpectedLossRatioEstimate copy() {
+        return new ExpectedLossRatioEstimate(
+                lrs.copy(), exposure.copy(), lossRatio.copy()
+                );
     }
 }

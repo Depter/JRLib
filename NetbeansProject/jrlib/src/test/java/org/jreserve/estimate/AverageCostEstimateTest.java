@@ -1,13 +1,13 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
-import org.jreserve.triangle.CompositeTriangle;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.WeightedAverageLRMethod;
+import org.jreserve.triangle.claim.CompositeClaimTriangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.TriangleOperation;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -38,9 +38,9 @@ public class AverageCostEstimateTest {
     
     private final static double RESERVE = 3010573.89561191;
     
-    private Triangle numberCik;
+    private ClaimTriangle numberCik;
     private LinkRatio numberLrs;
-    private Triangle costCiks;
+    private ClaimTriangle costCiks;
     private LinkRatio costLrs;
     
     private AverageCostEstimate estiamte;
@@ -61,8 +61,8 @@ public class AverageCostEstimateTest {
     }
     
     private void initCostLRs() {
-        Triangle paid = TestData.getCummulatedTriangle(TestData.PAID);
-        costCiks = new CompositeTriangle(paid, numberCik, TriangleOperation.DIVIDE);
+        ClaimTriangle paid = TestData.getCummulatedTriangle(TestData.PAID);
+        costCiks = new CompositeClaimTriangle(paid, numberCik, TriangleOperation.DIVIDE);
         costLrs = new SimpleLinkRatio(new DevelopmentFactors(costCiks), new WeightedAverageLRMethod());
     }
     
@@ -90,20 +90,20 @@ public class AverageCostEstimateTest {
         int accidents = EXPECTED.length;
         int developments = EXPECTED[0].length;
         
-        assertEquals(Double.NaN, estiamte.getValue(0, -1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(0, -1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED[a][d], estiamte.getValue(a, d), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getValue(0, developments), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getValue(accidents, 0), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], estiamte.getValue(a, d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(0, developments), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(accidents, 0), JRLibTestUtl.EPSILON);
         
-        assertEquals(Double.NaN, estiamte.getReserve(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estiamte.getReserve(-1), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++)
-            assertEquals(RESERVES[a], estiamte.getReserve(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getReserve(accidents), JRLibTestSuite.EPSILON);
+            assertEquals(RESERVES[a], estiamte.getReserve(a), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getReserve(accidents), JRLibTestUtl.EPSILON);
         
-        assertEquals(RESERVE, estiamte.getReserve(), JRLibTestSuite.EPSILON);
+        assertEquals(RESERVE, estiamte.getReserve(), JRLibTestUtl.EPSILON);
     }
 
 }

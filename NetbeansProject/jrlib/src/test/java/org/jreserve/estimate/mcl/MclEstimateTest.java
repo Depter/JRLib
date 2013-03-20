@@ -1,18 +1,18 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
 import org.jreserve.estimate.Estimate;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioFunction;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.factor.linkratio.scale.DefaultLinkRatioScaleSelection;
-import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleMinMaxEstimator;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioFunction;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
+import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
 import org.junit.AfterClass;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -113,13 +113,13 @@ public class MclEstimateTest {
         int devs = expected[0].length;
         assertEquals(devs, estimate.getDevelopmentCount());
         
-        assertEquals(Double.NaN, estimate.getValue(0, -1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(0, -1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++)
             for(int d=0; d<devs; d++)
-                assertEquals(expected[a][d], estimate.getValue(a, d), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(0, devs), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(accidents, 0), JRLibTestSuite.EPSILON);
+                assertEquals(expected[a][d], estimate.getValue(a, d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(0, devs), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(accidents, 0), JRLibTestUtl.EPSILON);
     }
 
 }

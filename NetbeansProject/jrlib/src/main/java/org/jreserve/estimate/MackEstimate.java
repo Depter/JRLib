@@ -1,9 +1,9 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioSE;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.TriangleUtil;
 
 /**
@@ -13,7 +13,7 @@ import org.jreserve.triangle.TriangleUtil;
  */
 public class MackEstimate extends AbstractEstimate<LinkRatioSE> {
     
-    private Triangle cik;
+    private ClaimTriangle cik;
     private LinkRatioSE lrSE;
     
     private double[] procSEs;
@@ -118,5 +118,10 @@ public class MackEstimate extends AbstractEstimate<LinkRatioSE> {
         for(int a=0; a<accidents; a++)
             SEs[a] = Math.sqrt(Math.pow(procSEs[a], 2) + Math.pow(paramSEs[a], 2));
         SE = Math.sqrt(Math.pow(procSE, 2) + Math.pow(paramSE, 2));
+    }
+    
+    @Override
+    public MackEstimate copy() {
+        return new MackEstimate(lrSE.copy());
     }
 }

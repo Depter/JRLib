@@ -1,14 +1,14 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.linkratio.DefaultLinkRatioSelection;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.InputVector;
 import org.jreserve.vector.Vector;
 import static org.junit.Assert.*;
@@ -60,7 +60,7 @@ public class BornhuetterFergusonEstimateTest {
     }
     
     private void createLrs() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.INCURRED);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.INCURRED);
         lrs = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
 
         LinkRatioSmoothingSelection smoothing = new DefaultLinkRatioSmoothing(lrs);
@@ -73,7 +73,7 @@ public class BornhuetterFergusonEstimateTest {
 
     @Test
     public void testGetObservedDevelopmentCount() {
-        Triangle cik = lrs.getSourceFactors().getSourceTriangle();
+        ClaimTriangle cik = lrs.getSourceFactors().getSourceTriangle();
         int accidents = estiamte.getDevelopmentCount();
         for(int a=0; a<accidents; a++)
             assertEquals(cik.getDevelopmentCount(a), estiamte.getObservedDevelopmentCount(a));
@@ -87,17 +87,17 @@ public class BornhuetterFergusonEstimateTest {
         assertEquals(accidents, estiamte.getAccidentCount());
         assertEquals(developments, estiamte.getDevelopmentCount());
         
-        assertEquals(Double.NaN, estiamte.getValue(0, -1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(0, -1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED[a][d], estiamte.getValue(a, d), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getValue(0, developments), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getValue(accidents, 0), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], estiamte.getValue(a, d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(0, developments), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getValue(accidents, 0), JRLibTestUtl.EPSILON);
         
-        assertEquals(Double.NaN, estiamte.getReserve(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estiamte.getReserve(-1), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++)
-            assertEquals(RESERVES[a], estiamte.getReserve(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estiamte.getReserve(accidents), JRLibTestSuite.EPSILON);
+            assertEquals(RESERVES[a], estiamte.getReserve(a), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estiamte.getReserve(accidents), JRLibTestUtl.EPSILON);
     }
 }

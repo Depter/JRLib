@@ -15,4 +15,6 @@ public interface TriangleSmoothing {
      * @return the smoothed triangle.
      */
     public double[][] smooth(Triangle input);
+    
+    public TriangleSmoothing copy();
 }

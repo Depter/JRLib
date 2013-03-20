@@ -8,4 +8,7 @@ package org.jreserve.vector;
 public interface ModifiedVector extends Vector {
     
     public Vector getSourceVector();
+    
+    @Override
+    public ModifiedVector copy();
 }

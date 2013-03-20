@@ -1,8 +1,8 @@
 package org.jreserve.estimate;
 
 import org.jreserve.CalculationData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.Vector;
 
 /**
@@ -17,7 +17,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
     
     private Vector exposure;
     private LinkRatio lrs;
-    private Triangle cik;
+    private ClaimTriangle cik;
     
     public CapeCodEstiamte(LinkRatio lrs, Vector exposure) {
         super(lrs, exposure);
@@ -92,5 +92,10 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
         }
         
         return (sumEG == 0d)? Double.NaN : (sumS / sumEG);
+    }
+    
+    @Override
+    public CapeCodEstiamte copy() {
+        return new CapeCodEstiamte(lrs.copy(), exposure.copy());
     }
 }

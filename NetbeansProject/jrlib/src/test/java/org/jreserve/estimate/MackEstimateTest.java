@@ -1,24 +1,25 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.standarderror.DefaultLinkRatioSESelection;
-import org.jreserve.factor.linkratio.standarderror.LinkRatioSESelection;
-import org.jreserve.factor.linkratio.standarderror.UserInputLinkRatioSEFunction;
-import org.jreserve.factor.linkratio.scale.DefaultLinkRatioScaleSelection;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleCaclulator;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleSelection;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleMinMaxEstimator;
-import org.jreserve.factor.linkratio.scale.UserInputLinkRatioScaleEstimator;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.standarderror.DefaultLinkRatioSESelection;
+import org.jreserve.linkratio.standarderror.LinkRatioSESelection;
+import org.jreserve.linkratio.standarderror.UserInputLinkRatioSEFunction;
+import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
+import org.jreserve.linkratio.scale.LinkRatioScaleCaclulator;
+import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
+import org.jreserve.linkratio.scale.UserInputLinkRatioScaleEstimator;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.*;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.factor.linkratio.scale.*;
-import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.linkratio.standarderror.LinkRatioSE;
 import org.jreserve.triangle.Cell;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -58,7 +59,7 @@ public class MackEstimateTest {
     
     private final static double EXPECTED_SE = 4053667.66802943;
     
-    private Triangle cik;
+    private ClaimTriangle cik;
     private MackEstimate estimate;
     
     public MackEstimateTest() {
@@ -112,38 +113,38 @@ public class MackEstimateTest {
 
     @Test
     public void testGetValue_Cell() {
-        assertEquals(Double.NaN, estimate.getValue(new Cell(-1,  0)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(new Cell( 0, -1)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(new Cell(-1, -1)), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(-1,  0)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell( 0, -1)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(-1, -1)), JRLibTestUtl.EPSILON);
         
         int accidents = estimate.getAccidentCount();
         int developments = estimate.getDevelopmentCount();
         
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED_CIK[a][d], estimate.getValue(new Cell(a, d)), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED_CIK[a][d], estimate.getValue(new Cell(a, d)), JRLibTestUtl.EPSILON);
 
-        assertEquals(Double.NaN, estimate.getValue(new Cell(accidents,  0)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(new Cell(0, developments)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(new Cell(accidents, developments)), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(accidents,  0)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(0, developments)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(accidents, developments)), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetValue_int_int() {
-        assertEquals(Double.NaN, estimate.getValue(-1,  0), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue( 0, -1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(-1, -1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(-1,  0), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue( 0, -1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(-1, -1), JRLibTestUtl.EPSILON);
         
         int accidents = estimate.getAccidentCount();
         int developments = estimate.getDevelopmentCount();
         
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED_CIK[a][d], estimate.getValue(a, d), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED_CIK[a][d], estimate.getValue(a, d), JRLibTestUtl.EPSILON);
 
-        assertEquals(Double.NaN, estimate.getValue(accidents,  0), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue( 0, developments), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(accidents, developments), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(accidents,  0), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue( 0, developments), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(accidents, developments), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -151,44 +152,44 @@ public class MackEstimateTest {
         double[][] found = estimate.toArray();
         assertEquals(EXPECTED_CIK.length, found.length);
         for(int a=0; a<EXPECTED_CIK.length; a++)
-            assertArrayEquals(EXPECTED_CIK[a], found[a], JRLibTestSuite.EPSILON);
+            assertArrayEquals(EXPECTED_CIK[a], found[a], JRLibTestUtl.EPSILON);
     }
     
     @Test
     public void testGetReserve_int() {
         int length = EXPECTED_RI.length;
-        assertEquals(Double.NaN, estimate.getReserve(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getReserve(-1), JRLibTestUtl.EPSILON);
         for(int a=0; a<length; a++)
-            assertEquals(EXPECTED_RI[a], estimate.getReserve(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getReserve(length), JRLibTestSuite.EPSILON);
+            assertEquals(EXPECTED_RI[a], estimate.getReserve(a), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getReserve(length), JRLibTestUtl.EPSILON);
     }
     
     @Test
     public void testToArrayReserve() {
-        assertArrayEquals(EXPECTED_RI, estimate.toArrayReserve(), JRLibTestSuite.EPSILON);
+        assertArrayEquals(EXPECTED_RI, estimate.toArrayReserve(), JRLibTestUtl.EPSILON);
     }
     
     @Test
     public void testGetReserve() {
-        assertEquals(EXPECTED_R, estimate.getReserve(), JRLibTestSuite.EPSILON);
+        assertEquals(EXPECTED_R, estimate.getReserve(), JRLibTestUtl.EPSILON);
     }
     
     @Test
     public void testGetStandardError_int() {
         int length = EXPECTED_SEI.length;
-        assertEquals(Double.NaN, estimate.getSE(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getSE(-1), JRLibTestUtl.EPSILON);
         for(int a=0; a<length; a++)
-            assertEquals(EXPECTED_SEI[a], estimate.getSE(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getSE(length), JRLibTestSuite.EPSILON);
+            assertEquals(EXPECTED_SEI[a], estimate.getSE(a), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getSE(length), JRLibTestUtl.EPSILON);
     }
     
     @Test
     public void testToArrayStandardError() {
-        assertArrayEquals(EXPECTED_SEI, estimate.toArraySE(), JRLibTestSuite.EPSILON);
+        assertArrayEquals(EXPECTED_SEI, estimate.toArraySE(), JRLibTestUtl.EPSILON);
     }
     
     @Test
     public void testGetStandardError() {
-        assertEquals(EXPECTED_SE, estimate.getSE(), JRLibTestSuite.EPSILON);
+        assertEquals(EXPECTED_SE, estimate.getSE(), JRLibTestUtl.EPSILON);
     }
 }

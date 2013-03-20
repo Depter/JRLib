@@ -12,4 +12,6 @@ public interface ODPScaledResidualTriangle extends ResidualTriangle {
     public ResidualTriangle getSourceResidualTriangle();
     
     public double getScale(int development);
+    
+    public double getAdjustment(int development);
 }

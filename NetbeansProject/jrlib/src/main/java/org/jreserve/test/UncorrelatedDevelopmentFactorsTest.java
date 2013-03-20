@@ -2,26 +2,38 @@ package org.jreserve.test;
 
 import java.util.Arrays;
 import org.jreserve.AbstractCalculationData;
-import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.triangle.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<Triangle> implements Test {
+public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<FactorTriangle> implements Test {
+    
+    private final static double DEFAULT_ALPHA = 0.5;
     
     private double testValue;
     private double lowerBound;
     private double alpha;
     private double pValue;
     
-    public UncorrelatedDevelopmentFactorsTest(Triangle factors) {
-        this(factors, 0.5);
+    public UncorrelatedDevelopmentFactorsTest(ClaimTriangle claims) {
+        this(claims, DEFAULT_ALPHA);
     }
     
-    public UncorrelatedDevelopmentFactorsTest(Triangle factors, double alpha) {
+    public UncorrelatedDevelopmentFactorsTest(ClaimTriangle claims, double alpha) {
+        this(new DevelopmentFactors(claims), alpha);
+    }
+    
+    public UncorrelatedDevelopmentFactorsTest(FactorTriangle factors) {
+        this(factors, DEFAULT_ALPHA);
+    }
+    
+    public UncorrelatedDevelopmentFactorsTest(FactorTriangle factors, double alpha) {
         super(factors);
         checkAlpha(alpha);
         this.alpha = alpha;
@@ -104,18 +116,18 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         private int n;
         private int t;
         
-        RankHelper(int development, Triangle source) {
+        RankHelper(int development, FactorTriangle source) {
             this.development = development;
             calculate(source);
         }
         
-        private void calculate(Triangle source) {
+        private void calculate(FactorTriangle source) {
             int[] ri = getRanks(createRi(source));
             int[] si = getRanks(createSi(source, ri.length));
             calculate(si, ri);
         }
         
-        private Double[] createRi(Triangle source) {
+        private Double[] createRi(FactorTriangle source) {
             int dPlus1 = development+1;
             int size = TriangleUtil.getAccidentCount(source, dPlus1);
             Double[] values = new Double[size];
@@ -145,7 +157,7 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
             return -1;
         }
         
-        private Double[] createSi(Triangle source, int size) {
+        private Double[] createSi(FactorTriangle source, int size) {
             Double[] si = new Double[size];
             for(int a=0; a<size; a++)
                 si[a] = source.getValue(a, development);

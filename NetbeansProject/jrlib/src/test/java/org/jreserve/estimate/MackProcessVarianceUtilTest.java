@@ -1,14 +1,20 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
+import org.jreserve.linkratio.scale.UserInputLinkRatioScaleEstimator;
+import org.jreserve.linkratio.scale.LinkRatioScaleExtrapolation;
+import org.jreserve.linkratio.scale.SimpleLinkRatioScale;
+import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
+import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.factor.linkratio.scale.*;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -39,16 +45,16 @@ public class MackProcessVarianceUtilTest {
 
     @Test
     public void testCalculation_Mack() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lr = createLinkRatio_Mack(cik);
         LinkRatioScale scales = createLrScales_Mack(lr);
         MackProcessVarianceUtil util = new MackProcessVarianceUtil(scales, EstimateUtil.completeTriangle(cik, lr));
         
-        assertEquals(PROC_SD_MACK, util.getProcessSD(), JRLibTestSuite.EPSILON);
-        assertArrayEquals(PROC_SDS_MACK, util.getProcessSDs(), JRLibTestSuite.EPSILON);
+        assertEquals(PROC_SD_MACK, util.getProcessSD(), JRLibTestUtl.EPSILON);
+        assertArrayEquals(PROC_SDS_MACK, util.getProcessSDs(), JRLibTestUtl.EPSILON);
     }
     
-    private LinkRatio createLinkRatio_Mack(Triangle cik) {
+    private LinkRatio createLinkRatio_Mack(ClaimTriangle cik) {
         LinkRatio lr = new SimpleLinkRatio(cik);
         LinkRatioSmoothingSelection lrSmoothing = new DefaultLinkRatioSmoothing(lr);
         lrSmoothing.setDevelopmentCount(9);
@@ -69,12 +75,12 @@ public class MackProcessVarianceUtilTest {
     
     @Test
     public void testCalculation_QPaid() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.Q_PAID);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.Q_PAID);
         LinkRatio lr = new SimpleLinkRatio(cik);
         LinkRatioScale scales = new SimpleLinkRatioScale(lr, new LinkRatioScaleExtrapolation());
         MackProcessVarianceUtil util = new MackProcessVarianceUtil(scales, EstimateUtil.completeTriangle(cik, lr));
         
-        assertEquals(PROC_SD_Q_PAID, util.getProcessSD(), JRLibTestSuite.EPSILON);
-        assertArrayEquals(PROC_SDS_Q_PAID, util.getProcessSDs(), JRLibTestSuite.EPSILON);
+        assertEquals(PROC_SD_Q_PAID, util.getProcessSD(), JRLibTestUtl.EPSILON);
+        assertArrayEquals(PROC_SDS_Q_PAID, util.getProcessSDs(), JRLibTestUtl.EPSILON);
     }
 }

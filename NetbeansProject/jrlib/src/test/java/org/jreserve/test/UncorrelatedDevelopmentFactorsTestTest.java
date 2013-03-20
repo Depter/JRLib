@@ -1,12 +1,13 @@
 package org.jreserve.test;
 
 import org.jreserve.ChangeCounter;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.test.UncorrelatedDevelopmentFactorsTest.RankHelper;
-import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.triangle.factor.FactorTriangle;
+import org.jreserve.triangle.factor.FixedDevelopmentFactors;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,41 +38,42 @@ public class UncorrelatedDevelopmentFactorsTestTest {
 
     @Before
     public void setUp() {
-        Triangle triangle = new InputTriangle(MACK_FACTORS);
-        test = new UncorrelatedDevelopmentFactorsTest(triangle);
+        FactorTriangle factors = new FixedDevelopmentFactors(MACK_FACTORS);
+        test = new UncorrelatedDevelopmentFactorsTest(factors);
         counter = new ChangeCounter();
         test.addChangeListener(counter);
     }
 
     @Test
     public void testTest() {
-        assertEquals( 0.50000000, test.getAlpha(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.06955782, test.getTestValue(), JRLibTestSuite.EPSILON);
-        assertEquals(-0.12746658, test.getLowerBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.12746658, test.getUpperBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.71282447, test.getPValue(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.50000000, test.getAlpha(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.06955782, test.getTestValue(), JRLibTestUtl.EPSILON);
+        assertEquals(-0.12746658, test.getLowerBound(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.12746658, test.getUpperBound(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.71282447, test.getPValue(), JRLibTestUtl.EPSILON);
         assertTrue(test.isTestPassed());
         
         test.setAlpha(0.75);
-        assertEquals( 0.75000000, test.getAlpha(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.75000000, test.getAlpha(), JRLibTestUtl.EPSILON);
         assertEquals(1, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
 
     @Test
     public void testTest_Quarterly() {
-        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
-        test = new UncorrelatedDevelopmentFactorsTest(triangle);
+        ClaimTriangle claims = TestData.getCummulatedTriangle(TestData.Q_PAID);
+        FactorTriangle factors =  new DevelopmentFactors(claims);
+        test = new UncorrelatedDevelopmentFactorsTest(factors);
         test.addChangeListener(counter);
-        assertEquals( 0.50000000, test.getAlpha(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.28288600, test.getTestValue(), JRLibTestSuite.EPSILON);
-        assertEquals(-0.04654421, test.getLowerBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.04654421, test.getUpperBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.00004142, test.getPValue(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.50000000, test.getAlpha(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.28288600, test.getTestValue(), JRLibTestUtl.EPSILON);
+        assertEquals(-0.04654421, test.getLowerBound(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.04654421, test.getUpperBound(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.00004142, test.getPValue(), JRLibTestUtl.EPSILON);
         assertFalse(test.isTestPassed());
         
         test.setAlpha(0.25);
-        assertEquals( 0.25000000, test.getAlpha(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.25000000, test.getAlpha(), JRLibTestUtl.EPSILON);
         assertEquals(1, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
@@ -88,12 +90,12 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         boolean[] expectedUsed = {true, true , true, 
                                   true, true , true, 
                                   true, false, false};
-        Triangle triangle = new InputTriangle(MACK_FACTORS);
+        FactorTriangle factors = new FixedDevelopmentFactors(MACK_FACTORS);
         for(int d=0; d<expectedN.length; d++) {
-            RankHelper helper = new RankHelper(d, triangle);
+            RankHelper helper = new RankHelper(d, factors);
             assertEquals(expectedUsed[d], helper.shouldUse());
             assertEquals(expectedN[d], helper.getN());
-            assertEquals(expectedT[d], helper.getT(), JRLibTestSuite.EPSILON);
+            assertEquals(expectedT[d], helper.getT(), JRLibTestUtl.EPSILON);
         }
     }
     
@@ -122,12 +124,13 @@ public class UncorrelatedDevelopmentFactorsTestTest {
             true, true, true, true, true, true, true, true, true, false, 
             false, false, false, false
         };
-        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
+        ClaimTriangle claims = TestData.getCummulatedTriangle(TestData.Q_PAID);
+        FactorTriangle factors = new DevelopmentFactors(claims);
         for(int d=0; d<expectedN.length; d++) {
-            RankHelper helper = new RankHelper(d, triangle);
+            RankHelper helper = new RankHelper(d, factors);
             assertEquals(expectedUsed[d], helper.shouldUse());
             assertEquals(expectedN[d], helper.getN());
-            assertEquals("At d="+d, expectedT[d], helper.getT(), JRLibTestSuite.EPSILON);
+            assertEquals("At d="+d, expectedT[d], helper.getT(), JRLibTestUtl.EPSILON);
         }
     }
 }

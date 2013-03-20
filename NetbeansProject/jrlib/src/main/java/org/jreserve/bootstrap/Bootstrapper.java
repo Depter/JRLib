@@ -13,25 +13,30 @@ public abstract class Bootstrapper {
     private final int bootstrapCount;
     private final double[] reserves;
     
-    protected final int ultimateDev;
+    protected final int devCount;
     protected final int accidents;
-    protected final int[] lastObserved;
+    protected final int[] observedDevCount;
     
-    public Bootstrapper(Estimate estimate, int bootstrapCount) {
+    protected Bootstrapper(Estimate estimate, int bootstrapCount) {
         this.bootstrapCount = bootstrapCount;
         this.reserves = new double[bootstrapCount];
         
         this.estimate = estimate;
-        ultimateDev = estimate.getDevelopmentCount();
+        this.estimate.detach();
+        devCount = estimate.getDevelopmentCount();
         accidents = estimate.getAccidentCount();
-        lastObserved = new int[accidents];
+        observedDevCount = new int[accidents];
         for(int a=0; a<accidents; a++)
-            lastObserved[a] = estimate.getObservedDevelopmentCount(a);
+            observedDevCount[a] = estimate.getObservedDevelopmentCount(a);
     }
     
     public void run() {
         for(int n=0; n<bootstrapCount; n++)
             reserves[n] = calculatePseudoReserve();
+    }
+    
+    public double[] getReserves() {
+        return reserves;
     }
     
     protected abstract double calculatePseudoReserve();

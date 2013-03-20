@@ -1,6 +1,6 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.factor.linkratio.AbstractVectorUserInput;
+import org.jreserve.util.AbstractVectorUserInput;
 
 /**
  *
@@ -33,5 +33,10 @@ public class UserInputMclRhoEstimator extends AbstractVectorUserInput implements
     @Override
     public String toString() {
         return "UserInputMclRhoEstimator";
+    }
+    
+    @Override
+    public UserInputMclRhoEstimator copy() {
+        return new UserInputMclRhoEstimator(values);
     }
 }

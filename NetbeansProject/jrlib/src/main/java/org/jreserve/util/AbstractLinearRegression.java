@@ -77,4 +77,13 @@ public abstract class AbstractLinearRegression<T> implements SelectableMethod<T>
     public double getSlope() {
         return slope;
     }
+    
+    protected void copyStateFrom(AbstractLinearRegression original) {
+        int size = original.isExcluded.length;
+        this.isExcluded = new boolean[size];
+        System.arraycopy(original.isExcluded, 0, isExcluded, 0, size);
+        
+        this.intercept = original.intercept;
+        this.slope = original.slope;
+    }
 }

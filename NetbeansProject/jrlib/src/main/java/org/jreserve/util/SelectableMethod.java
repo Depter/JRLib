@@ -10,4 +10,6 @@ public interface SelectableMethod<T> {
     public void fit(T source);
     
     public double getValue(int index);
+    
+    public SelectableMethod<T> copy();
 }

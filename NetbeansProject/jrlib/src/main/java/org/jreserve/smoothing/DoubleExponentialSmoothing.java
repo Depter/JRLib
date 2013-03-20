@@ -7,10 +7,10 @@ package org.jreserve.smoothing;
  */
 public class DoubleExponentialSmoothing extends AbstractVectorSmoothing {
 
-    private final double alpha;
-    private final double alpha2;
-    private final double beta;
-    private final double beta2;
+    private double alpha;
+    private double alpha2;
+    private double beta;
+    private double beta2;
     
     public DoubleExponentialSmoothing(SmoothingCell[] cells, double alpha, double beta) {
         super(cells);
@@ -26,6 +26,9 @@ public class DoubleExponentialSmoothing extends AbstractVectorSmoothing {
         this.beta2 = 1d-beta;
     }
     
+    private DoubleExponentialSmoothing() {
+    }
+    
     @Override
     protected void smooth(double[] input) {
         int size = input.length;
@@ -39,5 +42,16 @@ public class DoubleExponentialSmoothing extends AbstractVectorSmoothing {
             b = beta * (s - input[i-1]) + beta2 * b;
             input[i] = s;
         }
+    }
+    
+    @Override
+    public DoubleExponentialSmoothing copy() {
+        DoubleExponentialSmoothing copy = new DoubleExponentialSmoothing();
+        copy.copyStateFrom(this);
+        copy.alpha = this.alpha;
+        copy.alpha2 = this.alpha2;
+        copy.beta = this.beta;
+        copy.beta2 = this.beta2;
+        return copy;
     }
 }

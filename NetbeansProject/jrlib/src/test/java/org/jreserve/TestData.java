@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.Triangle;
-import org.jreserve.triangle.TriangleCummulation;
+import org.jreserve.triangle.claim.InputTriangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.claim.CummulatedClaimTriangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.triangle.factor.FactorTriangle;
 
 /**
  *
@@ -50,12 +52,16 @@ public class TestData {
         return getMatrix(path)[0];
     }
     
-    public static Triangle getTriangle(String path) {
+    public static ClaimTriangle getTriangle(String path) {
         return new InputTriangle(getCachedMatrix(path));
     }
     
-    public static Triangle getCummulatedTriangle(String path) {
-        return new TriangleCummulation(getTriangle(path));
+    public static ClaimTriangle getCummulatedTriangle(String path) {
+        return new CummulatedClaimTriangle(getTriangle(path));
+    }
+    
+    public static FactorTriangle getDevelopmentFactors(String path) {
+        return new DevelopmentFactors(getCummulatedTriangle(path));
     }
     
 //    public final static double[][] INCURRED = {

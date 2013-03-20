@@ -11,11 +11,21 @@ public class ArithmeticMovingAverage extends AbstractMovingAverage {
         super(cells, maLength);
     }
 
+    private ArithmeticMovingAverage() {
+    }
+    
     @Override
     protected double mean(double[] input, int index) {
         double sum = 0d;
         for(int i=index-maLength+1; i<=index; i++)
             sum += input[i];
         return sum/(double)maLength;
+    }
+    
+    @Override
+    public ArithmeticMovingAverage copy() {
+        ArithmeticMovingAverage copy = new ArithmeticMovingAverage();
+        copy.copyStateFrom(this);
+        return copy;
     }
 }

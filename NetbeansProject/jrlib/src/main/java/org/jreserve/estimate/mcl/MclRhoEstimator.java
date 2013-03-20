@@ -8,5 +8,7 @@ import org.jreserve.util.SelectableMethod;
  * @version 1.0
  */
 public interface MclRhoEstimator extends SelectableMethod<MclRho> {
-
+    
+    @Override
+    public MclRhoEstimator copy();
 }

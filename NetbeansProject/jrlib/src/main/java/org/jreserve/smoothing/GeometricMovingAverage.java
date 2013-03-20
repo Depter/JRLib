@@ -7,11 +7,14 @@ package org.jreserve.smoothing;
  */
 public class GeometricMovingAverage extends AbstractMovingAverage {
     
-    private final double power;
+    private double power;
     
     public GeometricMovingAverage(SmoothingCell[] cells, int maLength) {
         super(cells, maLength);
         this.power = 1d/(double)maLength;
+    }
+    
+    private GeometricMovingAverage() {
     }
     
     @Override
@@ -20,5 +23,13 @@ public class GeometricMovingAverage extends AbstractMovingAverage {
         for(int i=index-maLength+1; i<=index; i++)
             product *= input[i];
         return Math.pow(product, power);
+    }
+    
+    @Override
+    public GeometricMovingAverage copy() {
+        GeometricMovingAverage copy = new GeometricMovingAverage();
+        copy.copyStateFrom(this);
+        copy.power = this.power;
+        return copy;
     }
 }

@@ -20,4 +20,5 @@ public interface Triangle extends CalculationData {
     public double getValue(int accident, int development);
     
     public double[][] toArray();
+
 }

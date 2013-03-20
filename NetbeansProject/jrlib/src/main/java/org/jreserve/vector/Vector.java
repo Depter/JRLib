@@ -1,13 +1,14 @@
 package org.jreserve.vector;
 
 import org.jreserve.CalculationData;
+import org.jreserve.Copyable;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface Vector extends CalculationData {
+public interface Vector extends CalculationData, Copyable<Vector> {
     
     public int getLength();
     

@@ -1,12 +1,12 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.InputVector;
 import org.jreserve.vector.Vector;
 import static org.junit.Assert.assertEquals;
@@ -37,7 +37,7 @@ public class CapeCodEstiamteTest {
 
     @Before
     public void setUp() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.PAID);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.PAID);
         LinkRatioSmoothingSelection lrs = new DefaultLinkRatioSmoothing(new SimpleLinkRatio(cik));
         UserInputLRFunction tail = new UserInputLRFunction();
         tail.setValue(7, 1.05);
@@ -50,15 +50,15 @@ public class CapeCodEstiamteTest {
 
     @Test
     public void testRecalculateLayer() {
-        assertEquals(Double.NaN, estimate.getValue(-1, 0), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(0, -1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(-1, 0), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(0, -1), JRLibTestUtl.EPSILON);
         
         int accidents = EXPECTED.length;
         int devs = EXPECTED[0].length;
         for(int a=0; a<accidents; a++)
             for(int d=0; d<devs; d++)
-                assertEquals(EXPECTED[a][d], estimate.getValue(a, d), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(accidents, 0), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(0, devs), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], estimate.getValue(a, d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(accidents, 0), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(0, devs), JRLibTestUtl.EPSILON);
     }
 }

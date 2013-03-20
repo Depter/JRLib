@@ -1,12 +1,13 @@
 package org.jreserve.test;
 
 import org.jreserve.ChangeCounter;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
 import org.jreserve.test.CalendarEffectTest.DiagonalHelper;
-import org.jreserve.triangle.InputTriangle;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.triangle.factor.FactorTriangle;
+import org.jreserve.triangle.factor.FixedDevelopmentFactors;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -24,40 +25,40 @@ public class CalendarEffectTestTest {
 
     @Test
     public void testTest() {
-        Triangle triangle = new InputTriangle(UncorrelatedDevelopmentFactorsTestTest.MACK_FACTORS);
-        CalendarEffectTest test = new CalendarEffectTest(triangle);
+        FactorTriangle factors = new FixedDevelopmentFactors(UncorrelatedDevelopmentFactorsTestTest.MACK_FACTORS);
+        CalendarEffectTest test = new CalendarEffectTest(factors);
         ChangeCounter counter = new ChangeCounter();
         test.addChangeListener(counter);
         
-        assertEquals( 0.05000000, test.getAlpha(), JRLibTestSuite.EPSILON);
-        assertEquals(14.0000000, test.getTestValue(), JRLibTestSuite.EPSILON);
-        assertEquals( 8.96561335, test.getLowerBound(), JRLibTestSuite.EPSILON);
-        assertEquals(16.78438665, test.getUpperBound(), JRLibTestSuite.EPSILON);
-        assertEquals( 0.57274274, test.getPValue(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.05000000, test.getAlpha(), JRLibTestUtl.EPSILON);
+        assertEquals(14.0000000, test.getTestValue(), JRLibTestUtl.EPSILON);
+        assertEquals( 8.96561335, test.getLowerBound(), JRLibTestUtl.EPSILON);
+        assertEquals(16.78438665, test.getUpperBound(), JRLibTestUtl.EPSILON);
+        assertEquals( 0.57274274, test.getPValue(), JRLibTestUtl.EPSILON);
         assertTrue(test.isTestPassed());
         
         test.setAlpha(0.75);
-        assertEquals( 0.75000000, test.getAlpha(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.75000000, test.getAlpha(), JRLibTestUtl.EPSILON);
         assertEquals(1, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
 
     @Test
     public void testTest_Quarterly() {
-        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
+        ClaimTriangle triangle = TestData.getCummulatedTriangle(TestData.Q_PAID);
         CalendarEffectTest test = new CalendarEffectTest(triangle);
         ChangeCounter counter = new ChangeCounter();
         test.addChangeListener(counter);
         
-        assertEquals( 0.05000000, test.getAlpha(), JRLibTestSuite.EPSILON);
-        assertEquals(75.00000000, test.getTestValue(), JRLibTestSuite.EPSILON);
-        assertEquals(69.24185858, test.getLowerBound(), JRLibTestSuite.EPSILON);
-        assertEquals(87.32845392, test.getUpperBound(), JRLibTestSuite.EPSILON);
-        assertEquals(0.47646752, test.getPValue(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.05000000, test.getAlpha(), JRLibTestUtl.EPSILON);
+        assertEquals(75.00000000, test.getTestValue(), JRLibTestUtl.EPSILON);
+        assertEquals(69.24185858, test.getLowerBound(), JRLibTestUtl.EPSILON);
+        assertEquals(87.32845392, test.getUpperBound(), JRLibTestUtl.EPSILON);
+        assertEquals(0.47646752, test.getPValue(), JRLibTestUtl.EPSILON);
         assertTrue(test.isTestPassed());
         
         test.setAlpha(0.25);
-        assertEquals( 0.25000000, test.getAlpha(), JRLibTestSuite.EPSILON);
+        assertEquals( 0.25000000, test.getAlpha(), JRLibTestUtl.EPSILON);
         assertEquals(1, counter.getChangeCount());
         assertTrue(test.isTestPassed());
     }
@@ -85,13 +86,14 @@ public class CalendarEffectTestTest {
         };
         boolean[] expectedUsed = {
             false, true, true, true, true , 
-            true,  true, true, true};
-        Triangle triangle = new InputTriangle(UncorrelatedDevelopmentFactorsTestTest.MACK_FACTORS);
+            true,  true, true, true
+        };
+        FactorTriangle factors = new FixedDevelopmentFactors(UncorrelatedDevelopmentFactorsTestTest.MACK_FACTORS);
         for(int d=0; d<expectedEZ.length; d++) {
-            DiagonalHelper helper = new DiagonalHelper(sl, d, triangle);
+            DiagonalHelper helper = new DiagonalHelper(sl, d, factors);
             assertEquals(expectedUsed[d], helper.shouldUse());
-            assertEquals(expectedEZ[d], helper.getEZ(), JRLibTestSuite.EPSILON);
-            assertEquals(expectedVarZ[d], helper.getVarZ(), JRLibTestSuite.EPSILON);
+            assertEquals(expectedEZ[d], helper.getEZ(), JRLibTestUtl.EPSILON);
+            assertEquals(expectedVarZ[d], helper.getVarZ(), JRLibTestUtl.EPSILON);
         }
     }
     
@@ -138,12 +140,13 @@ public class CalendarEffectTestTest {
             true, true, true, true, true, true, true, true, true, 
             true, true, true, true, true, true, true, true, true
         };
-        Triangle triangle = new DevelopmentFactors(TestData.getCummulatedTriangle(TestData.Q_PAID));
+        ClaimTriangle triangle = TestData.getCummulatedTriangle(TestData.Q_PAID);
+        FactorTriangle factors = new DevelopmentFactors(triangle);
         for(int d=0; d<expectedEZ.length; d++) {
-            DiagonalHelper helper = new DiagonalHelper(sl, d, triangle);
+            DiagonalHelper helper = new DiagonalHelper(sl, d, factors);
             assertEquals(expectedUsed[d], helper.shouldUse());
-            assertEquals(expectedEZ[d], helper.getEZ(), JRLibTestSuite.EPSILON);
-            assertEquals(expectedVarZ[d], helper.getVarZ(), JRLibTestSuite.EPSILON);
+            assertEquals(expectedEZ[d], helper.getEZ(), JRLibTestUtl.EPSILON);
+            assertEquals(expectedVarZ[d], helper.getVarZ(), JRLibTestUtl.EPSILON);
         }
     }
 }

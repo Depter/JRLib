@@ -1,7 +1,7 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -11,7 +11,7 @@ import org.jreserve.triangle.Triangle;
 public class ChainLadderEstimate extends AbstractEstimate<LinkRatio> {
 
     private LinkRatio lrs;
-    private Triangle ciks;
+    private ClaimTriangle ciks;
 
     public ChainLadderEstimate(LinkRatio lrs) {
         super(lrs);
@@ -38,5 +38,10 @@ public class ChainLadderEstimate extends AbstractEstimate<LinkRatio> {
         accidents = ciks.getAccidentCount();
         developments = lrs.getDevelopmentCount()+1;
         values = EstimateUtil.completeTriangle(ciks, lrs);
+    }
+    
+    @Override
+    public ChainLadderEstimate copy() {
+        return new ChainLadderEstimate(lrs.copy());
     }
 }

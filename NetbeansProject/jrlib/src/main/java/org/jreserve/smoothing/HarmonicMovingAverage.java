@@ -11,11 +11,21 @@ public class HarmonicMovingAverage extends AbstractMovingAverage {
         super(cells, maLength);
     }
 
+    private HarmonicMovingAverage() {
+    }
+    
     @Override
     protected double mean(double[] input, int index) {
         double sum = 0d;
         for(int i=index-maLength+1; i<=index; i++)
             sum += 1d/input[i];
         return (double)maLength/sum;
+    }
+    
+    @Override
+    public HarmonicMovingAverage copy() {
+        HarmonicMovingAverage copy = new HarmonicMovingAverage();
+        copy.copyStateFrom(this);
+        return copy;
     }
 }

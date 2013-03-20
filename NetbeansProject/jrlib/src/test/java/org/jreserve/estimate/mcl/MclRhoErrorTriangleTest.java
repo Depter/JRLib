@@ -1,13 +1,13 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioFunction;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioFunction;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,14 +96,14 @@ public class MclRhoErrorTriangleTest {
     public void testRecalculateLayer() {
         int accidents = ERRORS_IP.length;
         
-        assertEquals(Double.NaN, errors.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, errors.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++) {
             int devs = ERRORS_IP[a].length;
-            assertEquals(Double.NaN, errors.getValue(a, -1), JRLibTestSuite.EPSILON);
+            assertEquals(Double.NaN, errors.getValue(a, -1), JRLibTestUtl.EPSILON);
             
             for(int d=0; d<devs; d++)
-                assertEquals("At ["+a+"; "+d+"]", ERRORS_IP[a][d], errors.getValue(a, d), JRLibTestSuite.EPSILON);
-            assertEquals(Double.NaN, errors.getValue(a, devs), JRLibTestSuite.EPSILON);
+                assertEquals("At ["+a+"; "+d+"]", ERRORS_IP[a][d], errors.getValue(a, d), JRLibTestUtl.EPSILON);
+            assertEquals(Double.NaN, errors.getValue(a, devs), JRLibTestUtl.EPSILON);
         }
     }
 }

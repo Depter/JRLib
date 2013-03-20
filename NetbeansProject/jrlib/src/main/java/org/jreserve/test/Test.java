@@ -26,4 +26,5 @@ public interface Test {
      * Returns the p-value of the test.
      */
     public double getPValue();
+    
 }

@@ -1,16 +1,16 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.WeightedAverageLRMethod;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.WeightedAverageLRMethod;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
 import org.jreserve.triangle.Cell;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,7 +40,7 @@ public class ChainLadderEstimateTest {
     
     private final static double RESERVE = 4768029.05562229;
     
-    private Triangle cik;
+    private ClaimTriangle cik;
     private LinkRatio lrs;
     private ChainLadderEstimate cl;
     
@@ -76,38 +76,38 @@ public class ChainLadderEstimateTest {
 
     @Test
     public void testGetValue_Cell() {
-        assertEquals(Double.NaN, cl.getValue(new Cell(-1,  0)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(new Cell( 0, -1)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(new Cell(-1, -1)), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(new Cell(-1,  0)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(new Cell( 0, -1)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(new Cell(-1, -1)), JRLibTestUtl.EPSILON);
         
         int accidents = EXPECTED.length;
         int developments = EXPECTED[0].length;
         
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED[a][d], cl.getValue(new Cell(a, d)), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], cl.getValue(new Cell(a, d)), JRLibTestUtl.EPSILON);
 
-        assertEquals(Double.NaN, cl.getValue(new Cell(accidents,  0)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(new Cell(0, developments)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(new Cell(accidents, developments)), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(new Cell(accidents,  0)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(new Cell(0, developments)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(new Cell(accidents, developments)), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetValue_int_int() {
-        assertEquals(Double.NaN, cl.getValue(-1,  0), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue( 0, -1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(-1, -1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(-1,  0), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue( 0, -1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(-1, -1), JRLibTestUtl.EPSILON);
         
         int accidents = EXPECTED.length;
         int developments = EXPECTED[0].length;
         
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED[a][d], cl.getValue(a, d), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], cl.getValue(a, d), JRLibTestUtl.EPSILON);
 
-        assertEquals(Double.NaN, cl.getValue(accidents, 0), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(0, developments), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getValue(accidents, developments), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(accidents, 0), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(0, developments), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getValue(accidents, developments), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -116,25 +116,25 @@ public class ChainLadderEstimateTest {
         assertEquals(EXPECTED.length, found.length);
         
         for(int a=0; a<EXPECTED.length; a++)
-            assertArrayEquals(EXPECTED[a], found[a], JRLibTestSuite.EPSILON);
+            assertArrayEquals(EXPECTED[a], found[a], JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetReserve_int() {
-        assertEquals(Double.NaN, cl.getReserve(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, cl.getReserve(-1), JRLibTestUtl.EPSILON);
         int accidents = RESERVES.length;
         for(int a=0; a<accidents; a++)
-            assertEquals(RESERVES[a], cl.getReserve(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, cl.getReserve(accidents), JRLibTestSuite.EPSILON);
+            assertEquals(RESERVES[a], cl.getReserve(a), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, cl.getReserve(accidents), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testToArrayReserve() {
-        assertArrayEquals(RESERVES, cl.toArrayReserve(), JRLibTestSuite.EPSILON);
+        assertArrayEquals(RESERVES, cl.toArrayReserve(), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetReserve_0args() {
-        assertEquals(RESERVE, cl.getReserve(), JRLibTestSuite.EPSILON);
+        assertEquals(RESERVE, cl.getReserve(), JRLibTestUtl.EPSILON);
     }
 }

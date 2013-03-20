@@ -1,11 +1,10 @@
 package org.jreserve.bootstrap.odp;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.bootstrap.PearsonResidualClaimTriangle;
 import org.jreserve.bootstrap.ResidualTriangle;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,17 +47,17 @@ public class AbstractODPResidualTriangleTest {
         double correction = paid.correction;
         
         int accidents = paidSource.getAccidentCount();
-        assertEquals(Double.NaN, paid.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, paid.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++) {
             int devs = paidSource.getDevelopmentCount(a);
-            assertEquals(Double.NaN, paid.getValue(a, -1), JRLibTestSuite.EPSILON);
+            assertEquals(Double.NaN, paid.getValue(a, -1), JRLibTestUtl.EPSILON);
             for(int d=0; d<devs; d++) {
                 double expected = correction * paidSource.getValue(a, d);
                 double found = paid.getValue(a, d);
-                assertEquals(expected, found, JRLibTestSuite.EPSILON);
+                assertEquals(expected, found, JRLibTestUtl.EPSILON);
             }
         }
-        assertEquals(Double.NaN, paid.getValue(accidents, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, paid.getValue(accidents, 0), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -67,26 +66,26 @@ public class AbstractODPResidualTriangleTest {
         double correction = incurred.correction;
         
         int accidents = incurredSource.getAccidentCount();
-        assertEquals(Double.NaN, incurred.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, incurred.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++) {
             int devs = incurredSource.getDevelopmentCount(a);
-            assertEquals(Double.NaN, incurred.getValue(a, -1), JRLibTestSuite.EPSILON);
+            assertEquals(Double.NaN, incurred.getValue(a, -1), JRLibTestUtl.EPSILON);
             for(int d=0; d<devs; d++) {
                 double expected = correction * incurredSource.getValue(a, d);
                 double found = incurred.getValue(a, d);
-                assertEquals(expected, found, JRLibTestSuite.EPSILON);
+                assertEquals(expected, found, JRLibTestUtl.EPSILON);
             }
         }
-        assertEquals(Double.NaN, incurred.getValue(accidents, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, incurred.getValue(accidents, 0), JRLibTestUtl.EPSILON);
     }
     
     public void testCalculateCorrection() {
         paid.calculateCorrection();
-        assertEquals(1.30930734, paid.correction, JRLibTestSuite.EPSILON);
+        assertEquals(1.30930734, paid.correction, JRLibTestUtl.EPSILON);
         assertEquals(36, paid.n);
     
         incurred.calculateCorrection();
-        assertEquals(1.63299316, incurred.correction, JRLibTestSuite.EPSILON);
+        assertEquals(1.63299316, incurred.correction, JRLibTestUtl.EPSILON);
         assertEquals(24, incurred.n);
     }
 

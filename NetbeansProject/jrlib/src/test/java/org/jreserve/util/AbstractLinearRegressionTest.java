@@ -1,6 +1,6 @@
 package org.jreserve.util;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class AbstractLinearRegressionTest {
 
     @Test
     public void testSetExcluded() {
-        assertArrayEquals(Y, lr.getYs(null), JRLibTestSuite.EPSILON);
+        assertArrayEquals(Y, lr.getYs(null), JRLibTestUtl.EPSILON);
         
         int index = 2;
         lr.setExcluded(index, true);
@@ -38,21 +38,21 @@ public class AbstractLinearRegressionTest {
             if(i == index)
                 assertTrue(Double.isNaN(y[i]));
             else
-                assertEquals(Y[i], y[i], JRLibTestSuite.EPSILON);
+                assertEquals(Y[i], y[i], JRLibTestUtl.EPSILON);
         }
         
         lr.setExcluded(index, false);
         assertFalse(lr.isExcluded(index));
         y = lr.getYs(null);
         lr.excludeValues(y);
-        assertArrayEquals(Y, y, JRLibTestSuite.EPSILON);
+        assertArrayEquals(Y, y, JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testFit() {
         lr.fit(null);
-        assertEquals(1.0, lr.intercept, JRLibTestSuite.EPSILON);
-        assertEquals(0.5, lr.slope, JRLibTestSuite.EPSILON);
+        assertEquals(1.0, lr.intercept, JRLibTestUtl.EPSILON);
+        assertEquals(0.5, lr.slope, JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class AbstractLinearRegressionTest {
         double[] x = lr.getXZeroBased(length);
         assertEquals(length, x.length);
         for(int i=0; i<length; i++)
-            assertEquals((double)i, x[i], JRLibTestSuite.EPSILON);
+            assertEquals((double)i, x[i], JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class AbstractLinearRegressionTest {
         double[] x = lr.getXOneBased(length);
         assertEquals(length, x.length);
         for(int i=0; i<length; i++)
-            assertEquals((double)(i+1), x[i], JRLibTestSuite.EPSILON);
+            assertEquals((double)(i+1), x[i], JRLibTestUtl.EPSILON);
     }
 
     public class AbstractLinearRegressionImpl extends AbstractLinearRegression<Object> {
@@ -94,6 +94,10 @@ public class AbstractLinearRegressionTest {
         public double getValue(int index) {
             double x = (double) (index+1);
             return intercept + slope * x;
+        }
+
+        public SelectableMethod<Object> copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

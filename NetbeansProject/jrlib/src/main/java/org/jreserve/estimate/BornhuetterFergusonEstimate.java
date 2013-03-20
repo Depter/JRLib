@@ -1,8 +1,8 @@
 package org.jreserve.estimate;
 
 import org.jreserve.CalculationData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.Vector;
 
 /**
@@ -17,7 +17,7 @@ public class BornhuetterFergusonEstimate extends AbstractEstimate<CalculationDat
     private final static int LOSS_RATIOS = 2;
     
     private LinkRatio lrs;
-    private Triangle ciks;
+    private ClaimTriangle ciks;
     private Vector exposure;
     private Vector lossRatio;
     
@@ -122,5 +122,12 @@ public class BornhuetterFergusonEstimate extends AbstractEstimate<CalculationDat
         for(int a=0; a<accidents; a++)
             ultimates[a] = exposure.getValue(a) * lossRatio.getValue(a);
         return ultimates;
+    }
+    
+    @Override
+    public BornhuetterFergusonEstimate copy() {
+        return new BornhuetterFergusonEstimate(
+                lrs.copy(), exposure.copy(), lossRatio.copy()
+                );
     }
 }

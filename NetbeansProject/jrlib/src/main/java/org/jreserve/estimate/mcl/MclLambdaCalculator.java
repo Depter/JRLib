@@ -1,7 +1,7 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleErrorTriangle;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.scale.LinkRatioScaleErrorTriangle;
 import org.jreserve.triangle.TriangleUtil;
 
 /**

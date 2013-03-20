@@ -1,6 +1,7 @@
 package org.jreserve.estimate;
 
 import org.jreserve.CalculationData;
+import org.jreserve.Copyable;
 import org.jreserve.triangle.Cell;
 
 /**
@@ -8,7 +9,7 @@ import org.jreserve.triangle.Cell;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface Estimate extends CalculationData{
+public interface Estimate extends CalculationData, Copyable<Estimate> {
 
     public int getAccidentCount();
     

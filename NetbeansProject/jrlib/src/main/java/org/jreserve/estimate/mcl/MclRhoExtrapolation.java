@@ -75,4 +75,12 @@ public class MclRhoExtrapolation extends AbstractLinearRegression<MclRho> implem
             "MclRhoExtrapolation [ln(rho(k)) = %f + (%f) * k]",
             intercept, slope);
     }
+    
+    @Override
+    public MclRhoExtrapolation copy() {
+        MclRhoExtrapolation copy = new MclRhoExtrapolation();
+        copy.isEmptyModel = isEmptyModel;
+        copy.copyStateFrom(this);
+        return copy;
+    }
 }

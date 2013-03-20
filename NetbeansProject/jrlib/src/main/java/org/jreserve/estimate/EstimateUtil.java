@@ -1,7 +1,7 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -10,7 +10,7 @@ import org.jreserve.triangle.Triangle;
  */
 public class EstimateUtil {
     
-    public static double[][] completeTriangle(Triangle cik, LinkRatio lrs) {
+    public static double[][] completeTriangle(ClaimTriangle cik, LinkRatio lrs) {
         int accidents = cik.getAccidentCount();
         int developments = lrs.getDevelopmentCount() + 1;
         double[][] result = new double[accidents][developments];

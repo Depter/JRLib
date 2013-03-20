@@ -8,16 +8,15 @@ import org.jreserve.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractTriangle<T extends CalculationData> extends AbstractCalculationData<T> implements Triangle {
+public abstract class AbstractTriangle <T extends CalculationData> extends AbstractCalculationData<T> implements Triangle {
 
     protected AbstractTriangle(T source) {
         super(source);
     }
-
+    
     protected AbstractTriangle() {
     }
-
-
+    
     protected boolean withinBounds(int accident) {
         return accident >= 0 &&
                accident < getAccidentCount();
@@ -49,5 +48,5 @@ public abstract class AbstractTriangle<T extends CalculationData> extends Abstra
         for(int d=0; d<devs; d++)
             result[d] = getValue(accident, d);
         return result;
-    }    
+    }        
 }

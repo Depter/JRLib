@@ -1,17 +1,17 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioFunction;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.factor.linkratio.scale.DefaultLinkRatioScaleSelection;
-import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleMinMaxEstimator;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioFunction;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
+import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -78,9 +78,9 @@ public class MCLLambdaCalculatorTest {
     @Test
     public void testRecalculateLayer() {
         MclLambdaCalculator paid = new MclLambdaCalculator(PAID_RHO, PAID_SCALE);
-        assertEquals(PAID_LAMBDA, paid.getLambda(), JRLibTestSuite.EPSILON);
+        assertEquals(PAID_LAMBDA, paid.getLambda(), JRLibTestUtl.EPSILON);
         
         MclLambdaCalculator incurred = new MclLambdaCalculator(INCURRED_RHO, INCURRED_SCALE);
-        assertEquals(INCURRED_LAMBDA, incurred.getLambda(), JRLibTestSuite.EPSILON);
+        assertEquals(INCURRED_LAMBDA, incurred.getLambda(), JRLibTestUtl.EPSILON);
     }
 }

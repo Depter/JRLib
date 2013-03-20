@@ -33,4 +33,11 @@ public class EmptyMclRhoEstimator implements MclRhoEstimator {
     public String toString() {
         return "EmptyMclRhoEstimator";
     }
+    
+    @Override
+    public EmptyMclRhoEstimator copy() {
+        EmptyMclRhoEstimator copy = new EmptyMclRhoEstimator();
+        copy.rhos = rhos;
+        return copy;
+    }
 }

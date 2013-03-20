@@ -1,6 +1,6 @@
 package org.jreserve.vector;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -38,8 +38,8 @@ public class VectorCorrectionTest {
 
     @Test
     public void testGetCorrection() {
-        assertEquals(CORRECTION, corrigated.getCorrection(), JRLibTestSuite.EPSILON);
-        assertEquals(CORRECTION, outsider.getCorrection(), JRLibTestSuite.EPSILON);
+        assertEquals(CORRECTION, corrigated.getCorrection(), JRLibTestUtl.EPSILON);
+        assertEquals(CORRECTION, outsider.getCorrection(), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -48,11 +48,11 @@ public class VectorCorrectionTest {
         
         for(int i=0; i<length; i++) {
             double expected = source.getValue(i);
-            assertEquals(expected, outsider.getValue(i), JRLibTestSuite.EPSILON);
+            assertEquals(expected, outsider.getValue(i), JRLibTestUtl.EPSILON);
                 
             if(i == INDEX)
                 expected = CORRECTION;
-            assertEquals(expected, corrigated.getValue(i), JRLibTestSuite.EPSILON);
+            assertEquals(expected, corrigated.getValue(i), JRLibTestUtl.EPSILON);
         }
         
         int index = outsider.getIndex();

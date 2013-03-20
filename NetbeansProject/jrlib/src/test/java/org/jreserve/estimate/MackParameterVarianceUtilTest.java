@@ -1,15 +1,25 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.linkratio.standarderror.DefaultLinkRatioSESelection;
+import org.jreserve.linkratio.standarderror.LinkRatioSECalculator;
+import org.jreserve.linkratio.standarderror.UserInputLinkRatioSEFunction;
+import org.jreserve.linkratio.standarderror.LinkRatioSESelection;
+import org.jreserve.linkratio.standarderror.LinkRatioSE;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
+import org.jreserve.linkratio.scale.UserInputLinkRatioScaleEstimator;
+import org.jreserve.linkratio.scale.LinkRatioScaleExtrapolation;
+import org.jreserve.linkratio.scale.SimpleLinkRatioScale;
+import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
+import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
-import org.jreserve.factor.linkratio.curve.DefaultLinkRatioSmoothing;
-import org.jreserve.factor.linkratio.curve.LinkRatioSmoothingSelection;
-import org.jreserve.factor.linkratio.curve.UserInputLRFunction;
-import org.jreserve.factor.linkratio.scale.*;
-import org.jreserve.factor.linkratio.standarderror.*;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
+import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
+import org.jreserve.linkratio.smoothing.UserInputLRFunction;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
@@ -40,17 +50,17 @@ public class MackParameterVarianceUtilTest {
 
     @Test
     public void testCalculation_Mack3() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lr = createLinkRatio_Mack(cik);
         LinkRatioScale scales = createLrScales_Mack(lr);
         LinkRatioSE lrSE = createLrSE(scales);
         MackParameterVarianceUtil util = new MackParameterVarianceUtil(lrSE, EstimateUtil.completeTriangle(cik, lr));
         
-        assertEquals(PARAM_SD_MACK, util.getParameterSD(), JRLibTestSuite.EPSILON);
-        assertArrayEquals(PARAM_SDS_MACK, util.getParameterSDs(), JRLibTestSuite.EPSILON);
+        assertEquals(PARAM_SD_MACK, util.getParameterSD(), JRLibTestUtl.EPSILON);
+        assertArrayEquals(PARAM_SDS_MACK, util.getParameterSDs(), JRLibTestUtl.EPSILON);
     }
     
-    private LinkRatio createLinkRatio_Mack(Triangle cik) {
+    private LinkRatio createLinkRatio_Mack(ClaimTriangle cik) {
         LinkRatio lr = new SimpleLinkRatio(cik);
         LinkRatioSmoothingSelection lrSmoothing = new DefaultLinkRatioSmoothing(lr);
         lrSmoothing.setDevelopmentCount(9);
@@ -80,13 +90,13 @@ public class MackParameterVarianceUtilTest {
 
     @Test
     public void testCalculation_Q_Paid() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.Q_PAID);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.Q_PAID);
         LinkRatio lrs = new SimpleLinkRatio(cik);
         LinkRatioScale scales = new SimpleLinkRatioScale(lrs, new LinkRatioScaleExtrapolation());
         LinkRatioSE lrSE = new LinkRatioSECalculator(scales);
         MackParameterVarianceUtil util = new MackParameterVarianceUtil(lrSE, EstimateUtil.completeTriangle(cik, lrs));
         
-        assertEquals(PARAM_SD_Q_PAID, util.getParameterSD(), JRLibTestSuite.EPSILON);
-        assertArrayEquals(PARAM_SDS_Q_PAID, util.getParameterSDs(), JRLibTestSuite.EPSILON);
+        assertEquals(PARAM_SD_Q_PAID, util.getParameterSD(), JRLibTestUtl.EPSILON);
+        assertArrayEquals(PARAM_SDS_Q_PAID, util.getParameterSDs(), JRLibTestUtl.EPSILON);
     }
 }

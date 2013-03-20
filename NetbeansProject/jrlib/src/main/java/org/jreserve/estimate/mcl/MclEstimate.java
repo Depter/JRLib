@@ -2,10 +2,10 @@ package org.jreserve.estimate.mcl;
 
 import org.jreserve.CalculationData;
 import org.jreserve.estimate.AbstractEstimate;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.factor.linkratio.scale.LinkRatioScaleErrorTriangle;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.scale.LinkRatioScaleErrorTriangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -142,11 +142,19 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
         return op < oi? op : oi;
     }
     
+    @Override
+    public MclEstimate copy() {
+        return new MclEstimate(
+                paid.scale.copy(), 
+                incurred.scale.copy()
+                );
+    }
+    
     public class MclEstimateDelegate extends AbstractEstimate<CalculationData> {
         
         private LinkRatioScale scale;
         private LinkRatio lrs;
-        private Triangle cik;
+        private ClaimTriangle cik;
         private MclRhoSelection rho;
         private MclLambdaCalculator lambda;
         
@@ -227,6 +235,10 @@ public class MclEstimate extends AbstractEstimate<CalculationData> {
 
         @Override
         protected void recalculateLayer() {
+        }
+
+        public MclEstimateDelegate copy() {
+            throw new UnsupportedOperationException("Not supported. Call copy on MclEstimate instance!");
         }
     }
 }

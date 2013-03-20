@@ -1,7 +1,7 @@
 package org.jreserve.vector;
 
 import org.jreserve.ChangeCounter;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import static org.jreserve.TestData.EXPOSURE;
 import static org.jreserve.TestData.getCachedVector;
 import static org.junit.Assert.*;
@@ -47,10 +47,10 @@ public class InputVectorTest {
         assertEquals(data.length, vector.getLength());
         assertEquals(2, changeCounter.getChangeCount());
         
-        assertEquals(Double.NaN, vector.getValue(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, vector.getValue(-1), JRLibTestUtl.EPSILON);
         for(int i=0; i<data.length; i++)
-            assertEquals(data[i], vector.getValue(i), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, vector.getValue(data.length), JRLibTestSuite.EPSILON);
+            assertEquals(data[i], vector.getValue(i), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, vector.getValue(data.length), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -60,9 +60,9 @@ public class InputVectorTest {
 
     @Test
     public void testGetValue() {
-        assertEquals(Double.NaN, vector.getValue(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, vector.getValue(-1), JRLibTestUtl.EPSILON);
         for(int i=0; i<INPUT.length; i++)
-            assertEquals(INPUT[i], vector.getValue(i), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, vector.getValue(INPUT.length), JRLibTestSuite.EPSILON);
+            assertEquals(INPUT[i], vector.getValue(i), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, vector.getValue(INPUT.length), JRLibTestUtl.EPSILON);
     }
 }

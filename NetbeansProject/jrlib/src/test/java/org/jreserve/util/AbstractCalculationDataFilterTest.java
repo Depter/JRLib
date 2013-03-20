@@ -2,7 +2,7 @@ package org.jreserve.util;
 
 import org.jreserve.CalculationData;
 import org.jreserve.ChangeCounter;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import static org.jreserve.TestData.EXPOSURE;
 import static org.jreserve.TestData.getCachedVector;
 import org.jreserve.vector.InputVector;
@@ -40,7 +40,7 @@ public class AbstractCalculationDataFilterTest {
     public void testGetFilter() {
         Filter f = filter.getFilter();
         assertTrue(f instanceof SigmaFilter);
-        assertEquals(SigmaFilter.DEFAULT_TRESHOLD, ((SigmaFilter)f).getTreshold(), JRLibTestSuite.EPSILON);
+        assertEquals(SigmaFilter.DEFAULT_TRESHOLD, ((SigmaFilter)f).getTreshold(), JRLibTestUtl.EPSILON);
     }
 
     @Test

@@ -1,6 +1,6 @@
 format 76
 "jreserve" // org::jreserve
-  revision 1
+  revision 2
   modified_by 2 ""
   // class settings
   //class diagram settings
@@ -125,9 +125,13 @@ ${members}}
     end
   end
 
+  package_ref 136578 // bootstrap
+
   package_ref 129026 // triangle
 
   package_ref 129154 // factor
 
   package_ref 129410 // util
+
+  package_ref 136450 // estimate
 end

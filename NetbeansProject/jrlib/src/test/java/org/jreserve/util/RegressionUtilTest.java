@@ -1,6 +1,6 @@
 package org.jreserve.util;
 
-import static org.jreserve.JRLibTestSuite.EPSILON;
+import static org.jreserve.JRLibTestUtl.EPSILON;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

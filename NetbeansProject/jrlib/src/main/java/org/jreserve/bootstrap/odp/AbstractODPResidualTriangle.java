@@ -2,6 +2,7 @@ package org.jreserve.bootstrap.odp;
 
 import org.jreserve.bootstrap.ResidualTriangle;
 import org.jreserve.triangle.AbstractTriangleModification;
+import org.jreserve.triangle.claim.ModifiedClaimTriangle;
 
 /**
  *
@@ -20,6 +21,11 @@ public abstract class AbstractODPResidualTriangle extends AbstractTriangleModifi
     @Override
     public ResidualTriangle getSourceResidualTriangle() {
         return source;
+    }
+    
+    @Override
+    public double getAdjustment(int development) {
+        return correction;
     }
     
     @Override
@@ -44,5 +50,10 @@ public abstract class AbstractODPResidualTriangle extends AbstractTriangleModifi
                     n++;
         }
         return n;
+    }
+    
+    @Override
+    public double getFittedValue(int accident, int development) {
+        return source.getFittedValue(accident, development);
     }
 }

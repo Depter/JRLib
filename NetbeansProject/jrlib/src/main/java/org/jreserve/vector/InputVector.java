@@ -52,4 +52,8 @@ public class InputVector extends AbstractVector implements Vector {
             return data[index];
         return Double.NaN;
     }
+    
+    public InputVector copy() {
+        return new InputVector(data);
+    }
 }

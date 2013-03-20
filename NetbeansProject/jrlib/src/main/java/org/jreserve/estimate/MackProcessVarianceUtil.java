@@ -1,8 +1,8 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.scale.LinkRatioScale;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -12,7 +12,7 @@ import org.jreserve.triangle.Triangle;
 class MackProcessVarianceUtil {
     
     private LinkRatio lrs;
-    private Triangle cik;
+    private ClaimTriangle cik;
     private double[][] estimates;
     private LinkRatioScale scales;
     private int accidents;

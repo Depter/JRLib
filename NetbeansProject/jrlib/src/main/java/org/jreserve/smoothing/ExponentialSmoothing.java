@@ -7,8 +7,8 @@ package org.jreserve.smoothing;
  */
 public class ExponentialSmoothing extends AbstractVectorSmoothing {
     
-    private final double alpha;
-    private final double alpha2;
+    private double alpha;
+    private double alpha2;
     
     public ExponentialSmoothing(SmoothingCell[] cells, double alpha) {
         super(cells);
@@ -16,6 +16,9 @@ public class ExponentialSmoothing extends AbstractVectorSmoothing {
             throw new IllegalArgumentException("Alpha must be within [0; 1], but it was "+alpha+"!");
         this.alpha = alpha;
         this.alpha2 = 1d-alpha;
+    }
+    
+    private ExponentialSmoothing() {
     }
 
     @Override
@@ -29,5 +32,14 @@ public class ExponentialSmoothing extends AbstractVectorSmoothing {
             s = alpha * input[i] + alpha2 * s;
             input[i] = s;
         }
+    }
+    
+    @Override
+    public ExponentialSmoothing copy() {
+        ExponentialSmoothing copy = new ExponentialSmoothing();
+        copy.copyStateFrom(this);
+        copy.alpha = this.alpha;
+        copy.alpha2 = this.alpha2;
+        return copy;
     }
 }

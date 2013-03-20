@@ -1,8 +1,8 @@
 package org.jreserve.smoothing;
 
-import static org.jreserve.JRLibTestSuite.EPSILON;
-import org.jreserve.triangle.InputTriangleTest;
-import org.jreserve.triangle.Triangle;
+import static org.jreserve.JRLibTestUtl.EPSILON;
+import org.jreserve.triangle.claim.InputTriangleTest;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,7 @@ public class AbstractVectorSmoothingTest {
     
     private final static double SMOOTH_VALUE = -1;
     
-    private Triangle data;
+    private ClaimTriangle data;
     private AbstractVectorSmoothingImpl smoothing;
     
     public AbstractVectorSmoothingTest() {
@@ -72,6 +72,10 @@ public class AbstractVectorSmoothingTest {
         public void smooth(double[] input) {
             for(int i=0; i<input.length; i++)
                 input[i] = SMOOTH_VALUE;
+        }
+
+        public TriangleSmoothing copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

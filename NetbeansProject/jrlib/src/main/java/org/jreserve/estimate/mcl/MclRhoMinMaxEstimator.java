@@ -2,6 +2,7 @@ package org.jreserve.estimate.mcl;
 
 import static java.lang.Math.min;
 import static java.lang.Math.sqrt;
+import org.jreserve.triangle.TriangleUtil;
 
 /**
  *
@@ -72,5 +73,13 @@ public class MclRhoMinMaxEstimator implements MclRhoEstimator {
     @Override
     public String toString() {
         return "MclRhoEstimator";
+    }
+    
+    @Override
+    public MclRhoMinMaxEstimator copy() {
+        MclRhoMinMaxEstimator copy = new MclRhoMinMaxEstimator();
+        copy.sourceLength = sourceLength;
+        copy.source = TriangleUtil.copy(source);
+        return copy;
     }
 }

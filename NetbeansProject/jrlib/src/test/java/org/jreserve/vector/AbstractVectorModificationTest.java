@@ -1,6 +1,6 @@
 package org.jreserve.vector;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import static org.jreserve.TestData.EXPOSURE;
 import static org.jreserve.TestData.getCachedVector;
 import static org.junit.Assert.*;
@@ -34,18 +34,18 @@ public class AbstractVectorModificationTest {
     public void testGetValue() {
         double expected = source.getValue(-1);
         double found = vector.getValue(-1);
-        assertEquals(expected, found, JRLibTestSuite.EPSILON);
+        assertEquals(expected, found, JRLibTestUtl.EPSILON);
         
         int length = source.getLength();
         for(int i=0; i<length; i++) {
             expected = source.getValue(i);
             found = vector.getValue(i);
-            assertEquals(expected, found, JRLibTestSuite.EPSILON);
+            assertEquals(expected, found, JRLibTestUtl.EPSILON);
         }
         
         expected = source.getValue(length);
         found = vector.getValue(length);
-        assertEquals(expected, found, JRLibTestSuite.EPSILON);
+        assertEquals(expected, found, JRLibTestUtl.EPSILON);
     }
 
     private class AbstractVectorModificationImpl extends AbstractVectorModification {
@@ -56,6 +56,10 @@ public class AbstractVectorModificationTest {
         
         @Override
         protected void recalculateLayer() {
+        }
+
+        public ModifiedVector copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

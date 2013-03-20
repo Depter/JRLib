@@ -1,7 +1,6 @@
 package org.jreserve.estimate;
 
-import org.jreserve.CalculationData;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.triangle.Cell;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -46,32 +45,32 @@ public class AbstractEstimateTest {
 
     @Test
     public void testGetValue_Cell() {
-        assertEquals(Double.NaN, estimate.getValue(new Cell(0, -1)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(new Cell(-1, 0)), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(0, -1)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(-1, 0)), JRLibTestUtl.EPSILON);
         
         int accidents = EXPECTED.length;
         int developments = EXPECTED[0].length;
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED[a][d], estimate.getValue(new Cell(a, d)), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], estimate.getValue(new Cell(a, d)), JRLibTestUtl.EPSILON);
         
-        assertEquals(Double.NaN, estimate.getValue(new Cell(0, developments)), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(new Cell(accidents, 0)), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(0, developments)), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(new Cell(accidents, 0)), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetValue_int_int() {
-        assertEquals(Double.NaN, estimate.getValue(0, -1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(-1, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(0, -1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(-1, 0), JRLibTestUtl.EPSILON);
         
         int accidents = EXPECTED.length;
         int developments = EXPECTED[0].length;
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
-                assertEquals(EXPECTED[a][d], estimate.getValue(a, d), JRLibTestSuite.EPSILON);
+                assertEquals(EXPECTED[a][d], estimate.getValue(a, d), JRLibTestUtl.EPSILON);
         
-        assertEquals(Double.NaN, estimate.getValue(0, developments), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getValue(accidents, 0), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(0, developments), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getValue(accidents, 0), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -95,7 +94,7 @@ public class AbstractEstimateTest {
         int accidents = EXPECTED.length;
         assertEquals(accidents, found.length);
         for(int a=0; a<accidents; a++)
-            assertArrayEquals(EXPECTED[a], found[a], JRLibTestSuite.EPSILON);
+            assertArrayEquals(EXPECTED[a], found[a], JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -108,22 +107,22 @@ public class AbstractEstimateTest {
     
     @Test
     public void testGetReserve_int() {
-        assertEquals(Double.NaN, estimate.getReserve(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, estimate.getReserve(-1), JRLibTestUtl.EPSILON);
         int accidents = EXPECTED.length;
         for(int a=0; a<accidents; a++)
-            assertEquals(RESERVES[a], estimate.getReserve(a), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, estimate.getReserve(accidents), JRLibTestSuite.EPSILON);
+            assertEquals(RESERVES[a], estimate.getReserve(a), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, estimate.getReserve(accidents), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetReserve_0args() {
-        assertEquals(3d, estimate.getReserve(), JRLibTestSuite.EPSILON);
+        assertEquals(3d, estimate.getReserve(), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testToArrayReserve() {
         double[] found = estimate.toArrayReserve();
-        assertArrayEquals(RESERVES, found, JRLibTestSuite.EPSILON);
+        assertArrayEquals(RESERVES, found, JRLibTestUtl.EPSILON);
     }
 
     private class AbstractEstimateImpl extends AbstractEstimate {
@@ -142,6 +141,10 @@ public class AbstractEstimateTest {
             accidents = EXPECTED.length;
             developments = EXPECTED[0].length;
             values = EXPECTED;
+        }
+
+        public Estimate copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 

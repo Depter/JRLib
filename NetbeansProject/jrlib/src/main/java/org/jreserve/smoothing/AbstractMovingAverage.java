@@ -7,7 +7,7 @@ package org.jreserve.smoothing;
  */
 public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
 
-    protected final int maLength;
+    protected int maLength;
     
     protected AbstractMovingAverage(SmoothingCell[] cells, int maLength) {
         super(cells);
@@ -16,6 +16,9 @@ public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
         this.maLength = maLength;
     }
 
+    protected AbstractMovingAverage() {
+    }
+    
     @Override
     protected void smooth(double[] input) {
         int size = input.length;
@@ -30,4 +33,10 @@ public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
     }
 
     protected abstract double mean(double[] input, int index);
+    
+    @Override
+    protected void copyStateFrom(AbstractVectorSmoothing ama) {
+        super.copyStateFrom(ama);
+        this.maLength = ((AbstractMovingAverage)ama).maLength;
+    }
 }

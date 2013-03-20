@@ -1,7 +1,7 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.util.AbstractMethodSelection;
 
@@ -29,19 +29,19 @@ public class DefaultMclRhoSelection extends AbstractMethodSelection<MclRho, MclR
         this.denominator = denominator;
         doRecalculate();
     }
-
+    
     @Override
     public MclRho getSourceRhos() {
         return source;
     }
     
     @Override
-    public Triangle getNumerator() {
+    public ClaimTriangle getNumerator() {
         return source.getNumerator();
     }
 
     @Override
-    public Triangle getDenominator() {
+    public ClaimTriangle getDenominator() {
         return source.getDenominator();
     }
 
@@ -126,5 +126,9 @@ public class DefaultMclRhoSelection extends AbstractMethodSelection<MclRho, MclR
     private void calculateRhos() {
         super.fitMethods();
         rhos = super.getFittedValues(developments);
+    }
+    
+    public MclRhoSelection copy() {
+        throw new UnsupportedOperationException("Not supported yet!");
     }
 }

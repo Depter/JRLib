@@ -2,7 +2,7 @@ package org.jreserve.triangle;
 
 import org.jreserve.ChangeCounter;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
+import org.jreserve.triangle.factor.FactorTriangle;
 import org.jreserve.util.SigmaFilter;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -35,7 +35,7 @@ public class TriangleOutlierFilterTest {
         {true},
     };
     
-    private Triangle source;
+    private FactorTriangle source;
     private SigmaFilter filter;
     private TriangleOutlierFilter triangleFilter;
     private ChangeCounter counter;
@@ -45,16 +45,11 @@ public class TriangleOutlierFilterTest {
 
     @Before
     public void setUp() {
-        createSource();
+        source = TestData.getDevelopmentFactors(TestData.INCURRED);
         filter = new SigmaFilter(1.5);
         triangleFilter = new TriangleOutlierFilter(source, filter);
         counter = new ChangeCounter();
         triangleFilter.addChangeListener(counter);
-    }
-    
-    private void createSource() {
-        source = TestData.getCummulatedTriangle(TestData.INCURRED);
-        source = new DevelopmentFactors(source);
     }
 
     @Test

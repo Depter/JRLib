@@ -1,17 +1,19 @@
 package org.jreserve.util;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.jreserve.AbstractCalculationData;
 import org.jreserve.CalculationData;
+import org.jreserve.Copyable;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractMethodSelection<T extends CalculationData, M extends SelectableMethod<T>> extends AbstractCalculationData<T> implements MethodSelection<T, M> {
+public abstract class AbstractMethodSelection<T extends CalculationData & Copyable, M extends SelectableMethod<T>> extends AbstractCalculationData<T> implements MethodSelection<T, M> {
 
     private SelectableMethod[] methods = new SelectableMethod[0];
     private M defaultMethod;
@@ -19,6 +21,42 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
     protected AbstractMethodSelection(T source, M defaultMethod) {
         super(source);
         initDefaultMethod(defaultMethod);
+    }
+    
+    protected AbstractMethodSelection(AbstractMethodSelection<T, M> toCopy) {
+        super((T)toCopy.source.copy());
+        this.defaultMethod = (M) toCopy.defaultMethod.copy();
+        copyMethods(defaultMethod, methods);
+    }
+    
+    private void copyMethods(SelectableMethod toCopyDefault, SelectableMethod[] toCopy) {
+        Map<SelectableMethod, SelectableMethod> map = mapMethods(toCopy);
+        fillMethods(map, toCopy);
+        fillDefaultMethod(toCopyDefault, map);
+    }
+    
+    private Map<SelectableMethod, SelectableMethod> mapMethods(SelectableMethod[] toCopy) {
+        Map<SelectableMethod, SelectableMethod> map = new HashMap<SelectableMethod, SelectableMethod>();
+        for(SelectableMethod m : toCopy)
+            if(m != null && !map.containsKey(m))
+                map.put(m, m.copy());
+        return map;
+    }
+    
+    private void fillMethods(Map<SelectableMethod, SelectableMethod> map, SelectableMethod[] toCopy) {
+        int size = toCopy.length;
+        this.methods = new SelectableMethod[size];
+        for(int i=0; i<size; i++) {
+            SelectableMethod m = toCopy[i];
+            if(m != null)
+                methods[i] = map.get(m);
+        }
+    }
+    
+    private void fillDefaultMethod(SelectableMethod toCopyDefault, Map<SelectableMethod, SelectableMethod> map) {
+        this.defaultMethod = (M) (map.containsKey(toCopyDefault)? 
+                                    map.get(toCopyDefault)      : 
+                                    toCopyDefault.copy());
     }
 
     private void initDefaultMethod(M defaultMethod) {

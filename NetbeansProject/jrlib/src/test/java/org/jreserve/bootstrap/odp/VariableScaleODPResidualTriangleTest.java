@@ -1,11 +1,10 @@
 package org.jreserve.bootstrap.odp;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.bootstrap.PearsonResidualClaimTriangle;
 import org.jreserve.bootstrap.ResidualTriangle;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,18 +48,18 @@ public class VariableScaleODPResidualTriangleTest {
     @Test
     public void testGetScale_Paid() {
         int devs = PAID.length;
-        assertEquals(Double.NaN, paid.getScale(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, paid.getScale(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++)
-            assertEquals(PAID[d], paid.getScale(d), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, paid.getScale(devs), JRLibTestSuite.EPSILON);
+            assertEquals(PAID[d], paid.getScale(d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, paid.getScale(devs), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetScale_Incurred() {
         int devs = INCURRED.length;
-        assertEquals(Double.NaN, incurred.getScale(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, incurred.getScale(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++)
-            assertEquals(INCURRED[d], incurred.getScale(d), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, incurred.getScale(devs), JRLibTestSuite.EPSILON);
+            assertEquals(INCURRED[d], incurred.getScale(d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, incurred.getScale(devs), JRLibTestUtl.EPSILON);
     }
 }

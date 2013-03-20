@@ -1,18 +1,19 @@
 package org.jreserve.estimate.mcl;
 
 import org.jreserve.CalculationData;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.Copyable;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface MclRho extends CalculationData {
+public interface MclRho extends CalculationData, Copyable<MclRho> {
 
-    public Triangle getNumerator();
+    public ClaimTriangle getNumerator();
     
-    public Triangle getDenominator();
+    public ClaimTriangle getDenominator();
     
     public int getDevelopmentCount();
     

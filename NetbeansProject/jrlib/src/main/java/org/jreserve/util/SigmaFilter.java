@@ -63,4 +63,9 @@ public class SigmaFilter implements Filter {
         return String.format("SigmaFilter [%f]", treshold);
     }
     
+    @Override
+    public SigmaFilter copy() {
+        return new SigmaFilter(treshold);
+    }
+    
 }

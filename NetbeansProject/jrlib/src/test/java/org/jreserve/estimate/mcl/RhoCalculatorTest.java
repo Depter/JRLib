@@ -1,8 +1,8 @@
 package org.jreserve.estimate.mcl;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,8 +35,8 @@ public class RhoCalculatorTest {
          82.09314392,  86.79189307, 132.33680485, Double.NaN
     };
     
-    private static Triangle paid;
-    private static Triangle incurred;
+    private static ClaimTriangle paid;
+    private static ClaimTriangle incurred;
     private MclRhoCalculator calculator;
     
     public RhoCalculatorTest() {
@@ -60,14 +60,14 @@ public class RhoCalculatorTest {
         int devs = RATIO_IP.length;
         assertEquals(devs, calculator.getDevelopmentCount());
         
-        assertEquals(Double.NaN, calculator.getRatio(-1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, calculator.getRho(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, calculator.getRatio(-1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, calculator.getRho(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++) {
-            assertEquals(RATIO_IP[d], calculator.getRatio(d), JRLibTestSuite.EPSILON);
-            assertEquals(RHO_IP[d], calculator.getRho(d), JRLibTestSuite.EPSILON);
+            assertEquals(RATIO_IP[d], calculator.getRatio(d), JRLibTestUtl.EPSILON);
+            assertEquals(RHO_IP[d], calculator.getRho(d), JRLibTestUtl.EPSILON);
         }
-        assertEquals(Double.NaN, calculator.getRatio(devs), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, calculator.getRho(devs), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, calculator.getRatio(devs), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, calculator.getRho(devs), JRLibTestUtl.EPSILON);
     }
 
     @Test
@@ -76,14 +76,14 @@ public class RhoCalculatorTest {
         int devs = RATIO_PI.length;
         assertEquals(devs, calculator.getDevelopmentCount());
         
-        assertEquals(Double.NaN, calculator.getRatio(-1), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, calculator.getRho(-1), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, calculator.getRatio(-1), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, calculator.getRho(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++) {
-            assertEquals(RATIO_PI[d], calculator.getRatio(d), JRLibTestSuite.EPSILON);
-            assertEquals(RHO_PI[d], calculator.getRho(d), JRLibTestSuite.EPSILON);
+            assertEquals(RATIO_PI[d], calculator.getRatio(d), JRLibTestUtl.EPSILON);
+            assertEquals(RHO_PI[d], calculator.getRho(d), JRLibTestUtl.EPSILON);
         }
-        assertEquals(Double.NaN, calculator.getRatio(devs), JRLibTestSuite.EPSILON);
-        assertEquals(Double.NaN, calculator.getRho(devs), JRLibTestSuite.EPSILON);
+        assertEquals(Double.NaN, calculator.getRatio(devs), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, calculator.getRho(devs), JRLibTestUtl.EPSILON);
     }
 
 }

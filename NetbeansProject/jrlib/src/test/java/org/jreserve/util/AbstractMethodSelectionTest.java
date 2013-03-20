@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.CalculationData;
 import org.jreserve.ChangeCounter;
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.Copyable;
+import org.jreserve.JRLibTestUtl;
 import static org.jreserve.TestData.EXPOSURE;
 import static org.jreserve.TestData.getCachedVector;
 import org.jreserve.vector.InputVector;
+import org.jreserve.vector.Vector;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -86,34 +88,43 @@ public class AbstractMethodSelectionTest {
         
         for(int i=1; i<4; i++) {
             Method method = selection.getMethod(i);
-            assertEquals((double)i, method.getValue(i), JRLibTestSuite.EPSILON);
+            assertEquals((double)i, method.getValue(i), JRLibTestUtl.EPSILON);
         }
     }
 
-    public class AbstractOutputSelectionImpl extends AbstractMethodSelection<CalculationData, Method> {
+    public class AbstractOutputSelectionImpl extends AbstractMethodSelection<Vector, Method> implements Copyable<AbstractOutputSelectionImpl> {
 
-        public AbstractOutputSelectionImpl(CalculationData source, Method defaultMethod) {
+        public AbstractOutputSelectionImpl(Vector source, Method defaultMethod) {
             super(source, defaultMethod);
         }
 
         @Override
         protected void recalculateLayer() {
         }
+
+        public AbstractOutputSelectionImpl copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     }
     
-    private static class Method implements SelectableMethod<CalculationData> {
+    private static class Method implements SelectableMethod<Vector> {
 
         private double value;
         
         private Method(double value) {
             this.value = value;
         }
-        
-        public void fit(CalculationData source) {
-        }
 
         public double getValue(int index) {
             return value;
+        }
+
+        public SelectableMethod<Vector> copy() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public void fit(Vector source) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     
     }

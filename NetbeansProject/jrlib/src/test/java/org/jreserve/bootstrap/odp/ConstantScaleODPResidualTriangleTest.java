@@ -1,11 +1,10 @@
 package org.jreserve.bootstrap.odp;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.bootstrap.PearsonResidualClaimTriangle;
 import org.jreserve.bootstrap.ResidualTriangle;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.SimpleLinkRatio;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,10 +39,10 @@ public class ConstantScaleODPResidualTriangleTest {
     public void testGetScale() {
         int developments = paidSource.getDevelopmentCount();
         for(int d=0; d<developments; d++)
-            assertEquals(14893.23748760, paid.getScale(d), JRLibTestSuite.EPSILON);
+            assertEquals(14893.23748760, paid.getScale(d), JRLibTestUtl.EPSILON);
         
         developments = incurredSource.getDevelopmentCount();
         for(int d=0; d<developments; d++)
-            assertEquals(31726.67925471, incurred.getScale(d), JRLibTestSuite.EPSILON);
+            assertEquals(31726.67925471, incurred.getScale(d), JRLibTestUtl.EPSILON);
     }
 }

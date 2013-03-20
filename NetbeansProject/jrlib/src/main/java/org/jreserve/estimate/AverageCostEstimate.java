@@ -1,7 +1,7 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -14,9 +14,9 @@ public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
     private final static int COSTS = 1;
     
     private LinkRatio numberLrs;
-    private Triangle numberCik;
+    private ClaimTriangle numberCik;
     private LinkRatio costLrs;
-    private Triangle costCik;
+    private ClaimTriangle costCik;
     
     public AverageCostEstimate(LinkRatio numberLrs, LinkRatio costLrs) {
         super(numberLrs, costLrs);
@@ -76,5 +76,10 @@ public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
         int costDevs = costLrs.getDevelopmentCount();
         developments = (numberDevs < costDevs)? numberDevs : costDevs;
         developments++;
+    }
+    
+    @Override
+    public AverageCostEstimate copy() {
+        return new AverageCostEstimate(numberLrs.copy(), costLrs.copy());
     }
 }

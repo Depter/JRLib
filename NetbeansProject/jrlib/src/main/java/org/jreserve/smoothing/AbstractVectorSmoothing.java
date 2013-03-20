@@ -13,11 +13,14 @@ public abstract class AbstractVectorSmoothing implements TriangleSmoothing {
     private int[][] cells;
     private boolean[] applied;
     
-    public AbstractVectorSmoothing(SmoothingCell[] cells) {
+    protected AbstractVectorSmoothing(SmoothingCell[] cells) {
         if(cells == null)
             throw new NullPointerException("Cells were null!");
         this.cellCount = cells.length;
         initCells(cells);
+    }
+    
+    protected AbstractVectorSmoothing() {
     }
     
     private void initCells(SmoothingCell[] cells) {
@@ -68,5 +71,16 @@ public abstract class AbstractVectorSmoothing implements TriangleSmoothing {
         int development = cells[i][1];
         return accident >=0 && accident < values.length &&
                development >= 0 && development < values[accident].length;
+    }
+    
+    protected void copyStateFrom(AbstractVectorSmoothing other) {
+        this.cellCount = other.cellCount;
+        this.cells = new int[cellCount][2];
+        this.applied = new boolean[cellCount];
+        for(int i=0; i<cellCount; i++) {
+            applied[i] = other.applied[i];
+            cells[i][0] = other.cells[i][0];
+            cells[i][1] = other.cells[i][1];
+        }
     }
 }

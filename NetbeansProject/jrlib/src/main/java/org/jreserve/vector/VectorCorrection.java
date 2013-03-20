@@ -46,4 +46,9 @@ public class VectorCorrection extends AbstractVectorModification {
             "VectorCorrection [%d] = %f",
             index, correction);
     }
+    
+    @Override
+    public VectorCorrection copy() {
+        return new VectorCorrection(source.copy(), index, correction);
+    }
 }

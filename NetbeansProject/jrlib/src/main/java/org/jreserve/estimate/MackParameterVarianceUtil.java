@@ -1,8 +1,8 @@
 package org.jreserve.estimate;
 
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.factor.linkratio.standarderror.LinkRatioSE;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.standarderror.LinkRatioSE;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -14,7 +14,7 @@ class MackParameterVarianceUtil {
     private LinkRatioSE lrSE;
     private double[][] estimates;
     private LinkRatio lrs;
-    private Triangle cik;
+    private ClaimTriangle cik;
     private int accidents;
     
     private double[] paramSDs;

@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jreserve.AbstractCalculationData;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.triangle.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class CalendarEffectTest extends AbstractCalculationData<Triangle> implements Test {
+public class CalendarEffectTest extends AbstractCalculationData<FactorTriangle> implements Test {
+    
+    private final static double DEFAULT_ALPHA = 0.05;
     
     private final static int S = 0;
     private final static int L = 1;
@@ -24,12 +28,19 @@ public class CalendarEffectTest extends AbstractCalculationData<Triangle> implem
     private double alpha;
     private double pValue;
 
+    public CalendarEffectTest(ClaimTriangle triangle) {
+        this(triangle, DEFAULT_ALPHA);
+    }
     
-    public CalendarEffectTest(Triangle factors) {
+    public CalendarEffectTest(ClaimTriangle triangle, double alpha) {
+        this(new DevelopmentFactors(triangle), alpha);
+    }
+    
+    public CalendarEffectTest(FactorTriangle factors) {
         this(factors, 0.05);
     }
     
-    public CalendarEffectTest(Triangle factors, double alpha) {
+    public CalendarEffectTest(FactorTriangle factors, double alpha) {
         super(factors);
         checkAlpha(alpha);
         this.alpha = alpha;
@@ -169,13 +180,13 @@ public class CalendarEffectTest extends AbstractCalculationData<Triangle> implem
     
         private int[][] sl;
         private int diagonal;
-        private Triangle source;
+        private FactorTriangle source;
         
         private double eZ;
         private double varZ;
         private int z;
         
-        DiagonalHelper(int[][] sl, int diagonal, Triangle source) {
+        DiagonalHelper(int[][] sl, int diagonal, FactorTriangle source) {
             this.sl = sl;
             this.diagonal = diagonal;
             this.source = source;

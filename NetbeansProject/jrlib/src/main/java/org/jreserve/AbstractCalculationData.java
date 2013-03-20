@@ -47,6 +47,17 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
         sourceListener = null;
     }
     
+    public void setSource(T source) {
+        if(this.source != null)
+            this.source.removeChangeListener(sourceListener);
+        this.source = source;
+        
+        if(this.source != null)
+            this.source.addChangeListener(sourceListener);
+        recalculateLayer();
+        fireChange();
+    }
+    
     private class SourceListener implements ChangeListener {
 
         @Override

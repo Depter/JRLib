@@ -1,11 +1,11 @@
 package org.jreserve.estimate;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.factor.DevelopmentFactors;
-import org.jreserve.factor.linkratio.FixedLinkRatio;
-import org.jreserve.factor.linkratio.LinkRatio;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.linkratio.FixedLinkRatio;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -37,7 +37,7 @@ public class EstimateUtilTest {
 
     @Test
     public void testCompleteTriangle() {
-        Triangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lrs = new FixedLinkRatio(LRS, new DevelopmentFactors(cik));
         
         assertEquals(cik.getDevelopmentCount(), lrs.getDevelopmentCount());
@@ -47,7 +47,7 @@ public class EstimateUtilTest {
         for(int a=0; a<accidents; a++) {
             int devs = COMPLETED_MACK[a].length;
             assertEquals("For accident period: "+a, devs, found[a].length);
-            assertArrayEquals("For accident period: "+a, COMPLETED_MACK[a], found[a], JRLibTestSuite.EPSILON);
+            assertArrayEquals("For accident period: "+a, COMPLETED_MACK[a], found[a], JRLibTestUtl.EPSILON);
         }
     }
 }

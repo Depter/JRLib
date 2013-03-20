@@ -27,11 +27,14 @@ public class ODPBootstrapper extends Bootstrapper{
         
         for(int a=0; a<accidents; a++) {
             double[] row = values[a];
-            int firstDev = lastObserved[a]+1;
+            int firstDev = observedDevCount[a];
+            if(firstDev >= devCount)
+                continue;
+            
             double prev = firstDev==0? 0d : row[firstDev-1];
             
-            for(int d=firstDev; d<ultimateDev; d++) {
-                double dik = row[d] - prev;
+            for(int d=firstDev; d<devCount; d++) {
+                double dik = row[d];
                 reserve += simulator.simulateEstimate(dik - prev, a, d);
                 prev = dik;
             }

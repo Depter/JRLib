@@ -1,7 +1,7 @@
 package org.jreserve.estimate.mcl;
 
 import javax.swing.event.ChangeListener;
-import org.jreserve.triangle.Triangle;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.TriangleUtil;
 
 /**
@@ -11,15 +11,15 @@ import org.jreserve.triangle.TriangleUtil;
  */
 class MclRhoCalculator implements MclRho {
     
-    private Triangle numerator;
-    private Triangle denominator;
+    private ClaimTriangle numerator;
+    private ClaimTriangle denominator;
     
     private double[] ratios;
     private double[] rhos;
     private int developments;
     private int accidents;
 
-    MclRhoCalculator(Triangle numerator, Triangle denominator) {
+    MclRhoCalculator(ClaimTriangle numerator, ClaimTriangle denominator) {
         this.numerator = numerator;
         this.denominator = denominator;
         recalculate();
@@ -38,12 +38,12 @@ class MclRhoCalculator implements MclRho {
     }
     
     @Override
-    public Triangle getNumerator() {
+    public ClaimTriangle getNumerator() {
         return numerator;
     }
     
     @Override
-    public Triangle getDenominator() {
+    public ClaimTriangle getDenominator() {
         return denominator;
     }
     
@@ -149,5 +149,9 @@ class MclRhoCalculator implements MclRho {
             return Double.NaN;
         sum /= (double)count;
         return (sum == 0d)? 0d : (sum > 0d)? Math.sqrt(sum) : Double.NaN;
+    }
+
+    public MclRho copy() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

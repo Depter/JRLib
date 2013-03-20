@@ -8,4 +8,6 @@ package org.jreserve.util;
 public interface Filter {
     
     public boolean[] filter(double[] x);
+    
+    public Filter copy();
 }

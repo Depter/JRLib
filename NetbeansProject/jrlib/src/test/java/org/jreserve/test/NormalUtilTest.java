@@ -1,6 +1,6 @@
 package org.jreserve.test;
 
-import org.jreserve.JRLibTestSuite;
+import org.jreserve.JRLibTestUtl;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,25 +47,25 @@ public class NormalUtilTest {
     @Test
     public void testNormDF_double() {
         for(int i=0; i<X.length; i++)
-            assertEquals(DF[i], NormalUtil.normDF(X[i]), JRLibTestSuite.EPSILON);
+            assertEquals(DF[i], NormalUtil.normDF(X[i]), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testNormDF_3args() {
         for(int i=0; i<X.length; i++)
-            assertEquals(DF_MEAN_SIGMA[i], NormalUtil.normDF(X[i], MEAN, SIGMA), JRLibTestSuite.EPSILON);
+            assertEquals(DF_MEAN_SIGMA[i], NormalUtil.normDF(X[i], MEAN, SIGMA), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testNormCDF() {
         for(int i=0; i<X.length; i++)
-            assertEquals(CDF[i], NormalUtil.normCDF(X[i]), JRLibTestSuite.EPSILON);
+            assertEquals(CDF[i], NormalUtil.normCDF(X[i]), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testNormCDF_3args() {
         for(int i=0; i<X.length; i++)
-            assertEquals(CDF_MEAN_SIGMA[i], NormalUtil.normCDF(X[i], MEAN, SIGMA), JRLibTestSuite.EPSILON);
+            assertEquals(CDF_MEAN_SIGMA[i], NormalUtil.normCDF(X[i], MEAN, SIGMA), JRLibTestUtl.EPSILON);
     }
     
     @Test
@@ -82,7 +82,7 @@ public class NormalUtilTest {
         for(int i=0; i<X.length; i++) {
             double x = X[i];
             double cdf = NormalUtil.normCDF(x, MEAN, SIGMA);
-            assertEquals(x, NormalUtil.invNormCDF(cdf, MEAN, SIGMA), JRLibTestSuite.EPSILON);
+            assertEquals(x, NormalUtil.invNormCDF(cdf, MEAN, SIGMA), JRLibTestUtl.EPSILON);
         }
     }
 }
