@@ -27,6 +27,20 @@ public class JavaRandom implements Random {
         return rnd.nextLong();
     }
     
+    @Override
+    public double nextDouble() {
+        return rnd.nextDouble();
+    }
+    
+    @Override
+    public double nextNonZeroDouble() {
+        double d;
+        do {
+            d = rnd.nextDouble();
+        } while(d == 0d);
+        return d;
+    }
+    
     public static class JavaRandomFactory implements Random.Factory {
         
         @Override

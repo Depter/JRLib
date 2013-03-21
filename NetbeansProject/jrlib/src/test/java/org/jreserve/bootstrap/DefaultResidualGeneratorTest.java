@@ -80,6 +80,14 @@ public class DefaultResidualGeneratorTest {
             this.n++;
             return result;
         }
+
+        public double nextDouble() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        public double nextNonZeroDouble() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
     
     }
 

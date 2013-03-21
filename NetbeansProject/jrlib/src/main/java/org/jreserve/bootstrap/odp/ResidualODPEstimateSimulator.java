@@ -22,6 +22,7 @@ class ResidualODPEstimateSimulator implements ODPEstimateSimulator {
         double r = residuals.getValue(accident, development);
         double scale = odp.getScale(development);
         double adjustment = odp.getAdjustment(development);
-        return r * scale / adjustment * Math.sqrt(cik) + cik;
+        double sqrtCik = Math.sqrt(cik<0d? -cik : cik);
+        return r * scale / adjustment * sqrtCik + cik;
     }
 }

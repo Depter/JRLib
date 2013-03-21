@@ -20,13 +20,14 @@ public class ODPBootstrapper extends Bootstrapper{
     }
 
     @Override
-    protected double calculatePseudoReserve() {
+    protected double[] calculatePseudoReserve() {
         estimate.recalculate();
         double[][] values = estimate.toArray();
-        double reserve = 0d;
+        double[] reserve = new double[accidents];
         
         for(int a=0; a<accidents; a++) {
             double[] row = values[a];
+            double r = 0d;
             int firstDev = observedDevCount[a];
             if(firstDev >= devCount)
                 continue;
@@ -35,9 +36,10 @@ public class ODPBootstrapper extends Bootstrapper{
             
             for(int d=firstDev; d<devCount; d++) {
                 double dik = row[d];
-                reserve += simulator.simulateEstimate(dik - prev, a, d);
+                r += simulator.simulateEstimate(dik - prev, a, d);
                 prev = dik;
             }
+            reserve[a] = r;
         }
         
         return reserve;

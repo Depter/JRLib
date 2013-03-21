@@ -11,15 +11,16 @@ public abstract class Bootstrapper {
 
     protected final Estimate estimate;
     private final int bootstrapCount;
-    private final double[] reserves;
     
     protected final int devCount;
     protected final int accidents;
     protected final int[] observedDevCount;
     
+    protected double [][] reserves;
+    
     protected Bootstrapper(Estimate estimate, int bootstrapCount) {
         this.bootstrapCount = bootstrapCount;
-        this.reserves = new double[bootstrapCount];
+        this.reserves = new double[bootstrapCount][];
         
         this.estimate = estimate;
         this.estimate.detach();
@@ -35,9 +36,9 @@ public abstract class Bootstrapper {
             reserves[n] = calculatePseudoReserve();
     }
     
-    public double[] getReserves() {
+    public double[][] getReserves() {
         return reserves;
     }
     
-    protected abstract double calculatePseudoReserve();
+    protected abstract double[] calculatePseudoReserve();
 }

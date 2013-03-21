@@ -15,6 +15,35 @@ public class MathUtil {
     }
     
     /**
+     * Calculates the sum of the elements in the array, 
+     * ignoring NaN values.
+     */
+    public static double sum(double[] x) {
+        return sum(x, true);
+    }
+    
+    /**
+     * Calculates the sum of the elements in x. If NaN's are
+     * not ignored, and x contains a NaN value, then the
+     * result will be NaN.
+     */
+    public static double sum(double[] x, boolean ignoreNaN) {
+        int size = x.length;
+        double sum = 0d;
+        
+        for(int i=0; i<size; i++) {
+            double v = x[i];
+            if(Double.isNaN(v)) {
+                if(!ignoreNaN)
+                    return Double.NaN;
+            } else {
+                sum += v;
+            }
+        }
+        return sum;
+    }
+    
+    /**
      * Calculates the arithmetic mean of the input array. If the input
      * does not contain any non NaN values, then <i>Double.NaN</i> 
      * is returned.

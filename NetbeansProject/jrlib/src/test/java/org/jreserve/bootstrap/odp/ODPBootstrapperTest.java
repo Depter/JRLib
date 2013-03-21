@@ -5,6 +5,7 @@ import org.jreserve.TestData;
 import org.jreserve.estimate.ChainLadderEstimate;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.linkratio.SimpleLinkRatio;
+import org.jreserve.util.MathUtil;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -35,19 +36,7 @@ public class ODPBootstrapperTest {
 
     @Before
     public void setUp() {
-    
         LinkRatio lrs = new SimpleLinkRatio(TestData.getCummulatedTriangle(TestData.PAID));
-        //PearsonResidualClaimTriangle resSource = new PearsonResidualClaimTriangle(lrs);
-        //ConstantScaleODPResidualTriangle odpResiduals = new ConstantScaleODPResidualTriangle(resSource);
-        
-        //DefaultResidualGenerator resGenerator = new DefaultResidualGenerator(new JavaRandom());
-        //resGenerator.initialize(odpResiduals, Collections.EMPTY_LIST);
-        //ResidualODPEstimateSimulator estimateSimulator = new ResidualODPEstimateSimulator(resGenerator, odpResiduals);
-        
-        //ODPPseudoTriangle pseudoTriangle = new ODPPseudoTriangle(resGenerator, odpResiduals);
-        
-        //ChainLadderEstimate estimate = new ChainLadderEstimate(new SimpleLinkRatio(new CummulatedClaimTriangle(pseudoTriangle)));
-        
         estimate = new ChainLadderEstimate(lrs);
         estimate.detach();
         bootstrap = new ODPBootstrapper(estimate, N, new DummyEstimateSimulator());
@@ -55,13 +44,15 @@ public class ODPBootstrapperTest {
 
     @Test
     public void testCalculatePseudoReserve() {
-        double[] reserves = new double[N];
+        double[][] reserves = new double[N][];
         for(int i=0; i<N; i++)
             reserves[i] = bootstrap.calculatePseudoReserve();
         
         double expected = estimate.getReserve();
-        for(int i=0; i<N; i++)
-            assertEquals(expected, reserves[i], JRLibTestUtl.EPSILON);
+        for(int i=0; i<N; i++) {
+            double found = MathUtil.sum(reserves[i], false);
+            assertEquals(expected, found, JRLibTestUtl.EPSILON);
+        }
         
     }
     

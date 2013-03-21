@@ -11,6 +11,10 @@ public interface Random {
     
     public int nextInt(int n);
     
+    public double nextDouble();
+    
+    public double nextNonZeroDouble();
+    
     public static interface Factory {
         
         public Random createRandom();

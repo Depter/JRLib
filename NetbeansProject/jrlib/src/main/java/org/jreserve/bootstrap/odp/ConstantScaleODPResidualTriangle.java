@@ -20,6 +20,10 @@ public class ConstantScaleODPResidualTriangle extends AbstractODPResidualTriangl
     public double getScale(int development) {
         return scale;
     }
+    
+    public double getConstantScale() {
+        return scale;
+    }
 
     @Override
     protected void recalculateLayer() {
