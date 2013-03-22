@@ -43,8 +43,8 @@ public class AbstractODPResidualTriangleTest {
 
     @Test
     public void testGetValue_Paid() {
-        paid.calculateCorrection();
-        double correction = paid.correction;
+        paid.calculateAdjustment();
+        double correction = paid.adjustment;
         
         int accidents = paidSource.getAccidentCount();
         assertEquals(Double.NaN, paid.getValue(-1, 0), JRLibTestUtl.EPSILON);
@@ -62,8 +62,8 @@ public class AbstractODPResidualTriangleTest {
 
     @Test
     public void testGetValue_Incurred() {
-        incurred.calculateCorrection();
-        double correction = incurred.correction;
+        incurred.calculateAdjustment();
+        double correction = incurred.adjustment;
         
         int accidents = incurredSource.getAccidentCount();
         assertEquals(Double.NaN, incurred.getValue(-1, 0), JRLibTestUtl.EPSILON);
@@ -80,12 +80,12 @@ public class AbstractODPResidualTriangleTest {
     }
     
     public void testCalculateCorrection() {
-        paid.calculateCorrection();
-        assertEquals(1.30930734, paid.correction, JRLibTestUtl.EPSILON);
+        paid.calculateAdjustment();
+        assertEquals(1.30930734, paid.adjustment, JRLibTestUtl.EPSILON);
         assertEquals(36, paid.n);
     
-        incurred.calculateCorrection();
-        assertEquals(1.63299316, incurred.correction, JRLibTestUtl.EPSILON);
+        incurred.calculateAdjustment();
+        assertEquals(1.63299316, incurred.adjustment, JRLibTestUtl.EPSILON);
         assertEquals(24, incurred.n);
     }
 

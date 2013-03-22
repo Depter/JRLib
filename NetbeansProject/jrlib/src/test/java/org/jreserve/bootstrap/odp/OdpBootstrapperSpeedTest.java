@@ -1,15 +1,10 @@
 package org.jreserve.bootstrap.odp;
 
-import java.util.Collections;
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.bootstrap.DefaultResidualGenerator;
 import org.jreserve.bootstrap.JavaRandom;
-import org.jreserve.bootstrap.Random;
-import org.jreserve.estimate.ChainLadderEstimate;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.linkratio.SimpleLinkRatio;
-import org.jreserve.triangle.claim.CummulatedClaimTriangle;
 import org.jreserve.util.MathUtil;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -33,27 +28,18 @@ public class OdpBootstrapperSpeedTest {
     @Before
     public void setUp() {
         LinkRatio lrs = new SimpleLinkRatio(TestData.getCummulatedTriangle(TestData.PAID));
-        PearsonResidualClaimTriangle resSource = new PearsonResidualClaimTriangle(lrs);
-        ConstantScaleODPResidualTriangle odpResiduals = new ConstantScaleODPResidualTriangle(resSource);
-        
-        Random rnd = new JavaRandom(SEED);
-        DefaultResidualGenerator resGenerator = new DefaultResidualGenerator(rnd);
-        resGenerator.initialize(odpResiduals, Collections.EMPTY_LIST);
-        
-        ODPPseudoTriangle pseudoTriangle = new ODPPseudoTriangle(resGenerator, odpResiduals);
-        
-        ChainLadderEstimate estimate = new ChainLadderEstimate(new SimpleLinkRatio(new CummulatedClaimTriangle(pseudoTriangle)));
-        estimate.detach();
-        
-        //ResidualODPEstimateSimulator estimateSimulator = new ResidualODPEstimateSimulator(resGenerator, odpResiduals);
-        GammaODPEstimateSimulator estimateSimulator = new GammaODPEstimateSimulator(rnd, odpResiduals);
-        bootstrap = new ODPBootstrapper(estimate, N, estimateSimulator);
+        bootstrap = new ODPBootstrapFactory()
+                .setLinkRatios(lrs).setBootstrapCount(N).setRandomGenerator(new JavaRandom(SEED))
+                .useConstantScaledResiduals().useGammaProcessSimulator().build();
     }
 
     @Test
     public void testSpeed() {
-        if(!JRLibTestUtl.EXECUTE_SPEED_TESTS)
+        if(!JRLibTestUtl.EXECUTE_SPEED_TESTS) {
+            System.out.println("OdpBootstrapperSpeedTest skipped...");
             return;
+        }
+        System.out.println("Begin OdpBootstrapperSpeedTest.");
         
         long begin = System.currentTimeMillis();
         

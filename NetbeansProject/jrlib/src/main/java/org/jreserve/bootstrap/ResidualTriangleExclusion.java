@@ -83,8 +83,8 @@ public class ResidualTriangleExclusion extends AbstractTriangleModification<Resi
     }
     
     @Override
-    public double getFittedValue(int accident, int development) {
-        return source.getFittedValue(accident, development);
+    public double getWeight(int accident, int development) {
+        return source.getWeight(accident, development);
     }
     
     @Override

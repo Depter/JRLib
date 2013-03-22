@@ -7,9 +7,9 @@ import org.jreserve.estimate.Estimate;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class Bootstrapper {
+public abstract class Bootstrapper<T extends Estimate> {
 
-    protected final Estimate estimate;
+    protected final T source;
     private final int bootstrapCount;
     
     protected final int devCount;
@@ -18,17 +18,17 @@ public abstract class Bootstrapper {
     
     protected double [][] reserves;
     
-    protected Bootstrapper(Estimate estimate, int bootstrapCount) {
+    protected Bootstrapper(T source, int bootstrapCount) {
         this.bootstrapCount = bootstrapCount;
         this.reserves = new double[bootstrapCount][];
         
-        this.estimate = estimate;
-        this.estimate.detach();
-        devCount = estimate.getDevelopmentCount();
-        accidents = estimate.getAccidentCount();
+        this.source = source;
+        this.source.detach();
+        devCount = source.getDevelopmentCount();
+        accidents = source.getAccidentCount();
         observedDevCount = new int[accidents];
         for(int a=0; a<accidents; a++)
-            observedDevCount[a] = estimate.getObservedDevelopmentCount(a);
+            observedDevCount[a] = source.getObservedDevelopmentCount(a);
     }
     
     public void run() {

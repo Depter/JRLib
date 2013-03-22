@@ -36,7 +36,7 @@ class ODPPseudoTriangle implements ClaimTriangle {
             
             mij[a] = new double[devs];
             for(int d=0; d<devs; d++) 
-                mij[a][d] = odpResiduals.getFittedValue(a, d);
+                mij[a][d] = odpResiduals.getWeight(a, d);
             
             values[a] = new double[devs];
         }

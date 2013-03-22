@@ -18,8 +18,8 @@ public class VariableScaleODPResidualTriangle extends AbstractODPResidualTriangl
     }
 
     public double getScale(int development) {
-        return (0 <= development && development < developments)?
-                scales[development] :
+        return (0 <= development && development < developments)? 
+                scales[development] : 
                 Double.NaN;
     }
     
@@ -29,11 +29,16 @@ public class VariableScaleODPResidualTriangle extends AbstractODPResidualTriangl
     }
     
     private void doRecalculate() {
+        initState();
         int accidents = source.getAccidentCount();
-        developments = source.getDevelopmentCount();
-        scales = new double[developments];
         for(int d=0; d<developments; d++)
             scales[d] = calculateScale(d, accidents);
+    }
+    
+    private void initState() {
+        super.calculateAdjustment();
+        developments = source.getDevelopmentCount();
+        scales = new double[developments];
     }
 
     private double calculateScale(int development, int accidents) {
@@ -43,7 +48,7 @@ public class VariableScaleODPResidualTriangle extends AbstractODPResidualTriangl
             double r = source.getValue(a, development);
             if(!Double.isNaN(r)) {
                 count++;
-                scale += Math.pow(r, 2d);
+                scale += Math.pow(adjustment * r, 2d);
             }
         }
         

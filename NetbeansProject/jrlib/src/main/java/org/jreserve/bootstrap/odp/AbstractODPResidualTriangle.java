@@ -2,7 +2,6 @@ package org.jreserve.bootstrap.odp;
 
 import org.jreserve.bootstrap.ResidualTriangle;
 import org.jreserve.triangle.AbstractTriangleModification;
-import org.jreserve.triangle.claim.ModifiedClaimTriangle;
 
 /**
  *
@@ -12,7 +11,7 @@ import org.jreserve.triangle.claim.ModifiedClaimTriangle;
 public abstract class AbstractODPResidualTriangle extends AbstractTriangleModification<ResidualTriangle> implements ODPScaledResidualTriangle {
 
     protected int n;
-    protected double correction;
+    protected double adjustment;
     
     public AbstractODPResidualTriangle(ResidualTriangle source) {
         super(source);
@@ -25,19 +24,19 @@ public abstract class AbstractODPResidualTriangle extends AbstractTriangleModifi
     
     @Override
     public double getAdjustment(int development) {
-        return correction;
+        return adjustment;
     }
     
     @Override
     public double getValue(int accident, int development) {
         double rp = source.getValue(accident, development);
-        return  correction * rp / getScale(development);
+        return  adjustment * rp / getScale(development);
     }
 
-    protected void calculateCorrection() {
+    protected void calculateAdjustment() {
         countResiduals();
         int p = source.getAccidentCount() + source.getDevelopmentCount() - 1;
-        correction = Math.sqrt(((double) n) / ((double)(n-p)));
+        adjustment = Math.sqrt(((double) n) / ((double)(n-p)));
     }
     
     private int countResiduals() {
@@ -53,7 +52,7 @@ public abstract class AbstractODPResidualTriangle extends AbstractTriangleModifi
     }
     
     @Override
-    public double getFittedValue(int accident, int development) {
-        return source.getFittedValue(accident, development);
+    public double getWeight(int accident, int development) {
+        return source.getWeight(accident, development);
     }
 }

@@ -53,7 +53,7 @@ public class PearsonResidualClaimTriangle extends AbstractTriangle<LinkRatio> im
     }
     
     @Override
-    public double getFittedValue(int accident, int development) {
+    public double getWeight(int accident, int development) {
         return withinBounds(accident, development)?
                 fittedValues[accident][development] :
                 Double.NaN;

@@ -1,4 +1,4 @@
-package org.jreserve.bootstrap.odp;
+package org.jreserve.util;
 
 import org.jreserve.bootstrap.Random;
 
@@ -7,7 +7,7 @@ import org.jreserve.bootstrap.Random;
  * @author Peter Decsi
  * @version 1.0
  */
-public class GammaODPEstimateSimulator implements ODPEstimateSimulator {
+public class RndGamma {
     private final static double Q1 =  0.0416666664;
     private final static double Q2 =  0.0208333723;
     private final static double Q3 =  0.0079849875;
@@ -36,29 +36,19 @@ public class GammaODPEstimateSimulator implements ODPEstimateSimulator {
     private final static double E6 = 0.001353826;
     private final static double E7 = 0.000247453;
     
-
     private final Random rnd;
-    private final ODPScaledResidualTriangle odp;
     
-    public GammaODPEstimateSimulator(Random rnd, ODPScaledResidualTriangle odpResiduals) {
-        this.rnd = rnd;
-        this.odp = odpResiduals;
+    public RndGamma(Random random) {
+        this.rnd = random;
     }
     
-    @Override
-    public double simulateEstimate(double cik, int accident, int development) {
-        double scale = odp.getScale(development);
-        
-        double mean = cik<0d? -cik : cik;
-        
-        double alpha = mean / scale; //mean ^2 / variance;
-        double lambda = 1d / scale; //1d / (variance / mean)
-        double random = rndGamma(alpha, lambda);
-        
-        return cik < 0d? (random + 2 * cik) : random;
+    public double rndGammaFromMeanVariance(double mean, double variance) {
+        double alpha = mean * mean / variance; //mean ^2 / variance;
+        double lambda = 1d / (variance/mean); //1d / (variance / mean)
+        return rndGamma(alpha, lambda);
     }
-
-    private double rndGamma(double alpha, double lambda) {
+    
+    public double rndGamma(double alpha, double lambda) {
         if(alpha <= 0.0) throw new IllegalArgumentException(); 
         if(lambda <= 0.0) new IllegalArgumentException(); 
         return (alpha < 1d)?
@@ -203,5 +193,5 @@ public class GammaODPEstimateSimulator implements ODPEstimateSimulator {
         if(q > 0.5)
             return Math.exp(q) - 1.0;
         return ((((((E7*q+E6)*q+E5)*q+E4)*q+E3)*q+E2)*q+E1)*q;
-    }
+    }    
 }

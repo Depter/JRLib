@@ -2,11 +2,9 @@ package org.jreserve.bootstrap.odp;
 
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.bootstrap.ResidualTriangle;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.linkratio.SimpleLinkRatio;
 import static org.junit.Assert.assertEquals;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -17,49 +15,53 @@ import org.junit.Test;
 public class VariableScaleODPResidualTriangleTest {
 
     private final static double[] PAID = {
-         5364.32835962, 15442.67058489, 15449.67691824, 28947.93246574, 
-        25764.08994669,  3288.71838771, 17391.49489716,     0.00000000
+         9195.99147363, 26473.14957409, 26485.16043127, 49625.02708412, 
+        44167.01133718,  5637.80295036, 29813.99125227,     0.00000000
     };
     
     private final static double[] INCURRED = {
-         8213.97580272, 40268.31998867, Double.NaN, Double.NaN, 
-        39034.39639707, 84826.99071337, 1615.84902103, Double.NaN
+         21903.93547393, 107382.18663646, Double.NaN, Double.NaN, 
+        104091.72372552, 226205.30856898, 4308.93072274, Double.NaN
     };
     
-    private ResidualTriangle paidSource;
-    private VariableScaleODPResidualTriangle paid;
-    private ResidualTriangle incurredSource;
-    private VariableScaleODPResidualTriangle incurred;
+    private final static double[] BS_EXAMPLE = {
+        19574.66449804,  20241.69275166, 23423.14673359, 101196.03968712, 
+        79855.89729970, 149429.19124078, 88046.14495366,   7034.73810803, 
+         9912.70878300,      0.00000000
+    };
 
     public VariableScaleODPResidualTriangleTest() {
     }
 
-    @Before
-    public void setUp() {
-        LinkRatio lrs = new SimpleLinkRatio(TestData.getCummulatedTriangle(TestData.PAID));
-        paidSource = new PearsonResidualClaimTriangle(lrs);
-        paid = new VariableScaleODPResidualTriangle(paidSource);
-        
-        lrs = new SimpleLinkRatio(TestData.getCummulatedTriangle(TestData.INCURRED));
-        incurredSource = new PearsonResidualClaimTriangle(lrs);
-        incurred = new VariableScaleODPResidualTriangle(incurredSource);
-    }
-
     @Test
     public void testGetScale_Paid() {
-        int devs = PAID.length;
-        assertEquals(Double.NaN, paid.getScale(-1), JRLibTestUtl.EPSILON);
+        VariableScaleODPResidualTriangle paid = getResidualTriangle(TestData.PAID);
+        testScale(PAID, paid);
+    }
+    
+    private VariableScaleODPResidualTriangle getResidualTriangle(String path) {
+        LinkRatio lrs = new SimpleLinkRatio(TestData.getCummulatedTriangle(path));
+        PearsonResidualClaimTriangle source = new PearsonResidualClaimTriangle(lrs);
+        return new VariableScaleODPResidualTriangle(source);
+    }
+    
+    private void testScale(double[] expected, VariableScaleODPResidualTriangle found) {
+        int devs = expected.length;
+        assertEquals(Double.NaN, found.getScale(-1), JRLibTestUtl.EPSILON);
         for(int d=0; d<devs; d++)
-            assertEquals(PAID[d], paid.getScale(d), JRLibTestUtl.EPSILON);
-        assertEquals(Double.NaN, paid.getScale(devs), JRLibTestUtl.EPSILON);
+            assertEquals(expected[d], found.getScale(d), JRLibTestUtl.EPSILON);
+        assertEquals(Double.NaN, found.getScale(devs), JRLibTestUtl.EPSILON);
     }
 
     @Test
     public void testGetScale_Incurred() {
-        int devs = INCURRED.length;
-        assertEquals(Double.NaN, incurred.getScale(-1), JRLibTestUtl.EPSILON);
-        for(int d=0; d<devs; d++)
-            assertEquals(INCURRED[d], incurred.getScale(d), JRLibTestUtl.EPSILON);
-        assertEquals(Double.NaN, incurred.getScale(devs), JRLibTestUtl.EPSILON);
+        VariableScaleODPResidualTriangle incurred = getResidualTriangle(TestData.INCURRED);
+        testScale(INCURRED, incurred);
+    }
+    
+    @Test
+    public void testBSExample() {
+        VariableScaleODPResidualTriangle found = getResidualTriangle(TestData.TAYLOR_ASHE);
+        testScale(BS_EXAMPLE, found);
     }
 }

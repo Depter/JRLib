@@ -9,6 +9,6 @@ import org.jreserve.triangle.Triangle;
  */
 public interface ResidualTriangle extends Triangle {
 
-    public double getFittedValue(int accident, int development);
+    public double getWeight(int accident, int development);
     
 }

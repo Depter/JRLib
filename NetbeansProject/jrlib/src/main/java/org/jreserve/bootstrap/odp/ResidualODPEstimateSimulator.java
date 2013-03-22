@@ -1,5 +1,6 @@
 package org.jreserve.bootstrap.odp;
 
+import org.jreserve.bootstrap.ProcessSimulator;
 import org.jreserve.bootstrap.ResidualGenerator;
 
 /**
@@ -7,7 +8,7 @@ import org.jreserve.bootstrap.ResidualGenerator;
  * @author Peter Decsi
  * @version 1.0
  */
-class ResidualODPEstimateSimulator implements ODPEstimateSimulator {
+class ResidualODPEstimateSimulator implements ProcessSimulator {
     
     private final ResidualGenerator residuals;
     private ODPScaledResidualTriangle odp;

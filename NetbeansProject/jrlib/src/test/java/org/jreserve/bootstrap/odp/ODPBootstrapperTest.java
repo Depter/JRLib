@@ -1,5 +1,6 @@
 package org.jreserve.bootstrap.odp;
 
+import org.jreserve.bootstrap.ProcessSimulator;
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
 import org.jreserve.estimate.ChainLadderEstimate;
@@ -56,7 +57,7 @@ public class ODPBootstrapperTest {
         
     }
     
-    private static class DummyEstimateSimulator implements ODPEstimateSimulator {
+    private static class DummyEstimateSimulator implements ProcessSimulator {
         public double simulateEstimate(double cik, int accident, int development) {
             return cik;
         }
