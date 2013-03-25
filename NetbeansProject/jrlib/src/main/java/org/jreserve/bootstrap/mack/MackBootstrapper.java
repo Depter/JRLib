@@ -3,7 +3,6 @@ package org.jreserve.bootstrap.mack;
 import org.jreserve.bootstrap.Bootstrapper;
 import org.jreserve.bootstrap.ProcessSimulator;
 import org.jreserve.estimate.ChainLadderEstimate;
-import org.jreserve.estimate.Estimate;
 import org.jreserve.linkratio.LinkRatio;
 
 /**
