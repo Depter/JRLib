@@ -2,15 +2,16 @@ package org.jreserve.linkratio;
 
 import org.jreserve.CalculationData;
 import org.jreserve.Copyable;
-import org.jreserve.triangle.factor.FactorTriangle;
+import org.jreserve.MutableSource;
 import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface LinkRatio extends CalculationData, Copyable<LinkRatio> {
+public interface LinkRatio extends CalculationData, MutableSource<FactorTriangle>, Copyable<LinkRatio> {
     
     /**
      * Returns the development factors, used for the calculation.

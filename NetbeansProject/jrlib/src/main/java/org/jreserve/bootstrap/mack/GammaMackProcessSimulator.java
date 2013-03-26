@@ -23,7 +23,7 @@ public class GammaMackProcessSimulator extends AbstractMackProcessSimulator impl
     public double simulateEstimate(double cik, int accident, int development) {
         double mean = cik<0d? -cik : cik;
         double var = getVariance(mean, development);
-        double random = rnd.rndGammaFromMeanVariance(mean, var);
+        double random = rnd.nextGammaFromMeanVariance(mean, var);
         return cik < 0d? (random + 2 * cik) : random;
     }
 }

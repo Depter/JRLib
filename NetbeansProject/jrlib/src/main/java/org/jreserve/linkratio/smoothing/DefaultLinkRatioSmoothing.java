@@ -43,6 +43,11 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
     }
     
     @Override
+    public void setSource(FactorTriangle factors) {
+        source.setSource(factors);
+    }
+    
+    @Override
     public ClaimTriangle getSourceTriangle() {
         return source.getSourceTriangle();
     }

@@ -33,12 +33,12 @@ public class RndNormal {
         return mean + srnd * sigma;
     }
 
-    public double nextStandardNormal() {
+    private double nextStandardNormal() {
         double v1, v2, sum;
         do {
-            v1 = square(2 * rnd.nextDouble() - 1);
-            v2 = square(2 * rnd.nextDouble() - 1);
-            sum = v1 + v2;
+            v1 = 2 * rnd.nextDouble() - 1;
+            v2 = 2 * rnd.nextDouble() - 1;
+            sum = square(v1) + square(v2);
         } while(sum >= 1d);
         
         double srnd = Math.sqrt(-2d * Math.log(sum) / sum);

@@ -1,9 +1,9 @@
 package org.jreserve.linkratio;
 
+import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.factor.DevelopmentFactors;
 import org.jreserve.triangle.factor.FactorTriangle;
-import org.jreserve.triangle.claim.ClaimTriangle;
-import org.jreserve.triangle.TriangleUtil;
 import org.jreserve.util.AbstractMethodSelection;
         
 /**

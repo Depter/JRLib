@@ -42,13 +42,13 @@ public class RndGamma {
         this.rnd = random;
     }
     
-    public double rndGammaFromMeanVariance(double mean, double variance) {
-        double alpha = mean * mean / variance; //mean ^2 / variance;
-        double lambda = 1d / (variance/mean); //1d / (variance / mean)
-        return rndGamma(alpha, lambda);
+    public double nextGammaFromMeanVariance(double mean, double variance) {
+        double alpha = mean * mean / variance;
+        double lambda = mean / variance;
+        return nextGamma(alpha, lambda);
     }
     
-    public double rndGamma(double alpha, double lambda) {
+    public double nextGamma(double alpha, double lambda) {
         if(alpha <= 0.0) throw new IllegalArgumentException(); 
         if(lambda <= 0.0) new IllegalArgumentException(); 
         return (alpha < 1d)?

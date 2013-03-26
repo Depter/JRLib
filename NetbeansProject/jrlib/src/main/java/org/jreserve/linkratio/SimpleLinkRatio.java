@@ -1,9 +1,9 @@
 package org.jreserve.linkratio;
 
 import org.jreserve.AbstractCalculationData;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.factor.DevelopmentFactors;
 import org.jreserve.triangle.factor.FactorTriangle;
-import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -11,7 +11,7 @@ import org.jreserve.triangle.claim.ClaimTriangle;
  * @version 1.0
  */
 public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> implements LinkRatio {
-
+    
     private LinkRatioMethod method;
     private int developmentCount;
 

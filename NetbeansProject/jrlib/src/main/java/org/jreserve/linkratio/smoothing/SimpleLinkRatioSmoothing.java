@@ -46,6 +46,11 @@ public class SimpleLinkRatioSmoothing extends AbstractCalculationData<LinkRatio>
     }
     
     @Override
+    public void setSource(FactorTriangle factors) {
+        source.setSource(factors);
+    }
+    
+    @Override
     public FactorTriangle getSourceFactors() {
         return source.getSourceFactors();
     }

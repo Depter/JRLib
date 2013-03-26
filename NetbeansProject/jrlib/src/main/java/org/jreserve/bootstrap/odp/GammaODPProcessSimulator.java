@@ -26,7 +26,7 @@ public class GammaODPProcessSimulator implements ProcessSimulator {
         
         double alpha = mean / scale; //mean ^2 / variance;
         double lambda = 1d / scale; //1d / (variance / mean)
-        double random = rnd.rndGamma(alpha, lambda);
+        double random = rnd.nextGamma(alpha, lambda);
         
         return cik < 0d? (random + 2 * cik) : random;
     }

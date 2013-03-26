@@ -1,4 +1,4 @@
-package org.jreserve.bootstrap.odp;
+package org.jreserve.bootstrap.mack;
 
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
@@ -15,14 +15,14 @@ import org.junit.Test;
  *
  * @author Peter Decsi
  */
-public class ODPBootstrapperTest {
+public class MackBootstrapperTest {
 
     private final static int N = 1;
     
-    private ODPBootstrapper bootstrap;
+    private MackBootstrapper bootstrap;
     private ChainLadderEstimate estimate;
-    
-    public ODPBootstrapperTest() {
+
+    public MackBootstrapperTest() {
     }
 
     @Before
@@ -30,7 +30,7 @@ public class ODPBootstrapperTest {
         LinkRatio lrs = new SimpleLinkRatio(TestData.getCummulatedTriangle(TestData.PAID));
         estimate = new ChainLadderEstimate(lrs);
         estimate.detach();
-        bootstrap = new ODPBootstrapper(estimate, N, new FixedProcessSimulator());
+        bootstrap = new MackBootstrapper(estimate, N, new FixedProcessSimulator());
     }
 
     @Test
@@ -44,6 +44,6 @@ public class ODPBootstrapperTest {
             double found = MathUtil.sum(reserves[i], false);
             assertEquals(expected, found, JRLibTestUtl.EPSILON);
         }
-        
     }
+
 }

@@ -1,11 +1,10 @@
 package org.jreserve.linkratio;
 
-import org.jreserve.linkratio.LinkRatio;
 import javax.swing.event.ChangeListener;
 import org.jreserve.TestData;
+import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.factor.DevelopmentFactors;
 import org.jreserve.triangle.factor.FactorTriangle;
-import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -109,5 +108,9 @@ public class FixedLinkRatio implements LinkRatio {
 
     public LinkRatio copy() {
         return this;
+    }
+
+    public void setSource(FactorTriangle source) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
