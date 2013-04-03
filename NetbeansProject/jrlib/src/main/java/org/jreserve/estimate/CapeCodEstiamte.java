@@ -1,6 +1,5 @@
 package org.jreserve.estimate;
 
-import org.jreserve.CalculationData;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.Vector;
@@ -10,25 +9,22 @@ import org.jreserve.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
-    
-    private final static int LRS = 0;
-    private final static int EXPOSURE = 1;
-    
-    private Vector exposure;
-    private LinkRatio lrs;
+public class CapeCodEstiamte extends AbstractEstimate<CapeCodEstimateInput> {
+
     private ClaimTriangle cik;
     
     public CapeCodEstiamte(LinkRatio lrs, Vector exposure) {
-        super(lrs, exposure);
-        initState();
+        this(new CapeCodEstimateInput(lrs, exposure));
+    }
+    
+    public CapeCodEstiamte(CapeCodEstimateInput source) {
+        super(source);
+        cik = source.getSourceLinkRatio().getSourceTriangle();
         doRecalculate();
     }
     
-    private void initState() {
-        this.lrs = (LinkRatio) sources[LRS];
-        this.cik = lrs.getSourceTriangle();
-        this.exposure = (Vector) sources[EXPOSURE];
+    public CapeCodEstimateInput getSource() {
+        return source;
     }
     
     @Override
@@ -47,7 +43,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
         double kappa = getKappa(gammas);
         
         for(int a=0; a<accidents; a++) {
-            double ultimate = exposure.getValue(a) * kappa;
+            double ultimate = source.getExposure(a) * kappa;
             int observedDevs = cik.getDevelopmentCount(a);
             
             for(int d=0; d<observedDevs; d++)
@@ -60,7 +56,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
     
     private void initCalculation() {
         accidents = cik.getAccidentCount();
-        developments = lrs.getDevelopmentCount() + 1;
+        developments = source.getDevelopmentCount() + 1;
         values = new double[accidents][developments];
     }
     
@@ -68,7 +64,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
         double[] gammas = new double[developments];
         gammas[developments-1] = 1d;
         for(int d=(developments-2); d>=0; d--) {
-            double lr = lrs.getValue(d);
+            double lr = source.getLinkRatio(d);
             gammas[d] = gammas[d+1] / lr;
         }
         return gammas;
@@ -82,13 +78,10 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
         for(int a=0; a<accidents; a++) {
             int dev = cik.getDevelopmentCount(a) - 1;
             
-            double s = cik.getValue(a, dev);
-            
             sumS += cik.getValue(a, dev);
             double gamma = (dev<0)? Double.NaN : dev >= gammaLength? 1d : gammas[dev];
             
-            double eg = gamma * exposure.getValue(a);
-            sumEG += (gamma * exposure.getValue(a));
+            sumEG += (gamma * source.getExposure(a));
         }
         
         return (sumEG == 0d)? Double.NaN : (sumS / sumEG);
@@ -96,6 +89,6 @@ public class CapeCodEstiamte extends AbstractEstimate<CalculationData> {
     
     @Override
     public CapeCodEstiamte copy() {
-        return new CapeCodEstiamte(lrs.copy(), exposure.copy());
+        return new CapeCodEstiamte(source.copy());
     }
 }

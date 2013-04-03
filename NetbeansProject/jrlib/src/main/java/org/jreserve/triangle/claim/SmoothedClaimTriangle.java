@@ -1,43 +1,33 @@
 package org.jreserve.triangle.claim;
 
 import org.jreserve.smoothing.TriangleSmoothing;
+import org.jreserve.triangle.SmoothedTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class SmoothedClaimTriangle extends AbstractClaimTriangleModification {
-
-    private final TriangleSmoothing smoothing;
-    private double[][] values;
+public class SmoothedClaimTriangle extends SmoothedTriangle<ClaimTriangle> implements ModifiedClaimTriangle {
     
     public SmoothedClaimTriangle(ClaimTriangle source, TriangleSmoothing smoothing) {
-        super(source);
-        if(smoothing == null)
-            throw new NullPointerException("Smoothing is null!");
-        this.smoothing = smoothing;
-        this.values = smoothing.smooth(source);
-    }
-    
-    public TriangleSmoothing getSmoothing() {
-        return smoothing;
-    }
-    
-    @Override
-    protected void recalculateLayer() {
-        this.values = smoothing.smooth(source);
+        super(source, smoothing);
     }
 
     @Override
-    public double getValue(int accident, int development) {
-        if(withinBounds(accident, development))
-            return values[accident][development];
-        return Double.NaN;
+    public ClaimTriangle getSourceTriangle() {
+        return source;
     }
     
     @Override
     public SmoothedClaimTriangle copy() {
         return new SmoothedClaimTriangle(source.copy(), smoothing.copy());
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+            "SmoothedClaimTriangle [%s; %s]",
+            source, smoothing);
     }
 }

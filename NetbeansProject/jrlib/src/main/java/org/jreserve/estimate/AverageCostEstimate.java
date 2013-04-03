@@ -1,5 +1,6 @@
 package org.jreserve.estimate;
 
+import org.jreserve.AbstractMultiSourceCalculationData;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.triangle.claim.ClaimTriangle;
 
@@ -8,40 +9,28 @@ import org.jreserve.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
-    
-    private final static int NUMBERS = 0;
-    private final static int COSTS = 1;
-    
-    private LinkRatio numberLrs;
-    private ClaimTriangle numberCik;
-    private LinkRatio costLrs;
-    private ClaimTriangle costCik;
+public class AverageCostEstimate extends AbstractEstimate<AverageCostEstimate.AverageCostEstimateInput> {
     
     public AverageCostEstimate(LinkRatio numberLrs, LinkRatio costLrs) {
-        super(numberLrs, costLrs);
-        initSources();
-        doRecalculate();
+        this(new AverageCostEstimateInput(numberLrs, costLrs));
     }
     
-    private void initSources() {
-        this.numberLrs = sources[NUMBERS];
-        this.numberCik = numberLrs.getSourceTriangle();
-        this.costLrs = sources[COSTS];
-        this.costCik = costLrs.getSourceTriangle();
+    public AverageCostEstimate(AverageCostEstimateInput input) {
+        super(input);
+        doRecalculate();
     }
     
     @Override
     public int getObservedDevelopmentCount(int accident) {
-        return numberCik.getDevelopmentCount(accident);
+        return source.numberCik.getDevelopmentCount(accident);
     }
 
     public LinkRatio getSourceCostLinkRatios() {
-        return costLrs;
+        return source.costLrs;
     }
     
     public LinkRatio getSourceNumberLinkRatios() {
-        return numberLrs;
+        return source.numberLrs;
     }
 
     @Override
@@ -51,8 +40,8 @@ public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
     
     private void doRecalculate() {
         initValues();
-        double[][] number = EstimateUtil.completeTriangle(numberCik, numberLrs);
-        double[][] cost = EstimateUtil.completeTriangle(costCik, costLrs);
+        double[][] number = EstimateUtil.completeTriangle(source.numberCik, source.numberLrs);
+        double[][] cost = EstimateUtil.completeTriangle(source.costCik, source.costLrs);
         
         for(int a=0; a<accidents; a++)
             for(int d=0; d<developments; d++)
@@ -66,20 +55,46 @@ public class AverageCostEstimate extends AbstractEstimate<LinkRatio> {
     }
     
     private void initAccidents() {
-        int numberAccidents = numberCik.getAccidentCount();
-        int costAccidents = costCik.getAccidentCount();
+        int numberAccidents = source.numberCik.getAccidentCount();
+        int costAccidents = source.costCik.getAccidentCount();
         accidents = (numberAccidents < costAccidents)? numberAccidents : costAccidents;
     }
     
     private void initDevelopments() {
-        int numberDevs = numberLrs.getDevelopmentCount();
-        int costDevs = costLrs.getDevelopmentCount();
+        int numberDevs = source.numberLrs.getDevelopmentCount();
+        int costDevs = source.costLrs.getDevelopmentCount();
         developments = (numberDevs < costDevs)? numberDevs : costDevs;
         developments++;
     }
     
     @Override
     public AverageCostEstimate copy() {
-        return new AverageCostEstimate(numberLrs.copy(), costLrs.copy());
+        return new AverageCostEstimate(source.copy());
+    }
+    
+    public static class AverageCostEstimateInput extends AbstractMultiSourceCalculationData<LinkRatio> {
+
+        private final LinkRatio numberLrs;
+        private final ClaimTriangle numberCik;
+        private final LinkRatio costLrs;
+        private final ClaimTriangle costCik;
+        
+        public AverageCostEstimateInput(LinkRatio numberLrs, LinkRatio costLrs) {
+            super(numberLrs, costLrs);
+            this.numberLrs = numberLrs;
+            this.numberCik = numberLrs.getSourceTriangle();
+            this.costLrs = costLrs;
+            this.costCik = costLrs.getSourceTriangle();
+        }
+        
+        @Override
+        protected void recalculateLayer() {
+        }
+        
+        private AverageCostEstimateInput copy() {
+            return new AverageCostEstimateInput(
+                    numberLrs.copy(), 
+                    costLrs.copy());
+        }
     }
 }

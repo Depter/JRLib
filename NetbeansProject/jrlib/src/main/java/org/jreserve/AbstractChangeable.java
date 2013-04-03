@@ -6,7 +6,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 /**
- *
+ * Default implementation for the {@link Changeable Changeable} interface.
+ * This class does nothing extra, just reduces boiler-plate codeing.
+ * 
  * @author Peter Decsi
  * @version 1.0
  */

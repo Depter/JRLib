@@ -1,8 +1,9 @@
 package org.jreserve.triangle.claim;
 
 import org.jreserve.AbstractMultiSourceCalculationData;
-import org.jreserve.triangle.Cell;
+import org.jreserve.triangle.AbstractTriangle;
 import org.jreserve.triangle.TriangleOperation;
+import org.jreserve.triangle.claim.CompositeClaimTriangle.CompositeClaimTriangleInput;
 
 //TODO add javadoc
 /**
@@ -10,28 +11,21 @@ import org.jreserve.triangle.TriangleOperation;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CompositeClaimTriangle extends AbstractMultiSourceCalculationData<ClaimTriangle> implements ClaimTriangle {
-
-    private final static int PRIMARY = 0;
-    private final static int SECONDARY = 1;
+public class CompositeClaimTriangle extends AbstractTriangle<CompositeClaimTriangleInput> implements ClaimTriangle {
     
     private TriangleOperation operation;
-    private ClaimTriangle primary;
-    private ClaimTriangle secondary;
     private int accidents;
     private int developments;
     private double[][] values;
     
     public CompositeClaimTriangle(ClaimTriangle primary, ClaimTriangle secondary, TriangleOperation operation) {
-        super(primary, secondary);
-        initState();
-        initOperation(operation);
-        doRecalculate();
+        this(new CompositeClaimTriangleInput(primary, secondary), operation);
     }
     
-    private void initState() {
-        primary = sources[PRIMARY];
-        secondary = sources[SECONDARY];
+    public CompositeClaimTriangle(CompositeClaimTriangleInput input, TriangleOperation operation) {
+        super(input);
+        initOperation(operation);
+        doRecalculate();
     }
     
     private void initOperation(TriangleOperation operation) {
@@ -52,18 +46,9 @@ public class CompositeClaimTriangle extends AbstractMultiSourceCalculationData<C
 
     @Override
     public int getDevelopmentCount(int accident) {
-        if(withinBound(accident))
+        if(withinBounds(accident))
             return values[accident].length;
         return 0;
-    }
-    
-    private boolean withinBound(int accident) {
-        return accident >=0 && accident < accidents;
-    }
-
-    @Override
-    public double getValue(Cell cell) {
-        return getValue(cell.getAccident(), cell.getDevelopment());
     }
 
     @Override
@@ -71,26 +56,6 @@ public class CompositeClaimTriangle extends AbstractMultiSourceCalculationData<C
         if(withinBounds(accident, development))
             return values[accident][development];
         return Double.NaN;
-    }
-    
-    private boolean withinBounds(int accident, int development) {
-        return withinBound(accident) &&
-               development>=0 && development < values[accident].length;
-    }
-
-    @Override
-    public double[][] toArray() {
-        double[][] result = new double[accidents][];
-        for(int a=0; a<accidents; a++)
-            result[a] = toArray(a);
-        return result;
-    }
-    
-    private double[] toArray(int accident) {
-        int devs = values[accident].length;
-        double[] result = new double[devs];
-        System.arraycopy(values[accident], 0, result, 0, devs);
-        return result;
     }
     
     @Override
@@ -105,14 +70,14 @@ public class CompositeClaimTriangle extends AbstractMultiSourceCalculationData<C
     }
     
     private void initAccidents() {
-        int a1 = primary.getAccidentCount();
-        int a2 = secondary.getAccidentCount();
+        int a1 =  source.getPrimarySource().getAccidentCount();
+        int a2 = source.getSecondarySource().getAccidentCount();
         this.accidents = (a1<a2)? a1 : a2;
     }
     
     private void initDevelopments() {
-        int d1 = primary.getDevelopmentCount();
-        int d2 = secondary.getDevelopmentCount();
+        int d1 = source.getPrimarySource().getDevelopmentCount();
+        int d2 = source.getSecondarySource().getDevelopmentCount();
         this.developments = (d1<d2)? d1 : d2;
     }
     
@@ -131,22 +96,60 @@ public class CompositeClaimTriangle extends AbstractMultiSourceCalculationData<C
     }
     
     private int getDevelopments(int accident) {
-        int d1 = primary.getDevelopmentCount(accident);
-        int d2 = secondary.getDevelopmentCount(accident);
+        int d1 = source.getPrimarySource().getDevelopmentCount(accident);
+        int d2 = source.getSecondarySource().getDevelopmentCount(accident);
         return (d1<d2)? d1 : d2;
     }
     
     private double recalculateCell(int accident, int development) {
-        double v1 = primary.getValue(accident, development);
-        double v2 = secondary.getValue(accident, development);
+        double v1 = source.getPrimaryValue(accident, development);
+        double v2 = source.getSecondaryValue(accident, development);
         return operation.operate(v1, v2);
     }
     
     @Override
     public CompositeClaimTriangle copy() {
         return new CompositeClaimTriangle(
-                primary.copy(), 
-                secondary.copy(), 
+                source.copy(), 
                 operation);
+    }
+    
+    public static class CompositeClaimTriangleInput extends AbstractMultiSourceCalculationData<ClaimTriangle> {
+
+        private ClaimTriangle primary;
+        private ClaimTriangle secondary;
+        
+        public CompositeClaimTriangleInput(ClaimTriangle primary, ClaimTriangle secondary) {
+            super(primary, secondary);
+            this.primary = primary;
+            this.secondary = secondary;
+        }
+        
+        public ClaimTriangle getPrimarySource() {
+            return primary;
+        }
+        
+        public double getPrimaryValue(int accident, int development) {
+            return primary.getValue(accident, development);
+        }
+        
+        public ClaimTriangle getSecondarySource() {
+            return secondary;
+        }
+        
+        public double getSecondaryValue(int accident, int development) {
+            return secondary.getValue(accident, development);
+        }
+        
+        @Override
+        protected void recalculateLayer() {
+        }
+        
+        private CompositeClaimTriangleInput copy() {
+            return new CompositeClaimTriangleInput(
+                    primary.copy(), 
+                    secondary.copy()
+                    );
+        }
     }
 }

@@ -1,5 +1,6 @@
 package org.jreserve.triangle.claim;
 
+import org.jreserve.triangle.AbstractTriangleModification;
 import org.jreserve.triangle.TriangleUtil;
 
 /**
@@ -7,7 +8,7 @@ import org.jreserve.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CummulatedClaimTriangle extends AbstractClaimTriangleModification {
+public class CummulatedClaimTriangle extends AbstractTriangleModification<ClaimTriangle> implements ModifiedClaimTriangle {
 
     private double[][] values;
 
@@ -15,6 +16,11 @@ public class CummulatedClaimTriangle extends AbstractClaimTriangleModification {
         super(source);
         values = (source==null)? new double[0][] : source.toArray();
         TriangleUtil.cummulate(values);
+    }
+
+    @Override
+    public ClaimTriangle getSourceTriangle() {
+        return source;
     }
     
     @Override

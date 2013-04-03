@@ -1,6 +1,6 @@
 package org.jreserve.estimate;
 
-import org.jreserve.AbstractMultiSourceCalculationData;
+import org.jreserve.AbstractCalculationData;
 import org.jreserve.CalculationData;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.TriangleUtil;
@@ -10,7 +10,7 @@ import org.jreserve.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractEstimate<T extends CalculationData> extends AbstractMultiSourceCalculationData<T> implements Estimate {
+public abstract class AbstractEstimate<T extends CalculationData> extends AbstractCalculationData<T> implements Estimate {
     
     protected int accidents;
     protected int developments;
@@ -19,8 +19,8 @@ public abstract class AbstractEstimate<T extends CalculationData> extends Abstra
     protected AbstractEstimate() {
     }
     
-    protected AbstractEstimate(T... sources) {
-        super(sources);
+    protected AbstractEstimate(T source) {
+        super(source);
     }
     
     @Override

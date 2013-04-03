@@ -1,8 +1,9 @@
 window_sizes 1600 851 375 1125 600 82
 show_stereotypes
-selected class_ref 138242 // Bootstrapper
+selected classdiagram_ref 128002 // cdm_System
 open
-  classview_ref 136194 // classes
+  
+package_ref 136578 // bootstrap
   classview_ref 136066 // classes
   classview_ref 128386 // System
 end

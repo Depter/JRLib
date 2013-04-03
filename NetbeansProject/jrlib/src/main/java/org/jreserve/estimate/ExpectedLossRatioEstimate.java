@@ -1,6 +1,5 @@
 package org.jreserve.estimate;
 
-import org.jreserve.CalculationData;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.vector.Vector;
@@ -10,60 +9,22 @@ import org.jreserve.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ExpectedLossRatioEstimate extends AbstractEstimate<CalculationData> {
+public class ExpectedLossRatioEstimate extends AbstractEstimate<LossRatioEstimateInput> {
 
-    private final static int LRS = 0;
-    private final static int EXPOSURES = 1;
-    private final static int LOSS_RATIOS = 2;
-
-    private LinkRatio lrs;
     private ClaimTriangle ciks;
-    private Vector exposure;
-    private Vector lossRatio;
     
     public ExpectedLossRatioEstimate(LinkRatio lrs, Vector exposure, Vector lossRatio) {
-        super(lrs, exposure, lossRatio);
-        initState();
-        checkInput();
+        this(new LossRatioEstimateInput(lrs, exposure, lossRatio));
+    }
+    
+    public ExpectedLossRatioEstimate(LossRatioEstimateInput source) {
+        super(source);
+        this.ciks = source.getSourceLinkRatio().getSourceTriangle();
         doRecalculate();
     }
-    
-    private void initState() {
-        this.lrs = (LinkRatio) sources[LRS];
-        this.ciks = lrs.getSourceTriangle();
-        this.exposure = (Vector) sources[EXPOSURES];
-        this.lossRatio = (Vector) sources[LOSS_RATIOS];
-    }
-    
-    private void checkInput() {
-        if(ciks.getAccidentCount() > exposure.getLength())
-            throw cikExposureMismatchException();
-        if(ciks.getAccidentCount() > lossRatio.getLength())
-            throw cikLossRatioMismatchException();
-    }
-    
-    private IllegalArgumentException cikExposureMismatchException() {
-        String msg = "Accident count in claims [%d] is more then the accident count in the exposure [%d]!";
-        msg = String.format(msg, ciks.getAccidentCount(), exposure.getLength());
-        return new IllegalArgumentException(msg);
-    }
-    
-    private IllegalArgumentException cikLossRatioMismatchException() {
-        String msg = "Accident count in claims [%d] is more then the accident count in the loss ratios [%d]!";
-        msg = String.format(msg, ciks.getAccidentCount(), exposure.getLength());
-        return new IllegalArgumentException(msg);
-    }
 
-    public LinkRatio getSourceLinkRatios() {
-        return lrs;
-    }
-    
-    public Vector getSourceExposure() {
-        return exposure;
-    }
-    
-    public Vector getSourceLossRatios() {
-        return lossRatio;
+    public LossRatioEstimateInput getSource() {
+        return source;
     }
 
     @Override
@@ -83,7 +44,7 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate<CalculationData>
     
     private void initDimensions() {
         accidents = ciks.getAccidentCount();
-        developments = lrs.getDevelopmentCount()+1;
+        developments = source.getDevelopmentCount()+1;
         values = new double[accidents][developments];
     }
     
@@ -105,7 +66,7 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate<CalculationData>
         
         quotas[developments-1] = 1d;
         for(int d=(developments-2); d>=0; d--) {
-            double lr = lrs.getValue(d);
+            double lr = source.getLinkRatio(d);
             quotas[d] = (lr == 0d)? Double.NaN : quotas[d+1] / lr;
         }
         
@@ -115,14 +76,12 @@ public class ExpectedLossRatioEstimate extends AbstractEstimate<CalculationData>
     private double[] calculateUltimates() {
         double[] ultimates = new double[accidents];
         for(int a=0; a<accidents; a++)
-            ultimates[a] = exposure.getValue(a) * lossRatio.getValue(a);
+            ultimates[a] = source.getExposure(a) * source.getLossRatio(a);
         return ultimates;
     }
     
     @Override
     public ExpectedLossRatioEstimate copy() {
-        return new ExpectedLossRatioEstimate(
-                lrs.copy(), exposure.copy(), lossRatio.copy()
-                );
+        return new ExpectedLossRatioEstimate(source.copy());
     }
 }

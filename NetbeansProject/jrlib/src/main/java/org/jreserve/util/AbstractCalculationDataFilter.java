@@ -4,7 +4,9 @@ import org.jreserve.AbstractCalculationData;
 import org.jreserve.CalculationData;
 
 /**
- *
+ * A calculation data filter enables to filter the output of a {@link CalculationData CalculationData}.
+ * 
+ * 
  * @author Peter Decsi
  * @version 1.0
  */
