@@ -6,7 +6,7 @@ import org.jreserve.linkratio.scale.LinkRatioScaleExtrapolation;
 import org.jreserve.linkratio.scale.LinkRatioScaleEstimator;
 import org.jreserve.linkratio.scale.EmptyLinkRatioScaleEstimator;
 import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
-import org.jreserve.linkratio.scale.LinkRatioScaleCaclulator;
+import org.jreserve.linkratio.scale.LinkRatioScaleCalculator;
 import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.ChangeCounter;
@@ -42,7 +42,7 @@ public class DefaultLinkRatioScaleSelectionTest {
     public void setUp() {
         ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA2);
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(cik));
-        source = new LinkRatioScaleCaclulator(lr);
+        source = new LinkRatioScaleCalculator(lr);
         selection = new DefaultLinkRatioScaleSelection(source);
         changeCounter = new ChangeCounter();
         selection.addChangeListener(changeCounter);

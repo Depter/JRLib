@@ -1,7 +1,8 @@
 package org.jreserve.estimate;
 
 import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
@@ -14,23 +15,23 @@ class MackProcessVarianceUtil {
     private LinkRatio lrs;
     private ClaimTriangle cik;
     private double[][] estimates;
-    private LinkRatioScale scales;
+    private RatioScale<LinkRatioScaleInput> scales;
     private int accidents;
     
     private double[] procSDs;
     private double procSD;
 
-    MackProcessVarianceUtil(LinkRatioScale scales, double[][] estimates) {
+    MackProcessVarianceUtil(RatioScale<LinkRatioScaleInput> scales, double[][] estimates) {
         initState(scales, estimates);
         double[] pvm = calculateProcVarMultiplier();
         fillValues(pvm);
         clearState();
     }
     
-    private void initState(LinkRatioScale scales, double[][] estimates) {
+    private void initState(RatioScale<LinkRatioScaleInput> scales, double[][] estimates) {
         this.estimates = estimates;
         this.scales = scales;
-        lrs = scales.getSourceLinkRatios();
+        lrs = scales.getSourceInput().getSourceLinkRatios();
         cik = lrs.getSourceTriangle();
         accidents = cik.getAccidentCount();
         procSDs = new double[accidents];

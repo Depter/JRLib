@@ -50,6 +50,11 @@ public class RatioTriangleCorrection extends TriangleCorrection<RatioTriangle> i
     }
     
     @Override
+    public RatioTriangleCorrection copy() {
+        return new RatioTriangleCorrection(source.copy(), accident, development, correction);
+    }
+    
+    @Override
     public String toString() {
         return String.format(
             "RatioTriangleCorrection [%d; %d] = %f",

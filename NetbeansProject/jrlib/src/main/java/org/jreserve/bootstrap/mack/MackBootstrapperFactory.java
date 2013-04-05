@@ -8,7 +8,9 @@ import org.jreserve.bootstrap.FixedProcessSimulator;
 import org.jreserve.bootstrap.ProcessSimulator;
 import org.jreserve.bootstrap.Random;
 import org.jreserve.estimate.ChainLadderEstimate;
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 
 /**
  *
@@ -19,7 +21,7 @@ public class MackBootstrapperFactory {
     
     private Random random;
     private int bootstrapCount;
-    private LinkRatioScale scales;
+    private RatioScale<LinkRatioScaleInput> scales;
     private MackResidualTriangle resTriangle;
     private List<int[][]> segments = new ArrayList<int[][]>();
     private DefaultResidualGenerator resGenerator;
@@ -29,14 +31,13 @@ public class MackBootstrapperFactory {
     public MackBootstrapperFactory() {
     }
 
-    
-    public MackBootstrapperFactory(LinkRatioScale scales, int n, Random rnd) {
+    public MackBootstrapperFactory(RatioScale<LinkRatioScaleInput> scales, int n, Random rnd) {
         initLinkRatioScales(scales);
         initBootstrapCount(n);
         initRandom(rnd);
     }
     
-    private void initLinkRatioScales(LinkRatioScale scales) {
+    private void initLinkRatioScales(RatioScale<LinkRatioScaleInput> scales) {
         this.scales = scales.copy();
         resTriangle = new MackResidualTriangle(scales);
     }
@@ -53,7 +54,7 @@ public class MackBootstrapperFactory {
         this.random = rnd;
     }
     
-    public MackBootstrapperFactory setLinkRatios(LinkRatioScale scales) {
+    public MackBootstrapperFactory setLinkRatios(RatioScale<LinkRatioScaleInput> scales) {
         initLinkRatioScales(scales);
         return this;
     }
@@ -128,8 +129,9 @@ public class MackBootstrapperFactory {
     }
     
     private ChainLadderEstimate createEstimate() {
-        scales.getSourceLinkRatios().setSource(pseudoFactors);
-        ChainLadderEstimate estimate = new ChainLadderEstimate(scales.getSourceLinkRatios());
+        LinkRatio lrs = scales.getSourceInput().getSourceLinkRatios();
+        lrs.setSource(pseudoFactors);
+        ChainLadderEstimate estimate = new ChainLadderEstimate(lrs);
         estimate.detach();
         return estimate;
     }

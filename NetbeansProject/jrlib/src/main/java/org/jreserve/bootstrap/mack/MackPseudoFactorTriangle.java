@@ -3,7 +3,8 @@ package org.jreserve.bootstrap.mack;
 import javax.swing.event.ChangeListener;
 import org.jreserve.bootstrap.ResidualGenerator;
 import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.claim.InputTriangle;
@@ -24,12 +25,13 @@ public class MackPseudoFactorTriangle implements FactorTriangle {
     private final double[] lrs;
     private final ClaimTriangle source;
     
-    public MackPseudoFactorTriangle(LinkRatioScale scales, ResidualGenerator residuals) {
+    public MackPseudoFactorTriangle(RatioScale<LinkRatioScaleInput> scales, ResidualGenerator residuals) {
         //Residuals
         this.residuals = residuals;
+        LinkRatioScaleInput input = scales.getSourceInput();
         
         //Accident, developments, values
-        FactorTriangle factors = scales.getSourceFactors();
+        FactorTriangle factors = input.getSourceFactors();
         this.accidents = factors.getAccidentCount();
         this.developments = new int[accidents];
         this.values = new double[accidents][];
@@ -40,7 +42,7 @@ public class MackPseudoFactorTriangle implements FactorTriangle {
         }
         
         //sigmas, link-ratios
-        LinkRatio linkRatios = scales.getSourceLinkRatios();
+        LinkRatio linkRatios = input.getSourceLinkRatios();
         int devs = factors.getDevelopmentCount();
         sigmas = new double[devs];
         lrs = new double[devs];
@@ -50,7 +52,7 @@ public class MackPseudoFactorTriangle implements FactorTriangle {
         }
         
         //Source triangle
-        source = new InputTriangle(scales.getSourceTriangle().toArray());
+        source = new InputTriangle(input.getSourceTriangle().toArray());
     }
     
     @Override

@@ -1,10 +1,11 @@
 package org.jreserve.estimate;
 
 import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
 import org.jreserve.linkratio.standarderror.LinkRatioSE;
-import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.claim.ClaimTriangle;
 
 /**
  *
@@ -96,12 +97,12 @@ public class MackEstimate extends AbstractEstimate<LinkRatioSE> {
     private void initState() {
         super.accidents = cik.getAccidentCount();
         super.developments = lrSE.getDevelopmentCount()+1;
-        LinkRatio lrs = lrSE.getSourceLRScales().getSourceLinkRatios();
+        LinkRatio lrs = lrSE.getSourceLinkRatios();
         super.values = EstimateUtil.completeTriangle(cik, lrs);
     }
     
     private void calculateProcessSDs() {
-        LinkRatioScale scales = lrSE.getSourceLRScales();
+        RatioScale<LinkRatioScaleInput> scales = lrSE.getSourceLRScales();
         MackProcessVarianceUtil util = new MackProcessVarianceUtil(scales, values);
         this.procSEs = util.getProcessSDs();
         this.procSE = util.getProcessSD();

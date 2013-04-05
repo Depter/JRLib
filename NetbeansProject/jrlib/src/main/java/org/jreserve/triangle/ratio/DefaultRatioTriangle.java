@@ -60,6 +60,11 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
     }
 
     @Override
+    public DefaultRatioTriangle copy() {
+        return new DefaultRatioTriangle(source.copy());
+    }
+    
+    @Override
     protected void recalculateLayer() {
     }
 }

@@ -1,6 +1,7 @@
 package org.jreserve.bootstrap.mack;
 
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 
 /**
  *
@@ -11,7 +12,7 @@ public abstract class AbstractMackProcessSimulator {
     private final int sigmaCount;
     private final double[] sigmas;
     
-    protected AbstractMackProcessSimulator(LinkRatioScale scales) {
+    protected AbstractMackProcessSimulator(RatioScale<LinkRatioScaleInput> scales) {
         this.sigmas = scales.toArray();
         this.sigmaCount = this.sigmas.length;
         for(int d=0; d<sigmaCount; d++)

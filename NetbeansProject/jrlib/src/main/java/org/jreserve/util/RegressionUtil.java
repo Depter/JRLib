@@ -37,12 +37,12 @@ public class RegressionUtil {
      *<pre>
      *     (sum(y)*sum(x^2) - sum(x)*sum(x*y))
      * a = --------------------------------
-     *         n*(sum(x^2) - sum(x)^2)
+     *         n*sum(x^2) - sum(x)^2
      *</pre>
      *<pre>
      *      n*sum(x*y) - sum(x) * sum(y)
      * b = --------------------------------
-     *         n(sum(x^2) - sum(x)^2)
+     *         n * sum(x^2) - sum(x)^2
      *</pre>
      * </p>
      * 

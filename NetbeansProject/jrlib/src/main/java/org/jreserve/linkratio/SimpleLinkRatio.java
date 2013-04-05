@@ -1,19 +1,16 @@
 package org.jreserve.linkratio;
 
-import org.jreserve.AbstractCalculationData;
 import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.factor.DevelopmentFactors;
 import org.jreserve.triangle.factor.FactorTriangle;
+import org.jreserve.util.AbstractSimpleEstimator;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> implements LinkRatio {
-    
-    private LinkRatioMethod method;
-    private int developmentCount;
+public class SimpleLinkRatio extends AbstractSimpleEstimator<FactorTriangle, LinkRatioMethod> implements LinkRatio {
 
     public SimpleLinkRatio(ClaimTriangle triangle) {
         this(new DevelopmentFactors(triangle), null);
@@ -28,9 +25,7 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     }
     
     public SimpleLinkRatio(FactorTriangle source, LinkRatioMethod method) {
-        super(source);
-        this.method = (method==null)? new WeightedAverageLRMethod() : method;
-        doRecalculate();
+        super(source, method, source.getDevelopmentCount());
     }
 
     @Override
@@ -42,53 +37,25 @@ public class SimpleLinkRatio extends AbstractCalculationData<FactorTriangle> imp
     public ClaimTriangle getSourceTriangle() {
         return source.getSourceTriangle();
     }
-    
-    @Override
-    public int getDevelopmentCount() {
-        return developmentCount;
-    }
-
-    @Override
-    public double getValue(int development) {
-        if(development>=0 && development < developmentCount)
-            return method.getValue(development);
-        return Double.NaN;
-    }
-
-    @Override
-    public double[] toArray() {
-        double[] result = new double[developmentCount];
-        for(int d=0; d<developmentCount; d++)
-            result[d] = method.getValue(d);
-        return result;
-    }
 
     @Override
     public double getMackAlpha(int development) {
-        return method.getMackAlpha();
+        return estimator.getMackAlpha();
     }
     
     @Override
     public double getWeight(int accident, int development) {
-        return method.getWeight(accident, development);
+        return estimator.getWeight(accident, development);
     }
-
+    
     @Override
-    protected void recalculateLayer() {
-        doRecalculate();
-    }
-
-    private void doRecalculate() {
-        if(source == null) {
-            developmentCount = 0;
-        } else {
-            developmentCount = source.getDevelopmentCount();
-            method.fit(source);
-        }
+    protected void initCalculation() {
+        developments = source.getDevelopmentCount();
+        values = null;
     }
     
     @Override
     public SimpleLinkRatio copy() {
-        return new SimpleLinkRatio(source.copy(), method.copy());
+        return new SimpleLinkRatio(source.copy(), estimator.copy());
     }
 }

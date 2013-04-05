@@ -4,8 +4,9 @@ import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
 import org.jreserve.linkratio.LinkRatio;
 import org.jreserve.linkratio.SimpleLinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
-import org.jreserve.linkratio.scale.SimpleLinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
+import org.jreserve.scale.SimpleRatioScale;
 import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.factor.FactorTriangle;
 import org.junit.AfterClass;
@@ -33,7 +34,8 @@ public class MackResidualTriangleTest {
     };
     
     private ClaimTriangle claims;
-    private LinkRatioScale scales;
+    private LinkRatioScaleInput input;
+    private RatioScale<LinkRatioScaleInput> scales;
     private MackResidualTriangle residuals;
     
     public MackResidualTriangleTest() {
@@ -50,8 +52,8 @@ public class MackResidualTriangleTest {
     @Before
     public void setUp() {
         claims = TestData.getCummulatedTriangle(TestData.TAYLOR_ASHE);
-        LinkRatio lrs = new SimpleLinkRatio(claims);
-        scales = new SimpleLinkRatioScale(lrs);
+        input = new LinkRatioScaleInput(new SimpleLinkRatio(claims));
+        scales = new SimpleRatioScale<LinkRatioScaleInput>(input);
         residuals = new MackResidualTriangle(scales);
     }
 
@@ -62,18 +64,18 @@ public class MackResidualTriangleTest {
 
     @Test
     public void testGetAccidentCount() {
-        assertEquals(scales.getSourceFactors().getAccidentCount(), residuals.getAccidentCount());
+        assertEquals(input.getSourceFactors().getAccidentCount(), residuals.getAccidentCount());
     }
 
     @Test
     public void testGetDevelopmentCount_0args() {
-        assertEquals(scales.getSourceFactors().getDevelopmentCount(), residuals.getDevelopmentCount());
+        assertEquals(input.getSourceFactors().getDevelopmentCount(), residuals.getDevelopmentCount());
     }
 
     @Test
     public void testGetDevelopmentCount_int() {
         assertEquals(0, residuals.getDevelopmentCount(-1));
-        FactorTriangle factors = scales.getSourceFactors();
+        FactorTriangle factors = input.getSourceFactors();
         int accidents = factors.getAccidentCount();
         for(int a=0; a<accidents; a++)
             assertEquals(factors.getDevelopmentCount(a), residuals.getDevelopmentCount(a));
@@ -82,7 +84,7 @@ public class MackResidualTriangleTest {
 
     @Test
     public void testGetValue() {
-        int accidents = scales.getSourceFactors().getAccidentCount();
+        int accidents = input.getSourceFactors().getAccidentCount();
         assertEquals(Double.NaN, residuals.getValue(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++) {
             assertEquals(Double.NaN, residuals.getValue(a, -1), JRLibTestUtl.EPSILON);
@@ -96,9 +98,9 @@ public class MackResidualTriangleTest {
 
     @Test
     public void testGetWeight() {
-        LinkRatio lrs = scales.getSourceLinkRatios();
+        LinkRatio lrs = input.getSourceLinkRatios();
         
-        int accidents = scales.getSourceFactors().getAccidentCount();
+        int accidents = input.getSourceFactors().getAccidentCount();
         assertEquals(Double.NaN, residuals.getWeight(-1, 0), JRLibTestUtl.EPSILON);
         for(int a=0; a<accidents; a++) {
             assertEquals(Double.NaN, residuals.getWeight(a, -1), JRLibTestUtl.EPSILON);

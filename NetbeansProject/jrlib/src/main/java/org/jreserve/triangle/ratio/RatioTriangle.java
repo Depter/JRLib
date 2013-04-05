@@ -1,5 +1,6 @@
 package org.jreserve.triangle.ratio;
 
+import org.jreserve.Copyable;
 import org.jreserve.triangle.Triangle;
 import org.jreserve.triangle.claim.ClaimTriangle;
 
@@ -8,7 +9,7 @@ import org.jreserve.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface RatioTriangle extends Triangle {
+public interface RatioTriangle extends Triangle, Copyable<RatioTriangle> {
 
     public RatioTriangleInput getSourceTriangles();
     

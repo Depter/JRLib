@@ -1,9 +1,9 @@
 package org.jreserve.linkratio.standarderror;
 
-import org.jreserve.triangle.factor.FactorTriangle;
 import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.FactorTriangle;
 import org.jreserve.util.AbstractMethodSelection;
 
 /**
@@ -16,7 +16,7 @@ public class DefaultLinkRatioSESelection extends AbstractMethodSelection<LinkRat
     private int developments;
     private double[] values;
 
-    public DefaultLinkRatioSESelection(LinkRatioScale scales) {
+    public DefaultLinkRatioSESelection(RatioScale<LinkRatioScaleInput> scales) {
         this(new LinkRatioSECalculator(scales), null);
     }
 
@@ -44,7 +44,7 @@ public class DefaultLinkRatioSESelection extends AbstractMethodSelection<LinkRat
     }
 
     @Override
-    public LinkRatioScale getSourceLRScales() {
+    public RatioScale<LinkRatioScaleInput> getSourceLRScales() {
         return source.getSourceLRScales();
     }
     

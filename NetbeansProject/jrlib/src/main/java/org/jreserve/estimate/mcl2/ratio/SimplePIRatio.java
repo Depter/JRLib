@@ -10,7 +10,7 @@ import org.jreserve.triangle.ratio.RatioTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class SimplePIRatio extends AbstractCalculationData<RatioTriangle> implements PIRatio {
+public class SimplePIRatio extends AbstractCalculationData<RatioTriangle> implements Ratio {
 
     private int developments;
     private double[] pPerI;
@@ -67,6 +67,11 @@ public class SimplePIRatio extends AbstractCalculationData<RatioTriangle> implem
         return result;
     }
 
+    @Override
+    public Ratio copy() {
+        return new SimplePIRatio(source.copy());
+    }
+    
     @Override
     protected void recalculateLayer() {
         doRecalculate();

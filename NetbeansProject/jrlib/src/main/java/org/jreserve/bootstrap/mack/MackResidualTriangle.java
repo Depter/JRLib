@@ -2,7 +2,8 @@ package org.jreserve.bootstrap.mack;
 
 import org.jreserve.bootstrap.ResidualTriangle;
 import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.triangle.AbstractTriangle;
 import org.jreserve.triangle.factor.FactorTriangle;
 
@@ -11,7 +12,7 @@ import org.jreserve.triangle.factor.FactorTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MackResidualTriangle extends AbstractTriangle<LinkRatioScale> implements ResidualTriangle {
+public class MackResidualTriangle extends AbstractTriangle<RatioScale<LinkRatioScaleInput>> implements ResidualTriangle {
 
     private FactorTriangle factors;
 
@@ -20,13 +21,13 @@ public class MackResidualTriangle extends AbstractTriangle<LinkRatioScale> imple
     private double[][] residuals;
     private double[][] dik;
     
-    public MackResidualTriangle(LinkRatioScale scales) {
+    public MackResidualTriangle(RatioScale<LinkRatioScaleInput> scales) {
         super(scales);
-        factors = scales.getSourceFactors();
+        factors = scales.getSourceInput().getSourceFactors();
         doRecalculate();
     }
     
-    public LinkRatioScale getSourceLinkRatioScale() {
+    public RatioScale<LinkRatioScaleInput> getSourceLinkRatioScale() {
         return source;
     }
     
@@ -84,7 +85,7 @@ public class MackResidualTriangle extends AbstractTriangle<LinkRatioScale> imple
         residuals[accident] = new double[devs];
         dik[accident] = new double[devs];
         
-        LinkRatio lrs = source.getSourceLinkRatios();
+        LinkRatio lrs = source.getSourceInput().getSourceLinkRatios();
         
         for(int d=0; d<devs; d++) {
             double f = factors.getValue(accident, d);

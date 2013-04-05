@@ -1,6 +1,6 @@
 package org.jreserve.linkratio.scale;
 
-import org.jreserve.linkratio.scale.LinkRatioScaleCaclulator;
+import org.jreserve.linkratio.scale.LinkRatioScaleCalculator;
 import org.jreserve.ChangeCounter;
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
@@ -31,7 +31,7 @@ public class LinkRatioScaleCalculatorTest {
     
     private ClaimTriangle cik;
     private LinkRatio source;
-    private LinkRatioScaleCaclulator scale;
+    private LinkRatioScaleCalculator scale;
     private ChangeCounter changeCounter;
     
     public LinkRatioScaleCalculatorTest() {
@@ -41,7 +41,7 @@ public class LinkRatioScaleCalculatorTest {
     public void setUp() {
         cik = TestData.getCummulatedTriangle(TestData.Q_PAID);
         source = new DefaultLinkRatioSelection(new DevelopmentFactors(cik));
-        scale = new LinkRatioScaleCaclulator(source);
+        scale = new LinkRatioScaleCalculator(source);
         changeCounter = new ChangeCounter();
         scale.addChangeListener(changeCounter);
     }

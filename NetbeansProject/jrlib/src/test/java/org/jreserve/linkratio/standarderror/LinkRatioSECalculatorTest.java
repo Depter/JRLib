@@ -5,7 +5,7 @@ import org.jreserve.linkratio.scale.LinkRatioScale;
 import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
 import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
 import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
-import org.jreserve.linkratio.scale.LinkRatioScaleCaclulator;
+import org.jreserve.linkratio.scale.LinkRatioScaleCalculator;
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
 import org.jreserve.triangle.factor.DevelopmentFactors;
@@ -42,7 +42,7 @@ public class LinkRatioSECalculatorTest {
     private LinkRatioScale createScales() {
         ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(cik));
-        LinkRatioScaleSelection result = new DefaultLinkRatioScaleSelection(new LinkRatioScaleCaclulator(lr));
+        LinkRatioScaleSelection result = new DefaultLinkRatioScaleSelection(new LinkRatioScaleCalculator(lr));
         
         int developments = lr.getDevelopmentCount();
         result.setMethod(new LinkRatioScaleMinMaxEstimator(), developments-1);

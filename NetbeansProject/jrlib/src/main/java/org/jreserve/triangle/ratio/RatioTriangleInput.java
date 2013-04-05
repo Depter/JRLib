@@ -27,4 +27,9 @@ public class RatioTriangleInput extends CompositeClaimTriangle {
     public ClaimTriangle getSourceIncurredTriangle() {
         return incurred;
     }
+    
+    @Override
+    public RatioTriangleInput copy() {
+        return new RatioTriangleInput(paid.copy(), incurred.copy());
+    }
 }

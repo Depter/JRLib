@@ -1,6 +1,7 @@
 package org.jreserve.estimate.mcl2.ratio;
 
 import org.jreserve.CalculationData;
+import org.jreserve.Copyable;
 import org.jreserve.triangle.claim.ClaimTriangle;
 import org.jreserve.triangle.ratio.RatioTriangle;
 
@@ -9,7 +10,7 @@ import org.jreserve.triangle.ratio.RatioTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface PIRatio extends CalculationData {
+public interface Ratio extends CalculationData, Copyable<Ratio> {
     
     public RatioTriangle getSourceRatioTriangle();
     
@@ -21,10 +22,9 @@ public interface PIRatio extends CalculationData {
     
     public double getPperI(int development);
     
-    public double getIperP(int development);
-    
     public double[] toArrayPperI();
     
-    public double[] toArrayIperP();
+    public double getIperP(int development);
     
+    public double[] toArrayIperP();
 }

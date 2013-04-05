@@ -1,7 +1,5 @@
 package org.jreserve.triangle.claim;
 
-import org.jreserve.triangle.claim.ClaimTriangleCorrection;
-import org.jreserve.triangle.claim.ClaimTriangle;
 import static org.jreserve.JRLibTestUtl.EPSILON;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -34,21 +32,21 @@ public class ClaimTriangleCorrectionTest {
 
     @Test
     public void testGetAccident() {
-        assertEquals(ACCIDENT, corrigated.getAccident());
-        assertEquals(ACCIDENT, outsider.getAccident());
+        assertEquals(ACCIDENT, corrigated.getAccidentCount());
+        assertEquals(ACCIDENT, outsider.getAccidentCount());
     }
 
     @Test
     public void testGetDevelopment() {
-        assertEquals(DEVELOPMENT, corrigated.getDevelopment());
+        assertEquals(DEVELOPMENT, corrigated.getDevelopmentCount());
         int dev = source.getDevelopmentCount(ACCIDENT);
-        assertEquals(dev, outsider.getDevelopment());
+        assertEquals(dev, outsider.getDevelopmentCount());
     }
 
     @Test
     public void testGetCorrection() {
-        assertEquals(CORRECTION, corrigated.getCorrection(), EPSILON);
-        assertEquals(CORRECTION, outsider.getCorrection(), EPSILON);
+        assertEquals(CORRECTION, corrigated.getCorrigatedValue(), EPSILON);
+        assertEquals(CORRECTION, outsider.getCorrigatedValue(), EPSILON);
     }
 
     @Test

@@ -1,45 +1,45 @@
 package org.jreserve.linkratio.standarderror;
 
 import org.jreserve.AbstractCalculationData;
-import org.jreserve.triangle.factor.FactorTriangle;
 import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.scale.LinkRatioScale;
-import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.triangle.TriangleUtil;
+import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class LinkRatioSECalculator extends AbstractCalculationData<LinkRatioScale> implements LinkRatioSE {
+public class LinkRatioSECalculator extends AbstractCalculationData<RatioScale<LinkRatioScaleInput>> implements LinkRatioSE {
 
     private int developments;
     private double[] values;
     
-    public LinkRatioSECalculator(LinkRatioScale source) {
+    public LinkRatioSECalculator(RatioScale<LinkRatioScaleInput> source) {
         super(source);
         doRecalculate();
     }
     
     @Override
-    public LinkRatioScale getSourceLRScales() {
+    public RatioScale<LinkRatioScaleInput> getSourceLRScales() {
         return source;
     }
     
     @Override
     public LinkRatio getSourceLinkRatios() {
-        return source.getSourceLinkRatios();
+        return source.getSourceInput().getSourceLinkRatios();
     }
     
     @Override
     public FactorTriangle getSourceFactors() {
-        return source.getSourceFactors();
+        return source.getSourceInput().getSourceFactors();
     }
     
     @Override
     public ClaimTriangle getSourceTriangle() {
-        return source.getSourceTriangle();
+        return source.getSourceInput().getSourceTriangle();
     }
 
     @Override
@@ -78,8 +78,8 @@ public class LinkRatioSECalculator extends AbstractCalculationData<LinkRatioScal
     private void initState() {
         developments = source.getDevelopmentCount();
         values = new double[developments];
-        lrk = source.getSourceLinkRatios();
-        accidents = source.getSourceFactors().getAccidentCount();
+        lrk = getSourceLinkRatios();
+        accidents = getSourceFactors().getAccidentCount();
     }
     
     private double calculateSE(int development) {

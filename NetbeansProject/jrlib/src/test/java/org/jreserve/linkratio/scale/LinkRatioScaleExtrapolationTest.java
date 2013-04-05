@@ -1,6 +1,6 @@
 package org.jreserve.linkratio.scale;
 
-import org.jreserve.linkratio.scale.LinkRatioScaleCaclulator;
+import org.jreserve.linkratio.scale.LinkRatioScaleCalculator;
 import org.jreserve.linkratio.scale.LinkRatioScale;
 import org.jreserve.linkratio.scale.LinkRatioScaleExtrapolation;
 import org.jreserve.JRLibTestUtl;
@@ -39,7 +39,7 @@ public class LinkRatioScaleExtrapolationTest {
     private void createSource() {
         ClaimTriangle triangle = TestData.getCummulatedTriangle(TestData.INCURRED);
         LinkRatio lr = new SimpleLinkRatio(new DevelopmentFactors(triangle));
-        source = new LinkRatioScaleCaclulator(lr);
+        source = new LinkRatioScaleCalculator(lr);
     }
 
     @Test

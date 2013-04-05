@@ -2,7 +2,8 @@ package org.jreserve.bootstrap.mack;
 
 import org.jreserve.bootstrap.ProcessSimulator;
 import org.jreserve.bootstrap.Random;
-import org.jreserve.linkratio.scale.LinkRatioScale;
+import org.jreserve.linkratio.standarderror.LinkRatioScaleInput;
+import org.jreserve.scale.RatioScale;
 import org.jreserve.util.RndNormal;
 
 /**
@@ -14,7 +15,7 @@ public class NormalMackProcessSimulator extends AbstractMackProcessSimulator imp
 
     private final RndNormal rnd;
     
-    public NormalMackProcessSimulator(Random rnd, LinkRatioScale scales) {
+    public NormalMackProcessSimulator(Random rnd, RatioScale<LinkRatioScaleInput> scales) {
         super(scales);
         this.rnd = new RndNormal(rnd);
     }

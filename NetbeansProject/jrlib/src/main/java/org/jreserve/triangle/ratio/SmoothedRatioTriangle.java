@@ -46,6 +46,11 @@ public class SmoothedRatioTriangle extends SmoothedTriangle<RatioTriangle> imple
     }
 
     @Override
+    public SmoothedRatioTriangle copy() {
+        return new SmoothedRatioTriangle(source.copy(), smoothing.copy());
+    }
+    
+    @Override
     public String toString() {
         return String.format(
             "SmoothedRatioTriangle [%s; %s]",

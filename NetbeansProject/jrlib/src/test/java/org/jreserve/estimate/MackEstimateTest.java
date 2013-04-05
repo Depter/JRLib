@@ -1,25 +1,17 @@
 package org.jreserve.estimate;
 
-import org.jreserve.linkratio.scale.LinkRatioScale;
-import org.jreserve.linkratio.SimpleLinkRatio;
-import org.jreserve.linkratio.LinkRatio;
-import org.jreserve.linkratio.standarderror.DefaultLinkRatioSESelection;
-import org.jreserve.linkratio.standarderror.LinkRatioSESelection;
-import org.jreserve.linkratio.standarderror.UserInputLinkRatioSEFunction;
-import org.jreserve.linkratio.scale.DefaultLinkRatioScaleSelection;
-import org.jreserve.linkratio.scale.LinkRatioScaleCaclulator;
-import org.jreserve.linkratio.scale.LinkRatioScaleSelection;
-import org.jreserve.linkratio.scale.LinkRatioScaleMinMaxEstimator;
-import org.jreserve.linkratio.scale.UserInputLinkRatioScaleEstimator;
 import org.jreserve.JRLibTestUtl;
 import org.jreserve.TestData;
-import org.jreserve.triangle.factor.DevelopmentFactors;
+import org.jreserve.linkratio.LinkRatio;
+import org.jreserve.linkratio.SimpleLinkRatio;
 import org.jreserve.linkratio.smoothing.DefaultLinkRatioSmoothing;
 import org.jreserve.linkratio.smoothing.LinkRatioSmoothingSelection;
 import org.jreserve.linkratio.smoothing.UserInputLRFunction;
-import org.jreserve.linkratio.standarderror.LinkRatioSE;
+import org.jreserve.linkratio.standarderror.*;
+import org.jreserve.scale.*;
 import org.jreserve.triangle.Cell;
 import org.jreserve.triangle.claim.ClaimTriangle;
+import org.jreserve.triangle.factor.DevelopmentFactors;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -73,7 +65,7 @@ public class MackEstimateTest {
     }
     
     private LinkRatioSE createLinkRatioSE() {
-        LinkRatioScale scales= createLRScales();
+        RatioScale<LinkRatioScaleInput> scales = createLRScales();
         LinkRatioSESelection lrSe = new DefaultLinkRatioSESelection(scales);
         UserInputLinkRatioSEFunction uiSE = new UserInputLinkRatioSEFunction();
         uiSE.setValue(8, 0.02);
@@ -81,10 +73,10 @@ public class MackEstimateTest {
         return lrSe;
     }
     
-    private LinkRatioScale createLRScales() {
-        LinkRatio lrs = createLinkRatios();
-        LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(new LinkRatioScaleCaclulator(lrs), new LinkRatioScaleMinMaxEstimator());
-        UserInputLinkRatioScaleEstimator uiScale = new UserInputLinkRatioScaleEstimator();
+    private RatioScale<LinkRatioScaleInput> createLRScales() {
+        LinkRatioScaleInput input = new LinkRatioScaleInput(createLinkRatios());
+        RatioScaleSelection<LinkRatioScaleInput> scales = new DefaultRatioScaleSelection<LinkRatioScaleInput>(input, new MinMaxRatioScaleEstimator<LinkRatioScaleInput>());
+        UserInputRatioScaleEstimator<LinkRatioScaleInput> uiScale = new UserInputRatioScaleEstimator<LinkRatioScaleInput>();
         uiScale.setValue(8, 71d);
         scales.setMethod(uiScale, 8);
         return scales;
