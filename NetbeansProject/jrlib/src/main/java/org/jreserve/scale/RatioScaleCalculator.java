@@ -67,7 +67,7 @@ class RatioScaleCalculator<T extends RatioScaleInput> extends AbstractCalculatio
         double sDik = 0d;
         double t;
         
-        int accidents = source.getAccidentCount(development);
+        int accidents = source.getAccidentCount();
         
         for(int a=0; a<accidents; a++) {
             double w = source.getWeight(a, development);

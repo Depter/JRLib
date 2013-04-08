@@ -18,15 +18,24 @@ public abstract class AbstractRatioScaleInput extends AbstractCalculationData<Ra
         ratios = source.getSourceRatioTriangle();
     }
     
+    public abstract boolean isPaidInput();
+    
     @Override
     protected void recalculateLayer() {
     }
 
+    @Override
+    public int getAccidentCount() {
+        return ratios.getAccidentCount();
+    }
+
+    @Override
     public int getDevelopmentCount() {
         return source.getDevelopmentCount();
     }
 
-    public int getAccidentCount(int development) {
-        return ratios.getAccidentCount();
+    @Override
+    public int getDevelopmentCount(int accident) {
+        return ratios.getDevelopmentCount(accident);
     }
 }

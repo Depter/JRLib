@@ -15,7 +15,12 @@ public class IperPRatioScaleInput extends AbstractRatioScaleInput {
         super(ratio);
         pik = ratio.getSourcePaidTriangle();
     }
-
+    
+    @Override
+    public boolean isPaidInput() {
+        return true;
+    }
+    
     @Override
     public double getRatio(int development) {
         return source.getIperP(development);

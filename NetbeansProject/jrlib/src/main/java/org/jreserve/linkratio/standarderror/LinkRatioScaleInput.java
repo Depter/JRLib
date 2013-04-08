@@ -35,13 +35,18 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
     }
 
     @Override
+    public int getAccidentCount() {
+        return factors.getAccidentCount();
+    }
+
+    @Override
     public int getDevelopmentCount() {
         return source.getDevelopmentCount();
     }
 
     @Override
-    public int getAccidentCount(int development) {
-        return factors.getAccidentCount();
+    public int getDevelopmentCount(int accident) {
+        return factors.getDevelopmentCount(accident);
     }
 
     @Override

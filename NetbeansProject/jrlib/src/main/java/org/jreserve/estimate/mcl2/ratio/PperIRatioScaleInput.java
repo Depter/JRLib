@@ -15,6 +15,11 @@ public class PperIRatioScaleInput extends AbstractRatioScaleInput {
         super(ratio);
         iik = ratio.getSourceIncurredTriangle();
     }
+    
+    @Override
+    public boolean isPaidInput() {
+        return false;
+    }
 
     @Override
     public double getRatio(int development) {
