@@ -10,7 +10,7 @@ import org.jreserve.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-class RatioScaleCalculator<T extends RatioScaleInput> extends AbstractCalculationData<T> implements RatioScale<T> {
+public class RatioScaleCalculator<T extends RatioScaleInput> extends AbstractCalculationData<T> implements RatioScale<T> {
     
     protected int developments;
     protected double[] scales;

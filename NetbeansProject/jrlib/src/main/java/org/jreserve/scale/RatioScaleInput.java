@@ -9,7 +9,7 @@ import org.jreserve.Copyable;
  * @version 1.0
  */
 public interface RatioScaleInput extends CalculationData, Copyable<RatioScaleInput> {
-
+    
     public int getAccidentCount();
     
     public int getDevelopmentCount();

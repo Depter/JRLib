@@ -1,5 +1,5 @@
 format 76
-"factor" // org::jreserve::factor
+"piratio" // org::jreserve::triangle::piratio
   revision 1
   modified_by 2 ""
   // class settings
@@ -26,7 +26,7 @@ format 76
   package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default show_stereotype_properties default
   
-  classview 128642 "classes"
+  classview 142978 "classes"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
     //collaboration diagram settings
@@ -42,7 +42,7 @@ format 76
     //activity diagram settings
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default show_stereotype_properties default
-    class 128898 "FactorTriangle"
+    class 145538 "PIRatioTriangle"
       visibility public stereotype "interface"
       cpp_decl ""
       java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
@@ -53,8 +53,22 @@ ${members}}
       idl_decl ""
       explicit_switch_type ""
       
-      operation 129410 "getSourceTriangle"
-	public return_type class_ref 128642 // Triangle
+      operation 151554 "getValue"
+	public explicit_return_type "double"
+	nparams 2
+	  param in name "accident" explicit_type "int"
+	  param in name "development" explicit_type "int"
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+      end
+
+      operation 152066 "getSourceInput"
+	public return_type class_ref 145666 // PIRatioTriangleInput
 	nparams 0
 	
 	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
@@ -65,26 +79,61 @@ ${members}}
 	
       end
 
-      classrelation 128514 // <generalisation>
-	relation 128514 ---|>
+      operation 152194 "getSourcePaidTriangle"
+	public return_type class_ref 145026 // ClaimTriangle
+	nparams 0
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+      end
+
+      operation 152322 "getSourceIncurredTriangle"
+	public return_type class_ref 145026 // ClaimTriangle
+	nparams 0
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+      end
+
+      classrelation 143618 // <generalisation>
+	relation 141698 ---|>
 	  a public
 	    java "${type}"
-	    classrelation_ref 128514 // <generalisation>
+	    classrelation_ref 143618 // <generalisation>
 	  b parent class_ref 128642 // Triangle
       end
 
-      classrelation 134914 // <unidirectional association>
-	relation 133122 --->
+      classrelation 143746 // <generalisation>
+	relation 141826 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 143746 // <generalisation>
+	  b parent class_ref 144770 // Copyable<T>
+      end
+
+      classrelation 143874 // <association>
+	relation 141954 ----
 	  a role_name "" private
 	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
 "
-	    classrelation_ref 134914 // <unidirectional association>
-	  b parent class_ref 128642 // Triangle
+	    classrelation_ref 143874 // <association>
+	  b role_name "" private
+	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
+"
+	    classrelation_ref 144002 // <association>
       end
     end
 
-    class 131458 "ModifiedFactorTriangle"
-      visibility public stereotype "interface"
+    class 145666 "PIRatioTriangleInput"
+      visibility package 
       cpp_decl ""
       java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
@@ -94,8 +143,42 @@ ${members}}
       idl_decl ""
       explicit_switch_type ""
       
-      operation 136322 "getSourceFactors"
-	public return_type class_ref 128898 // FactorTriangle
+      attribute 135170 "paid"
+	private type class_ref 145026 // ClaimTriangle
+	cpp_decl ""
+	java_decl "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
+"
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      attribute 135298 "incurred"
+	private type class_ref 145026 // ClaimTriangle
+	cpp_decl ""
+	java_decl "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
+"
+	php_decl ""
+	python_decl ""
+	idl_decl ""
+      end
+
+      operation 151682 "PIRatioTriangleInput"
+	public return_type class_ref 145538 // PIRatioTriangle
+	nparams 2
+	  param in name "paid" type class_ref 145026 // ClaimTriangle
+	  param in name "incurred" type class_ref 145026 // ClaimTriangle
+	
+	java_def "  ${comment}${@}${visibility}${final}${synchronized}${name}${(}${t0} ${p0}, ${t1} ${p1}${)}${throws} {
+  ${body}}
+"
+	
+	
+	
+      end
+
+      operation 151810 "getSourcePaidTriangle"
+	public return_type class_ref 145026 // ClaimTriangle
 	nparams 0
 	
 	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
@@ -106,25 +189,62 @@ ${members}}
 	
       end
 
-      classrelation 134786 // <generalisation>
-	relation 132994 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 134786 // <generalisation>
-	  b parent class_ref 128898 // FactorTriangle
+      operation 151938 "getSourceIncurredTriangle"
+	public return_type class_ref 145026 // ClaimTriangle
+	nparams 0
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
       end
 
-      classrelation 135042 // <unidirectional association>
-	relation 133250 --->
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 135042 // <unidirectional association>
-	  b parent class_ref 128898 // FactorTriangle
+      classrelation 144002 // <association>
+	relation_ref 141954 // <association>
       end
+    end
+
+    class 145794 "ModifiedPIRatioTriangle"
+      visibility public stereotype "interface"
+      cpp_decl ""
+      java_decl "${comment}${@}${visibility}interface ${name}${extends} {
+${members}}
+"
+      php_decl "${comment}interface ${name} {
+${members}}
+"
+      python_2_2 python_decl ""
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      operation 152450 "getSourcePIRatioTriangle"
+	public return_type class_ref 145538 // PIRatioTriangle
+	nparams 0
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+      end
+
+      classrelation 144130 // <generalisation>
+	relation 142082 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 144130 // <generalisation>
+	  b parent class_ref 145538 // PIRatioTriangle
+      end
+    end
+
+    classdiagram 134786 "cdm_PIRatio"
+      draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+      size A4
     end
   end
-
-  package_ref 129282 // linkratio
-
 end

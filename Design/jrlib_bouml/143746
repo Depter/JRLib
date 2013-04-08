@@ -1,5 +1,5 @@
 format 76
-"curve" // org::jreserve::factor::linkratio::curve
+"smoothing" // org::jreserve::linkratio::smoothing
   revision 1
   modified_by 2 ""
   // class settings
@@ -26,7 +26,7 @@ format 76
   package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default show_stereotype_properties default
   
-  classview 129282 "classes"
+  classview 143362 "classes"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
     //collaboration diagram settings
@@ -42,109 +42,28 @@ format 76
     //activity diagram settings
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default show_stereotype_properties default
-    class 130306 "LinkRatioFunction"
-      visibility public stereotype "interface"
-      cpp_decl ""
-      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      php_decl ""
-      python_2_2 python_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 133634 "fit"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "lr" type class_ref 129026 // LinkRatio
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 133762 "getValue"
-	public explicit_return_type "double"
-	nparams 1
-	  param in name "development" explicit_type "int"
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      classrelation 133122 // <composition>
-	relation_ref 131586 // <composition>
-      end
-
-      classrelation 134402 // <generalisation>
-	relation 132610 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 134402 // <generalisation>
-	  b parent class_ref 131330 // SelectableMethod<T>
-      end
+    classdiagram 135298 "cdm_LrSmoothing"
+      draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+      size A4
     end
 
-    class 130434 "LinkRatioSmoothingSelection"
+    class 146562 "LinkRatioFunction"
       visibility public stereotype "interface"
       cpp_decl ""
-      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
+      java_decl "${comment}${@}${visibility}interface ${name}${extends} {
 ${members}}
 "
-      php_decl ""
-      python_2_2 python_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 132994 // <composition>
-	relation 131586 *---
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 132994 // <composition>
-	  b role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133122 // <composition>
-      end
-
-      classrelation 135682 // <generalisation>
-	relation 133890 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 135682 // <generalisation>
-	  b parent class_ref 129154 // MethodSelection<T, M extends SelectableMethod<T>>
-      end
-
-      classrelation 136066 // <generalisation>
-	relation 134146 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 136066 // <generalisation>
-	  b parent class_ref 131586 // LinkRatioSmoothing
-      end
-    end
-
-    class 131586 "LinkRatioSmoothing"
-      visibility public stereotype "interface"
-      cpp_decl ""
-      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
+      php_decl "${comment}interface ${name} {
 ${members}}
 "
-      php_decl ""
       python_2_2 python_decl ""
-      idl_decl ""
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
       explicit_switch_type ""
       
-      operation 133890 "getSourceLinkRatios"
-	public return_type class_ref 129026 // LinkRatio
+      operation 154370 "copy"
+	public return_type class_ref 146562 // LinkRatioFunction
 	nparams 0
 	
 	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
@@ -155,7 +74,51 @@ ${members}}
 	
       end
 
-      operation 134018 "setDevelopmentCount"
+      classrelation 145538 // <generalisation>
+	relation 143362 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 145538 // <generalisation>
+	  b parent class_ref 131330 // SelectableMethod<T>
+      end
+
+      classrelation 146050 // <association>
+	relation 143874 ----
+	  a role_name "" private
+	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
+"
+	    classrelation_ref 146050 // <association>
+	  b role_name "" private
+	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
+"
+	    classrelation_ref 146178 // <association>
+      end
+    end
+
+    class 146690 "LinkRatioSmoothing"
+      visibility public stereotype "interface"
+      cpp_decl ""
+      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
+"
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 154498 "getSourceLinkRatio"
+	public return_type class_ref 146178 // LinkRatio
+	nparams 0
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+      end
+
+      operation 154626 "setDevelopmentCount"
 	public explicit_return_type ""
 	nparams 1
 	  param in name "developments" explicit_type "int"
@@ -168,12 +131,48 @@ ${members}}
 	
       end
 
-      classrelation 136194 // <generalisation>
-	relation 134274 ---|>
+      classrelation 145666 // <generalisation>
+	relation 143490 ---|>
 	  a public
 	    java "${type}"
-	    classrelation_ref 136194 // <generalisation>
-	  b parent class_ref 129026 // LinkRatio
+	    classrelation_ref 145666 // <generalisation>
+	  b parent class_ref 146178 // LinkRatio
+      end
+    end
+
+    class 146818 "LinkRatioSmoothingSelection"
+      visibility public stereotype "interface"
+      cpp_decl ""
+      java_decl "${comment}${@}${visibility}interface ${name}${extends} {
+${members}}
+"
+      php_decl "${comment}interface ${name} {
+${members}}
+"
+      python_2_2 python_decl ""
+      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
+${members}};
+"
+      explicit_switch_type ""
+      
+      classrelation 145794 // <generalisation>
+	relation 143618 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 145794 // <generalisation>
+	  b parent class_ref 146690 // LinkRatioSmoothing
+      end
+
+      classrelation 145922 // <generalisation>
+	relation 143746 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 145922 // <generalisation>
+	  b parent class_ref 129154 // MethodSelection<T, M extends SelectableMethod<T>>
+      end
+
+      classrelation 146178 // <association>
+	relation_ref 143874 // <association>
       end
     end
   end

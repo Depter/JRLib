@@ -1,5 +1,5 @@
 format 76
-"standarderror" // org::jreserve::factor::linkratio::standarderror
+"factor" // org::jreserve::triangle::factor
   revision 1
   modified_by 2 ""
   // class settings
@@ -26,7 +26,7 @@ format 76
   package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default show_stereotype_properties default
   
-  classview 129410 "classes"
+  classview 142850 "classes"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
     //collaboration diagram settings
@@ -42,125 +42,7 @@ format 76
     //activity diagram settings
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default show_stereotype_properties default
-    class 130946 "LinkRatioSE"
-      visibility public stereotype "interface"
-      cpp_decl ""
-      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      php_decl ""
-      python_2_2 python_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 135042 "getSourceLRScales"
-	public return_type class_ref 130690 // LinkRatioScale
-	nparams 0
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 135170 "getDevelopmentCount"
-	public explicit_return_type "int"
-	nparams 0
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 135298 "getValue"
-	public explicit_return_type "double"
-	nparams 1
-	  param in name "development" explicit_type "int"
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 135426 "toArray"
-	public explicit_return_type "double[]"
-	nparams 0
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      classrelation 131458 // <generalisation>
-	relation 130690 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 131458 // <generalisation>
-	  b parent class_ref 128514 // CalculationData
-      end
-
-      classrelation 133762 // <unidirectional association>
-	relation 131970 --->
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133762 // <unidirectional association>
-	  b parent class_ref 130690 // LinkRatioScale
-      end
-    end
-
-    class 131074 "LinkRatioSESelection"
-      visibility public stereotype "interface"
-      cpp_decl ""
-      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      php_decl ""
-      python_2_2 python_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      classrelation 131586 // <generalisation>
-	relation 130818 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 131586 // <generalisation>
-	  b parent class_ref 130946 // LinkRatioSE
-      end
-
-      classrelation 133506 // <composition>
-	relation 131842 *---
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133506 // <composition>
-	  b role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133634 // <composition>
-      end
-
-      classrelation 134146 // <generalisation>
-	relation 132354 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 134146 // <generalisation>
-	  b parent class_ref 129154 // MethodSelection<T, M extends SelectableMethod<T>>
-      end
-    end
-
-    class 131202 "LinkRatioSEFunction"
+    class 145282 "FactorTriangle"
       visibility public stereotype "interface"
       cpp_decl ""
       java_decl "${comment}${@}${visibility}interface ${name}${extends} {
@@ -175,12 +57,11 @@ ${members}};
 "
       explicit_switch_type ""
       
-      operation 135682 "fit"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "ses" type class_ref 130946 // LinkRatioSE
+      operation 151298 "getSourceTriangle"
+	public return_type class_ref 145026 // ClaimTriangle
+	nparams 0
 	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
   ${body}}
 "
 	
@@ -188,29 +69,65 @@ ${members}};
 	
       end
 
-      operation 135810 "getValue"
-	public explicit_return_type "double"
-	nparams 1
-	  param in name "development" explicit_type "int"
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      classrelation 133634 // <composition>
-	relation_ref 131842 // <composition>
-      end
-
-      classrelation 134658 // <generalisation>
-	relation 132866 ---|>
+      classrelation 143106 // <generalisation>
+	relation 141186 ---|>
 	  a public
 	    java "${type}"
-	    classrelation_ref 134658 // <generalisation>
-	  b parent class_ref 131330 // SelectableMethod<T>
+	    classrelation_ref 143106 // <generalisation>
+	  b parent class_ref 128642 // Triangle
+      end
+
+      classrelation 143234 // <generalisation>
+	relation 141314 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 143234 // <generalisation>
+	  b parent class_ref 144898 // MutableSource<T>
+      end
+
+      classrelation 143362 // <generalisation>
+	relation 141442 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 143362 // <generalisation>
+	  b parent class_ref 144770 // Copyable<T>
+      end
+    end
+
+    classdiagram 134658 "cdm_FactorTriangle"
+      draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+      size A4
+    end
+
+    class 145410 "ModifiedFactorTriangle"
+      visibility public stereotype "interface"
+      cpp_decl ""
+      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
+${members}}
+"
+      php_decl ""
+      python_2_2 python_decl ""
+      idl_decl ""
+      explicit_switch_type ""
+      
+      operation 151426 "getSourceFactors"
+	public return_type class_ref 128898 // FactorTriangle
+	nparams 0
+	
+	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
+  ${body}}
+"
+	
+	
+	
+      end
+
+      classrelation 143490 // <generalisation>
+	relation 141570 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 143490 // <generalisation>
+	  b parent class_ref 145282 // FactorTriangle
       end
     end
   end

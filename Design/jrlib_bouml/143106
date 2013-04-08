@@ -1,5 +1,5 @@
 format 76
-"scale" // org::jreserve::factor::linkratio::scale
+"claim" // org::jreserve::triangle::claim
   revision 1
   modified_by 2 ""
   // class settings
@@ -26,7 +26,7 @@ format 76
   package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
   show_infonote default drawing_language default show_stereotype_properties default
   
-  classview 129538 "classes"
+  classview 142722 "classes"
     //class diagram settings
     draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
     //collaboration diagram settings
@@ -42,121 +42,52 @@ format 76
     //activity diagram settings
     package_name_in_tab default show_context default show_opaque_action_definition default auto_label_position default write_flow_label_horizontally default draw_all_relations default shadow default
     show_infonote default drawing_language default show_stereotype_properties default
-    class 130818 "LinkRatioScaleEstimator"
+    class 145026 "ClaimTriangle"
       visibility public stereotype "interface"
       cpp_decl ""
-      java_decl "${comment}${@}${visibility}interface ${name}${extends} {
+      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
 "
-      php_decl "${comment}interface ${name} {
-${members}}
-"
+      php_decl ""
       python_2_2 python_decl ""
-      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
-${members}};
-"
+      idl_decl ""
       explicit_switch_type ""
       
-      operation 134786 "fit"
-	public explicit_return_type ""
-	nparams 1
-	  param in name "scales" type class_ref 130690 // LinkRatioScale
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 134914 "getValue"
-	public explicit_return_type "double"
-	nparams 1
-	  param in name "development" explicit_type "int"
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      classrelation 133378 // <composition>
-	relation_ref 131714 // <composition>
-      end
-
-      classrelation 134530 // <generalisation>
-	relation 132738 ---|>
+      classrelation 142722 // <generalisation>
+	relation 140802 ---|>
 	  a public
 	    java "${type}"
-	    classrelation_ref 134530 // <generalisation>
-	  b parent class_ref 131330 // SelectableMethod<T>
+	    classrelation_ref 142722 // <generalisation>
+	  b parent class_ref 128642 // Triangle
+      end
+
+      classrelation 142850 // <generalisation>
+	relation 140930 ---|>
+	  a public
+	    java "${type}"
+	    classrelation_ref 142850 // <generalisation>
+	  b parent class_ref 144770 // Copyable<T>
       end
     end
 
-    class 130562 "LinkRatioScaleSelection"
-      visibility public stereotype "interface"
-      cpp_decl ""
-      java_decl "${comment}${@}${visibility}interface ${name}${extends} {
-${members}}
-"
-      php_decl "${comment}interface ${name} {
-${members}}
-"
-      python_2_2 python_decl ""
-      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
-${members}};
-"
-      explicit_switch_type ""
-      
-      classrelation 130946 // <generalisation>
-	relation 130306 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 130946 // <generalisation>
-	  b parent class_ref 130690 // LinkRatioScale
-      end
-
-      classrelation 131074 // <generalisation>
-	relation 130434 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 131074 // <generalisation>
-	  b parent class_ref 129154 // MethodSelection<T, M extends SelectableMethod<T>>
-      end
-
-      classrelation 133250 // <composition>
-	relation 131714 *---
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133250 // <composition>
-	  b role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133378 // <composition>
-      end
+    classdiagram 134530 "cd_ClaimTriangle"
+      draw_all_relations default hide_attributes default hide_operations default hide_getset_operations default show_members_full_definition default show_members_visibility default show_members_stereotype default show_members_context default show_members_multiplicity default show_members_initialization default show_attribute_modifiers default member_max_width 0 show_parameter_dir default show_parameter_name default package_name_in_tab default class_drawing_mode default drawing_language default show_context_mode default auto_label_position default show_relation_modifiers default show_relation_visibility default show_infonote default shadow default show_stereotype_properties default
+      size A4
     end
 
-    class 130690 "LinkRatioScale"
+    class 145154 "ModifiedClaimTriangle"
       visibility public stereotype "interface"
       cpp_decl ""
-      java_decl "${comment}${@}${visibility}interface ${name}${extends} {
+      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
 ${members}}
 "
-      php_decl "${comment}interface ${name} {
-${members}}
-"
+      php_decl ""
       python_2_2 python_decl ""
-      idl_decl "${comment}${abstract}${local}interface ${name}${inherit} {
-${members}};
-"
+      idl_decl ""
       explicit_switch_type ""
       
-      operation 134146 "getSourceLinkRatios"
-	public return_type class_ref 129026 // LinkRatio
+      operation 151170 "getSourceTriangle"
+	public return_type class_ref 145026 // ClaimTriangle
 	nparams 0
 	
 	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
@@ -167,58 +98,12 @@ ${members}};
 	
       end
 
-      operation 134402 "getDevelopmentCount"
-	public explicit_return_type "int"
-	nparams 0
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 134530 "getValue"
-	public explicit_return_type "double"
-	nparams 1
-	  param in name "development" explicit_type "int"
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${t0} ${p0}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      operation 134658 "toArray"
-	public explicit_return_type "double[]"
-	nparams 0
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      classrelation 130818 // <generalisation>
-	relation 130178 ---|>
+      classrelation 142978 // <generalisation>
+	relation 141058 ---|>
 	  a public
 	    java "${type}"
-	    classrelation_ref 130818 // <generalisation>
-	  b parent class_ref 128514 // CalculationData
-      end
-
-      classrelation 133890 // <unidirectional association>
-	relation 132098 --->
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 133890 // <unidirectional association>
-	  b parent class_ref 129026 // LinkRatio
+	    classrelation_ref 142978 // <generalisation>
+	  b parent class_ref 145026 // ClaimTriangle
       end
     end
   end

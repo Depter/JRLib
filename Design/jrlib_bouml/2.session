@@ -1,10 +1,19 @@
-window_sizes 1600 851 375 1125 600 82
+window_sizes 1440 851 375 1125 600 82
+diagrams
+  active  classdiagram_ref 135042 // cdm_System2
+    1059 695 100 4 0 0
+  classdiagram_ref 135298 // cdm_LrSmoothing
+    843 556 100 4 36 0
+end
 show_stereotypes
-selected classdiagram_ref 128002 // cdm_System
+selected class_ref 146818 // LinkRatioSmoothingSelection
 open
+  classview_ref 128258 // Classes
+  classview_ref 128898 // classes
   
-package_ref 136578 // bootstrap
-  classview_ref 136066 // classes
+  package_ref 143490 // vector
+  classview_ref 143234 // classes
+  classview_ref 143362 // classes
   classview_ref 128386 // System
 end
 end

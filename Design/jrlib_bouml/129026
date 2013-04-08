@@ -1,6 +1,6 @@
 format 76
 "triangle" // org::jreserve::triangle
-  revision 1
+  revision 2
   modified_by 2 ""
   // class settings
   //class diagram settings
@@ -125,45 +125,11 @@ ${members}}
       end
     end
 
-    class 128770 "ModifiedTriangle"
-      visibility public stereotype "interface"
-      cpp_decl ""
-      java_decl "${comment}${@}${visibility}${final}${abstract}class ${name}${extends}${implements} {
-${members}}
-"
-      php_decl ""
-      python_2_2 python_decl ""
-      idl_decl ""
-      explicit_switch_type ""
-      
-      operation 129282 "getSourceTriangle"
-	public return_type class_ref 128642 // Triangle
-	nparams 0
-	
-	java_def "  ${comment}${@}${visibility}${final}${static}${abstract}${synchronized}${type} ${name}${(}${)}${throws}${staticnl}{
-  ${body}}
-"
-	
-	
-	
-      end
-
-      classrelation 128386 // <generalisation>
-	relation 128386 ---|>
-	  a public
-	    java "${type}"
-	    classrelation_ref 128386 // <generalisation>
-	  b parent class_ref 128642 // Triangle
-      end
-
-      classrelation 135170 // <unidirectional association>
-	relation 133378 --->
-	  a role_name "" private
-	    java "  ${comment}${@}${visibility}${static}${final}${transient}${volatile}${type} ${name}${value};
-"
-	    classrelation_ref 135170 // <unidirectional association>
-	  b parent class_ref 128642 // Triangle
-      end
-    end
   end
+
+  package_ref 143106 // claim
+
+  package_ref 143234 // factor
+
+  package_ref 143362 // piratio
 end
