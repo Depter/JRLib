@@ -18,6 +18,7 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
     private SourceListener sourceListener = new SourceListener();
     private boolean myChange = false;
     protected T source;
+    private boolean forwardCalls = true;
     
     /**
      * Creates an instance, with the given source.
@@ -38,6 +39,16 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
     protected AbstractCalculationData() {
     }
     
+    @Override
+    public boolean isCallsForwarded() {
+        return forwardCalls;
+    }
+    
+    @Override
+    public void setCallsForwarded(boolean forwardCalls) {
+        this.forwardCalls = forwardCalls;
+    }
+    
     /**
      * Recalculates the source calculation (if any), then calls
      * {@link #recalculateLayer() recalculateLayer}, then fires 
@@ -51,7 +62,7 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
     }
     
     private void recalculateSource() {
-        if(source != null) {
+        if(source != null && forwardCalls) {
             myChange = true;
             source.recalculate();
             myChange = false;
@@ -71,7 +82,7 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
      */
     @Override
     public final void detach() {
-        if(source != null)
+        if(source != null && forwardCalls)
             source.detach();
         listeners = null;
         sourceListener = null;

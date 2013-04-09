@@ -26,6 +26,20 @@ package org.jrlib;
 public interface CalculationData extends Changeable {
     
     /**
+     * Returns wether a call to {@link #recalculate() recalculate()} or
+     * {@link #detach() detach()} is forewarded to the 
+     * source calculation(s).
+     */
+    public boolean isCallsForwarded();
+    
+    /**
+     * Sets wether a call to {@link #recalculate() recalculate()} or
+     * {@link #detach() detach()} should be forewarded to the 
+     * source calculation(s).
+     */
+    public void setCallsForwarded(boolean forwardCalls);
+    
+    /**
      * Recalculates the state of this calculation data. After calling this
      * method the following actions are made in strict order:
      * 
