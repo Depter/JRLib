@@ -6,6 +6,12 @@ import org.jrlib.claimratio.scale.ClaimRatioResiduals;
 import org.jrlib.linkratio.scale.LinkRatioResiduals;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import static java.lang.Math.min;
+import org.jrlib.claimratio.ClaimRatio;
+import org.jrlib.claimratio.scale.ClaimRatioScale;
+import org.jrlib.linkratio.LinkRatio;
+import org.jrlib.linkratio.scale.LinkRatioScale;
+import org.jrlib.triangle.factor.FactorTriangle;
+import org.jrlib.triangle.ratio.RatioTriangle;
 
 /**
  *
@@ -52,17 +58,86 @@ public class MclCorrelationInput extends AbstractMultiSourceCalculationData<Calc
     }
     
     /**
-     * Returns the link-ratios.
+     * Returns the residual triangle for the link-ratios.
      */
     public LinkRatioResiduals getSourceLinkRatioResiduals() {
         return lrResiduals;
     }
     
     /**
-     * Returns the claim-ratios.
+     * Returns the scale parameters for the link-rarios.
+     */
+    public LinkRatioScale getSourceLinkRatioScaless() {
+        return lrResiduals.getSourceLinkRatioScales();
+    }
+    
+    /**
+     * Returns the link-ratios.
+     */
+    public LinkRatio getSourceLinkRatios() {
+        return lrResiduals.getSourceLinkRatios();
+    }
+    
+    /**
+     * Returns the development factors, used to calculate the
+     * link-ratios.
+     */
+    public FactorTriangle getSourceFactors() {
+        return lrResiduals.getSourceFactors();
+    }
+    
+    /**
+     * Returns the claim triangle, used to calculate the link-ratios. The value 
+     * returned from this method is the same as the one returned from 
+     * {@link #getSourceDenominatorTriangle() getSourceDenominatorTriangle}.
+     */
+    public ClaimTriangle getSourceTriangle() {
+        return lrResiduals.getSourceTriangle();
+    }
+    
+    /**
+     * Returns the residual triangle for the claim-ratios.
      */
     public ClaimRatioResiduals getSourceClaimRatioResiduals() {
         return crResiduals;
+    }
+    
+    /**
+     * Returns the scale parameters for the claim-rarios.
+     */
+    public ClaimRatioScale getSourceClaimRatioScales() {
+        return crResiduals.getSourceClaimRatioScales();
+    }
+    
+    /**
+     * Returns the claim-ratios.
+     */
+    public ClaimRatio getSourceClaimRatios() {
+        return crResiduals.getSourceClaimRatios();
+    }
+    
+    /**
+     * Returns the ratio triangle, used to calculate the
+     * claim-ratios.
+     */
+    public RatioTriangle getSourceRatioTriangle() {
+        return crResiduals.getSourceRatioTriangle();
+    }
+    
+    /**
+     * Returns the triangle used as denominator for the claim-ratios. The value 
+     * returned from this method is the same as the one returned from 
+     * {@link #getSourceTriangle() getSourceTriangle}.
+     */
+    public ClaimTriangle getSourceDenominatorTriangle() {
+        return crResiduals.getSourceDenominatorTriangle();
+    }
+    
+    /**
+     * Returns the triangle used as numerator for the claim-ratios.
+     */
+    public ClaimTriangle getSourceNumeratorTriangle() {
+        return crResiduals.getSourceNumeratorTriangle();
     }
     
     /**

@@ -81,9 +81,11 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
      * all registred listeners.
      */
     @Override
-    public final void detach() {
+    public void detach() {
         if(source != null && forwardCalls)
             source.detach();
+        
+        super.setEventsFired(false);
         listeners = null;
         sourceListener = null;
     }

@@ -23,4 +23,13 @@ public interface Changeable {
      */
     public void removeChangeListener(ChangeListener listener);
 
+    /**
+     * Enable/Disable fireing of events.
+     */
+    public void setEventsFired(boolean eventsFired);
+    
+    /**
+     * Retunrs if fireing events are enabled.
+     */
+    public boolean isEventsFired();
 }

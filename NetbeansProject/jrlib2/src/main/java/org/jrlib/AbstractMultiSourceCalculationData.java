@@ -52,7 +52,7 @@ public abstract class AbstractMultiSourceCalculationData<T extends CalculationDa
      * then all registerd listeners (if not detached) are notified.
      */
     @Override
-    public final void recalculate() {
+    public void recalculate() {
         if(forwardCalls)
             recalculateSources();
         recalculateLayer();
@@ -78,9 +78,11 @@ public abstract class AbstractMultiSourceCalculationData<T extends CalculationDa
      * registered listeners.
      */
     @Override
-    public final void detach() {
+    public void detach() {
         if(forwardCalls)
            detachSources();
+        
+        super.setEventsFired(false);
         listeners = null;
         sourceListener = null;
     }

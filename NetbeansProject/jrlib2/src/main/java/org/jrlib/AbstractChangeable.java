@@ -16,6 +16,7 @@ import javax.swing.event.ChangeListener;
 public class AbstractChangeable implements Changeable {
 
     protected List<ChangeListener> listeners = new ArrayList<ChangeListener>();
+    private boolean eventsFired = true;
     
     @Override
     public void addChangeListener(ChangeListener listener) {
@@ -34,7 +35,7 @@ public class AbstractChangeable implements Changeable {
      * of the event will be this object.
      */
     protected void fireChange() {
-        if(listeners != null) {
+        if(eventsFired && listeners != null) {
             ChangeEvent evt = new ChangeEvent(this);
             for(ChangeListener listener : getListeners())
                 listener.stateChanged(evt);
@@ -47,4 +48,13 @@ public class AbstractChangeable implements Changeable {
         return listeners.toArray(result);
     }
 
+    @Override
+    public void setEventsFired(boolean firesEvents) {
+        this.eventsFired = firesEvents;
+    }
+
+    @Override
+    public boolean isEventsFired() {
+        return eventsFired;
+    }
 }

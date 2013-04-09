@@ -55,6 +55,10 @@ public interface CalculationData extends Changeable {
      * item releases all registered listeners, and will not accept new
      * listeners. After detaching itself the calculation data detaches
      * all of it's input data.
+     * 
+     * Calling this method also disables change events.
+     * 
+     * @see Changeable#setEventsFired(boolean).
      */
     public void detach();
 
