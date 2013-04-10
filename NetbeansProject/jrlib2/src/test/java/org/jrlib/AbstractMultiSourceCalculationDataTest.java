@@ -52,7 +52,7 @@ public class AbstractMultiSourceCalculationDataTest {
         source2.detach();
         source2.recalculate();
         assertEquals(1, source1.recalculateCount);
-        assertEquals(1, source2.recalculateCount);
+        assertEquals(2, source2.recalculateCount);
         assertEquals(1, data.recalculateCount);
     }
 

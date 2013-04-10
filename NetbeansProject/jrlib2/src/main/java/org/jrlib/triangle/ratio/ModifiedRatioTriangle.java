@@ -17,5 +17,8 @@ package org.jrlib.triangle.ratio;
  */
 public interface ModifiedRatioTriangle extends RatioTriangle {
     
-    public RatioTriangle getSourcePIRatioTriangle();
+    /**
+     * Returns the ratio triangle, being modified by this instance.
+     */
+    public RatioTriangle getSourceRatioTriangle();
 }

@@ -23,7 +23,7 @@ class TriangleDimensionCheck {
             int dif = getDevelopmentDifference(triangle);
             for(int a=1; a<accidents; a++) {
                 validateNotEmptyAccident(triangle, a);
-                validateDevDifference(triangle, accidents, dif);
+                validateDevDifference(triangle, a, dif);
             }
         }
     }
@@ -60,7 +60,7 @@ class TriangleDimensionCheck {
         int d1 = triangle.getDevelopmentCount(1);
         if(d1 >= d0)
             throw firstNotLongerThenSecond(d0, d1);
-        return d1 - d0;
+        return d0 - d1;
     }
     
     private static IllegalArgumentException firstNotLongerThenSecond(int d0, int d1) {
@@ -71,12 +71,12 @@ class TriangleDimensionCheck {
     }
 
     private static void validateDevDifference(Triangle triangle, int accident, int dif) {
-        int a0 = triangle.getDevelopmentCount(accident-1);
-        int a1 = triangle.getDevelopmentCount(accident);
-        if(dif != (a1-a0)) {
+        int d1 = triangle.getDevelopmentCount(accident-1);
+        int d2 = triangle.getDevelopmentCount(accident);
+        if(dif != (d1-d2)) {
             String msg = "Unexpected difference in length between accident "+
                     "period [%d] and [%d]! Difference is [%d], expected [%d].";
-            msg = String.format(msg, accident-1, accident, a1-a0, dif);
+            msg = String.format(msg, accident-1, accident, d1-d2, dif);
             throw new IllegalArgumentException(msg);
         }
     }

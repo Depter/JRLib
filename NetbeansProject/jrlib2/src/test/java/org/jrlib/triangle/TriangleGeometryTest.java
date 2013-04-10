@@ -12,7 +12,7 @@ import org.junit.Test;
 public class TriangleGeometryTest {
 
     private final static int ACCIDENTS = 4;
-    private final static int DEVELOPMENTS = 7;
+    private final static int DEVELOPMENTS = 8;
     private final static int ACCIDENT_LENGTH = 2;
     
     private TriangleGeometry geometry;
@@ -27,27 +27,27 @@ public class TriangleGeometryTest {
     
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_NegativeAccidents() {
-        new TriangleGeometry(-1, 0, 1);
+        geometry = new TriangleGeometry(-1, 0, 1);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_NegativeDevelopments() {
-        new TriangleGeometry(0, -1, 1);
+        geometry = new TriangleGeometry(0, -1, 1);
     }
     
     @Test(expected=IllegalArgumentException.class)
-    public void testConstructor_LesTehnOnePeriodLength() {
-        new TriangleGeometry(0, 0, 0);
+    public void testConstructor_LesThenOnePeriodLength() {
+        geometry = new TriangleGeometry(0, 0, 0);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_WellAccidentNoDevelopment() {
-        new TriangleGeometry(2, 0, 1);
+        geometry = new TriangleGeometry(2, 0, 1);
     }
     
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_EmptyAccidents() {
-        new TriangleGeometry(3, 8, 4);
+        geometry = new TriangleGeometry(3, 8, 4);
     }
     
     @Test

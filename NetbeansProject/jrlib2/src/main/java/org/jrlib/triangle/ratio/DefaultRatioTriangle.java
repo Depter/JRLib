@@ -4,12 +4,25 @@ import org.jrlib.triangle.AbstractTriangle;
 import org.jrlib.triangle.claim.ClaimTriangle;
 
 /**
- *
+ * DefaultRatioTriangle is the basic implementation of the 
+ * {@link RatioTriangle RatioTriangle} interface. The class
+ * calculates the ratios 'r(a,d)' for acccident period `a`
+ * and development period `d` with the formula:
+ *               n(a,d)
+ *      r(a,d) = ------
+ *               d(a,d)
+ * where `n(a,d)` and `d(a,d)` are the values form the claim
+ * triangles used as numerator and denominator.
+ * 
+ * If the input triangles have differnet geometries, then the
+ * smaller values (numeber of accident periods, number of 
+ * development periods) are used.
+ * 
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> implements RatioTriangle{
-//TODO write documentation, test
+public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> implements RatioTriangle {
+//TODO write test
     
     private ClaimTriangle numerator;
     private ClaimTriangle denominator;
@@ -18,6 +31,20 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
     private int developments;
     private double[][] values;
     
+    /**
+     * Creates an instance with the given input.
+     * 
+     * @throws NullPointerException if one of the triangles is null.
+     */
+    public DefaultRatioTriangle(ClaimTriangle numerator, ClaimTriangle denominator) {
+        this(new RatioTriangleInput(numerator, denominator));
+    }
+    
+    /**
+     * Creates an instance with the given input.
+     * 
+     * @throws NullPointerException if `source` is null.
+     */
     public DefaultRatioTriangle(RatioTriangleInput source) {
         super(source);
         this.numerator = source.getSourceNumeratorTriangle();
@@ -25,16 +52,31 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
         doRecalculate();
     }
 
+    /**
+     * Returns the source input of this triangle.
+     */
     @Override
     public RatioTriangleInput getSourceInput() {
         return source;
     }
 
+    /**
+     * Returns the claim tirnalge used as numerator for the
+     * calculation.
+     * 
+     * @see RatioTriangleInput#getSourceNumeratorTriangle().
+     */
     @Override
     public ClaimTriangle getSourceNumeratorTriangle() {
         return numerator;
     }
 
+    /**
+     * Returns the claim tirnalge used as denominator for the
+     * calculation.
+     * 
+     * @see RatioTriangleInput#getSourceDenominatorTriangle().
+     */
     @Override
     public ClaimTriangle getSourceDenominatorTriangle() {
         return denominator;

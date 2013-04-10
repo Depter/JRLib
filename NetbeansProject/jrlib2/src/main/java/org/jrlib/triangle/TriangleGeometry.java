@@ -31,12 +31,12 @@ public class TriangleGeometry {
     }
     
     private void validate() {
-        if(accidents < 1) throw new IllegalArgumentException("Number of accident periods can not be less then 0!" + accidents);
-        if(developments < 1) throw new IllegalArgumentException("Number of development periods can not be less then 0!" + developments);
+        if(accidents < 0) throw new IllegalArgumentException("Number of accident periods can not be less then 0!" + accidents);
+        if(developments < 0) throw new IllegalArgumentException("Number of development periods can not be less then 0!" + developments);
         if(accidentLength < 1) throw new IllegalArgumentException("AccidentLength can not be less tehn 1!" + accidentLength);
         if(accidents==0 && developments>0)
             throw new IllegalArgumentException("A triangle with no accident periods can not have development periods! "+this);
-        if(developments - accidents*accidentLength <= 0)
+        if(developments - (accidents-1)*accidentLength <= 0)
             throw new IllegalArgumentException("A triangle would have accident period(s) with no development periods! "+this);
     }
 

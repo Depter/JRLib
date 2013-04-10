@@ -12,6 +12,13 @@ import org.junit.Test;
  */
 public class TriangleCorrectionTest {
 
+    private final static double[][] DATA = {
+        {1 , 2 , 3 , 4 , 5 , 6 , 7},
+        {8 , 9 , 10, 11, 12},
+        {13, 14, 15},
+        {16}
+    };
+
     private final static double CORRECTION = 0.5;
     private final static int ACCIDENT = 0;
     private final static int DEVELOPMENT = 3;
@@ -25,7 +32,7 @@ public class TriangleCorrectionTest {
 
     @Before
     public void setUp() {
-        source = InputTriangleTest.createData();
+        source = new InputTriangle(DATA);
         corrigated = new TriangleCorrection(source, ACCIDENT, DEVELOPMENT, CORRECTION);
         int dev = source.getDevelopmentCount(ACCIDENT);
         outsider = new TriangleCorrection(source, ACCIDENT, dev, CORRECTION);
@@ -33,15 +40,15 @@ public class TriangleCorrectionTest {
 
     @Test
     public void testGetAccident() {
-        assertEquals(ACCIDENT, corrigated.getAccidentCount());
-        assertEquals(ACCIDENT, outsider.getAccidentCount());
+        assertEquals(ACCIDENT, corrigated.getCorrigatedAccident());
+        assertEquals(ACCIDENT, outsider.getCorrigatedAccident());
     }
 
     @Test
     public void testGetDevelopment() {
-        assertEquals(DEVELOPMENT, corrigated.getDevelopmentCount());
+        assertEquals(DEVELOPMENT, corrigated.getCorrigatedDevelopment());
         int dev = source.getDevelopmentCount(ACCIDENT);
-        assertEquals(dev, outsider.getDevelopmentCount());
+        assertEquals(dev, outsider.getCorrigatedDevelopment());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package org.jrlib.triangle.smoothing;
 
 import org.jrlib.TestConfig;
+import org.jrlib.triangle.TriangleUtil;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
@@ -28,14 +29,17 @@ public class AbstractMovingAverageTest {
     public void testSmooth() {
         
         AbstractMovingAverageImpl smoothing = new AbstractMovingAverageImpl(CELLS, 2);
-        double[] data = {1d, 2d, 3d};
+        double[] original = {1d, 2d, 3d};
+        double[] data = TriangleUtil.copy(original);
         smoothing.smooth(data);
         
-        for(int i=0; i<smoothing.maLength; i++)
-            assertEquals((double)i, data[i], TestConfig.EPSILON);
+        for(int i=0; i<(smoothing.maLength-1); i++)
+            assertEquals(original[i], data[i], TestConfig.EPSILON);
         
-        for(int i=smoothing.maLength; i<data.length; i++)
-            assertEquals((double)(i/2), data[i], TestConfig.EPSILON);
+        for(int i=smoothing.maLength; i<data.length; i++) {
+            double expected = original[i] / 2d;
+            assertEquals(expected, data[i], TestConfig.EPSILON);
+        }
     }
 
     public class AbstractMovingAverageImpl extends AbstractMovingAverage {
@@ -46,7 +50,7 @@ public class AbstractMovingAverageTest {
         
         @Override
         public double mean(double[] input, int index) {
-            return index/2;
+            return input[index]/2d;
         }
 
         @Override

@@ -18,7 +18,6 @@ public class RegressionUtilTest {
     private final static double[] X = {
         1d, 2d, 3d, 4d, 5d, 6d, 7d, 8d
     };
-    private final static double[] Y = createObserved(X, INTERCEPT, SLOPE);
     
     
     private static double[] createObserved(double[] x, double intercept, double slope) {
@@ -33,13 +32,10 @@ public class RegressionUtilTest {
     
     @Test
     public void testLinearRegression() {
-        double intercept = 0.5;
-        double slope = 0.25;
-        
-        double[] y = createObserved(X, intercept, slope);
+        double[] y = createObserved(X, INTERCEPT, SLOPE);
         double[] params = RegressionUtil.linearRegression(y);
-        assertEquals(intercept, params[0], TestConfig.EPSILON);
-        assertEquals(slope, params[1], TestConfig.EPSILON);
+        assertEquals(INTERCEPT, params[0], TestConfig.EPSILON);
+        assertEquals(SLOPE, params[1], TestConfig.EPSILON);
         
         params = RegressionUtil.linearRegression(y, false);
         assertEquals(0d, params[0], TestConfig.EPSILON);
@@ -47,8 +43,8 @@ public class RegressionUtilTest {
        
         double[] x = {0d, 1d, 2d, 3d, 4d, 5d, 6d, 7d};
         params = RegressionUtil.linearRegression(x, y);
-        assertEquals(1d+intercept, params[0], TestConfig.EPSILON);
-        assertEquals(slope, params[1], TestConfig.EPSILON);
+        assertEquals(0.75, params[0], TestConfig.EPSILON);
+        assertEquals(SLOPE, params[1], TestConfig.EPSILON);
     }
     
     @Test

@@ -81,10 +81,12 @@ public abstract class AbstractSimpleMethodSelection<T extends CalculationData, M
     private void fillValues() {
         int size = getLength();
         if(values == null)
-            values = new double[getLength()];
+            values = new double[size];
         
-        for(int i=0; i<size; i++)
-            values[i] = defaultMethod.getValue(i);
+        for(int i=0; i<size; i++) {
+            double v = defaultMethod.getValue(i);
+            values[i] = Double.isNaN(v)? estimatorMethod.getValue(i) : v;
+        }
     }
     
     /**

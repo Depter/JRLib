@@ -107,4 +107,12 @@ public class InputTriangle extends AbstractTriangle<CalculationData> implements 
             return values[accident][development];
         return Double.NaN;
     }
+    
+    @Override
+    public String toString() {
+        int step = developments - getDevelopmentCount(1);
+        return String.format(
+                "InputTriangle [accidents=%d; developments=%d; step=%d]",
+                accidents, developments, step);
+    }
 }
