@@ -7,9 +7,10 @@ import org.jrlib.CalculationData;
  * 
  * Each implementation should force the following constraints regarding
  * it's dimensions:
- * 1.  The difference between the length of accident period <i>i</i> and
- *     <i>i+1</i> shoudl be constant.
- * 2.  Accident period <i>i</i> has to be longer than accident period<i>i+1</i>.
+ * 1.  The difference between the length of accident period `i` and
+ *     `i+1` should be constant.
+ * 2.  Accident period `i` has to be longer than accident period `i+1`.
+ * 3.  Evry accident period must contain at least one development period.
  * 
  * @author Peter Decsi
  * @version 1.0
