@@ -1,10 +1,12 @@
 package org.jrlib.util;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import org.jrlib.AbstractCalculationData;
 import org.jrlib.CalculationData;
+import org.jrlib.Copyable;
 
 /**
  * The AbstractMethodSelection is a basic implementation for the
@@ -36,35 +38,47 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
         initDefaultMethod(defaultMethod);
     }
     
-//    private void copyMethods(SelectableMethod toCopyDefault, SelectableMethod[] toCopy) {
-//        Map<SelectableMethod, SelectableMethod> map = mapMethods(toCopy);
-//        fillMethods(map, toCopy);
-//        fillDefaultMethod(toCopyDefault, map);
-//    }
-//    
-//    private Map<SelectableMethod, SelectableMethod> mapMethods(SelectableMethod[] toCopy) {
-//        Map<SelectableMethod, SelectableMethod> map = new HashMap<SelectableMethod, SelectableMethod>();
-//        for(SelectableMethod m : toCopy)
-//            if(m != null && !map.containsKey(m))
-//                map.put(m, m.copy());
-//        return map;
-//    }
-//    
-//    private void fillMethods(Map<SelectableMethod, SelectableMethod> map, SelectableMethod[] toCopy) {
-//        int size = toCopy.length;
-//        this.methods = new SelectableMethod[size];
-//        for(int i=0; i<size; i++) {
-//            SelectableMethod m = toCopy[i];
-//            if(m != null)
-//                methods[i] = map.get(m);
-//        }
-//    }
-//    
-//    private void fillDefaultMethod(SelectableMethod toCopyDefault, Map<SelectableMethod, SelectableMethod> map) {
-//        this.defaultMethod = (M) (map.containsKey(toCopyDefault)? 
-//                                    map.get(toCopyDefault)      : 
-//                                    toCopyDefault.copy());
-//    }
+    /**
+     * Copies the used methods from the original data. This constructor
+     * can be used if the extending class wishes to implement the
+     * {@link Copyable Copyable} interface.
+     * 
+     * @throws NullPointerException if `source` or `original` is null.
+     */
+    protected AbstractMethodSelection(T source, AbstractMethodSelection<T, M> original) {
+        super(source);
+        copyMethods(original.defaultMethod, original.methods);
+    }
+    
+    private void copyMethods(SelectableMethod toCopyDefault, SelectableMethod[] toCopy) {
+        Map<SelectableMethod, SelectableMethod> map = mapMethods(toCopy);
+        fillMethods(map, toCopy);
+        fillDefaultMethod(toCopyDefault, map);
+    }
+    
+    private Map<SelectableMethod, SelectableMethod> mapMethods(SelectableMethod[] toCopy) {
+        Map<SelectableMethod, SelectableMethod> map = new HashMap<SelectableMethod, SelectableMethod>();
+        for(SelectableMethod m : toCopy)
+            if(m != null && !map.containsKey(m))
+                map.put(m, m.copy());
+        return map;
+    }
+    
+    private void fillMethods(Map<SelectableMethod, SelectableMethod> map, SelectableMethod[] toCopy) {
+        int size = toCopy.length;
+        this.methods = new SelectableMethod[size];
+        for(int i=0; i<size; i++) {
+            SelectableMethod m = toCopy[i];
+            if(m != null)
+                methods[i] = map.get(m);
+        }
+    }
+    
+    private void fillDefaultMethod(SelectableMethod toCopyDefault, Map<SelectableMethod, SelectableMethod> map) {
+        this.defaultMethod = (M) (map.containsKey(toCopyDefault)? 
+                                    map.get(toCopyDefault)      : 
+                                    toCopyDefault.copy());
+    }
 
     private void initDefaultMethod(M defaultMethod) {
         if(defaultMethod == null)

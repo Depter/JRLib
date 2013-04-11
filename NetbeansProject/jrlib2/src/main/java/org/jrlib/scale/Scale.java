@@ -1,5 +1,6 @@
 package org.jrlib.scale;
 
+import org.jrlib.Copyable;
 import org.jrlib.vector.Vector;
 
 /**
@@ -26,7 +27,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface Scale<T extends ScaleInput> extends Vector {
+public interface Scale<T extends ScaleInput> extends Vector, Copyable<Scale<T>> {
     
     /**
      * Returns the input used for the calculation.

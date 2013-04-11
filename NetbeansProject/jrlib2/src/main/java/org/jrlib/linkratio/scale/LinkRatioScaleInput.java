@@ -8,7 +8,8 @@ import org.jrlib.triangle.factor.FactorTriangle;
 
 /**
  * This class provides the input needed to calculate the sigma's for
- * Mack's method.
+ * Mack's method. It serves the values from it's source as defined by
+ * the {@link LinkRatio LinkRatio} interface.
  * 
  * @author Peter Decsi
  * @version 1.0
@@ -18,11 +19,39 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
     private FactorTriangle factors;
     private ClaimTriangle claims;
     
+    /**
+     * Creates an instance with the given source.
+     * 
+     * @throws NullPointerException if `source` is null.
+     */
     public LinkRatioScaleInput(LinkRatio source) {
         super(source);
         this.factors = source.getSourceFactors();
         this.claims = factors.getSourceTriangle();
     } 
+    
+    /**
+     * Returns the link-ratios used as input.
+     */
+    public LinkRatio getSourceLinkRatios() {
+        return source;
+    }
+    
+    /**
+     * Returns the development factors used as input for 
+     * the calculation of the link-ratios.
+     */
+    public FactorTriangle getSourceFactors() {
+        return source.getSourceFactors();
+    }
+    
+    /**
+     * Returns the claims used as input for the calculation of 
+     * the development factors.
+     */
+    public ClaimTriangle getSourceTriangle() {
+        return source.getSourceTriangle();
+    }
     
     /**
      * Returns the number of accident periods form the factor triangle.
@@ -87,6 +116,11 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
         return claims.getValue(accident, development);
     }
 
+    @Override
+    public LinkRatioScaleInput copy() {
+        return new LinkRatioScaleInput(source.copy());
+    }
+    
     /**
      * Does nothing.
      */

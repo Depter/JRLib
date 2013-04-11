@@ -10,15 +10,21 @@ import org.jrlib.triangle.factor.FactorTriangle;
 import org.jrlib.util.NormalUtil;
 
 /**
- * Performs the test for calendar year effects as described in Mack's paper
- * "Measuring the Variability of Chain Ladder Reserve Estimates".
+ * Performs the test for calendar year effects. The basic idea of the
+ * test is to divide each columns in a triangle of development factors
+ * to a group containing elements smaller then the median of the column 
+ * (mark this elements with `S`) and one that contains the elements 
+ * larger then the median (mark this elements with `L`). If there is no 
+ * calendar year effect, then the diagonals of the triangle should 
+ * contain roughly the same number of `L` and `S` elements.
  * 
+ * @see "Mack[1993]: Measuring the Variability of Chain Ladder Reserve Estimates"
  * @author Peter Decsi
  * @version 1.0
  */
 public class CalendarEffectTest extends AbstractCalculationData<FactorTriangle> implements Test {
     
-    private final static double DEFAULT_ALPHA = 0.05;
+    public final static double DEFAULT_ALPHA = 0.05;
     
     private final static int S = 0;
     private final static int L = 1;
@@ -30,19 +36,43 @@ public class CalendarEffectTest extends AbstractCalculationData<FactorTriangle> 
     private double upperBound;
     private double alpha;
     private double pValue;
-
+    
+    /**
+     * Initialises the test with the {@link #DEFAULT_ALPHA default}
+     * value of 0.05.
+     * 
+     * @throws NullPointerException if `triangle` is null.
+     */
     public CalendarEffectTest(ClaimTriangle triangle) {
         this(triangle, DEFAULT_ALPHA);
     }
     
+    /**
+     * Initialises the test with the given alpha.
+     * 
+     * @throws NullPointerException if `triangle` is null.
+     * @throws IllegalArgumentException if `alpha` is not in [0;1].
+     */
     public CalendarEffectTest(ClaimTriangle triangle, double alpha) {
         this(new DevelopmentFactors(triangle), alpha);
     }
     
+    /**
+     * Initialises the test with the {@link #DEFAULT_ALPHA default}
+     * value of 0.05.
+     * 
+     * @throws NullPointerException if `factors` is null.
+     */
     public CalendarEffectTest(FactorTriangle factors) {
-        this(factors, 0.05);
+        this(factors, DEFAULT_ALPHA);
     }
     
+    /**
+     * Initialises the test with the given alpha.
+     * 
+     * @throws NullPointerException if `triangle` is null.
+     * @throws IllegalArgumentException if `alpha` is not in [0;1].
+     */
     public CalendarEffectTest(FactorTriangle factors, double alpha) {
         super(factors);
         checkAlpha(alpha);
@@ -50,29 +80,53 @@ public class CalendarEffectTest extends AbstractCalculationData<FactorTriangle> 
         doRecalculate();
     }
     
+    /**
+     * Retunrs true when there is no significant calendar year effect.
+     */
     @Override
     public boolean isTestPassed() {
         return (!Double.isNaN(pValue)) && pValue >= alpha;
     }
     
+    /**
+     * Returns the test value.
+     */
     @Override
     public double getTestValue() {
         return testValue;
     }
     
+    /**
+     * Returns the lower-bound for the test value.
+     */
     public double getLowerBound() {
         return lowerBound;
     }
     
+    /**
+     * Returns the upper-bound for the test value.
+     */
     public double getUpperBound() {
         return upperBound;
     }
     
+    /**
+     * Returns the alpha used to check if the test value 
+     * accepted.
+     */
     @Override
     public double getAlpha() {
         return alpha;
     }
     
+    /**
+     * Sets the alpha used to check if the test value 
+     * accepted.
+     * 
+     * Calling this method fires a change event.
+     * 
+     * @throws IllegalArgumentException if `alpha` is not in [0;1].
+     */
     public void setAlpha(double alpha) {
         checkAlpha(alpha);
         this.alpha = alpha;
@@ -84,6 +138,9 @@ public class CalendarEffectTest extends AbstractCalculationData<FactorTriangle> 
             throw new IllegalArgumentException("Alpha must be within [0;1], but it was "+alpha+"!");
     }
     
+    /**
+     * Returns the p-value for the test.
+     */
     @Override
     public double getPValue() {
         return pValue;

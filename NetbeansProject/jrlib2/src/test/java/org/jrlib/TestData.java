@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jrlib.linkratio.LinkRatio;
+import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.claim.CummulatedClaimTriangle;
 import org.jrlib.triangle.claim.InputClaimTriangle;
@@ -33,6 +35,22 @@ public class TestData {
     public final static String TAYLOR_ASHE  = DIR + "taylor_ashe.csv";
     
     private final static Map<String, double[][]> CAHCE = new HashMap<String, double[][]>();
+    
+    public static LinkRatio getLinkRatio(String path) {
+        return new SimpleLinkRatio(getDevelopmentFactors(path));
+    }
+    
+    public static FactorTriangle getDevelopmentFactors(String path) {
+        return new DevelopmentFactors(getCummulatedTriangle(path));
+    }
+    
+    public static ClaimTriangle getCummulatedTriangle(String path) {
+        return new CummulatedClaimTriangle(getTriangle(path));
+    }
+    
+    public static ClaimTriangle getTriangle(String path) {
+        return new InputClaimTriangle(getCachedMatrix(path));
+    }
     
     public static double[][] getCachedMatrix(String path) {
         double[][] result = CAHCE.get(path);
@@ -80,17 +98,4 @@ public class TestData {
     public static double[] getCachedVector(String path) {
         return getCachedMatrix(path)[0];
     }
-    
-    public static FactorTriangle getDevelopmentFactors(String path) {
-        return new DevelopmentFactors(getCummulatedTriangle(path));
-    }
-    
-    public static ClaimTriangle getCummulatedTriangle(String path) {
-        return new CummulatedClaimTriangle(getTriangle(path));
-    }
-    
-    public static ClaimTriangle getTriangle(String path) {
-        return new InputClaimTriangle(getCachedMatrix(path));
-    }
-
 }
