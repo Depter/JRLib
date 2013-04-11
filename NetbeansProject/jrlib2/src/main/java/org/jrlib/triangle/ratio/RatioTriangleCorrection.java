@@ -43,4 +43,11 @@ public class RatioTriangleCorrection extends TriangleCorrection<RatioTriangle> i
     public void setSource(RatioTriangleInput source) {
         this.source.setSource(source);
     }
+    
+    @Override
+    public RatioTriangleCorrection copy() {
+        return new RatioTriangleCorrection(source.copy(), 
+                accident, development, 
+                correction);
+    }
 }

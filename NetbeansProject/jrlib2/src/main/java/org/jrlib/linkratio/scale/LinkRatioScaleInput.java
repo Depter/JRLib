@@ -2,6 +2,7 @@ package org.jrlib.linkratio.scale;
 
 import org.jrlib.AbstractCalculationData;
 import org.jrlib.linkratio.LinkRatio;
+import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.scale.ScaleInput;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
@@ -18,6 +19,26 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
 
     private FactorTriangle factors;
     private ClaimTriangle claims;
+    
+    /**
+     * Creates an instance with the given claims.
+     * 
+     * @see SimpleLinkRatio
+     * @throws NullPointerException if `claims` is null.
+     */
+    public LinkRatioScaleInput(ClaimTriangle claims) {
+        this(new SimpleLinkRatio(claims));
+    }
+    
+    /**
+     * Creates an instance with the given factors.
+     * 
+     * @see SimpleLinkRatio
+     * @throws NullPointerException if `factors` is null.
+     */
+    public LinkRatioScaleInput(FactorTriangle factors) {
+        this(new SimpleLinkRatio(factors));
+    }
     
     /**
      * Creates an instance with the given source.

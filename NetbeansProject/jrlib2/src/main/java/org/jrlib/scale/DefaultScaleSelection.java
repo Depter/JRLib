@@ -17,6 +17,29 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
     private double[] values;
     
     /**
+     * Creates an instance for the given source, and with a
+     * {@link DefaultScaleEstimator DefaultScaleEstimator} as default method.
+     * 
+     * @see DefaultScaleCalculator
+     * @see #DefaultScaleSelection(Scale, ScaleEstimator) 
+     * @throws NullPointerException if `source` is null.
+     */
+    public DefaultScaleSelection(T source) {
+        this(new DefaultScaleCalculator<T>(source));
+    }
+    
+    /**
+     * Creates an instance for the given source, and with a
+     * {@link DefaultScaleEstimator DefaultScaleEstimator} as default method.
+     * 
+     * @see #DefaultScaleSelection(Scale, int, ScaleEstimator) 
+     * @throws NullPointerException if `source` is null.
+     */
+    public DefaultScaleSelection(Scale<T> source) {
+        this(source, new DefaultScaleEstimator<T>());
+    }
+    
+    /**
      * Creates an instance for the given source, and method.
      * 
      * @see DefaultScaleCalculator
@@ -69,6 +92,20 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
     @Override
     public int getLength() {
         return length;
+    }
+    
+    /**
+     * Sets the default method to be used. If `method` is null,
+     * the the value is reset to 
+     * {@link DefaultScaleEstimator DefaultScaleEstimator}.
+     * 
+     * @param method 
+     */
+    @Override
+    public void setDefaultMethod(ScaleEstimator<T> method) {
+        if(method == null)
+            method = new DefaultScaleEstimator<T>();
+        super.setDefaultMethod(method);
     }
     
     /**

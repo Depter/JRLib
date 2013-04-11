@@ -132,4 +132,9 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
     @Override
     protected void recalculateLayer() {
     }
+
+    @Override
+    public ScaleInput copy() {
+        return new ClaimRatioScaleInput(source.copy());
+    }
 }

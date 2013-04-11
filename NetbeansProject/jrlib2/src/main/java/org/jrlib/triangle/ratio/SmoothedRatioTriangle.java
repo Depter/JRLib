@@ -39,4 +39,9 @@ public class SmoothedRatioTriangle extends SmoothedTriangle<RatioTriangle> imple
     public void setSource(RatioTriangleInput source) {
         this.source.setSource(source);
     }
+    
+    @Override
+    public SmoothedRatioTriangle copy() {
+        return new SmoothedRatioTriangle(source.copy(), smoothing.copy());
+    }
 }

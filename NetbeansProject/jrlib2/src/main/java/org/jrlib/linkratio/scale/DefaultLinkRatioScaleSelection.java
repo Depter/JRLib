@@ -1,6 +1,8 @@
 package org.jrlib.linkratio.scale;
 
 import org.jrlib.linkratio.LinkRatio;
+import org.jrlib.scale.DefaultScaleCalculator;
+import org.jrlib.scale.DefaultScaleEstimator;
 import org.jrlib.scale.DefaultScaleSelection;
 import org.jrlib.scale.Scale;
 import org.jrlib.scale.ScaleEstimator;
@@ -16,8 +18,29 @@ public class DefaultLinkRatioScaleSelection extends DefaultScaleSelection<LinkRa
 
     private LinkRatioScaleInput sourceInput;
 
+    public DefaultLinkRatioScaleSelection(LinkRatio source) {
+        this(new LinkRatioScaleInput(source));
+    }
+    
+    public DefaultLinkRatioScaleSelection(LinkRatio source, ScaleEstimator<LinkRatioScaleInput> method) {
+        this(new LinkRatioScaleInput(source), method);
+    }
+
+    public DefaultLinkRatioScaleSelection(LinkRatioScaleInput source) {
+        this(source, new DefaultScaleEstimator<LinkRatioScaleInput>());
+    }
+    
+    public DefaultLinkRatioScaleSelection(LinkRatioScaleInput source, ScaleEstimator<LinkRatioScaleInput> method) {
+        this(new DefaultScaleCalculator<LinkRatioScaleInput>(source), method);
+    }
+
+    public DefaultLinkRatioScaleSelection(Scale<LinkRatioScaleInput> source) {
+        this(source, new DefaultScaleEstimator<LinkRatioScaleInput>());
+    }
+
     public DefaultLinkRatioScaleSelection(Scale<LinkRatioScaleInput> source, ScaleEstimator<LinkRatioScaleInput> method) {
         super(source, method);
+        this.sourceInput = source.getSourceInput();
     }
     
     private DefaultLinkRatioScaleSelection(DefaultLinkRatioScaleSelection original) {

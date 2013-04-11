@@ -1,6 +1,7 @@
 package org.jrlib.triangle.ratio;
 
 import org.jrlib.AbstractMultiSourceCalculationData;
+import org.jrlib.Copyable;
 import org.jrlib.triangle.claim.ClaimTriangle;
 
 /**
@@ -10,7 +11,7 @@ import org.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class RatioTriangleInput extends AbstractMultiSourceCalculationData<ClaimTriangle>{
+public class RatioTriangleInput extends AbstractMultiSourceCalculationData<ClaimTriangle> implements Copyable<RatioTriangleInput>{
     
     private ClaimTriangle numerator;
     private ClaimTriangle denominator;
@@ -41,5 +42,9 @@ public class RatioTriangleInput extends AbstractMultiSourceCalculationData<Claim
     @Override
     protected void recalculateLayer() {
     }
-
+    
+    @Override
+    public RatioTriangleInput copy() {
+        return new RatioTriangleInput(numerator.copy(), denominator.copy());
+    }
 }

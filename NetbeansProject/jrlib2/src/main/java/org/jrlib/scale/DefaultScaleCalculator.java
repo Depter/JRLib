@@ -39,7 +39,7 @@ public class DefaultScaleCalculator<T extends ScaleInput> extends AbstractCalcul
      * 
      * @throws NullPointerException if `source` is null.
      */
-    protected DefaultScaleCalculator(T source) {
+    public DefaultScaleCalculator(T source) {
         super(source);
         doRecalculate();
     }
