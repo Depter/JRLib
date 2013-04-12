@@ -12,10 +12,32 @@ import org.jrlib.triangle.TriangleUtil;
 public abstract class AbstractVectorUserInput<T> implements SelectableMethod<T> {
     protected double[] values;
     
+    /**
+     * Creates an empty instance.
+     */
     protected AbstractVectorUserInput() {
         this.values = new double[0];
     }
     
+    /**
+     * Creates an instance, with the given index set to the given value. All
+     * other values will be NaN.
+     * 
+     * @throws IllegalArgumentException if `index` is less then 0.
+     */
+    protected AbstractVectorUserInput(int index, double value) {
+        if(index < 0)
+            throw new IllegalArgumentException("Index is less then 0! "+index);
+        this.values = new double[0];
+        ensureIndexExists(index);
+        values[index] = value;
+    }
+    
+    /**
+     * Creates an instance, with the given values.
+     * 
+     * @throws NullPointerException if `values` is null.
+     */
     protected AbstractVectorUserInput(double[] values) {
         this.values = TriangleUtil.copy(values);
     }

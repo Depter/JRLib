@@ -139,6 +139,118 @@ public class TriangleUtil {
         return result;
     }
     
+    /**
+     * Adds the two arrays. The length of the returned array will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if either input or on of it's elements are null;
+     */
+    public static double[][] add(double[][] a, double[][] b) {
+        int size = Math.min(a.length, b.length);
+        double[][] result = new double[size][];
+        for(int i=0; i<size; i++)
+            result[i] = add(a[i], b[i]);
+        return result;
+    }
+    
+    /**
+     * Adds the two vectors. The length of the returned vector will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if `t1` or `t2` is null;
+     */
+    public static double[] add(double[] a, double[] b) {
+        int size = Math.min(a.length, b.length);
+        double[] result = new double[size];
+        for(int i=0; i<size; i++)
+            result[i] = a[i] + b[i];
+        return result;
+    }
+    
+    /**
+     * Subtracts the two arrays. The length of the returned array will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if either input or on of it's elements are null;
+     */
+    public static double[][] subtract(double[][] a, double[][] b) {
+        int size = Math.min(a.length, b.length);
+        double[][] result = new double[size][];
+        for(int i=0; i<size; i++)
+            result[i] = subtract(a[i], b[i]);
+        return result;
+    }
+    
+    /**
+     * Subtracts the two vectors. The length of the returned vector will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if `a` or `b` is null;
+     */
+    public static double[] subtract(double[] a, double[] b) {
+        int size = Math.min(a.length, b.length);
+        double[] result = new double[size];
+        for(int i=0; i<size; i++)
+            result[i] = a[i] - b[i];
+        return result;
+    }
+    
+    /**
+     * Divides the two arrays. The length of the returned array will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if either input or on of it's elements are null;
+     */
+    public static double[][] divide(double[][] numerator, double[][] denominator) {
+        int size = Math.min(numerator.length, denominator.length);
+        double[][] result = new double[size][];
+        for(int i=0; i<size; i++)
+            result[i] = divide(numerator[i], denominator[i]);
+        return result;
+    }
+    
+    /**
+     * Divides the two vectors. The length of the returned vector will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if `numerator` or `denominator` is null;
+     */
+    public static double[] divide(double[] numerator, double[] denominator) {
+        int size = Math.min(numerator.length, denominator.length);
+        double[] result = new double[size];
+        for(int i=0; i<size; i++)
+            result[i] = numerator[i] / denominator[i];
+        return result;
+    }
+    
+    /**
+     * Multiplies the two arrays. The length of the returned array will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if either input or on of it's elements are null;
+     */
+    public static double[][] multiply(double[][] a, double[][] b) {
+        int size = Math.min(a.length, b.length);
+        double[][] result = new double[size][];
+        for(int i=0; i<size; i++)
+            result[i] = multiply(a[i], b[i]);
+        return result;
+    }
+    
+    /**
+     * Multiplies the two vectors. The length of the returned vector will be
+     * equal to the length of the shorter input.
+     * 
+     * @throws NullPointerException if `a` or `b` is null;
+     */
+    public static double[] multiply(double[] a, double[] b) {
+        int size = Math.min(a.length, b.length);
+        double[] result = new double[size];
+        for(int i=0; i<size; i++)
+            result[i] = a[i] * b[i];
+        return result;
+    }
+    
     private TriangleUtil() {
     }
 

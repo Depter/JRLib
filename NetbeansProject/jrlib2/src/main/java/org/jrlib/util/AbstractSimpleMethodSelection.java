@@ -24,6 +24,11 @@ public abstract class AbstractSimpleMethodSelection<T extends CalculationData, M
     protected M estimatorMethod;
     protected double[] values;
     
+    /**
+     * Creates an instance which uses only one method to estimate the values.
+     * 
+     * @throws NullPointerException if one of the parameters is null.
+     */
     protected AbstractSimpleMethodSelection(T source, M method) {
         this(source, method, method);
     }
@@ -80,7 +85,7 @@ public abstract class AbstractSimpleMethodSelection<T extends CalculationData, M
     
     private void fillValues() {
         int size = getLength();
-        if(values == null)
+        if(values == null || values.length != size)
             values = new double[size];
         
         for(int i=0; i<size; i++) {

@@ -150,7 +150,7 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
     
     /**
      * Sets the number of development periods. If the 
-     * input value is les then 0, then 0 will be used insted.
+     * input value is less then 0, then 0 will be used insted.
      * 
      * Calling this method recalculates this instance and 
      * fires a change event.

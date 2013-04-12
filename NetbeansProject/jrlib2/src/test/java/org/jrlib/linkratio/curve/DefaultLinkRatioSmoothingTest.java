@@ -61,7 +61,7 @@ public class DefaultLinkRatioSmoothingTest {
             1.03672801, //-> Exponential 
             1.01842143, //-> Power
             1.01302400, //-> Weibul
-            1.00347944, 1.00335199, 1.00191164, 1.05, 1d
+            1.00347944, 1.00335199, 1.00191164, 1.05, Double.NaN
         };
         
         Map<Integer, LinkRatioCurve> functions = new HashMap<Integer, LinkRatioCurve>(4);

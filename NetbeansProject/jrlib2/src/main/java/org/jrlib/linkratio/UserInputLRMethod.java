@@ -17,6 +17,31 @@ public class UserInputLRMethod extends AbstractVectorUserInput<FactorTriangle> i
     public final static double MACK_ALPHA = 0d;
 
     /**
+     * Creates an empty instance.
+     */
+    public UserInputLRMethod() {
+    }
+    
+    /**
+     * Creates an instance, with the given index set to the given value. All
+     * other values will be NaN.
+     * 
+     * @throws IllegalArgumentException if `index` is less then 0.
+     */
+    public UserInputLRMethod(int index, double value) {
+        super(index, value);
+    }
+
+    /**
+     * Creates an instance, with the given values.
+     * 
+     * @throws NullPointerException if `values` is null.
+     */
+    public UserInputLRMethod(double[] values) {
+        super(values);
+    }
+    
+    /**
      * Returns 0.
      */
     @Override
@@ -34,7 +59,7 @@ public class UserInputLRMethod extends AbstractVectorUserInput<FactorTriangle> i
     
     @Override
     public UserInputLRMethod copy() {
-        return new UserInputLRMethod();
+        return new UserInputLRMethod(values);
     }
 
     @Override

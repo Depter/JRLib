@@ -4,6 +4,7 @@ import org.jrlib.claimratio.ClaimRatio;
 import org.jrlib.scale.Scale;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.ratio.RatioTriangle;
+import org.jrlib.triangle.ratio.RatioTriangleInput;
 
 /**
  * The class represents the calculation of the rho parameters for the
@@ -23,6 +24,11 @@ public interface ClaimRatioScale extends Scale<ClaimRatioScaleInput>  {
      * Returns the ratio-triangle which is used to calculate the claim-ratios.
      */
     public RatioTriangle getSourceRatioTriangle();
+    
+    /**
+     * Returns the input used to calculate the ratio triangle.
+     */
+    public RatioTriangleInput getSourceRatioTriangleInput();
     
     /**
      * Returns the triangle used as numerator for the ratio-triangle.

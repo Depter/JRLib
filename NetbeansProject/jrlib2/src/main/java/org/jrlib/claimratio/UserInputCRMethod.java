@@ -1,20 +1,21 @@
-package org.jrlib.scale;
+package org.jrlib.claimratio;
 
+import org.jrlib.triangle.ratio.RatioTriangle;
 import org.jrlib.util.AbstractVectorUserInput;
 
 /**
- * Implementation of {@link ScaleEstimator ScaleEstimator} interface, 
+ * Implementation of {@link ClaimRatioMethod ClaimRatioMethod} interface, 
  * which allows manual input. 
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class UserInputScaleEstimator<T extends ScaleInput> extends AbstractVectorUserInput<Scale<T>> implements ScaleEstimator<T> {
+public class UserInputCRMethod extends AbstractVectorUserInput<RatioTriangle> implements ClaimRatioMethod {
 
     /**
      * Creates an empty instance.
      */
-    public UserInputScaleEstimator() {
+    public UserInputCRMethod() {
     }
 
     /**
@@ -23,40 +24,36 @@ public class UserInputScaleEstimator<T extends ScaleInput> extends AbstractVecto
      * 
      * @throws IllegalArgumentException if `index` is less then 0.
      */
-    public UserInputScaleEstimator(int index, double value) {
+    public UserInputCRMethod(int index, double value) {
         super(index, value);
     }
-    
+
     /**
      * Creates an instance, with the given values.
      * 
      * @throws NullPointerException if `values` is null.
      */
-    public UserInputScaleEstimator(double[] values) {
+    public UserInputCRMethod(double[] values) {
         super(values);
     }
     
     @Override
-    public void fit(Scale<T> scales) {
+    public UserInputCRMethod copy() {
+        return new UserInputCRMethod(values);
     }
-    
+
     @Override
     public boolean equals(Object o) {
-        return (o instanceof UserInputScaleEstimator);
+        return (o instanceof UserInputCRMethod);
     }
     
     @Override
     public int hashCode() {
-        return UserInputScaleEstimator.class.hashCode();
+        return UserInputCRMethod.class.hashCode();
     }
-    
+
     @Override
     public String toString() {
-        return "UserInputScaleEstimator";
-    }
-    
-    @Override
-    public UserInputScaleEstimator copy() {
-        return new UserInputScaleEstimator(values);
+        return "UserInputCRMethod "+values;
     }
 }

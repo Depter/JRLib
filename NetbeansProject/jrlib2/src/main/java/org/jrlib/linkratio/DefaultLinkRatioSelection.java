@@ -69,6 +69,9 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     
     private DefaultLinkRatioSelection(DefaultLinkRatioSelection original) {
         super(original.source.copy(), original);
+        this.developments = original.developments;
+        if(developments > 0)
+            this.values = TriangleUtil.copy(original.values);
     }
     
     @Override

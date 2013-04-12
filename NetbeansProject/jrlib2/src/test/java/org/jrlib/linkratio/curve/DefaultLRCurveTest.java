@@ -28,7 +28,7 @@ public class DefaultLRCurveTest {
         double[] lrs = lr.toArray();
         for(int d=0; d<lrs.length; d++)
             assertEquals(lrs[d], df.getValue(d), TestConfig.EPSILON);
-        assertEquals(1d, df.getValue(lrs.length), TestConfig.EPSILON);
+        assertEquals(Double.NaN, df.getValue(lrs.length), TestConfig.EPSILON);
     }
 
     @Test
@@ -38,13 +38,13 @@ public class DefaultLRCurveTest {
         double[] lrs = lr.toArray();
         for(int d=0; d<lrs.length; d++)
             assertEquals(lrs[d], df.getValue(d), TestConfig.EPSILON);
-        assertEquals(1d, df.getValue(lrs.length), TestConfig.EPSILON);
+        assertEquals(Double.NaN, df.getValue(lrs.length), TestConfig.EPSILON);
     }
 
     @Test
     public void testGetValue() {
         for(int d=0; d<10; d++)
-            assertEquals(1d, df.getValue(d), TestConfig.EPSILON);
+            assertEquals(Double.NaN, df.getValue(d), TestConfig.EPSILON);
     }
 
     @Test

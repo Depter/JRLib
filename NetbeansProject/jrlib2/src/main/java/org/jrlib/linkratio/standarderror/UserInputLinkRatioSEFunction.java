@@ -1,20 +1,19 @@
-package org.jrlib.scale;
+package org.jrlib.linkratio.standarderror;
 
 import org.jrlib.util.AbstractVectorUserInput;
 
 /**
- * Implementation of {@link ScaleEstimator ScaleEstimator} interface, 
- * which allows manual input. 
- *
+ * Allows to use manually entered values for the standard error of the link-ratios.
+ * 
  * @author Peter Decsi
  * @version 1.0
  */
-public class UserInputScaleEstimator<T extends ScaleInput> extends AbstractVectorUserInput<Scale<T>> implements ScaleEstimator<T> {
+public class UserInputLinkRatioSEFunction extends AbstractVectorUserInput<LinkRatioSE> implements LinkRatioSEFunction {
 
     /**
      * Creates an empty instance.
      */
-    public UserInputScaleEstimator() {
+    public UserInputLinkRatioSEFunction() {
     }
 
     /**
@@ -23,7 +22,7 @@ public class UserInputScaleEstimator<T extends ScaleInput> extends AbstractVecto
      * 
      * @throws IllegalArgumentException if `index` is less then 0.
      */
-    public UserInputScaleEstimator(int index, double value) {
+    public UserInputLinkRatioSEFunction(int index, double value) {
         super(index, value);
     }
     
@@ -32,31 +31,31 @@ public class UserInputScaleEstimator<T extends ScaleInput> extends AbstractVecto
      * 
      * @throws NullPointerException if `values` is null.
      */
-    public UserInputScaleEstimator(double[] values) {
+    public UserInputLinkRatioSEFunction(double[] values) {
         super(values);
     }
-    
+
     @Override
-    public void fit(Scale<T> scales) {
+    public void fit(LinkRatioSE ses) {
     }
     
     @Override
     public boolean equals(Object o) {
-        return (o instanceof UserInputScaleEstimator);
+        return (o instanceof UserInputLinkRatioSEFunction);
     }
     
     @Override
     public int hashCode() {
-        return UserInputScaleEstimator.class.hashCode();
+        return UserInputLinkRatioSEFunction.class.hashCode();
     }
     
     @Override
     public String toString() {
-        return "UserInputScaleEstimator";
+        return "UserInputLinkRatioSEFunction";
     }
     
     @Override
-    public UserInputScaleEstimator copy() {
-        return new UserInputScaleEstimator(values);
+    public UserInputLinkRatioSEFunction copy() {
+        return new UserInputLinkRatioSEFunction(values);
     }
 }

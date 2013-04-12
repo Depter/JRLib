@@ -1,16 +1,13 @@
 package org.jrlib.linkratio.scale;
 
 import org.jrlib.linkratio.LinkRatio;
-import org.jrlib.scale.DefaultScaleCalculator;
-import org.jrlib.scale.DefaultScaleEstimator;
-import org.jrlib.scale.DefaultScaleSelection;
-import org.jrlib.scale.Scale;
-import org.jrlib.scale.ScaleEstimator;
+import org.jrlib.scale.*;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
 
 /**
  *
+ * @see DefaultScaleSelection
  * @author Peter Decsi
  * @version 1.0
  */

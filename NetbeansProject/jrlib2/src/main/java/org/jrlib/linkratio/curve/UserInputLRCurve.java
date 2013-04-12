@@ -13,15 +13,29 @@ import org.jrlib.util.AbstractVectorUserInput;
  */
 public class UserInputLRCurve extends AbstractVectorUserInput<LinkRatio> implements LinkRatioCurve {
 
+    /**
+     * Creates an empty instance.
+     */
     public UserInputLRCurve() {
     }
 
+    /**
+     * Creates an instance, with the given values.
+     * 
+     * @throws NullPointerException if `values` is null.
+     */
     public UserInputLRCurve(double[] values) {
         super(values);
     }
     
+    /**
+     * Creates an instance, with the given index set to the given value. All
+     * other values will be NaN.
+     * 
+     * @throws IllegalArgumentException if `index` is less then 0.
+     */
     public UserInputLRCurve(int development, double value) {
-        super.setValue(development, value);
+        super(development, value);
     }
     
     @Override

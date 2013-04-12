@@ -5,7 +5,7 @@ import org.jrlib.linkratio.LinkRatio;
 /**
  * This class simply mirrors the fitted {@link LinkRatio LinkRatio}. 
  * For development periods, where there is no input link ratio returns 
- * 1.
+ * NaN.
  * 
  * @author Peter Decsi
  * @version 1.0
@@ -25,7 +25,7 @@ public class DefaultLRCurve implements LinkRatioCurve {
     public double getValue(int development) {
         if(development >= 0 && development < developments)
             return lrs[development];
-        return 1d;
+        return Double.NaN;
     }
     
     @Override
