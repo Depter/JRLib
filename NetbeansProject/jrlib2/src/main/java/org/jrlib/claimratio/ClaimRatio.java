@@ -1,6 +1,5 @@
 package org.jrlib.claimratio;
 
-import org.jrlib.Copyable;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.ratio.RatioTriangle;
 import org.jrlib.triangle.ratio.RatioTriangleInput;
@@ -13,7 +12,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ClaimRatio extends Vector, Copyable<ClaimRatio>{
+public interface ClaimRatio extends Vector {
     
     /**
      * Returns the ratio triangle used to calculate the expected ratios.
@@ -34,4 +33,7 @@ public interface ClaimRatio extends Vector, Copyable<ClaimRatio>{
      * Returns the triangle used as the denominator.
      */
     public ClaimTriangle getSourceDenominatorTriangle();
+    
+    @Override
+    public ClaimRatio copy();
 }

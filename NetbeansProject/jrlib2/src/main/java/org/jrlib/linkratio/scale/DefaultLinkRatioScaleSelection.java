@@ -14,7 +14,7 @@ import org.jrlib.triangle.factor.FactorTriangle;
 public class DefaultLinkRatioScaleSelection extends DefaultScaleSelection<LinkRatioScaleInput> implements LinkRatioScaleSelection {
 
     private LinkRatioScaleInput sourceInput;
-
+    
     public DefaultLinkRatioScaleSelection(LinkRatio source) {
         this(new LinkRatioScaleInput(source));
     }

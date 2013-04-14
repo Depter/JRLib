@@ -2,7 +2,10 @@ package org.jrlib.estimate;
 
 import org.jrlib.TestConfig;
 import org.jrlib.TestData;
+import org.jrlib.linkratio.LinkRatio;
+import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.linkratio.curve.DefaultLinkRatioSmoothing;
+import org.jrlib.linkratio.curve.LinkRatioSmoothingSelection;
 import org.jrlib.linkratio.curve.UserInputLRCurve;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.*;
@@ -14,11 +17,6 @@ import org.junit.Test;
  * @version 1.0
  */
 public class EstimateUtilTest {
-    
-    private final static double[] LRS = {
-        11.10425885, 4.09227348, 1.70791313, 1.27591994, 1.13891244, 
-         1.06869675, 1.02633486, 1.02268294, 1.05000000
-    };
     
     private final static double[][] COMPLETED_MACK = {
         {58046.00000000, 127970.00000000,  476599.00000000, 1027692.00000000, 1360489.00000000, 1647310.00000000, 1819179.00000000, 1906852.00000000, 1950105.00000000,  2047610.25000000},
@@ -51,5 +49,33 @@ public class EstimateUtilTest {
             assertEquals("For accident period: "+a, devs, found[a].length);
             assertArrayEquals("For accident period: "+a, COMPLETED_MACK[a], found[a], TestConfig.EPSILON);
         }
+    }
+    
+    @Test
+    public void testGetCummulatedLinkRatios() {
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.PAID);
+        DefaultLinkRatioSmoothing lrs = new DefaultLinkRatioSmoothing(cik);
+        lrs.setDevelopmentCount(8);
+        lrs.setMethod(new UserInputLRCurve(7, 1.05), 7);
+        double[] clrs = EstimateUtil.getCummulativeLinkRatios(lrs);
+        double[] expected = {
+            1.24694402, 1.26670461, 1.27868778, 1.29089024, 
+            1.29538181, 1.29972392, 1.30220852, 1.36731894
+        };
+        assertArrayEquals(expected, clrs, TestConfig.EPSILON);
+    }
+    
+    @Test
+    public void testGetCompletionRatios() {
+        ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.PAID);
+        DefaultLinkRatioSmoothing lrs = new DefaultLinkRatioSmoothing(cik);
+        lrs.setDevelopmentCount(8);
+        lrs.setMethod(new UserInputLRCurve(7, 1.05), 7);
+        double[] gs = EstimateUtil.getCompletionRatios(lrs);
+        double[] expected = {
+            0.73135826, 0.91196280, 0.92641487, 0.93517886, 
+            0.94410323, 0.94738819, 0.95056382, 0.95238095
+        };
+        assertArrayEquals(expected, gs, TestConfig.EPSILON);
     }
 }

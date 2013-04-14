@@ -85,13 +85,11 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
     }
 
     /**
-     * Returns the number of development periods form the factor triangle.
-     * 
-     * @see LinkRatio#getSourceFactors().
+     * Returns the number of development periods form the source link-ratios.
      */
     @Override
     public int getDevelopmentCount() {
-        return factors.getDevelopmentCount();
+        return source.getLength();
     }
 
     /**

@@ -86,6 +86,18 @@ public class SimpleClaimRatioScale extends SimpleScale<ClaimRatioScaleInput> imp
         this.sourceInput = source.getSourceInput();
     }
     
+    /**
+     * Do not get the length from the source.
+     */
+    @Override
+    protected void initCalculation() {
+    }
+    
+    @Override
+    public void setDevelopmentCount(int developments) {
+        super.setLength(developments);
+    }
+    
     @Override
     public ClaimRatio getSourceClaimRatios() {
         return sourceInput.getSourceClaimRatios();

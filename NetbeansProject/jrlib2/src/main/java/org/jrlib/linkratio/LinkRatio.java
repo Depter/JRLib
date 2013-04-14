@@ -1,6 +1,5 @@
 package org.jrlib.linkratio;
 
-import org.jrlib.Copyable;
 import org.jrlib.MutableSource;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
@@ -13,7 +12,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface LinkRatio extends Vector, MutableSource<FactorTriangle>, Copyable<LinkRatio> {
+public interface LinkRatio extends Vector, MutableSource<FactorTriangle> {
     
     /**
      * Returns the development factors, used for the calculation.
@@ -42,4 +41,7 @@ public interface LinkRatio extends Vector, MutableSource<FactorTriangle>, Copyab
      * <p>See {@link LinkRatioMethod#getWeight(int, int) LinkRatioMethod.getWeight()}.
      */
     public double getWeight(int accident, int development);
+    
+    @Override
+    public LinkRatio copy();
 }

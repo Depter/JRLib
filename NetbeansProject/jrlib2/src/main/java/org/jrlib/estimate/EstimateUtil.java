@@ -31,12 +31,53 @@ public class EstimateUtil {
             
             double last = result[a][devs-1];
             for(int d=devs; d<developments; d++) {
-                double lr = lrs.getValue(d-1);
                 last *= lrs.getValue(d-1);
                 result[a][d] = last;
             }
         }
         
+        return result;
+    }
+    
+    /**
+     * Calculates the cummulated link-ratios from the given link
+     * ratios. The cummulated link-ratio for development period
+     * `d, clr(d),` is calculated as:
+     *      clr(d) = lr(d) * clr(d-1)
+     * where `lr(d)` is the loss-ratio for development period `d`.
+     * 
+     * @see LinkRatio
+     * @throws NullPointerException if `lrs` is null, or 
+     * {@link LinkRatio#toArray() lrs.toArray()} returns null.
+     */
+    public static double[] getCummulativeLinkRatios(LinkRatio lrs) {
+        double[] result = lrs.toArray();
+        int size = result.length;
+        for(int i=1; i<size; i++)
+            result[i] *= result[i-1];
+        return result;
+    }
+    
+    /**
+     * Calculates the completion-ratios from the given link-ratios. The 
+     * completion-ratios for development period `d, g(d),` is calculated as:
+     *             g(d+1)
+     *      g(d) = ------
+     *              lr(d)
+     * where `lr(d)` is the loss-ratio for development period `d`, and
+     * `g(d)` is equals to 1, if `d >= {@link LinkRatio#getLength() lrs.getLength()}`.
+     * 
+     * @see LinkRatio
+     * @throws NullPointerException if `lrs` is null, or 
+     * {@link LinkRatio#toArray() lrs.toArray()} returns null.
+     */
+    public static double[] getCompletionRatios(LinkRatio lrs) {
+        double[] result = lrs.toArray();
+        int size = result.length;
+        for(int i=(size-1); i>=0; i--) {
+            double prev = i==(size-1)? 1d : result[i+1];
+            result[i] = prev/result[i];
+        }
         return result;
     }
 

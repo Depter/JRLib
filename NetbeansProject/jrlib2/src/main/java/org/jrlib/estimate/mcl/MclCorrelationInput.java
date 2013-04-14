@@ -2,14 +2,14 @@ package org.jrlib.estimate.mcl;
 
 import org.jrlib.AbstractMultiSourceCalculationData;
 import org.jrlib.CalculationData;
-import org.jrlib.claimratio.scale.ClaimRatioResiduals;
-import org.jrlib.linkratio.scale.LinkRatioResiduals;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import static java.lang.Math.min;
 import org.jrlib.claimratio.ClaimRatio;
 import org.jrlib.claimratio.scale.ClaimRatioScale;
+import org.jrlib.claimratio.scale.residuals.CRResidualTriangle;
 import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.linkratio.scale.LinkRatioScale;
+import org.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
 import org.jrlib.triangle.ratio.RatioTriangle;
 
@@ -20,8 +20,8 @@ import org.jrlib.triangle.ratio.RatioTriangle;
  */
 public class MclCorrelationInput extends AbstractMultiSourceCalculationData<CalculationData> {
 
-    private LinkRatioResiduals lrResiduals;
-    private ClaimRatioResiduals crResiduals;
+    private LRResidualTriangle lrResiduals;
+    private CRResidualTriangle crResiduals;
     
     private int accidents;
     private int[] developments;
@@ -35,7 +35,7 @@ public class MclCorrelationInput extends AbstractMultiSourceCalculationData<Calc
      * @throws IllegalArgumentException if the deiiferent ratios are based on
      * different triangles.
      */
-    public MclCorrelationInput(LinkRatioResiduals lrResiduals, ClaimRatioResiduals crResiduals) {
+    public MclCorrelationInput(LRResidualTriangle lrResiduals, CRResidualTriangle crResiduals) {
         super(lrResiduals, crResiduals);
         this.lrResiduals = lrResiduals;
         this.crResiduals = crResiduals;
@@ -60,7 +60,7 @@ public class MclCorrelationInput extends AbstractMultiSourceCalculationData<Calc
     /**
      * Returns the residual triangle for the link-ratios.
      */
-    public LinkRatioResiduals getSourceLinkRatioResiduals() {
+    public LRResidualTriangle getSourceLinkRatioResiduals() {
         return lrResiduals;
     }
     
@@ -98,7 +98,7 @@ public class MclCorrelationInput extends AbstractMultiSourceCalculationData<Calc
     /**
      * Returns the residual triangle for the claim-ratios.
      */
-    public ClaimRatioResiduals getSourceClaimRatioResiduals() {
+    public CRResidualTriangle getSourceClaimRatioResiduals() {
         return crResiduals;
     }
     

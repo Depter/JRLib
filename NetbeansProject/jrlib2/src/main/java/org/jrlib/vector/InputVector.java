@@ -1,7 +1,6 @@
 package org.jrlib.vector;
 
 import org.jrlib.CalculationData;
-import org.jrlib.vector.AbstractVector;
 
 /**
  * An InputVector simply wrapes an array, to be able to use
@@ -65,5 +64,10 @@ public class InputVector extends AbstractVector<CalculationData> {
     
     @Override
     protected void recalculateLayer() {
+    }
+    
+    @Override
+    public InputVector copy() {
+        return new InputVector(values);
     }
 }

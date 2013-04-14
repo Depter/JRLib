@@ -97,6 +97,14 @@ public class MclCalculationBundle extends AbstractMultiSourceCalculationData<Cla
         incurredCorrelation.addChangeListener(correlationListener);
     }
     
+    public MclCorrelation getSourcePaidCorrelation() {
+        return paidCorrelation;
+    }
+    
+    public MclCorrelation getSourceIncurredCorrelation() {
+        return incurredCorrelation;
+    }
+    
     @Override
     protected void recalculateLayer() {
         paidCorrelation.recalculate();

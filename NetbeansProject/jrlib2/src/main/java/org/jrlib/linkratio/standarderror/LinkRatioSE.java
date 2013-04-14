@@ -1,6 +1,5 @@
 package org.jrlib.linkratio.standarderror;
 
-import org.jrlib.Copyable;
 import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.linkratio.scale.LinkRatioScale;
 import org.jrlib.linkratio.scale.LinkRatioScaleInput;
@@ -17,7 +16,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface LinkRatioSE extends Vector, Copyable<LinkRatioSE> {
+public interface LinkRatioSE extends Vector {
     
     /**
      * Returns Mack's sigma parameters, used for the calculation.
@@ -44,4 +43,7 @@ public interface LinkRatioSE extends Vector, Copyable<LinkRatioSE> {
      * Returns the claims used for this calculation.
      */
     public ClaimTriangle getSourceTriangle();
+    
+    @Override
+    public LinkRatioSE copy();
 }

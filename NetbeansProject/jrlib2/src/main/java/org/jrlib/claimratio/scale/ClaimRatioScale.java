@@ -43,4 +43,12 @@ public interface ClaimRatioScale extends Scale<ClaimRatioScaleInput>  {
      * @see #getSourceRatioTriangle().
      */
     public ClaimTriangle getSourceDenominatorTriangle();
+    
+    /**
+     * Sets the number of development periods, the class
+     * calculates a claim-ratio scale parameter. If
+     * `developments` is less then 0, i should be escaped
+     * to 0.
+     */
+    public void setDevelopmentCount(int developments);
 }

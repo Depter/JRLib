@@ -80,7 +80,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      */
     @Override
     public int getDevelopmentCount() {
-        return ratios.getDevelopmentCount();
+        return source.getLength();
     }
 
     /**

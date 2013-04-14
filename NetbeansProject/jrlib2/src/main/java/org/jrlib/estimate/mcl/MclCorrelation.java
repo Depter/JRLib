@@ -2,11 +2,13 @@ package org.jrlib.estimate.mcl;
 
 import org.jrlib.AbstractCalculationData;
 import org.jrlib.claimratio.ClaimRatio;
-import org.jrlib.claimratio.scale.ClaimRatioResiduals;
+import org.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
 import org.jrlib.claimratio.scale.ClaimRatioScale;
+import org.jrlib.claimratio.scale.residuals.CRResidualTriangle;
 import org.jrlib.linkratio.LinkRatio;
-import org.jrlib.linkratio.scale.LinkRatioResiduals;
+import org.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jrlib.linkratio.scale.LinkRatioScale;
+import org.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
 import org.jrlib.triangle.ratio.RatioTriangle;
@@ -35,6 +37,33 @@ public class MclCorrelation extends AbstractCalculationData<MclCorrelationInput>
 
     private double correlation;
     
+    /**
+     * Creates a new instance from the given input.
+     * 
+     * @see ClaimRatioResiduals#ClaimRatioResiduals(ClaimRatioScale) 
+     * @see LinkRatioResiduals#LinkRatioResiduals(LinkRatioScale) 
+     * @see MclCorrelationInput#MclCorrelationInput(LinkRatioResiduals, ClaimRatioResiduals) 
+     * @throws NullPointerException if one of the parameters is null.
+     */
+    public MclCorrelation(LinkRatioScale lrScales, ClaimRatioScale crScales) {
+        this(new LinkRatioResiduals(lrScales), new ClaimRatioResiduals(crScales));
+    }
+    
+    /**
+     * Creates a new instance from the given residual triangles.
+     * 
+     * @see MclCorrelationInput#MclCorrelationInput(LRResidualTriangle, ClaimRatioResidualTriangle) 
+     * @throws NullPointerException if one of the parameters is null.
+     */
+    public MclCorrelation(LRResidualTriangle lrResiduals, CRResidualTriangle crResiduals) {
+        this(new MclCorrelationInput(lrResiduals, crResiduals));
+    }
+    
+    /**
+     * Creates a new instance from the given source.
+     * 
+     * @throws NullPointerException if `source` is null.
+     */
     public MclCorrelation(MclCorrelationInput source) {
         super(source);
         doRecalculate();
@@ -50,7 +79,7 @@ public class MclCorrelation extends AbstractCalculationData<MclCorrelationInput>
     /**
      * Returns the residual triangle for the link-ratios.
      */
-    public LinkRatioResiduals getSourceLinkRatioResiduals() {
+    public LRResidualTriangle getSourceLinkRatioResiduals() {
         return source.getSourceLinkRatioResiduals();
     }
     
@@ -88,7 +117,7 @@ public class MclCorrelation extends AbstractCalculationData<MclCorrelationInput>
     /**
      * Returns the residual triangle for the claim-ratios.
      */
-    public ClaimRatioResiduals getSourceClaimRatioResiduals() {
+    public CRResidualTriangle getSourceClaimRatioResidualTriangle() {
         return source.getSourceClaimRatioResiduals();
     }
     
@@ -148,7 +177,7 @@ public class MclCorrelation extends AbstractCalculationData<MclCorrelationInput>
         
         int accidents = source.getAccidentCount();
         for(int a=0; a<accidents; a++) {
-            int devs = source.getDevelopmentCount(accidents);
+            int devs = source.getDevelopmentCount(a);
             for(int d=0; d<devs; d++) {
                 double f = source.getLinkRatioResidual(a, d);
                 double q = source.getClaimRatioResidual(a, d);

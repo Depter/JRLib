@@ -79,6 +79,16 @@ public class SimpleScale<T extends ScaleInput> extends AbstractSimpleMethodSelec
     }
     
     /**
+     * Sets the length, fires a change event. If `length` is less
+     * then 0, it is escaped to 0.
+     */
+    protected void setLength(int length) {
+        this.developments = (length<0)? 0 : length;
+        super.recalculateLayer();
+        fireChange();
+    }
+    
+    /**
      * Returns the {@link Scale Scale} instance used as input.
      */
     public Scale<T> getSourceScales() {

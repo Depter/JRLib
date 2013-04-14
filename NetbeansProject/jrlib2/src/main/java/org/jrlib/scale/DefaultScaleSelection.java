@@ -13,8 +13,8 @@ import org.jrlib.util.AbstractMethodSelection;
  */
 public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSelection<Scale<T>, ScaleEstimator<T>> implements ScaleSelection<T> {
     
-    private int length;
-    private double[] values;
+    protected int length;
+    protected double[] values;
     
     /**
      * Creates an instance for the given source, and with a
@@ -127,9 +127,13 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
     }
     
     private void doRecalculate() {
-        length = (source==null)? 0 : source.getLength();
+        recalculateLength();
         super.fitMethods();
         values = super.getFittedValues(length);
+    }
+    
+    protected void recalculateLength() {
+        length = source==null? 0 : source.getLength();
     }
     
     @Override
