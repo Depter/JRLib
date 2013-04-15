@@ -8,7 +8,7 @@ package org.jrlib.claimratio.scale.residuals;
 public interface ModifiedCRResidualTriangle extends CRResidualTriangle {
 
     /**
-     * Returns the {@link ClaimRatioResidualTriangle ClaimRatioResidualTriangle}
+     * Returns the {@link CRResidualTriangle CRResidualTriangle}
      * modified by this instance.
      */
     public CRResidualTriangle getSourceResidualTriangle();

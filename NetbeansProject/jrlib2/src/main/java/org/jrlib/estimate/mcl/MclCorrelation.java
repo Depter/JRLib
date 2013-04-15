@@ -42,7 +42,7 @@ public class MclCorrelation extends AbstractCalculationData<MclCorrelationInput>
      * 
      * @see ClaimRatioResiduals#ClaimRatioResiduals(ClaimRatioScale) 
      * @see LinkRatioResiduals#LinkRatioResiduals(LinkRatioScale) 
-     * @see MclCorrelationInput#MclCorrelationInput(LinkRatioResiduals, ClaimRatioResiduals) 
+     * @see MclCorrelationInput#MclCorrelationInput(LRResidualTriangle, CRResidualTriangle) 
      * @throws NullPointerException if one of the parameters is null.
      */
     public MclCorrelation(LinkRatioScale lrScales, ClaimRatioScale crScales) {
@@ -52,7 +52,7 @@ public class MclCorrelation extends AbstractCalculationData<MclCorrelationInput>
     /**
      * Creates a new instance from the given residual triangles.
      * 
-     * @see MclCorrelationInput#MclCorrelationInput(LRResidualTriangle, ClaimRatioResidualTriangle) 
+     * @see MclCorrelationInput#MclCorrelationInput(LRResidualTriangle, CRResidualTriangle) 
      * @throws NullPointerException if one of the parameters is null.
      */
     public MclCorrelation(LRResidualTriangle lrResiduals, CRResidualTriangle crResiduals) {

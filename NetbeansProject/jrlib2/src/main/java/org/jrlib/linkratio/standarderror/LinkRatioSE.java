@@ -25,7 +25,6 @@ public interface LinkRatioSE extends Vector {
     
     /**
      * Returns the input for the {@link LinkRatioScale LinkRatioScale}.
-     * @return 
      */
     public LinkRatioScaleInput getSourceLrScaleInput();
     

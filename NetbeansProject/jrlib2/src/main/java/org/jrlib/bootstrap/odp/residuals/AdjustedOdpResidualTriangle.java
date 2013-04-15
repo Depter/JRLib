@@ -16,8 +16,8 @@ import org.jrlib.triangle.claim.ClaimTriangle;
  * -   `N` is the number of cells, where the residual is not NaN.
  * -   `p` is equals to the number of accident periods in the source
  *     claims triangle, plus the number of development periods in
- *     the source triangle plus 1 
- *     ({@link ClaimTriangle#getAccidentCount() cik.getAccidentCount()) + {@link ClaimTriangle#getDevelopmentCount() cik.getDevelopmentCount() - 1).
+ *     the source triangle plus 1
+ *     ({@link ClaimTriangle#getAccidentCount() cik.getAccidentCount()} + {@link ClaimTriangle#getDevelopmentCount() cik.getDevelopmentCount()} - 1).
 * 
  * @author Peter Decsi
  * @version 1.0

@@ -18,7 +18,7 @@ import org.junit.Test;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CapeCodEstiamteTest {
+public class CapeCodEstimateTest {
     
     private final static double[][] EXPECTED = {
         {4426765.00000000, 5419095.00000000, 5508047.00000000, 5521287.00000000,  5559909.00000000,  5586629.00000000,  5623447.00000000,  5634197.00000000,  5107146.72239029},
@@ -31,16 +31,16 @@ public class CapeCodEstiamteTest {
         {7194587.00000000, 9676201.52654569, 9829542.37407868, 9922530.97600125, 10017221.23195790, 10052075.57106620, 10085769.99125970, 10105050.34144460, 10610302.85851680}
     };
     
-    private CapeCodEstiamte estimate;
+    private CapeCodEstimate estimate;
     
-    public CapeCodEstiamteTest() {
+    public CapeCodEstimateTest() {
     }
 
     @Before
     public void setUp() {
         LinkRatio lrs = createLrs();
         Vector exposure = new InputVector(TestData.getCachedVector(TestData.EXPOSURE));
-        estimate = new CapeCodEstiamte(lrs, exposure);
+        estimate = new CapeCodEstimate(lrs, exposure);
     }
     
     private LinkRatio createLrs() {

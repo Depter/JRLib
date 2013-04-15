@@ -20,7 +20,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CapeCodEstiamte extends AbstractEstimate<CapeCodEstimateInput> {
+public class CapeCodEstimate extends AbstractEstimate<CapeCodEstimateInput> {
 
     private ClaimTriangle cik;
     
@@ -29,7 +29,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CapeCodEstimateInput> {
      * 
      * @throws NullPointerException if one of the parameters is null.
      */
-    public CapeCodEstiamte(LinkRatio lrs, Vector exposure) {
+    public CapeCodEstimate(LinkRatio lrs, Vector exposure) {
         this(new CapeCodEstimateInput(lrs, exposure));
     }
     
@@ -38,7 +38,7 @@ public class CapeCodEstiamte extends AbstractEstimate<CapeCodEstimateInput> {
      * 
      * @throws NullPointerException if `source` is null.
      */
-    public CapeCodEstiamte(CapeCodEstimateInput source) {
+    public CapeCodEstimate(CapeCodEstimateInput source) {
         super(source);
         cik = source.getSourceLinkRatio().getSourceTriangle();
         doRecalculate();

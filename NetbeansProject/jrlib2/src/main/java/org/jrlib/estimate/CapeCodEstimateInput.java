@@ -6,7 +6,7 @@ import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.vector.Vector;
 
 /**
- * Utility class for {@link CapeCodeEstimate CapeCodeEstimates}. This class
+ * Utility class for {@link CapeCodEstimate CapeCodEstimates}. This class
  * wrapes the input calculations used by the estimate.
  * 
  * @author Peter Decsi

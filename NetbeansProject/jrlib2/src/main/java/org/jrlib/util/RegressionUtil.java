@@ -14,7 +14,7 @@ public class RegressionUtil {
     /**
      * Linear regression (`y ~ a + b * x`) with x values `1, ..., y.length`.
      * 
-     * {@see #linearRegression(double[], double[], boolean) linearRegression()}.
+     * @see #linearRegression(double[], double[], boolean)
      */
     public static double[] linearRegression(double[] y) {
         return linearRegression(y, true);
@@ -24,7 +24,7 @@ public class RegressionUtil {
      * Linear regression (`y ~ a + b * x`) with x values `1, ..., y.length`,
      * if `withIntercept` is true and `y ~ b * x` if `withIntercept` is false.
      * 
-     * {@see #linearRegression(double[], double[], boolean) linearRegression()}.
+     * @see #linearRegression(double[], double[], boolean)
      */
     public static double[] linearRegression(double[] y, boolean withIntercept) {
         int size = y.length;
@@ -176,10 +176,6 @@ public class RegressionUtil {
      * @throws NullPointerException if one of the arrays is null.
      * @throws IllegalArgumentException if the length of the arrays 
      * do not match.
-     * 
-     * @param original
-     * @param fitted
-     * @return 
      */
     public static double rSquare(double[] original, double[] fitted) {
         checkInput(original, fitted);

@@ -106,7 +106,7 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
     /**
      * Returns the link-ratio for the given development.
      * 
-     * @see LinkRatio#getValue(int,int).
+     * @see LinkRatio#getValue(int) 
      */
     @Override
     public double getRatio(int development) {

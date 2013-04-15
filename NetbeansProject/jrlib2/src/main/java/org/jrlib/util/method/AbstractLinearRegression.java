@@ -141,18 +141,4 @@ public abstract class AbstractLinearRegression<T> implements SelectableMethod<T>
     public double getSlope() {
         return slope;
     }
-    
-    /**
-     * Utility class to implement the {@link Copyable Copyable}
-     * interface. The inner state of the `original` instance will
-     * be copied to this instance (exlusions, intercept and slope).
-     */
-    protected void copyStateFrom(AbstractLinearRegression original) {
-        int size = original.isExcluded.length;
-        this.isExcluded = new boolean[size];
-        System.arraycopy(original.isExcluded, 0, isExcluded, 0, size);
-        
-        this.intercept = original.intercept;
-        this.slope = original.slope;
-    }
 }

@@ -9,7 +9,7 @@ import org.jrlib.triangle.ratio.RatioTriangle;
 import org.jrlib.triangle.ratio.RatioTriangleInput;
 
 /**
- * Basic implementation for the {@link LinkRatioScale LinkRatioScale} interface
+ * Basic implementation for the {@link ClaimRatioScale ClaimRatioScale} interface
  * which fills in the missing values (NaNs) with a preset
  * {@link ScaleEstimator ScaleEstimator}.
  *
@@ -23,7 +23,7 @@ public class SimpleClaimRatioScale extends SimpleScale<ClaimRatioScaleInput> imp
     /**
      * Creates an instance for the given source.
      * 
-     * @see ClaimRatioScaleInput#ClaimRatioScaleInput(LinkRatio) 
+     * @see ClaimRatioScaleInput#ClaimRatioScaleInput(ClaimRatio) 
      * @see #SimpleClaimRatioScale(ClaimRatioScaleInput) 
      * @throws NullPointerException if `source` is null.
      */
@@ -34,7 +34,7 @@ public class SimpleClaimRatioScale extends SimpleScale<ClaimRatioScaleInput> imp
     /**
      * Creates an instance for the given source and estimator.
      * 
-     * @see ClaimRatioScaleInput#ClaimRatioScaleInput(LinkRatio) 
+     * @see ClaimRatioScaleInput#ClaimRatioScaleInput(ClaimRatio) 
      * @see #SimpleClaimRatioScale(ClaimRatioScaleInput, ScaleEstimator) 
      * @throws NullPointerException if `source` or `estimator` is null.
      */

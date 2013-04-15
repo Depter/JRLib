@@ -97,15 +97,4 @@ public class ScaleExtrapolation<T extends ScaleInput> extends AbstractLinearRegr
             "ScaleExtrapolation [ln(sigma(k)) = %f + (%f) * k]",
             intercept, slope);
     }
-
-    /**
-     * The method copies the inner state of the given original instance.
-     * 
-     * @throws NullPointerException if `original` is null.
-     * @see AbstractLinearRegression#copyStateFrom(AbstractLinearRegression) 
-     */
-    protected void copyStateFrom(ScaleExtrapolation<T> original) {
-        super.copyStateFrom(original);
-        isEmptyModel = original.isEmptyModel;
-    }
 }

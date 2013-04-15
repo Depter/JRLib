@@ -53,6 +53,11 @@
               <artifactId>maven-javadoc-plugin</artifactId>
               <version>2.9</version>
               
+              <!-- 
+                Artifact has to be installed manually. It is available on 
+                Google-Code: http://code.google.com/p/markdown-doclet/
+                Version used: MarkdownDoclet-3.0.jar
+              -->
               <configuration>
                   <doclet>com.visural.doclets.markdown.standard.Standard</doclet>
                   <docletArtifact>

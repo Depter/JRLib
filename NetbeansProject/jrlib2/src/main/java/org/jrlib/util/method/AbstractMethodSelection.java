@@ -52,7 +52,7 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
      * for a given location.
      * 
      * @throws NullPointerException when `defaultMethod` is null.
-     * @see #setMethod(org.jrlib.util.SelectableMethod, int).
+     * @see #setMethod(org.jrlib.util.method.SelectableMethod, int) 
      */
     @Override
     public void setDefaultMethod(M defaultMethod) {
@@ -99,7 +99,7 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
     /**
      * Sets the methods used for the given indices.
      * 
-     * @see #setMethod(org.jrlib.util.SelectableMethod, int).
+     * @see #setMethod(org.jrlib.util.method.SelectableMethod, int) 
      */
     @Override
     public void setMethod(M method, int... indices) {
@@ -113,7 +113,7 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
      * Sets the methods used for the given indices.
      * 
      * @throws NullPointerException if one of the indices is null.
-     * @see #setMethod(org.jrlib.util.SelectableMethod, int).
+     * @see #setMethod(org.jrlib.util.method.SelectableMethod, int) 
      */
     @Override
     public void setMethods(Map<Integer, M> methods) {

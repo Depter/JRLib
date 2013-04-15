@@ -1,20 +1,20 @@
-package org.jrlib.claimratio;
+package org.jrlib.bootstrap.odp.scale;
 
 import org.jrlib.util.method.AbstractVectorUserInput;
 
 /**
- * Implementation of {@link ClaimRatioMethod ClaimRatioMethod} interface, 
+ * Implementation of {@link OdpRSMethod OdpRSMethod} interface, 
  * which allows manual input. 
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class UserInputCRMethod extends AbstractVectorUserInput<ClaimRatio> implements ClaimRatioMethod {
+public class UserInputOdpSMethod extends AbstractVectorUserInput<OdpResidualScale> implements OdpRSMethod {
 
     /**
      * Creates an empty instance.
      */
-    public UserInputCRMethod() {
+    public UserInputOdpSMethod() {
     }
 
     /**
@@ -23,7 +23,7 @@ public class UserInputCRMethod extends AbstractVectorUserInput<ClaimRatio> imple
      * 
      * @throws IllegalArgumentException if `index` is less then 0.
      */
-    public UserInputCRMethod(int index, double value) {
+    public UserInputOdpSMethod(int index, double value) {
         super(index, value);
     }
 
@@ -32,22 +32,22 @@ public class UserInputCRMethod extends AbstractVectorUserInput<ClaimRatio> imple
      * 
      * @throws NullPointerException if `values` is null.
      */
-    public UserInputCRMethod(double[] values) {
+    public UserInputOdpSMethod(double[] values) {
         super(values);
     }
 
     @Override
     public boolean equals(Object o) {
-        return (o instanceof UserInputCRMethod);
+        return (o instanceof UserInputOdpSMethod);
     }
     
     @Override
     public int hashCode() {
-        return UserInputCRMethod.class.hashCode();
+        return UserInputOdpSMethod.class.hashCode();
     }
 
     @Override
     public String toString() {
-        return "UserInputCRMethod "+values;
+        return "UserInputOdpResidualMethod "+values;
     }
 }

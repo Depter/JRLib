@@ -42,7 +42,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     
     /**
      * Creates a instance for the given input, which uses the 
-     * supplied {@link LinkRatioMethod LinkRatioMethod}
+     * supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if any of the parameters is null.
@@ -53,7 +53,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     
     /**
      * Creates a instance for the given input, which uses the 
-     * supplied {@link LinkRatioMethod LinkRatioMethod}
+     * supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if any of the parameters is null.
@@ -84,7 +84,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     
     /**
      * Creates a instance for the given input, which uses the 
-     * supplied {@link LinkRatioMethod LinkRatioMethod}
+     * supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if `source` is null.
@@ -96,7 +96,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     
     /**
      * Creates a instance for the given input, which uses the 
-     * supplied {@link LinkRatioMethod LinkRatioMethod}
+     * supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if `source` is null.
@@ -132,7 +132,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     
     /**
      * Creates a instance for the given input, which uses 
-     * the supplied {@link LinkRatioMethod LinkRatioMethod}
+     * the supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method. The instance will have the
      * same length as `source`.
      * 
@@ -145,7 +145,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
 
     /**
      * Creates a instance for the given input and length, which 
-     * uses the supplied {@link LinkRatioMethod LinkRatioMethod}
+     * uses the supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if `source` is null.
@@ -157,7 +157,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
 
     /**
      * Creates a instance for the given input and length, which 
-     * uses the supplied {@link LinkRatioMethod LinkRatioMethod}
+     * uses the supplied {@link ClaimRatioMethod ClaimRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if `source` is null.
@@ -205,7 +205,7 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
      * Length of the link-ratios is equals to the number of
      * development periods in the triangle of development factors.
      * 
-     * @see FactorTriangle#getDevelopmentCount().
+     * @see org.jrlib.triangle.factor.FactorTriangle#getDevelopmentCount() 
      */
     @Override
     public int getLength() {

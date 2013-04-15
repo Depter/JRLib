@@ -21,6 +21,8 @@ import org.jrlib.triangle.claim.ClaimTriangle;
  */
 public class InputOdpResidualTriangle extends AbstractTriangle<LinkRatio> implements OdpResidualTriangle {
     
+    private final static double EPSILON = 1E-10;
+    
     private ClaimTriangle cik;
     private int accidents;
     private int developments;
@@ -102,11 +104,25 @@ public class InputOdpResidualTriangle extends AbstractTriangle<LinkRatio> implem
             for(int d=0; d<devs; d++) 
                 values[a][d] = calculateResidual(values[a][d], fitted[a][d]);
         }
+        escapeTopRightCorner();
     }
     
     private double calculateResidual(double original, double fitted) {
         if(Double.isNaN(original) || Double.isNaN(fitted) || fitted <= 0d)
             return Double.NaN;
-        return (original - fitted) / Math.sqrt(fitted);
+        double diff = (original - fitted);
+        return (-EPSILON<diff &&  diff<EPSILON)? 0d : diff/Math.sqrt(fitted);
+    }
+    
+    /**
+     * The top-right corner of the residuals is based only on one development
+     * factor. this means that the residuals shoudl be 0. In some cases,
+     * thanks to floating point operation, this is not the case, so we
+     * are setting the values manually to 0.
+     */
+    private void escapeTopRightCorner() {
+        int firstDev = (accidents==1)? 0 : values[1].length;
+        for(int d=firstDev; d<developments; d++)
+            values[0][d] = 0d;
     }
 }

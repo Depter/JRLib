@@ -8,7 +8,6 @@ import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,7 +16,7 @@ import org.junit.Test;
  * @author Peter Decsi
  * @version 1.0
  */
-public class VariableOdpResidualScale {
+public class VariableOdpResidualScaleTest {
     
     private final static double[] EXPECTED = {
         139.90948681, 142.27330302, 153.04622417, 318.11324978, 282.58785767, 
@@ -32,7 +31,7 @@ public class VariableOdpResidualScale {
         ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.TAYLOR_ASHE);
         LinkRatio lrs = new SimpleLinkRatio(cik);
         residuals = new AdjustedOdpResidualTriangle(lrs);
-        scales = new ConstantOdpResidualScale(residuals);
+        scales = new VariableOdpResidualScale(residuals);
     }
     
     @Test
