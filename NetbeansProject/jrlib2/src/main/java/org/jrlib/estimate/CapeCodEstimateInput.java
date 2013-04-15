@@ -2,7 +2,6 @@ package org.jrlib.estimate;
 
 import org.jrlib.AbstractMultiSourceCalculationData;
 import org.jrlib.CalculationData;
-import org.jrlib.Copyable;
 import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.vector.Vector;
 
@@ -13,7 +12,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CapeCodEstimateInput extends AbstractMultiSourceCalculationData<CalculationData> implements Copyable<CapeCodEstimateInput> {
+public class CapeCodEstimateInput extends AbstractMultiSourceCalculationData<CalculationData> {
 
     private LinkRatio lrs;
     private Vector exposure;
@@ -76,13 +75,5 @@ public class CapeCodEstimateInput extends AbstractMultiSourceCalculationData<Cal
      */
     @Override
     protected void recalculateLayer() {
-    }
-
-    @Override
-    public CapeCodEstimateInput copy() {
-        return new CapeCodEstimateInput(
-                lrs.copy(), 
-                exposure.copy()
-                );
     }
 }

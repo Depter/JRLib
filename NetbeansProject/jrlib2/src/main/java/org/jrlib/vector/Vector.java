@@ -1,7 +1,6 @@
 package org.jrlib.vector;
 
 import org.jrlib.CalculationData;
-import org.jrlib.Copyable;
 
 /**
  * Vectors represent data with one dimension.
@@ -9,7 +8,7 @@ import org.jrlib.Copyable;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface Vector extends CalculationData, Copyable<Vector> {
+public interface Vector extends CalculationData {
     
     /**
      * Retunrs the length of this vector.

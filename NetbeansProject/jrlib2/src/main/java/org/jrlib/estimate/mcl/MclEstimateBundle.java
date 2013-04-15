@@ -31,9 +31,9 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
     
     public MclEstimateBundle(MclCalculationBundle source) {
         super(source);
+        doRecalculate();
         paidProxy = new EstimateProxy(true);
         incurredProxy = new EstimateProxy(false);
-        doRecalculate();
     }
     
     public Estimate getPaidEstimate() {
@@ -53,12 +53,12 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
     private ClaimTriangle paid;
     private LinkRatio paidLR;
     private double[] paidLSPR;
-    private double[] paidRatio;
+    private ClaimRatio paidRatio;
 
     private ClaimTriangle incurred;
     private LinkRatio incurredLR;
     private double[] incurredLSPR;
-    private double[] incurredRatio;
+    private ClaimRatio incurredRatio;
 
     private void doRecalculate() {
         initCalculationState();
@@ -70,10 +70,8 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
         initDimensions();
         paidLSPR = calculateLSPR(source.getSourcePaidCorrelation());
         incurredLSPR = calculateLSPR(source.getSourceIncurredCorrelation());
-        ClaimRatio cr = source.getSourcePaidCorrelation().getSourceClaimRatios();
-        paidRatio = calculateRatios(cr, incurredLR, paidLR);
-        cr = source.getSourceIncurredCorrelation().getSourceClaimRatios();
-        incurredRatio = calculateRatios(cr, paidLR, incurredLR);
+        paidRatio = source.getSourcePaidCorrelation().getSourceClaimRatios();
+        incurredRatio = source.getSourceIncurredCorrelation().getSourceClaimRatios();
     }
     
     private void initDimensions() {
@@ -109,17 +107,6 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
         return lspr;
     }
     
-    private double[] calculateRatios(ClaimRatio cr, LinkRatio lrN, LinkRatio lrD) {
-        double[] ratios = new double[developments-1];
-        double prev = Double.NaN;
-        for(int d=0; d<(developments-1); d++) {
-            double r = cr.getValue(d);
-            prev = Double.isNaN(r)? prev * lrN.getValue(d-1)/lrD.getValue(d-1): r;
-            ratios[d] = prev;
-        }
-        return ratios;
-    }
-    
     private void fillTriangles() {
         paidValues = new double[accidents][developments];
         incurredValues = new double[accidents][developments];
@@ -135,20 +122,24 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
         if(d == 0 || d < incurred.getDevelopmentCount(a))
             return incurred.getValue(a, d);
         
-        double iPrev = incurredValues[a][d-1];
-        double pPrev = paidValues[a][d-1];
-        double iLr = incurredLR.getValue(d-1);
-        return iPrev * (iLr + incurredLSPR[d-1] * (pPrev/iPrev - incurredRatio[d]));
+        int pD = d - 1;
+        double iPrev = incurredValues[a][pD];
+        double pPrev = paidValues[a][pD];
+        double iLr = incurredLR.getValue(pD);
+        double rPrev = incurredRatio.getValue(pD);
+        return iPrev * (iLr + incurredLSPR[pD] * (pPrev/iPrev - rPrev));
     }
     
     private double calculatePaid(int a, int d) {
         if(d == 0 || d < paid.getDevelopmentCount(a))
             return paid.getValue(a, d);
         
-        double iPrev = incurredValues[a][d-1];
-        double pPrev = paidValues[a][d-1];
-        double pLr = paidLR.getValue(d-1);
-        return pPrev * (pLr + paidLSPR[d-1] * (iPrev/pPrev - paidRatio[d]));
+        int pD = d - 1;
+        double iPrev = incurredValues[a][pD];
+        double pPrev = paidValues[a][pD];
+        double pLr = paidLR.getValue(pD);
+        double rPrev = paidRatio.getValue(pD);
+        return pPrev * (pLr + paidLSPR[pD] * (iPrev/pPrev - rPrev));
     }
     
     private void clearCalculationState() {
@@ -169,13 +160,18 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
         private EstimateProxy(boolean isPaid) {
             super(MclEstimateBundle.this);
             this.isPaid = isPaid;
+            readState();
+        }
+        
+        private void readState() {
+            super.accidents = MclEstimateBundle.this.accidents;
+            super.developments = MclEstimateBundle.this.developments;
+            super.values = isPaid? paidValues : incurredValues;
         }
         
         @Override
         protected void recalculateLayer() {
-            super.accidents = accidents;
-            super.developments = developments;
-            super.values = isPaid? paidValues : incurredValues;
+            readState();
         }
 
         @Override

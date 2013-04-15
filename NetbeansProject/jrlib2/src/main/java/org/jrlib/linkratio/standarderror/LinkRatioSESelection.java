@@ -1,6 +1,6 @@
 package org.jrlib.linkratio.standarderror;
 
-import org.jrlib.util.MethodSelection;
+import org.jrlib.util.method.MethodSelection;
 
 /**
  *
@@ -9,7 +9,4 @@ import org.jrlib.util.MethodSelection;
  */
 public interface LinkRatioSESelection 
     extends LinkRatioSE, MethodSelection<LinkRatioSE, LinkRatioSEFunction> {
-    
-    @Override
-    public LinkRatioSESelection copy();
 }

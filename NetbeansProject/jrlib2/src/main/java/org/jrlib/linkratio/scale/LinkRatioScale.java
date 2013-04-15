@@ -53,7 +53,4 @@ public interface LinkRatioScale extends Scale<LinkRatioScaleInput> {
      * the development factors.
      */
     public ClaimTriangle getSourceTriangle();
-    
-    @Override
-    public LinkRatioScale copy();
 }

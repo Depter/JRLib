@@ -94,8 +94,8 @@ public class SimpleClaimRatioScale extends SimpleScale<ClaimRatioScaleInput> imp
     }
     
     @Override
-    public void setDevelopmentCount(int developments) {
-        super.setLength(developments);
+    public int getLength() {
+        return source.getLength();
     }
     
     @Override

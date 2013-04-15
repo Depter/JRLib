@@ -1,8 +1,7 @@
 package org.jrlib.linkratio.curve;
 
-import org.jrlib.Copyable;
 import org.jrlib.linkratio.LinkRatio;
-import org.jrlib.util.AbstractLinearRegression;
+import org.jrlib.util.method.AbstractLinearRegression;
 
 /**
  * Abstract class for curves that want to estimate the link ratios
@@ -56,18 +55,5 @@ public abstract class AbstractLinkRatioCurve extends AbstractLinearRegression<Li
     @Override
     protected double[] getXs(LinkRatio source) {
         return super.getXOneBased(source.getLength());
-    }
-    
-    /**
-     * Utility method for implementing the {@link Copyable Copyable}
-     * interface. Copies the inner state (fitted model) from
-     * the input data.
-     * 
-     * @throws NullPointerException if `original` is null.
-     */
-    protected void copyStateFrom(AbstractLinkRatioCurve original) {
-        super.copyStateFrom(original);
-        this.pa = original.pa;
-        this.pb = original.pb;
     }
 }

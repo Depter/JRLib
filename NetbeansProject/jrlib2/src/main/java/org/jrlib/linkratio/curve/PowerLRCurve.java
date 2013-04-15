@@ -50,11 +50,4 @@ public class PowerLRCurve extends AbstractLinkRatioCurve {
             "PowerLRCurve [LR(t) = %.5f ^ %.5f ^ t]",
             pa, pb);
     }
-    
-    @Override
-    public PowerLRCurve copy() {
-        PowerLRCurve copy = new PowerLRCurve();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

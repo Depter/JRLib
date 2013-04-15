@@ -36,9 +36,4 @@ public class MaxLRMethod extends AbstractLRMethod {
     public String toString() {
         return "MaxLRMethod";
     }
-    
-    @Override
-    public MaxLRMethod copy() {
-        return new MaxLRMethod();
-    }
 }

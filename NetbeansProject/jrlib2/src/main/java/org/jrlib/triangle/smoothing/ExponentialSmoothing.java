@@ -46,13 +46,4 @@ public class ExponentialSmoothing extends AbstractVectorSmoothing {
             input[i] = s;
         }
     }
-    
-    @Override
-    public ExponentialSmoothing copy() {
-        ExponentialSmoothing copy = new ExponentialSmoothing();
-        copy.copyStateFrom(this);
-        copy.alpha = this.alpha;
-        copy.alpha2 = this.alpha2;
-        return copy;
-    }
 }

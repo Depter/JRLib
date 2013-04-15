@@ -4,7 +4,7 @@ import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.ratio.DefaultRatioTriangle;
 import org.jrlib.triangle.ratio.RatioTriangle;
 import org.jrlib.triangle.ratio.RatioTriangleInput;
-import org.jrlib.util.AbstractSimpleMethodSelection;
+import org.jrlib.util.method.AbstractSimpleMethodSelection;
 
 /**
  * SimpleClaimRatio is a basic implementation for the 
@@ -14,7 +14,9 @@ import org.jrlib.util.AbstractSimpleMethodSelection;
  * @author Peter Decsi
  * @version 1.0
  */
-public class SimpleClaimRatio extends AbstractSimpleMethodSelection<RatioTriangle, ClaimRatioMethod> implements ClaimRatio {
+public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, ClaimRatioMethod> implements ClaimRatio {
+    
+    private int developments;
     
     /**
      * Creates an instance for the given input, using the 
@@ -23,14 +25,14 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<RatioTriangl
      * @throws NullPointerException if `numerator` or `denominator` is null.
      */
     public SimpleClaimRatio(ClaimTriangle numerator, ClaimTriangle denominator) {
-        this(numerator, denominator, null);
+        this(numerator, denominator, new DefaultCRMethod());
     }
     
     /**
      * Creates an instance for the given input, using the given method. If
      * `method` is null, the {@link DefaultCRMethod DefaultCRMethod} is used.
      * 
-     * @throws NullPointerException if `numerator` or `denominator` is null.
+     * @throws NullPointerException if one of the parameters is null.
      */
     public SimpleClaimRatio(ClaimTriangle numerator, ClaimTriangle denominator, ClaimRatioMethod method) {
         this(new DefaultRatioTriangle(numerator, denominator), method);
@@ -43,14 +45,14 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<RatioTriangl
      * @throws NullPointerException if `source` is null.
      */
     public SimpleClaimRatio(RatioTriangleInput source) {
-        this(source, null);
+        this(source, new DefaultCRMethod());
     }
     
     /**
      * Creates an instance for the given source, using the given method. If
      * `method` is null, the {@link DefaultCRMethod DefaultCRMethod} is used.
      * 
-     * @throws NullPointerException if `source` is null.
+     * @throws NullPointerException if one of the parameters is null.
      */
     public SimpleClaimRatio(RatioTriangleInput source, ClaimRatioMethod method) {
         this(new DefaultRatioTriangle(source), method);
@@ -63,27 +65,40 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<RatioTriangl
      * @throws NullPointerException if `source` is null.
      */
     public SimpleClaimRatio(RatioTriangle source) {
-        this(source, null);
+        this(source, new DefaultCRMethod());
     }
     
     /**
      * Creates an instance for the given source, using the given method. If
      * `method` is null, the {@link DefaultCRMethod DefaultCRMethod} is used.
      * 
-     * @throws NullPointerException if `source` is null.
+     * @throws NullPointerException if one of the parameters is null.
      */
     public SimpleClaimRatio(RatioTriangle source, ClaimRatioMethod method) {
-        super(source, method==null? new DefaultCRMethod() : method);
+        this(new ClaimRatioCalculator(source), method);
     }
-
+    
+    /**
+     * Creates an instance for the given source, using the given method to
+     * fill NaN values.
+     * 
+     * @throws NullPointerException if one of the parameters is null.
+     */
+    public SimpleClaimRatio(ClaimRatio source, ClaimRatioMethod method) {
+        super(source, 
+              (method instanceof DefaultCRMethod)? method : new DefaultCRMethod(),
+              method);
+        super.recalculateLayer();
+    }
+    
     @Override
     public RatioTriangle getSourceRatioTriangle() {
-        return source;
+        return source.getSourceRatioTriangle();
     }
     
     @Override
     public RatioTriangleInput getSourceRatioTriangleInput() {
-        return source.getSourceInput();
+        return source.getSourceRatioTriangleInput();
     }
 
 
@@ -102,15 +117,11 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<RatioTriangl
      */
     @Override
     protected void initCalculation() {
+        developments = source.getLength();
     }
 
     @Override
     public int getLength() {
-        return source.getDevelopmentCount();
-    }
-
-    @Override
-    public SimpleClaimRatio copy() {
-        return new SimpleClaimRatio(source.copy(), estimatorMethod.copy());
+        return developments;
     }
 }

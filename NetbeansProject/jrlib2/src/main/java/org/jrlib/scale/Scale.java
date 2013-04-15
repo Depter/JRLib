@@ -32,7 +32,4 @@ public interface Scale<T extends ScaleInput> extends Vector {
      * Returns the input used for the calculation.
      */
     public T getSourceInput();
-    
-    @Override
-    public Scale<T> copy();
 }

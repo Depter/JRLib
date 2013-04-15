@@ -21,7 +21,4 @@ public interface ModifiedRatioTriangle extends RatioTriangle {
      * Returns the ratio triangle, being modified by this instance.
      */
     public RatioTriangle getSourceRatioTriangle();
-    
-    @Override
-    public ModifiedRatioTriangle copy();
 }

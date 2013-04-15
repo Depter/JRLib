@@ -6,7 +6,7 @@ import org.jrlib.linkratio.scale.LinkRatioScaleInput;
 import org.jrlib.triangle.TriangleUtil;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.AbstractMethodSelection;
+import org.jrlib.util.method.AbstractMethodSelection;
 
 /**
  * DefaultLinkRatioSESelection allows to estimate the standard error of 
@@ -66,13 +66,6 @@ public class DefaultLinkRatioSESelection extends AbstractMethodSelection<LinkRat
         super(source, defaultMethod==null? new DefaultLinkRatioSEFunction() : defaultMethod);
         this.developments = source.getLength();
         doRecalculate();
-    }
-
-    private DefaultLinkRatioSESelection(DefaultLinkRatioSESelection original) {
-        super(original.source.copy(), original);
-        this.developments = original.developments;
-        if(developments > 0)
-            this.values = TriangleUtil.copy(original.values); 
     }
     
     @Override
@@ -135,10 +128,5 @@ public class DefaultLinkRatioSESelection extends AbstractMethodSelection<LinkRat
         developments = (source==null)? 0 : source.getLength();
         super.fitMethods();
         values = super.getFittedValues(developments);
-    }
-    
-    @Override
-    public DefaultLinkRatioSESelection copy() {
-        return new DefaultLinkRatioSESelection(this);
     }
 }

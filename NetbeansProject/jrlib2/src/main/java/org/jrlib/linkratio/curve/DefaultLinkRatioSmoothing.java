@@ -5,7 +5,7 @@ import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.triangle.TriangleUtil;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.AbstractMethodSelection;
+import org.jrlib.util.method.AbstractMethodSelection;
 
 /**
  * DefaultLinkRatioSmoothing allows to use different 
@@ -86,12 +86,6 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
         super(source, defaultFunction);
         developments = (source==null)? 0 : source.getLength();
         doRecalculate();
-    }
-    
-    private DefaultLinkRatioSmoothing(DefaultLinkRatioSmoothing original) {
-        super(original.source.copy(), original);
-        this.developments = original.developments;
-        this.values = TriangleUtil.copy(original.values);
     }
     
     @Override
@@ -175,11 +169,6 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
     @Override
     public void setSource(FactorTriangle source) {
         this.source.setSource(source);
-    }
-
-    @Override
-    public DefaultLinkRatioSmoothing copy() {
-        return new DefaultLinkRatioSmoothing(this);
     }
     
     @Override

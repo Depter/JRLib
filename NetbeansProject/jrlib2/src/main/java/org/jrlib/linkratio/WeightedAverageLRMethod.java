@@ -59,9 +59,4 @@ public class WeightedAverageLRMethod extends AbstractLRMethod {
     public String toString() {
         return "WeightedAverageLRMethod";
     }
-    
-    @Override
-    public WeightedAverageLRMethod copy() {
-        return new WeightedAverageLRMethod();
-    }
 }

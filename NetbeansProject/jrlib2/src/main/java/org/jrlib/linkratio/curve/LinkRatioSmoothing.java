@@ -20,7 +20,4 @@ public interface LinkRatioSmoothing extends LinkRatio {
      * Sets the number of link-ratios (i.e. tail-factors). 
      */
     public void setDevelopmentCount(int developments);
-    
-    @Override
-    public LinkRatioSmoothing copy();
 }

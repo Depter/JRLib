@@ -1,7 +1,6 @@
 package org.jrlib.linkratio.standarderror;
 
 import java.util.Arrays;
-import org.jrlib.triangle.TriangleUtil;
 
 /**
  * The FixedRatioSEFunction estimates the standard errors of the link ratios
@@ -76,20 +75,6 @@ public class FixedRatioSEFunction implements LinkRatioSEFunction {
         return (0 <= development && development < developments)?
             ratio * lrs[development] :
             Double.NaN;
-    }
-
-    @Override
-    public FixedRatioSEFunction copy() {
-        FixedRatioSEFunction copy = new FixedRatioSEFunction();
-        copy.lrs = TriangleUtil.copy(lrs);
-        copy.developments = developments;
-        copy.ratio = ratio;
-        
-        int size = isExcluded.length;
-        copy.isExcluded = new boolean[size];
-        System.arraycopy(isExcluded, 0, copy.isExcluded, 0, size);
-        
-        return copy;
     }
     
     @Override

@@ -19,10 +19,4 @@ public class SmoothedClaimTriangle extends SmoothedTriangle<ClaimTriangle>
     public ClaimTriangle getSourceClaimTriangle() {
         return source;
     }
-
-    @Override
-    public ModifiedClaimTriangle copy() {
-        return new SmoothedClaimTriangle(source.copy(), smoothing.copy());
-    }
-
 }

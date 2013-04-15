@@ -45,17 +45,4 @@ public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
      * Extending classes should calculate a mean for the given location.
      */
     protected abstract double mean(double[] input, int index);
-    
-    /**
-     * Copies the state form the input.
-     * 
-     * @throws NullPointerException if `other` is null.
-     * @throws ClassCastException if `other` is not instance of 
-     * `AbstractMovingAverage`.
-     */
-    @Override
-    protected void copyStateFrom(AbstractVectorSmoothing ama) {
-        super.copyStateFrom(ama);
-        this.maLength = ((AbstractMovingAverage)ama).maLength;
-    }
 }

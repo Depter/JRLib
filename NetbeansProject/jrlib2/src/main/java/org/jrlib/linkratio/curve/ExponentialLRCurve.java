@@ -49,11 +49,4 @@ public class ExponentialLRCurve extends AbstractLinkRatioCurve {
             "ExponentialLR [LR(t) = 1 + %.5f * e ^ (-%.5f * t)]",
             intercept, slope);
     }
-    
-    @Override
-    public ExponentialLRCurve copy() {
-        ExponentialLRCurve copy = new ExponentialLRCurve();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

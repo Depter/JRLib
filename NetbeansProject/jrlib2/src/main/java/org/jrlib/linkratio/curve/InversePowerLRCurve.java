@@ -58,11 +58,4 @@ public class InversePowerLRCurve extends AbstractLinkRatioCurve {
             "InversePowerLRCurve [LR(t) = 1 + %.5f * t ^ %.5f]",
             pa, pb);
     }
-    
-    @Override
-    public InversePowerLRCurve copy() {
-        InversePowerLRCurve copy = new InversePowerLRCurve();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

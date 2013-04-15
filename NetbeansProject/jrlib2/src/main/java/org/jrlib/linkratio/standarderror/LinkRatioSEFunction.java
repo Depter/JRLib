@@ -1,6 +1,6 @@
 package org.jrlib.linkratio.standarderror;
 
-import org.jrlib.util.SelectableMethod;
+import org.jrlib.util.method.SelectableMethod;
 
 /**
  * Implementations of this interfae are able to extrapolate the standard error
@@ -10,7 +10,4 @@ import org.jrlib.util.SelectableMethod;
  * @version 1.0
  */
 public interface LinkRatioSEFunction extends SelectableMethod<LinkRatioSE> {
-    
-    @Override
-    public LinkRatioSEFunction copy();
 }

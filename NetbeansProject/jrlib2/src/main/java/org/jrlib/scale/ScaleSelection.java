@@ -1,6 +1,6 @@
 package org.jrlib.scale;
 
-import org.jrlib.util.MethodSelection;
+import org.jrlib.util.method.MethodSelection;
 
 /**
  *

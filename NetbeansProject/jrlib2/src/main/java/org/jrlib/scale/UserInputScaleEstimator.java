@@ -1,6 +1,6 @@
 package org.jrlib.scale;
 
-import org.jrlib.util.AbstractVectorUserInput;
+import org.jrlib.util.method.AbstractVectorUserInput;
 
 /**
  * Implementation of {@link ScaleEstimator ScaleEstimator} interface, 
@@ -53,10 +53,5 @@ public class UserInputScaleEstimator<T extends ScaleInput> extends AbstractVecto
     @Override
     public String toString() {
         return "UserInputScaleEstimator";
-    }
-    
-    @Override
-    public UserInputScaleEstimator copy() {
-        return new UserInputScaleEstimator(values);
     }
 }

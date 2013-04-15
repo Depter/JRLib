@@ -1,7 +1,6 @@
 package org.jrlib.scale;
 
 import org.jrlib.AbstractCalculationData;
-import org.jrlib.Copyable;
 import org.jrlib.triangle.TriangleUtil;
 
 /**
@@ -45,21 +44,6 @@ public class DefaultScaleCalculator<T extends ScaleInput> extends AbstractCalcul
     }
     
     /**
-     * Utility constructor for extending classes implementing the
-     * {@link Copyable Copyable} interface. This constructor
-     * copies the internal statie (source, length, values) from
-     * the original instance, without recalculating itself.
-     * 
-     * @throws NullPointerException if `original` is null.
-     */
-    protected DefaultScaleCalculator(DefaultScaleCalculator<T> original) {
-        super((T)original.source.copy());
-        developments = original.developments;
-        if(developments > 0)
-            scales = TriangleUtil.copy(original.scales);
-    }
-    
-    /**
      * Returns the source for this calculation.
      */
     @Override
@@ -92,11 +76,6 @@ public class DefaultScaleCalculator<T extends ScaleInput> extends AbstractCalcul
     @Override
     public double[] toArray() {
         return TriangleUtil.copy(scales);
-    }
-    
-    @Override
-    public DefaultScaleCalculator<T> copy() {
-        return new DefaultScaleCalculator<T>((T)source.copy());
     }
     
     @Override

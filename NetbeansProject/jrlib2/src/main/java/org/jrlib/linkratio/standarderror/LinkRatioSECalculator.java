@@ -126,9 +126,4 @@ public class LinkRatioSECalculator extends AbstractVector<LinkRatioScale> implem
         accidents = 0;
         lrk = null;
     }
-    
-    @Override
-    public LinkRatioSECalculator copy() {
-        return new LinkRatioSECalculator(source.copy());
-    }
 }

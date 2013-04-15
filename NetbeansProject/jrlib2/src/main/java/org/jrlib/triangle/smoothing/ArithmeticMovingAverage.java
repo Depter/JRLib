@@ -36,11 +36,4 @@ public class ArithmeticMovingAverage extends AbstractMovingAverage {
             sum += input[i];
         return sum/(double)maLength;
     }
-    
-    @Override
-    public ArithmeticMovingAverage copy() {
-        ArithmeticMovingAverage copy = new ArithmeticMovingAverage();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

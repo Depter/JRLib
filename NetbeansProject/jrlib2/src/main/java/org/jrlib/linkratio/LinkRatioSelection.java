@@ -1,7 +1,7 @@
 package org.jrlib.linkratio;
 
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.MethodSelection;
+import org.jrlib.util.method.MethodSelection;
 
 /**
  * This interface represents the calculation of link ratios, from
@@ -15,7 +15,4 @@ import org.jrlib.util.MethodSelection;
  * @version 1.0
  */
 public interface LinkRatioSelection extends LinkRatio, MethodSelection<FactorTriangle, LinkRatioMethod> {
-
-    @Override
-    public LinkRatioSelection copy();
 }

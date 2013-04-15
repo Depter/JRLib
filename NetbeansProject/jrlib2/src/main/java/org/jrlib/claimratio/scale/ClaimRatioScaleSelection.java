@@ -12,7 +12,4 @@ import org.jrlib.scale.ScaleSelection;
  */
 public interface ClaimRatioScaleSelection 
     extends ClaimRatioScale, ScaleSelection<ClaimRatioScaleInput> {
-    
-    @Override
-    public ClaimRatioScaleSelection copy();
 }

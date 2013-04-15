@@ -1,6 +1,6 @@
 package org.jrlib.scale;
 
-import org.jrlib.util.AbstractSimpleMethodSelection;
+import org.jrlib.util.method.AbstractSimpleMethodSelection;
 
 /**
  * This class takes an instance of {@link Scale Scale} calculation
@@ -102,10 +102,5 @@ public class SimpleScale<T extends ScaleInput> extends AbstractSimpleMethodSelec
     @Override
     public T getSourceInput() {
         return source.getSourceInput();
-    }
-    
-    @Override
-    public Scale<T> copy() {
-        return new SimpleScale<T>(source.copy(), estimatorMethod.copy());
     }
 }

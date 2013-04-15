@@ -43,9 +43,4 @@ public class CummulatedClaimTriangle extends AbstractTriangleModification<ClaimT
         values = source.toArray();
         TriangleUtil.cummulate(values);
     }
-    
-    @Override
-    public CummulatedClaimTriangle copy() {
-        return new CummulatedClaimTriangle(source.copy());
-    }
 }

@@ -83,14 +83,6 @@ class ClaimTriangleProxy extends AbstractCalculationData<ClaimTriangle> implemen
     }
 
     /**
-     * Returns a new instance, where the proxied triangle is also copied.
-     */
-    @Override
-    public ClaimTriangleProxy copy() {
-        return new ClaimTriangleProxy(source.copy());
-    }
-
-    /**
      * Does nothing.
      */
     @Override

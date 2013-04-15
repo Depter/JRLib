@@ -34,9 +34,4 @@ public class FactorTriangleCorrection extends TriangleCorrection<FactorTriangle>
     public void setSource(ClaimTriangle source) {
         this.source.setSource(source);
     }
-
-    @Override
-    public FactorTriangleCorrection copy() {
-        return new FactorTriangleCorrection(source.copy(), accident, development, correction);
-    }
 }

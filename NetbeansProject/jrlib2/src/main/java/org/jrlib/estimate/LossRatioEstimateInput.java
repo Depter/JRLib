@@ -2,7 +2,6 @@ package org.jrlib.estimate;
 
 import org.jrlib.AbstractMultiSourceCalculationData;
 import org.jrlib.CalculationData;
-import org.jrlib.Copyable;
 import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.vector.Vector;
 
@@ -15,7 +14,7 @@ import org.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class LossRatioEstimateInput extends AbstractMultiSourceCalculationData<CalculationData> implements Copyable<LossRatioEstimateInput> {
+public class LossRatioEstimateInput extends AbstractMultiSourceCalculationData<CalculationData> {
 
     private final LinkRatio lrs;
     private final Vector exposure;
@@ -97,14 +96,5 @@ public class LossRatioEstimateInput extends AbstractMultiSourceCalculationData<C
      */
     @Override
     protected void recalculateLayer() {
-    }
-
-    @Override
-    public LossRatioEstimateInput copy() {
-        return new LossRatioEstimateInput(
-                lrs.copy(), 
-                exposure.copy(),
-                lossRatio.copy()
-                );
     }
 }

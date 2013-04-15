@@ -1,6 +1,5 @@
 package org.jrlib.triangle.smoothing;
 
-import org.jrlib.Copyable;
 import org.jrlib.triangle.Triangle;
 
 /**
@@ -9,7 +8,7 @@ import org.jrlib.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface TriangleSmoothing extends Copyable<TriangleSmoothing> {
+public interface TriangleSmoothing {
     
     /**
      * Retuns the smoothed values for the given triangle. The returned

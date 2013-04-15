@@ -98,11 +98,5 @@ public class AverageCostEstimate extends AbstractEstimate<AverageCostEstimate.Av
         @Override
         protected void recalculateLayer() {
         }
-        
-        private AverageCostEstimateInput copy() {
-            return new AverageCostEstimateInput(
-                    numberLrs.copy(), 
-                    costLrs.copy());
-        }
     }
 }

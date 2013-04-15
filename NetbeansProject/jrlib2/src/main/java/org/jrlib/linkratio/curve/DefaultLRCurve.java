@@ -42,9 +42,4 @@ public class DefaultLRCurve implements LinkRatioCurve {
     public String toString() {
         return "DefaultLRCurve";
     }
-    
-    @Override
-    public DefaultLRCurve copy() {
-        return new DefaultLRCurve();
-    }
 }

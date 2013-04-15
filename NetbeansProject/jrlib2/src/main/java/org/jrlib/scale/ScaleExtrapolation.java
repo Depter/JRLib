@@ -1,6 +1,6 @@
 package org.jrlib.scale;
 
-import org.jrlib.util.AbstractLinearRegression;
+import org.jrlib.util.method.AbstractLinearRegression;
 
 /**
  * Calculates a scale parameter by using linear regression on the input.
@@ -96,14 +96,6 @@ public class ScaleExtrapolation<T extends ScaleInput> extends AbstractLinearRegr
         return String.format(
             "ScaleExtrapolation [ln(sigma(k)) = %f + (%f) * k]",
             intercept, slope);
-    }
-
-    @Override
-    public ScaleExtrapolation copy() {
-        ScaleExtrapolation copy = new ScaleExtrapolation();
-        copy.isEmptyModel = isEmptyModel;
-        copy.copyStateFrom(this);
-        return copy;
     }
 
     /**

@@ -3,7 +3,7 @@ package org.jrlib.triangle;
 import org.jrlib.ChangeCounter;
 import org.jrlib.TestData;
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.SigmaFilter;
+import org.jrlib.util.filter.SigmaFilter;
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;

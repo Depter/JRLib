@@ -1,6 +1,6 @@
 package org.jrlib.linkratio.standarderror;
 
-import org.jrlib.util.AbstractVectorUserInput;
+import org.jrlib.util.method.AbstractVectorUserInput;
 
 /**
  * Allows to use manually entered values for the standard error of the link-ratios.
@@ -52,10 +52,5 @@ public class UserInputLinkRatioSEFunction extends AbstractVectorUserInput<LinkRa
     @Override
     public String toString() {
         return "UserInputLinkRatioSEFunction";
-    }
-    
-    @Override
-    public UserInputLinkRatioSEFunction copy() {
-        return new UserInputLinkRatioSEFunction(values);
     }
 }

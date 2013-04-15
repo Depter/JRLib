@@ -44,11 +44,4 @@ public class DefaultScaleEstimator<T extends ScaleInput> implements ScaleEstimat
         if(developments > 0)
             scales = TriangleUtil.copy(original.scales);
     }
-
-    @Override
-    public DefaultScaleEstimator<T> copy() {
-        DefaultScaleEstimator<T> copy = new DefaultScaleEstimator<T>();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

@@ -75,13 +75,6 @@ public class MinMaxScaleEstimator<T extends ScaleInput> implements ScaleEstimato
         double min1_4 = min1_2 * min1_2;
         return sqrt(min(min1_4 / min2_2, min(min2_2, min1_2)));
     }
-    
-    @Override
-    public MinMaxScaleEstimator copy() {
-        MinMaxScaleEstimator copy = new MinMaxScaleEstimator();
-        copy.copyStateFrom(copy);
-        return copy;
-    }
 
     /**
      * The method copies the inner state (length and values) of the given 

@@ -1,7 +1,6 @@
 package org.jrlib.linkratio.standarderror;
 
-import org.jrlib.triangle.TriangleUtil;
-import org.jrlib.util.AbstractLinearRegression;
+import org.jrlib.util.method.AbstractLinearRegression;
 
 /**
  * The LogLinearRatioSEFunction models the logarithm of the ratio of the 
@@ -55,15 +54,6 @@ public class LogLinearRatioSEFunction extends AbstractLinearRegression<LinkRatio
         double lr = lrs[development];
         double x = (double) (development + 1);
         return lr * Math.exp(intercept + slope * x);
-    }
-    
-    @Override
-    public LogLinearRatioSEFunction copy() {
-        LogLinearRatioSEFunction copy = new LogLinearRatioSEFunction();
-        copy.developments = developments;
-        copy.lrs = TriangleUtil.copy(lrs);
-        copy.copyStateFrom(this);
-        return copy;
     }
     
     @Override

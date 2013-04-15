@@ -1,6 +1,5 @@
 package org.jrlib.triangle.ratio;
 
-import org.jrlib.Copyable;
 import org.jrlib.MutableSource;
 import org.jrlib.triangle.Triangle;
 import org.jrlib.triangle.claim.ClaimTriangle;
@@ -14,7 +13,7 @@ import org.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface RatioTriangle extends Triangle, MutableSource<RatioTriangleInput>, Copyable<RatioTriangle> {
+public interface RatioTriangle extends Triangle, MutableSource<RatioTriangleInput> {
 
     /**
      * Returns the bundle used as input.

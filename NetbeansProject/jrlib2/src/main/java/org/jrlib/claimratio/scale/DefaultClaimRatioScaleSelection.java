@@ -40,16 +40,6 @@ public class DefaultClaimRatioScaleSelection extends DefaultScaleSelection<Claim
         this.sourceInput = source.getSourceInput();
     }
     
-    private DefaultClaimRatioScaleSelection(DefaultClaimRatioScaleSelection original) {
-        super(original);
-        this.sourceInput = super.source.getSourceInput();
-    }
-
-    @Override
-    public void setDevelopmentCount(int developments) {
-        super.setLength(developments);
-    }
-    
     @Override
     public ClaimRatio getSourceClaimRatios() {
         return sourceInput.getSourceClaimRatios();
@@ -73,17 +63,5 @@ public class DefaultClaimRatioScaleSelection extends DefaultScaleSelection<Claim
     @Override
     public ClaimTriangle getSourceDenominatorTriangle() {
         return sourceInput.getSourceDenominatorTriangle();
-    }
-
-    @Override
-    public DefaultClaimRatioScaleSelection copy() {
-        return new DefaultClaimRatioScaleSelection(this);
-    }
-    
-    /**
-     * Do not recalculate the length.
-     */
-    @Override
-    protected void recalculateLength() {
     }
 }

@@ -1,7 +1,6 @@
 package org.jrlib.scale;
 
 import org.jrlib.CalculationData;
-import org.jrlib.Copyable;
 
 /**
  * This interface represents the needed imput for the 
@@ -9,7 +8,7 @@ import org.jrlib.Copyable;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ScaleInput extends CalculationData, Copyable<ScaleInput> {
+public interface ScaleInput extends CalculationData {
 
     /**
      * Returns the number of accidents period for the ratios.

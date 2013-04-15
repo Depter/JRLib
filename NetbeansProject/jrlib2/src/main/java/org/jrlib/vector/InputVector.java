@@ -65,9 +65,4 @@ public class InputVector extends AbstractVector<CalculationData> {
     @Override
     protected void recalculateLayer() {
     }
-    
-    @Override
-    public InputVector copy() {
-        return new InputVector(values);
-    }
 }

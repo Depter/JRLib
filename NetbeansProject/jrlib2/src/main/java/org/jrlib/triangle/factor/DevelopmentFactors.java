@@ -150,9 +150,4 @@ public class DevelopmentFactors extends AbstractTriangle<ClaimTriangle> implemen
         }
         return result;
     }
-    
-    @Override
-    public DevelopmentFactors copy() {
-        return new DevelopmentFactors(source.copy());
-    }
 }

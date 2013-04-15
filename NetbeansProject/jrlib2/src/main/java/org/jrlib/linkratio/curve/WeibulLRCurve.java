@@ -52,11 +52,4 @@ public class WeibulLRCurve extends AbstractLinkRatioCurve {
             "WeibulLRCurve [LR(t) = 1 / (1 - e^(-%.5f * t^%.5f))]",
             pa, pb);
     }
-    
-    @Override
-    public WeibulLRCurve copy() {
-        WeibulLRCurve copy = new WeibulLRCurve();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

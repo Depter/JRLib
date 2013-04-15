@@ -1,7 +1,7 @@
 package org.jrlib.linkratio.curve;
 
 import org.jrlib.linkratio.LinkRatio;
-import org.jrlib.util.SelectableMethod;
+import org.jrlib.util.method.SelectableMethod;
 
 /**
  * Link-ratio curves are able to smooth link-ratios.
@@ -10,7 +10,4 @@ import org.jrlib.util.SelectableMethod;
  * @version 1.0
  */
 public interface LinkRatioCurve extends SelectableMethod<LinkRatio> {
-
-    @Override
-    public LinkRatioCurve copy();
 }

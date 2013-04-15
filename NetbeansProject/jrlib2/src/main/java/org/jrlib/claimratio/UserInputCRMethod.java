@@ -1,7 +1,7 @@
 package org.jrlib.claimratio;
 
 import org.jrlib.triangle.ratio.RatioTriangle;
-import org.jrlib.util.AbstractVectorUserInput;
+import org.jrlib.util.method.AbstractVectorUserInput;
 
 /**
  * Implementation of {@link ClaimRatioMethod ClaimRatioMethod} interface, 
@@ -10,7 +10,7 @@ import org.jrlib.util.AbstractVectorUserInput;
  * @author Peter Decsi
  * @version 1.0
  */
-public class UserInputCRMethod extends AbstractVectorUserInput<RatioTriangle> implements ClaimRatioMethod {
+public class UserInputCRMethod extends AbstractVectorUserInput<ClaimRatio> implements ClaimRatioMethod {
 
     /**
      * Creates an empty instance.
@@ -35,11 +35,6 @@ public class UserInputCRMethod extends AbstractVectorUserInput<RatioTriangle> im
      */
     public UserInputCRMethod(double[] values) {
         super(values);
-    }
-    
-    @Override
-    public UserInputCRMethod copy() {
-        return new UserInputCRMethod(values);
     }
 
     @Override

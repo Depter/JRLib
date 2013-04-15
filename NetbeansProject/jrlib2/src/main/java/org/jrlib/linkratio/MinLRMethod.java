@@ -36,9 +36,4 @@ public class MinLRMethod extends AbstractLRMethod {
     public String toString() {
         return "MinLRMethod";
     }
-    
-    @Override
-    public MinLRMethod copy() {
-        return new MinLRMethod();
-    }
 }

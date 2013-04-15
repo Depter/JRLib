@@ -1,7 +1,7 @@
 package org.jrlib.linkratio.curve;
 
 import org.jrlib.linkratio.LinkRatio;
-import org.jrlib.util.AbstractVectorUserInput;
+import org.jrlib.util.method.AbstractVectorUserInput;
 
 /**
  * Class that allows manual smoothing of link-ratios.
@@ -40,10 +40,5 @@ public class UserInputLRCurve extends AbstractVectorUserInput<LinkRatio> impleme
     
     @Override
     public void fit(LinkRatio lr) {
-    }
-    
-    @Override
-    public UserInputLRCurve copy() {
-        return new UserInputLRCurve(values);
     }
 }

@@ -1,7 +1,7 @@
 package org.jrlib.linkratio;
 
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.AbstractVectorUserInput;
+import org.jrlib.util.method.AbstractVectorUserInput;
 
 /**
  * Implementation of {@link LinkRatioMethod LinkRatioMethod} interface, 
@@ -55,11 +55,6 @@ public class UserInputLRMethod extends AbstractVectorUserInput<FactorTriangle> i
     @Override
     public double getWeight(int accident, int development) {
         return 1d;
-    }
-    
-    @Override
-    public UserInputLRMethod copy() {
-        return new UserInputLRMethod(values);
     }
 
     @Override

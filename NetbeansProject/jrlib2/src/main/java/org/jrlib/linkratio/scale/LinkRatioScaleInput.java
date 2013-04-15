@@ -134,11 +134,6 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
     public double getWeight(int accident, int development) {
         return claims.getValue(accident, development);
     }
-
-    @Override
-    public LinkRatioScaleInput copy() {
-        return new LinkRatioScaleInput(source.copy());
-    }
     
     /**
      * Does nothing.

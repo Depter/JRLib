@@ -43,7 +43,4 @@ public interface LinkRatioSE extends Vector {
      * Returns the claims used for this calculation.
      */
     public ClaimTriangle getSourceTriangle();
-    
-    @Override
-    public LinkRatioSE copy();
 }

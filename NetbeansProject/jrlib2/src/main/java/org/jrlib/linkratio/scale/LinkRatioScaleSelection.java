@@ -12,7 +12,4 @@ import org.jrlib.scale.ScaleSelection;
  */
 public interface LinkRatioScaleSelection 
     extends LinkRatioScale, ScaleSelection<LinkRatioScaleInput> {
-    
-    @Override
-    public LinkRatioScaleSelection copy();
 }

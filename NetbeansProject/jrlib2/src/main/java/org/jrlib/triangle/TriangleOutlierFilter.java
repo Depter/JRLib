@@ -1,7 +1,7 @@
 package org.jrlib.triangle;
 
-import org.jrlib.util.AbstractCalculationDataFilter;
-import org.jrlib.util.Filter;
+import org.jrlib.util.filter.AbstractCalculationDataFilter;
+import org.jrlib.util.filter.Filter;
 
 /**
  * Outlier filter for triangular data. The output of

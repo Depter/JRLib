@@ -4,7 +4,7 @@ import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.AbstractSimpleMethodSelection;
+import org.jrlib.util.method.AbstractSimpleMethodSelection;
 
 /**
  * SimpleLinkRatioSmoothing allows to set the length of the tail factor
@@ -172,10 +172,5 @@ public class SimpleLinkRatioSmoothing extends AbstractSimpleMethodSelection<Link
     @Override
     public void setSource(FactorTriangle source) {
         this.source.setSource(source);
-    }
-
-    @Override
-    public LinkRatioSmoothing copy() {
-        return new SimpleLinkRatioSmoothing(source.copy(), estimatorMethod.copy());
     }
 }

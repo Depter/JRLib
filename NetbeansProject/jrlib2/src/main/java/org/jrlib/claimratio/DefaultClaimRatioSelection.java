@@ -5,7 +5,7 @@ import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.ratio.DefaultRatioTriangle;
 import org.jrlib.triangle.ratio.RatioTriangle;
 import org.jrlib.triangle.ratio.RatioTriangleInput;
-import org.jrlib.util.AbstractMethodSelection;
+import org.jrlib.util.method.AbstractMethodSelection;
 
 /**
  * DefaultClaimRatioSelection allows to use different 
@@ -15,7 +15,7 @@ import org.jrlib.util.AbstractMethodSelection;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultClaimRatioSelection extends AbstractMethodSelection<RatioTriangle, ClaimRatioMethod> implements ClaimRatioSelection {
+public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRatio, ClaimRatioMethod> implements ClaimRatioSelection {
     
     private int developments;
     private double[] values;
@@ -32,6 +32,16 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<RatioTri
     
     /**
      * Creates a instance for the given input, which uses the 
+     * {@link DefaultCRMethod DefaultCRMethod} as it's default method.
+     * 
+     * @throws NullPointerException if `numerator` or `denominator` is null.
+     */
+    public DefaultClaimRatioSelection(ClaimTriangle numerator, ClaimTriangle denominator, int developments) {
+        this(numerator, denominator, new DefaultCRMethod(), developments);
+    }
+    
+    /**
+     * Creates a instance for the given input, which uses the 
      * supplied {@link LinkRatioMethod LinkRatioMethod}
      * as it's default method.
      * 
@@ -43,12 +53,33 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<RatioTri
     
     /**
      * Creates a instance for the given input, which uses the 
+     * supplied {@link LinkRatioMethod LinkRatioMethod}
+     * as it's default method.
+     * 
+     * @throws NullPointerException if any of the parameters is null.
+     */
+    public DefaultClaimRatioSelection(ClaimTriangle numerator, ClaimTriangle denominator, ClaimRatioMethod defaultMethod, int developments) {
+        this(new DefaultRatioTriangle(numerator, denominator), defaultMethod, developments);
+    }
+    
+    /**
+     * Creates a instance for the given input, which uses the 
      * {@link DefaultCRMethod DefaultCRMethod} as it's default method.
      * 
      * @throws NullPointerException if `source` is null.
      */
     public DefaultClaimRatioSelection(RatioTriangleInput source) {
         this(source, new DefaultCRMethod());
+    }
+    
+    /**
+     * Creates a instance for the given input, which uses the 
+     * {@link DefaultCRMethod DefaultCRMethod} as it's default method.
+     * 
+     * @throws NullPointerException if `source` is null.
+     */
+    public DefaultClaimRatioSelection(RatioTriangleInput source, int developments) {
+        this(source, new DefaultCRMethod(), developments);
     }
     
     /**
@@ -65,43 +96,99 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<RatioTri
     
     /**
      * Creates a instance for the given input, which uses the 
-     * {@link DefaultCRMethod DefaultCRMethod} as it's default method.
-     * 
-     * @throws NullPointerException if `source` is null.
-     */
-    public DefaultClaimRatioSelection(RatioTriangle source) {
-        this(source, new DefaultCRMethod());
-    }
-    
-    /**
-     * Creates a instance for the given input, which uses the 
      * supplied {@link LinkRatioMethod LinkRatioMethod}
      * as it's default method.
      * 
      * @throws NullPointerException if `source` is null.
      * @throws NullPointerException if `defaultMethod` is null.
      */
+    public DefaultClaimRatioSelection(RatioTriangleInput source, ClaimRatioMethod defaultMethod, int developments) {
+        this(new DefaultRatioTriangle(source), defaultMethod, developments);
+    }
+    
+    /**
+     * Creates a instance for the given input, which uses the 
+     * {@link DefaultCRMethod DefaultCRMethod} as it's default 
+     * method. The instance will have the same development count
+     * as the `source`.
+     * 
+     * @see #DefaultClaimRatioSelection(RatioTriangle, int) 
+     * @throws NullPointerException if `source` is null.
+     */
+    public DefaultClaimRatioSelection(RatioTriangle source) {
+        this(source, source.getDevelopmentCount());
+    }
+    
+    /**
+     * Creates a instance for the given input and length, which 
+     * uses the {@link DefaultCRMethod DefaultCRMethod} as it's 
+     * default method.
+     * 
+     * @throws NullPointerException if `source` is null.
+     */
+    public DefaultClaimRatioSelection(RatioTriangle source, int developments) {
+        this(source, new DefaultCRMethod(), developments);
+    }
+    
+    /**
+     * Creates a instance for the given input, which uses 
+     * the supplied {@link LinkRatioMethod LinkRatioMethod}
+     * as it's default method. The instance will have the
+     * same length as `source`.
+     * 
+     * @throws NullPointerException if `source` is null.
+     * @throws NullPointerException if `defaultMethod` is null.
+     */
     public DefaultClaimRatioSelection(RatioTriangle source, ClaimRatioMethod defaultMethod) {
+        this(source, defaultMethod, source.getDevelopmentCount());
+    }
+
+    /**
+     * Creates a instance for the given input and length, which 
+     * uses the supplied {@link LinkRatioMethod LinkRatioMethod}
+     * as it's default method.
+     * 
+     * @throws NullPointerException if `source` is null.
+     * @throws NullPointerException if `defaultMethod` is null.
+     */
+    public DefaultClaimRatioSelection(RatioTriangle source, ClaimRatioMethod defaultMethod, int developments) {
+        this(new ClaimRatioCalculator(source), defaultMethod, developments);
+    }
+
+    /**
+     * Creates a instance for the given input and length, which 
+     * uses the supplied {@link LinkRatioMethod LinkRatioMethod}
+     * as it's default method.
+     * 
+     * @throws NullPointerException if `source` is null.
+     * @throws NullPointerException if `defaultMethod` is null.
+     */
+    public DefaultClaimRatioSelection(ClaimRatio source, ClaimRatioMethod defaultMethod, int developments) {
         super(source, defaultMethod);
-        developments = (source==null)? 0 : source.getDevelopmentCount();
+        this.developments = developments<0? 0 : developments;
         doRecalculate();
     }
     
-    private DefaultClaimRatioSelection(DefaultClaimRatioSelection original) {
-        super(original.source.copy(), original);
-        this.developments = original.developments;
-        if(developments > 0)
-            this.values = TriangleUtil.copy(original.values);
-    }
+    @Override
+    public void setDevelopmentCount(int developments) {
+        this.developments = (developments<0)? 0 : developments;
+        doRecalculate();
+        fireChange();
+    }    
 
     @Override
-    public RatioTriangle getSourceRatioTriangle() {
+    public ClaimRatio getSourceClaimRatios() {
         return source;
     }
     
     @Override
+    public RatioTriangle getSourceRatioTriangle() {
+        return source.getSourceRatioTriangle();
+    }
+    
+    @Override
     public RatioTriangleInput getSourceRatioTriangleInput() {
-        return source.getSourceInput();
+        return source.getSourceRatioTriangleInput();
     }
 
     @Override
@@ -136,11 +223,6 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<RatioTri
     public double[] toArray() {
         return TriangleUtil.copy(values);
     }
-
-    @Override
-    public DefaultClaimRatioSelection copy() {
-        return new DefaultClaimRatioSelection(this);
-    }
     
     @Override
     protected void recalculateLayer() {
@@ -148,7 +230,6 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<RatioTri
     }
     
     private void doRecalculate() {
-        developments = source.getDevelopmentCount();
         super.fitMethods();
         values = super.getFittedValues(developments);
     }

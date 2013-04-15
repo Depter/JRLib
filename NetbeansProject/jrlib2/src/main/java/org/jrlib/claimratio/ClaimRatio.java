@@ -33,7 +33,4 @@ public interface ClaimRatio extends Vector {
      * Returns the triangle used as the denominator.
      */
     public ClaimTriangle getSourceDenominatorTriangle();
-    
-    @Override
-    public ClaimRatio copy();
 }

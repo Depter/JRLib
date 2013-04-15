@@ -1,7 +1,7 @@
 package org.jrlib.scale;
 
 import org.jrlib.triangle.TriangleUtil;
-import org.jrlib.util.AbstractMethodSelection;
+import org.jrlib.util.method.AbstractMethodSelection;
 
 /**
  * DefaultLinkRatioSelection allows to use different 
@@ -72,17 +72,6 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
         this.length = length<0? 0 : length;
         doRecalculate();
     }
-    
-    /**
-     * Contructor that copies it's state from the supplied
-     * original instance.
-     */
-    protected DefaultScaleSelection(DefaultScaleSelection<T> original) {
-        super(original.source.copy(), original);
-        length = original.length;
-        if(length > 0)
-            values = TriangleUtil.copy(original.values);
-    }
 
     @Override
     public T getSourceInput() {
@@ -127,13 +116,9 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
     }
     
     private void doRecalculate() {
-        recalculateLength();
+        length = source==null? 0 : source.getLength();
         super.fitMethods();
         values = super.getFittedValues(length);
-    }
-    
-    protected void recalculateLength() {
-        length = source==null? 0 : source.getLength();
     }
     
     @Override
@@ -148,10 +133,5 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
     @Override
     public double[] toArray() {
         return TriangleUtil.copy(values);
-    }
-    
-    @Override
-    public DefaultScaleSelection<T> copy() {
-        return new DefaultScaleSelection(this);
     }
 }

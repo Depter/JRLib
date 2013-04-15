@@ -36,11 +36,4 @@ public class HarmonicMovingAverage extends AbstractMovingAverage {
             sum += 1d/input[i];
         return (double)maLength/sum;
     }
-    
-    @Override
-    public HarmonicMovingAverage copy() {
-        HarmonicMovingAverage copy = new HarmonicMovingAverage();
-        copy.copyStateFrom(this);
-        return copy;
-    }
 }

@@ -64,9 +64,4 @@ public class DefaultLinkRatioScaleSelection extends DefaultScaleSelection<LinkRa
     public ClaimTriangle getSourceTriangle() {
         return sourceInput.getSourceTriangle();
     }
-
-    @Override
-    public DefaultLinkRatioScaleSelection copy() {
-        return new DefaultLinkRatioScaleSelection(this);
-    }
 }

@@ -1,7 +1,7 @@
 package org.jrlib.linkratio.curve;
 
 import org.jrlib.linkratio.LinkRatio;
-import org.jrlib.util.MethodSelection;
+import org.jrlib.util.method.MethodSelection;
 
 /**
  *
@@ -9,7 +9,4 @@ import org.jrlib.util.MethodSelection;
  * @version 1.0
  */
 public interface LinkRatioSmoothingSelection extends LinkRatioSmoothing, MethodSelection<LinkRatio, LinkRatioCurve> {
-    
-    @Override
-    public LinkRatioSmoothingSelection copy();
 }

@@ -12,10 +12,4 @@ public class InputClaimTriangle extends InputTriangle implements ClaimTriangle {
     public InputClaimTriangle(double[][] data) {
         super(data);
     }
-    
-    @Override
-    public InputClaimTriangle copy() {
-        return new InputClaimTriangle(super.toArray());
-    }
-
 }

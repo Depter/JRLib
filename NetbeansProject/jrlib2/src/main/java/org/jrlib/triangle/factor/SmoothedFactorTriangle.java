@@ -30,9 +30,4 @@ implements ModifiedFactorTriangle {
     public void setSource(ClaimTriangle source) {
         this.source.setSource(source);
     }
-
-    @Override
-    public SmoothedFactorTriangle copy() {
-        return new SmoothedFactorTriangle(source.copy(), smoothing.copy());
-    }
 }

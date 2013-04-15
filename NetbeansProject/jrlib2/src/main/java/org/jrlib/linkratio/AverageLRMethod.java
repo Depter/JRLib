@@ -58,9 +58,4 @@ public class AverageLRMethod extends AbstractLRMethod {
     public String toString() {
         return "AverageLRMethod";
     }
-    
-    @Override
-    public AverageLRMethod copy() {
-        return new AverageLRMethod();
-    }
 }

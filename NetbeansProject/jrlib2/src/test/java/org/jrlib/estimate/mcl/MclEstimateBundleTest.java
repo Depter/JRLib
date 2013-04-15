@@ -2,11 +2,10 @@ package org.jrlib.estimate.mcl;
 
 import org.jrlib.TestConfig;
 import org.jrlib.TestData;
-import org.jrlib.claimratio.ClaimRatio;
-import org.jrlib.claimratio.SimpleClaimRatio;
+import org.jrlib.claimratio.ClaimRatioSelection;
+import org.jrlib.claimratio.DefaultClaimRatioSelection;
+import org.jrlib.claimratio.LrCrExtrapolation;
 import org.jrlib.claimratio.scale.ClaimRatioScale;
-import org.jrlib.claimratio.scale.ClaimRatioScaleSelection;
-import org.jrlib.claimratio.scale.DefaultClaimRatioScaleSelection;
 import org.jrlib.claimratio.scale.SimpleClaimRatioScale;
 import org.jrlib.claimratio.scale.residuals.CRResidualTriangle;
 import org.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
@@ -16,13 +15,13 @@ import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.linkratio.curve.DefaultLinkRatioSmoothing;
 import org.jrlib.linkratio.curve.LinkRatioSmoothingSelection;
 import org.jrlib.linkratio.curve.UserInputLRCurve;
-import org.jrlib.linkratio.scale.LinkRatioScale;
 import org.jrlib.linkratio.scale.SimpleLinkRatioScale;
 import org.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jrlib.triangle.claim.ClaimTriangle;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -63,22 +62,19 @@ public class MclEstimateBundleTest {
         ClaimTriangle paidCik = TestData.getCummulatedTriangle(TestData.PAID);
         ClaimTriangle incurredCik = TestData.getCummulatedTriangle(TestData.INCURRED);
         
-        LRResidualTriangle paidLrResiduals = createLrResiduals(paidCik, 1.05, 1.02);
-        CRResidualTriangle paidCrResiduals = createCrResiduals(incurredCik, paidCik);
+        LinkRatio paidLr = createLinkRatio(paidCik, 1.05, 1.02);
+        LinkRatio incurredLr = createLinkRatio(incurredCik, 1.03, 1.01);
+        
+        LRResidualTriangle paidLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(paidLr));
+        CRResidualTriangle paidCrResiduals = createCrResiduals(incurredCik, paidCik, incurredLr, paidLr);
         MclCorrelation paidLambda = new MclCorrelation(paidLrResiduals, paidCrResiduals);
         
-        LRResidualTriangle incurredLrResiduals = createLrResiduals(incurredCik, 1.03, 1.01);
-        CRResidualTriangle incurredCrResiduals = createCrResiduals(paidCik, incurredCik);
+        LRResidualTriangle incurredLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(incurredLr));
+        CRResidualTriangle incurredCrResiduals = createCrResiduals(paidCik, incurredCik, paidLr, incurredLr);
         MclCorrelation incurredLambda = new MclCorrelation(incurredLrResiduals, incurredCrResiduals);
         MclEstimateBundle bundle = new MclEstimateBundle(paidLambda, incurredLambda);
         paid = bundle.getPaidEstimate();
         incurred = bundle.getIncurredEstimate();
-    }
-    
-    private LRResidualTriangle createLrResiduals(ClaimTriangle cik, double t1, double t2) {
-        LinkRatio lr = createLinkRatio(cik, t1, t2);
-        LinkRatioScale scale = new SimpleLinkRatioScale(lr);
-        return new LinkRatioResiduals(scale);
     }
     
     private LinkRatio createLinkRatio(ClaimTriangle cik, double t1, double t2) {
@@ -91,10 +87,12 @@ public class MclEstimateBundleTest {
         return lrs;
     }
     
-    private CRResidualTriangle createCrResiduals(ClaimTriangle numerator, ClaimTriangle denumerator) {
-        ClaimRatio crs = new SimpleClaimRatio(numerator, denumerator);
+    private CRResidualTriangle createCrResiduals(ClaimTriangle numerator, ClaimTriangle denumerator, LinkRatio lrN, LinkRatio lrD) {
+        ClaimRatioSelection crs = new DefaultClaimRatioSelection(numerator, denumerator);
+        crs.setDevelopmentCount(DEVELOPMENT_COUNT);
+        crs.setMethod(new LrCrExtrapolation(lrN, lrD), 8);
+        
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
-        scales.setDevelopmentCount(DEVELOPMENT_COUNT);
         CRResidualTriangle residuals = new ClaimRatioResiduals(scales);
         return new ClaimRatioResidualTriangleCorrection(residuals, 0, 6, Double.NaN);
     }

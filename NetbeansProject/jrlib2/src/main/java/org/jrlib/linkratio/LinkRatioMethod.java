@@ -1,7 +1,7 @@
 package org.jrlib.linkratio;
 
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.SelectableMethod;
+import org.jrlib.util.method.SelectableMethod;
 
 /**
  * This interface represents methods, that can calculate the 
@@ -62,8 +62,4 @@ public interface LinkRatioMethod extends SelectableMethod<FactorTriangle> {
      * @see #getMackAlpha() 
      */
     public double getWeight(int accident, int development);
-    
-    @Override
-    public LinkRatioMethod copy();
-
 }

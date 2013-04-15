@@ -104,9 +104,4 @@ public class SimpleLinkRatioScale extends SimpleScale<LinkRatioScaleInput> imple
     public ClaimTriangle getSourceTriangle() {
         return sourceInput.getSourceTriangle();
     }
-
-    @Override
-    public LinkRatioScale copy() {
-        return new SimpleLinkRatioScale(source.copy(), estimatorMethod.copy());
-    }
 }

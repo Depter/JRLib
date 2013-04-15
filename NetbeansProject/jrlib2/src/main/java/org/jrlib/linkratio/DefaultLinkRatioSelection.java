@@ -4,7 +4,7 @@ import org.jrlib.triangle.TriangleUtil;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.DevelopmentFactors;
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.AbstractMethodSelection;
+import org.jrlib.util.method.AbstractMethodSelection;
 
 /**
  * DefaultLinkRatioSelection allows to use different 
@@ -65,13 +65,6 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
         super(source, defaultMethod);
         developments = (source==null)? 0 : source.getDevelopmentCount();
         doRecalculate();
-    }
-    
-    private DefaultLinkRatioSelection(DefaultLinkRatioSelection original) {
-        super(original.source.copy(), original);
-        this.developments = original.developments;
-        if(developments > 0)
-            this.values = TriangleUtil.copy(original.values);
     }
     
     @Override
@@ -139,11 +132,6 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     @Override
     public double[] toArray() {
         return TriangleUtil.copy(values);
-    }
-
-    @Override
-    public DefaultLinkRatioSelection copy() {
-        return new DefaultLinkRatioSelection(this);
     }
     
     @Override

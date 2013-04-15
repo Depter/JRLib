@@ -145,9 +145,4 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
         double d = denominator.getValue(accident, development);
         return n / d;
     }
-    
-    @Override
-    public DefaultRatioTriangle copy() {
-        return new DefaultRatioTriangle(source.copy());
-    }
 }

@@ -59,15 +59,4 @@ public class DoubleExponentialSmoothing extends AbstractVectorSmoothing {
             input[i] = s;
         }
     }
-    
-    @Override
-    public DoubleExponentialSmoothing copy() {
-        DoubleExponentialSmoothing copy = new DoubleExponentialSmoothing();
-        copy.copyStateFrom(this);
-        copy.alpha = this.alpha;
-        copy.alpha2 = this.alpha2;
-        copy.beta = this.beta;
-        copy.beta2 = this.beta2;
-        return copy;
-    }
 }

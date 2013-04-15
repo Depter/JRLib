@@ -22,7 +22,4 @@ public interface ModifiedClaimTriangle extends ClaimTriangle {
      * instance.
      */
     public ClaimTriangle getSourceClaimTriangle();
-    
-    @Override
-    public ModifiedClaimTriangle copy();
 }

@@ -39,12 +39,4 @@ public class GeometricMovingAverage extends AbstractMovingAverage {
             product *= input[i];
         return Math.pow(product, power);
     }
-    
-    @Override
-    public GeometricMovingAverage copy() {
-        GeometricMovingAverage copy = new GeometricMovingAverage();
-        copy.copyStateFrom(this);
-        copy.power = this.power;
-        return copy;
-    }
 }

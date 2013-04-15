@@ -1,6 +1,5 @@
 package org.jrlib.triangle.factor;
 
-import org.jrlib.Copyable;
 import org.jrlib.MutableSource;
 import org.jrlib.triangle.Triangle;
 import org.jrlib.triangle.claim.ClaimTriangle;
@@ -19,7 +18,7 @@ import org.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface FactorTriangle extends Triangle, MutableSource<ClaimTriangle>, Copyable<FactorTriangle> {
+public interface FactorTriangle extends Triangle, MutableSource<ClaimTriangle> {
 
     /**
      * Returns the {@link Triangle Triangle} containing the

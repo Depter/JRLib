@@ -23,10 +23,4 @@ public class ClaimTriangleCorrection extends TriangleCorrection<ClaimTriangle>
     public ClaimTriangle getSourceClaimTriangle() {
         return source;
     }
-
-    @Override
-    public ModifiedClaimTriangle copy() {
-        return new ClaimTriangleCorrection(source.copy(), accident, development, correction);
-    }
-
 }

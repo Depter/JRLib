@@ -56,9 +56,4 @@ public class MackRegressionLRMethod extends AbstractLRMethod {
     public String toString() {
         return "MackRegressionLRMethod";
     }
-
-    @Override
-    public MackRegressionLRMethod copy() {
-        return new MackRegressionLRMethod();
-    }
 }

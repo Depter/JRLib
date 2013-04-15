@@ -41,7 +41,4 @@ public interface LinkRatio extends Vector, MutableSource<FactorTriangle> {
      * <p>See {@link LinkRatioMethod#getWeight(int, int) LinkRatioMethod.getWeight()}.
      */
     public double getWeight(int accident, int development);
-    
-    @Override
-    public LinkRatio copy();
 }

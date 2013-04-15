@@ -3,7 +3,7 @@ package org.jrlib.linkratio;
 import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.triangle.factor.DevelopmentFactors;
 import org.jrlib.triangle.factor.FactorTriangle;
-import org.jrlib.util.AbstractSimpleMethodSelection;
+import org.jrlib.util.method.AbstractSimpleMethodSelection;
 
 /**
  * This class will calculate link-ratios for all development
@@ -111,10 +111,5 @@ public class SimpleLinkRatio extends AbstractSimpleMethodSelection<FactorTriangl
     @Override
     public double getWeight(int accident, int development) {
         return defaultMethod.getWeight(accident, development);
-    }
-    
-    @Override
-    public SimpleLinkRatio copy() {
-        return new SimpleLinkRatio(source.copy(), defaultMethod.copy());
     }
 }

@@ -1,5 +1,6 @@
 package org.jrlib.estimate;
 
+import org.jrlib.CalculationData;
 import org.jrlib.triangle.Cell;
 
 /**
@@ -10,7 +11,7 @@ import org.jrlib.triangle.Cell;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface Estimate {
+public interface Estimate extends CalculationData {
     
     /**
      * Returns the number of accident periods in the triangle.

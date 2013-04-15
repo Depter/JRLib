@@ -52,11 +52,5 @@ public class AbstractMovingAverageTest {
         public double mean(double[] input, int index) {
             return input[index]/2d;
         }
-
-        @Override
-        public TriangleSmoothing copy() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
     }
-
 }

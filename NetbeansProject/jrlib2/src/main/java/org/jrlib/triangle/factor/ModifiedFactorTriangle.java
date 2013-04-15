@@ -22,7 +22,4 @@ public interface ModifiedFactorTriangle extends FactorTriangle {
      * instance.
      */
     public FactorTriangle getSourceFactorTriangle();
-    
-    @Override
-    public ModifiedFactorTriangle copy();
 }
