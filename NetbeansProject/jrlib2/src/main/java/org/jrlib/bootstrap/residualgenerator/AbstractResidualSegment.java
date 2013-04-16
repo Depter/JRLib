@@ -13,16 +13,16 @@ public class AbstractResidualSegment<V> {
     protected int cellCount;
     protected int valueCount;
     
-    AbstractResidualSegment() {
+    protected AbstractResidualSegment() {
     }
         
-    AbstractResidualSegment(int[][] cells) {
+    protected AbstractResidualSegment(int[][] cells) {
         this.cells = cells;
         this.cellCount = cells.length;
     }
 
         
-    protected boolean containsCell(int accident, int development) {
+    public boolean containsCell(int accident, int development) {
         //TODO Binary search
         for(int c = 0; c<cellCount; c++) {
             int[] cell = cells[c];
