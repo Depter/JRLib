@@ -8,4 +8,6 @@ package org.jrlib;
 public class TestConfig {
     
     public final static double EPSILON = 0.0000001;
+    
+    public final static boolean EXECUTE_SPEED_TESTS = true;
 }

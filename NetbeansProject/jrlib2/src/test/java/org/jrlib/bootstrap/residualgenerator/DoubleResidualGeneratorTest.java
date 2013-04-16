@@ -2,9 +2,9 @@ package org.jrlib.bootstrap.residualgenerator;
 
 import java.util.Collections;
 import org.jrlib.TestConfig;
+import org.jrlib.bootstrap.FixedRandom;
 import org.jrlib.triangle.Triangle;
 import org.jrlib.triangle.claim.InputClaimTriangle;
-import org.jrlib.util.random.Random;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,11 +26,11 @@ public class DoubleResidualGeneratorTest {
     
     private Triangle residuals;
     private DoubleResidualGenerator rG;
-    private FixedRnd rnd;
+    private FixedRandom rnd;
     
     @Before
     public void setUp() {
-        rnd = new FixedRnd();
+        rnd = new FixedRandom();
         residuals = new InputClaimTriangle(RESIDUALS);
         rG = new DoubleResidualGenerator(rnd);
         rG.initialize(residuals, Collections.EMPTY_LIST);
@@ -43,48 +43,11 @@ public class DoubleResidualGeneratorTest {
         int developments = residuals.getDevelopmentCount();
         for(int a=0; a<accidents; a++) {
             for(int d=0; d<developments; d++) {
-                if(index >= rnd.max)
+                if(index >= rnd.getMax())
                     index = 0;
                 double r = RESIDUALS[0][index++];
                 assertEquals(r, rG.getValue(a, d), TestConfig.EPSILON);
             }
         }
     }
-    
-    /**
-     * Dummy implementation, which cycles through the values
-     * [0,1,2,3].
-     */
-    private static class FixedRnd implements Random {
-
-        private int max = 4;
-        private int n = 0;
-        
-        @Override
-        public long nextLong() {
-            if(n >= max)
-                n=0;
-            return n++;
-        }
-
-        @Override
-        public int nextInt(int n) {
-            if(this.n >= max)
-                this.n = 0;
-            int result = this.n >= n? n-1 : this.n;
-            this.n++;
-            return result;
-        }
-
-        @Override
-        public double nextDouble() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public double nextNonZeroDouble() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    
-    }    
 }

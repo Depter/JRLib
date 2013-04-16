@@ -1,21 +1,22 @@
-package org.jrlib.bootstrap.odp;
+package org.jrlib.bootstrap.odp.residuals;
 
-import org.jrlib.bootstrap.odp.scale.VariableOdpResidualScale;
 import org.jrlib.TestConfig;
 import org.jrlib.TestData;
+import org.jrlib.bootstrap.odp.scale.VariableOdpResidualScale;
 import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.linkratio.SimpleLinkRatio;
 import org.jrlib.triangle.claim.ClaimTriangle;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
+import org.junit.Test;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class InputOdpSRTriangleTest {
+public class DefaultOdpScaledResidualTriangleTest {
     
     private final static double[][] EXPECTED = {
         { 0.91039211,  0.61982147, -0.60325319, -1.67946738,  0.91744196,  2.80801559, -1.26926198, -0.53159210, -0.46838165, 0.00000000},
@@ -43,15 +44,15 @@ public class InputOdpSRTriangleTest {
         { 0.00000000}
     };
     
-    private OdpSRTriangle residuals;
-    private OdpSRTriangle vScale;
+    private DefaultOdpScaledResidualTriangle residuals;
+    private DefaultOdpScaledResidualTriangle vScale;
     
     @Before
     public void setUp() {
         ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.TAYLOR_ASHE);
         LinkRatio lrs = new SimpleLinkRatio(cik);
-        residuals = new InputOdpSRTriangle(lrs);
-        vScale = new InputOdpSRTriangle(new VariableOdpResidualScale(lrs));
+        residuals = new DefaultOdpScaledResidualTriangle(lrs);
+        vScale = new DefaultOdpScaledResidualTriangle(new VariableOdpResidualScale(lrs));
     }
     
     @Test

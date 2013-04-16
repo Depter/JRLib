@@ -10,5 +10,5 @@ public interface ModifiedOdpResidualTriangle extends OdpResidualTriangle {
     /**
      * Retunrs the residual triangle modified by this instance.
      */
-    public OdpResidualTriangle getSourceOdpResiduals();
+    public OdpResidualTriangle getSourceOdpResidualTriangle();
 }

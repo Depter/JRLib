@@ -20,10 +20,13 @@ public class SimpleLinkRatioScale extends SimpleScale<LinkRatioScaleInput> imple
     private LinkRatioScaleInput sourceInput;
     
     /**
-     * Creates an instance for the given source.
+     * Creates an instance for the given source. The instance will
+     * use a {@link org.jrlib.scale.MinMaxScaleEstimator MinMaxScaleEstimator}
+     * to fill in NaN values.
      * 
      * @see LinkRatioScaleInput#LinkRatioScaleInput(LinkRatio) 
      * @see #SimpleLinkRatioScale(LinkRatioScaleInput) 
+     * @see org.jrlib.scale.MinMaxScaleEstimator
      * @throws NullPointerException if `source` is null.
      */
     public SimpleLinkRatioScale(LinkRatio source) {
@@ -42,9 +45,12 @@ public class SimpleLinkRatioScale extends SimpleScale<LinkRatioScaleInput> imple
     }
     
     /**
-     * Creates an instance for the given source.
+     * Creates an instance for the given source. The instance will
+     * use a {@link org.jrlib.scale.MinMaxScaleEstimator MinMaxScaleEstimator}
+     * to fill in NaN values.
      * 
      * @see SimpleScale#SimpleScale(org.jrlib.scale.ScaleInput) 
+     * @see org.jrlib.scale.MinMaxScaleEstimator
      * @throws NullPointerException if `source` is null.
      */
     public SimpleLinkRatioScale(LinkRatioScaleInput source) {
@@ -64,9 +70,12 @@ public class SimpleLinkRatioScale extends SimpleScale<LinkRatioScaleInput> imple
     }
 
     /**
-     * Creates an instance for the given source.
+     * Creates an instance for the given source. The instance will
+     * use a {@link org.jrlib.scale.MinMaxScaleEstimator MinMaxScaleEstimator}
+     * to fill in NaN values.
      * 
      * @see SimpleScale#SimpleScale(org.jrlib.scale.Scale) 
+     * @see org.jrlib.scale.MinMaxScaleEstimator
      * @throws NullPointerException if `source` is null.
      */
     public SimpleLinkRatioScale(Scale<LinkRatioScaleInput> source) {

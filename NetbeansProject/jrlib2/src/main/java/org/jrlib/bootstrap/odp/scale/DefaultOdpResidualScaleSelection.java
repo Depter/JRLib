@@ -1,7 +1,9 @@
 package org.jrlib.bootstrap.odp.scale;
 
 import org.jrlib.bootstrap.odp.residuals.OdpResidualTriangle;
+import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.triangle.TriangleUtil;
+import org.jrlib.triangle.claim.ClaimTriangle;
 import org.jrlib.util.method.AbstractMethodSelection;
 
 /**
@@ -45,10 +47,30 @@ public class DefaultOdpResidualScaleSelection
     public OdpResidualScale getOdpSourceResidualScale() {
         return source;
     }
+    
+    @Override
+    public OdpResidualTriangle getSourceOdpResidualTriangle() {
+        return source.getSourceOdpResidualTriangle();
+    }
 
     @Override
-    public OdpResidualTriangle getSourceResiduals() {
-        return source.getSourceResiduals();
+    public LinkRatio getSourceLinkRatios() {
+        return source.getSourceLinkRatios();
+    }
+
+    @Override
+    public ClaimTriangle getSourceTriangle() {
+        return source.getSourceTriangle();
+    }
+
+    @Override
+    public double getFittedValue(int accident, int development) {
+        return source.getFittedValue(accident, development);
+    }
+
+    @Override
+    public double[][] toArrayFittedValues() {
+        return source.toArrayFittedValues();
     }
 
     @Override

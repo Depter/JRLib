@@ -27,6 +27,7 @@ public class InputOdpResidualTriangle extends AbstractTriangle<LinkRatio> implem
     private int accidents;
     private int developments;
     private double[][] values;
+    private double[][] fitted;
     
     /**
      * Creates an instance for the given source.
@@ -69,13 +70,25 @@ public class InputOdpResidualTriangle extends AbstractTriangle<LinkRatio> implem
     }
 
     @Override
+    public double getFittedValue(int accident, int development) {
+        return withinBounds(accident, development)?
+                fitted[accident][development] :
+                Double.NaN;
+    }
+    
+    @Override
+    public double[][] toArrayFittedValues() {
+        return TriangleUtil.copy(fitted);
+    }
+    
+    @Override
     protected void recalculateLayer() {
         doRecalculate();
     }
     
     private void doRecalculate() {
         recalculateBounds();
-        double[][] fitted = calculateFittedValues();
+        calculateFittedValues();
         TriangleUtil.deCummulate(values);
         calculateResiduals(fitted);
     }
@@ -87,15 +100,14 @@ public class InputOdpResidualTriangle extends AbstractTriangle<LinkRatio> implem
         values = cik.toArray();
     }
     
-    private double[][] calculateFittedValues() {
-        double[][] fitted = TriangleUtil.copy(values);
+    private void calculateFittedValues() {
+        fitted = TriangleUtil.copy(values);
         for(int a=0; a<accidents; a++) {
             int devs = values[a].length - 2;
             for(int d=devs; d>=0; d--)
                 fitted[a][d] = fitted[a][d+1]/source.getValue(d);
         }
         TriangleUtil.deCummulate(fitted);
-        return fitted;
     }
     
     private void calculateResiduals(double[][] fitted) {

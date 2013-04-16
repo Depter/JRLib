@@ -1,19 +1,18 @@
-package org.jrlib.bootstrap.odp;
+package org.jrlib.bootstrap.odp.residuals;
 
-import org.jrlib.bootstrap.odp.residuals.AdjustedOdpResidualTriangle;
-import org.jrlib.bootstrap.odp.residuals.OdpResidualTriangle;
 import org.jrlib.bootstrap.odp.scale.ConstantOdpResidualScale;
 import org.jrlib.bootstrap.odp.scale.OdpResidualScale;
 import org.jrlib.linkratio.LinkRatio;
 import org.jrlib.triangle.AbstractTriangle;
+import org.jrlib.triangle.claim.ClaimTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> implements OdpSRTriangle {
-    
+public class DefaultOdpScaledResidualTriangle extends AbstractTriangle<OdpResidualScale> implements OdpScaledResidualTriangle {
+
     private int accidents;
     private int developments;
     private double[][] values;
@@ -25,7 +24,7 @@ public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> imple
      * 
      * @throws NullPointerException if `lrs` is null.
      */
-    public InputOdpSRTriangle(LinkRatio lrs) {
+    public DefaultOdpScaledResidualTriangle(LinkRatio lrs) {
         this(new AdjustedOdpResidualTriangle(lrs));
     }
 
@@ -35,7 +34,7 @@ public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> imple
      * 
      * @throws NullPointerException if `residuals` is null.
      */
-    public InputOdpSRTriangle(OdpResidualTriangle residuals) {
+    public DefaultOdpScaledResidualTriangle(OdpResidualTriangle residuals) {
         this(new ConstantOdpResidualScale(residuals));
     }
     
@@ -44,7 +43,7 @@ public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> imple
      * 
      * @throws NullPointerException if `scales` is null.
      */
-    public InputOdpSRTriangle(OdpResidualScale scales) {
+    public DefaultOdpScaledResidualTriangle(OdpResidualScale scales) {
         super(scales);
         doRecalculate();
     }
@@ -52,6 +51,21 @@ public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> imple
     @Override
     public OdpResidualScale getSourceOdpResidualScales() {
         return source;
+    }
+
+    @Override
+    public OdpResidualTriangle getSourceOdpResidualTriangle() {
+        return source.getSourceOdpResidualTriangle();
+    }
+
+    @Override
+    public LinkRatio getSourceLinkRatios() {
+        return source.getSourceLinkRatios();
+    }
+
+    @Override
+    public ClaimTriangle getSourceTriangle() {
+        return source.getSourceTriangle();
     }
     
     @Override
@@ -70,6 +84,16 @@ public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> imple
     }
 
     @Override
+    public double getFittedValue(int accident, int development) {
+        return source.getFittedValue(accident, development);
+    }
+
+    @Override
+    public double[][] toArrayFittedValues() {
+        return source.toArrayFittedValues();
+    }
+
+    @Override
     public double getValue(int accident, int development) {
         return withinBounds(accident, development)?
                 values[accident][development] :
@@ -82,7 +106,7 @@ public class InputOdpSRTriangle extends AbstractTriangle<OdpResidualScale> imple
     }
 
     private void doRecalculate() {
-        OdpResidualTriangle residuals = source.getSourceResiduals();
+        OdpResidualTriangle residuals = source.getSourceOdpResidualTriangle();
         accidents = residuals.getAccidentCount();
         developments = residuals.getDevelopmentCount();
         values = residuals.toArray();

@@ -26,7 +26,7 @@ public class OdpResidualTriangleCorrection
     }
 
     @Override
-    public OdpResidualTriangle getSourceOdpResiduals() {
+    public OdpResidualTriangle getSourceOdpResidualTriangle() {
         return source;
     }
 
@@ -38,5 +38,15 @@ public class OdpResidualTriangleCorrection
     @Override
     public ClaimTriangle getSourceTriangle() {
         return source.getSourceTriangle();
+    }
+
+    @Override
+    public double getFittedValue(int accident, int development) {
+        return source.getFittedValue(accident, development);
+    }
+    
+    @Override
+    public double[][] toArrayFittedValues() {
+        return source.toArrayFittedValues();
     }
 }
