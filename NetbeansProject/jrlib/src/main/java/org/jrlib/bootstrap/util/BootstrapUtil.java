@@ -229,7 +229,7 @@ public class BootstrapUtil {
      * @throws IllegalArgumentException if `percentile` is less tehn 0, or
      * greater then 1.
      */
-    public double percentile(double[] reserves, double percentile) {
+    public static double percentile(double[] reserves, double percentile) {
         if(percentile<0d || percentile>1d)
             throw new IllegalArgumentException("Percentile must be within [0;1] but it was "+percentile+"!");
         int size = reserves.length;
@@ -245,11 +245,11 @@ public class BootstrapUtil {
         if(dI >= size) return reserves[size-1];
         
         int i = (int) dI;
-        double w = dI - (double)i;
+        double w = 1-(dI - (double)i);
         
         double lower = reserves[i-1];
         double upper = reserves[i];
-        return lower + w * upper;
+        return lower + w * (upper-lower);
     }
     
     private BootstrapUtil() {}
