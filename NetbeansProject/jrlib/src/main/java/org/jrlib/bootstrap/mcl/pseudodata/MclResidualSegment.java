@@ -9,16 +9,16 @@ import org.jrlib.util.random.Random;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MclResidualSegment extends AbstractResidualSegment<MclResidualCell> {
+class MclResidualSegment extends AbstractResidualSegment<MclResidualCell> {
     
     private final Random rnd;
     private MclResidualCell[] residualCells;
     
-    public MclResidualSegment(Random rnd) {
+    MclResidualSegment(Random rnd) {
         this.rnd = rnd;
     }
     
-    public MclResidualSegment(Random rnd, int[][] cells) {
+    MclResidualSegment(Random rnd, int[][] cells) {
         super(cells);
         this.rnd = rnd;
     }
@@ -31,7 +31,7 @@ public class MclResidualSegment extends AbstractResidualSegment<MclResidualCell>
             this.residualCells[i] = values.get(i);
     }
     
-    public MclResidualCell getCell() {
+    MclResidualCell getCell() {
         if(valueCount == 0)
             return null;
         if(valueCount == 1)

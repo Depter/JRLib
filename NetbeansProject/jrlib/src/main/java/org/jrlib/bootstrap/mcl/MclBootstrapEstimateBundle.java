@@ -6,7 +6,10 @@ import org.jrlib.estimate.mcl.MclCalculationBundle;
 import org.jrlib.estimate.mcl.MclEstimateBundle;
 
 /**
- *
+ * Utility class for {@link MclBootstrapper MclBootstrapper}. The class
+ * wraps an estimate for paid and incurred claims., and after each 
+ * recalculation simulates the process error.
+ * 
  * @author Peter Decsi
  * @version 1.0
  */
@@ -16,6 +19,11 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
     private final MackProcessSimulator paidSimulator;
     private final MackProcessSimulator incurredSimulator;
     
+    /**
+     * Creates an instance for the given input.
+     * 
+     * @throws NullPointerException if one of the parameters is null.
+     */
     public MclBootstrapEstimateBundle(MclCalculationBundle source, MclPseudoData pseudoData, MackProcessSimulator paidProcessSimulator, MackProcessSimulator incurredProcessSimulator) {
         super(source);
         this.detach();

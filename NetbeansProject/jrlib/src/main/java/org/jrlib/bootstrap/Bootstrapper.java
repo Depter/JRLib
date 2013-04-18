@@ -33,7 +33,7 @@ public abstract class Bootstrapper<T extends CalculationData> implements Runnabl
      * @throws NullPointerException if `source` is null.
      * @throws IllegalArgumentException if `bootstrapCount` is less then 1.
      * @throws IllegalArgumentException if `cb` is not null and
-     * {@link BootstrapCallBack#getCallbackStepCount() cb.getCallbackStepCount()} 
+     * {@link BootstrapCallBack#getCallbackStepSize() cb.getCallbackStepCount()} 
      * is less then 1.
      */
     protected Bootstrapper(T source, int bootstrapCount, BootstrapCallBack cb) {

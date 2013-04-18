@@ -1,6 +1,5 @@
 package org.jrlib.bootstrap.mcl.pseudodata;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import org.jrlib.AbstractCalculationData;
@@ -10,7 +9,24 @@ import org.jrlib.triangle.ratio.RatioTriangle;
 import org.jrlib.util.random.Random;
 
 /**
- *
+ * Pseudo data generator for MCL-Bootstrapping. The class generates parallel
+ * residuals for all four triangles:
+ * <ul>
+ *   <li>Paid development factors</li>
+ *   <li>Incurred/Paid ratios</li>
+ *   <li>Incurred development factors</li>
+ *   <li>Paid/Incurred ratios</li>
+ * </ul>
+ * 
+ * The MCL-bootsrap method extends the Mack-bootstrap method, by including
+ * the Paid/Incurred and Incurred/Paid ratios. In order to preserve
+ * the correlation between paid and incurred claims, the residuals of the
+ * four residual triangle (link-ratios and claim-ratios) are linked together.
+ * This means that if cell (1,1) in the paid link-ratio triangle got
+ * it's residual from cell(2,3), the all other residuals will get their
+ * residuals from the same cell.
+ * 
+ * @see "Liu, Verrall [2010]: Bootstrap Estimation of the Predictive Distributions of Reserves Using Paid and Incurred Claims, Variance 4:2, 2010, pp. 121-135."
  * @author Peter Decsi
  * @version 1.0
  */

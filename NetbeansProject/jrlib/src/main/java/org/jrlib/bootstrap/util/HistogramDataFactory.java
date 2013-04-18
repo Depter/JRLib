@@ -61,14 +61,14 @@ public class HistogramDataFactory {
     /**
      * Retunrs the number of intervals to use.
      */
-    public int getIntervallCount() {
+    public int getIntervalCount() {
         return intervalCount;
     }
     
     /**
      * Retunrs the interval size to use.
      */
-    public double getIntervallSize() {
+    public double getIntervalSize() {
         return intervalSize;
     }
     

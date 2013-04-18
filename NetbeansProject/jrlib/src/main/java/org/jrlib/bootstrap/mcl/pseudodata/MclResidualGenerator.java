@@ -11,14 +11,14 @@ import org.jrlib.util.random.Random;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MclResidualGenerator extends AbstractResidualGenerator<MclResidualCell, MclResidualSegment, MclResidualBundle> {
+class MclResidualGenerator extends AbstractResidualGenerator<MclResidualCell, MclResidualSegment, MclResidualBundle> {
     
     /**
      * Creates an instance with the given random generator.
      * 
      * @throws NullPointerException if `rnd` is null.
      */
-    public MclResidualGenerator(Random rnd) {
+    MclResidualGenerator(Random rnd) {
         super(rnd);
     }
 
@@ -28,7 +28,7 @@ public class MclResidualGenerator extends AbstractResidualGenerator<MclResidualC
      * @see #initialize(java.lang.Object, java.util.List) 
      * @throws NullPointerException if on of the parameters is null.
      */
-    public MclResidualGenerator(Random rnd, MclResidualBundle residuals) {
+    MclResidualGenerator(Random rnd, MclResidualBundle residuals) {
         super(rnd, residuals, Collections.EMPTY_LIST);
     }
 
@@ -38,7 +38,7 @@ public class MclResidualGenerator extends AbstractResidualGenerator<MclResidualC
      * @see #initialize(java.lang.Object, java.util.List) 
      * @throws NullPointerException if on of the parameters is null.
      */
-    public MclResidualGenerator(Random rnd, MclResidualBundle residuals, List<int[][]> segments) {
+    MclResidualGenerator(Random rnd, MclResidualBundle residuals, List<int[][]> segments) {
         super(rnd, residuals, segments);
     }
     
@@ -89,7 +89,7 @@ public class MclResidualGenerator extends AbstractResidualGenerator<MclResidualC
      * Generates a cell for the given accident and development
      * period.
      */
-    public MclResidualCell getCell(int accident, int development) {
+    MclResidualCell getCell(int accident, int development) {
         MclResidualSegment s = getSegment(accident, development);
         return getSegment(accident, development).getCell();
     }
