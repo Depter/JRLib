@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<project>
+    <dataFolders>
+        <folder name="Data">
+            <folder name="APC">
+                <folder name="BI">
+                    <data name="Paid.jrd"/>
+                    <data name="Incurred.jrd"/>
+                    <data name="NoC.jrd"/>
+                    <data name="Burning cost.jrd"/>
+                </folder>
+                <folder name="MD">
+                </folder>
+            </folder>
+        </folder>
+    </dataFolders>
+
+    <triangles>
+        <folder name="Triangles">
+            <folder name="APC">
+                <folder name="BI">
+                    <triangle name="Paid"/>
+                    <triangle name="Incurred"/>
+                </folder>
+            </folder>
+        </folder>
+    </triangles>
+
+    <linkRatios>
+    </linkRatios>
+
+    <estimates>
+    </estimates>
+
+    <bootstraps>
+    </bootstraps>
+</project>

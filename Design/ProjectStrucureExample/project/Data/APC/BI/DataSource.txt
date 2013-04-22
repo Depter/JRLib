@@ -1,0 +1,21 @@
+DataProvider
+  getDataSource(qualifiedName: String): DataSource
+
+DataSource
+  getQualifiedName(): String
+  setQualifiedName(String name)
+  
+  getAccidentFrequency(): Frequency
+  getDevelopmentFrequency(): Frequency
+  getRecords(): List<DataRecord>
+  addRecords(records: List<DataRecord>, strategy: ImportStrategy)
+  getData(startDate: Date, geometry: TriangleGeometry): double[][]
+
+DataRecord
+  getAccidentDate(): Date
+  getDevelopmentDate(): Date
+  getValue(): double
+
+ImportStrategy
+  IMPORT_IF_NEW,	//-> Existing records, will not be modified, only new records are imported
+  DELETE_OLD		//-> Existings records are overriden
