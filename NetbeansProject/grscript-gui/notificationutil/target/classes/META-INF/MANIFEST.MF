@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/jreserve/grscript/gui/notificati
+ onutil/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130424
+OpenIDE-Module-Build-Version: 201304241231
+OpenIDE-Module: org.jreserve.grscript.gui.util.notification
+OpenIDE-Module-Public-Packages: org.jreserve.grscript.gui.notification
+ util.*
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: Notificatin Utility
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.openide.awt > 7.46.1, org.openide.util > 8.25.1, or
+ g.openide.dialogs > 7.25.1
+
