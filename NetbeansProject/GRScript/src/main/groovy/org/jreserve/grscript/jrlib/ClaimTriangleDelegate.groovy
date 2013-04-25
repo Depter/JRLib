@@ -1,7 +1,6 @@
 package org.jreserve.grscript.jrlib
 
 import org.jreserve.grscript.FunctionProvider
-import org.jreserve.grscript.PrintDelegate
 import org.jreserve.jrlib.triangle.claim.*
 import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing
 

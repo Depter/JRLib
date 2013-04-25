@@ -2,7 +2,9 @@ package org.jreserve.grscript.gui.classpath;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +18,9 @@ import org.jreserve.grscript.gui.classpath.registry.ClassPathRegistry;
 import org.jreserve.grscript.gui.notificationutil.BubbleUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.modules.InstalledFileLocator;
+import org.openide.modules.ModuleInfo;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -28,8 +33,9 @@ import org.openide.util.NbBundle.Messages;
     "MSG.Registry.SaveError.Bubble=Unable to save classpath elements!"
 })
 public class ClassPathUtil {
-    
-    
+
+    private final static String PATH_SEPARATOR = "path.separator";
+    private final static String PATH = "java.class.path";
     private final static Logger logger = Logger.getLogger(ClassPathUtil.class.getName());
     
     private static ClassPathRegistry registry;
@@ -76,15 +82,15 @@ public class ClassPathUtil {
         }
     }
     
-    public synchronized static List<ClassPathItem> getClassPathItems() {
+    public synchronized static List<ClassPathItem> getRegistryItems() {
         return getRegistry().getItems();
     }
     
-    public synchronized static List<ClassPathItem> getClassPathItems(ClassPathItemType type) {
+    public synchronized static List<ClassPathItem> getRegistryItems(ClassPathItemType type) {
         return getRegistry().getItems(type);
     }
     
-    public synchronized static void addClassPathItems(Collection<ClassPathItem> items) {
+    public synchronized static void addRegistryItems(Collection<ClassPathItem> items) {
         ClassPathRegistry reg = getRegistry();
         boolean changed = false;
         for(ClassPathItem item : items) {
@@ -98,7 +104,7 @@ public class ClassPathUtil {
             saveRegistry();
     }
     
-    public synchronized static void addClassPathItem(ClassPathItem item) {
+    public synchronized static void addRegistryItem(ClassPathItem item) {
         if(getRegistry().addItem(item)) {
             fireAddItemEvent(item);
             saveRegistry();
@@ -106,10 +112,10 @@ public class ClassPathUtil {
     }
     
     private static void fireAddItemEvent(ClassPathItem item) {
-        //TODO implement method
+        ClassPathEvent.publishAdd(item);
     }
     
-    public synchronized static void removeClassPathItems(Collection<ClassPathItem> items) {
+    public synchronized static void removeRegistryItems(Collection<ClassPathItem> items) {
         ClassPathRegistry reg = getRegistry();
         boolean changed = false;
         for(ClassPathItem item : items) {
@@ -123,7 +129,7 @@ public class ClassPathUtil {
             saveRegistry();
     }
     
-    public synchronized static void removeClassPathItem(ClassPathItem item) {
+    public synchronized static void removeRegistryItem(ClassPathItem item) {
         if(getRegistry().removeItem(item)) {
             fireRemoveItemEvent(item);
             saveRegistry();
@@ -131,6 +137,78 @@ public class ClassPathUtil {
     }
     
     private static void fireRemoveItemEvent(ClassPathItem item) {
-        //TODO implement method
+        ClassPathEvent.publishDelete(item);
+    }
+    
+    public static List<ClassPathItem> getPlatformClassPath() {
+        List<ClassPathItem> items = new ArrayList<ClassPathItem>();
+        for(String path : getPlatformPathes()) {
+            ClassPathItemType type = getCpItemType(path);
+            if(type != null)
+                items.add(new ClassPathItem(type, path));
+        }
+        return items;
+    }
+    
+    private static String[] getPlatformPathes() {
+        String sep = System.getProperty(PATH_SEPARATOR);
+        String path = System.getProperty(PATH);
+        return path.split(sep);
+    }
+    
+    private static ClassPathItemType getCpItemType(String item) {
+        item = item.toLowerCase();
+        if(item.endsWith(".jar"))
+            return ClassPathItemType.JAR;
+        else if(item.endsWith(".class"))
+            return ClassPathItemType.CLASS;
+        else
+            return null;
+    }
+    
+    public static List<ClassPathItem> getPlatformClassPath(ClassPathItemType type) {
+        List<ClassPathItem> items = new ArrayList<ClassPathItem>();
+        for(String path : getPlatformPathes()) {
+            ClassPathItemType t = getCpItemType(path);
+            if(type == t)
+                items.add(new ClassPathItem(type, path));
+        }
+        return items;
+    }
+    
+    public static List<ClassPathItem> getModulesClassPath() {
+        InstalledFileLocator ifl = InstalledFileLocator.getDefault();
+        
+        Collection<? extends ModuleInfo> infos = Lookup.getDefault().lookupAll(ModuleInfo.class);
+        for(ModuleInfo info : infos) {
+            String cnb = info.getCodeNameBase();
+            System.out.println("\tCodeNameBase: "+cnb);
+            System.out.println("\tCodeName    : "+info.getCodeName());
+            String relPath = "*.jar";
+            for(File f : ifl.locateAll(relPath, cnb, false))
+                System.out.println("\tjar    : "+f.getAbsolutePath());
+        }
+        return Collections.EMPTY_LIST;
+    }
+    
+    public static boolean isJavaBinary(File file) {
+        return file != null && 
+               file.exists() && 
+               isJavaBinary(file.getAbsolutePath());
+    }
+    
+    public static boolean isJavaBinary(String path) {
+        return getCpItemType(path) != null;
+    }
+    
+    public static ClassPathItem createItem(File file) {
+        return createItem(file.getAbsolutePath());
+    }
+    
+    public static ClassPathItem createItem(String path) {
+        ClassPathItemType type = getCpItemType(path);
+        if(type == null)
+            throw new IllegalArgumentException("Unrecognizable source type: "+path);
+        return new ClassPathItem(type, path);
     }
 }

@@ -39,8 +39,7 @@
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
-            <version>RELEASE73</version>
-            <type>jar</type>
+            <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -56,6 +55,12 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
+                
+                <configuration>
+                    <publicPackages>
+                        <publickPackage>org.jreserve.grscript.gui.eventbus</publickPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>

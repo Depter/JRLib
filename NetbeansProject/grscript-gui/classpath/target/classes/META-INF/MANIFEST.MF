@@ -3,16 +3,19 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/grscript/gui/classpath/
  Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130424
-OpenIDE-Module-Build-Version: 201304241001
+OpenIDE-Module-Implementation-Version: 1.0-20130425
+OpenIDE-Module-Build-Version: 201304251145
 OpenIDE-Module: org.jreserve.grscript.gui.classpath
-OpenIDE-Module-Public-Packages: -
+OpenIDE-Module-Public-Packages: org.jreserve.grscript.gui.classpath.*,
+  org.jreserve.grscript.gui.classpath.registry.*
 OpenIDE-Module-Display-Category: org.jreserve
 OpenIDE-Module-Name: classpath
 OpenIDE-Module-Short-Description: <undefined>
 OpenIDE-Module-Long-Description: <undefined>
 OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  n/1 > 1.14.1, org.openide.windows > 6.55.1, org.openide.util > 8.25.1
- , org.openide.util.lookup > 8.15.1, org.openide.awt > 7.46.1, org.net
- beans.modules.settings/1 > 1.35.1
+ , org.openide.modules > 7.32.1, org.openide.util.lookup > 8.15.1, org
+ .openide.awt > 7.46.1, org.openide.filesystems > 7.62.1, org.netbeans
+ .modules.settings/1 > 1.35.1, org.jreserve.grscript.gui.util.notifica
+ tion > 1.0, org.jreserve.grscript.gui.util.eventbus > 1.0
 

@@ -1,12 +1,12 @@
 package org.jreserve.grscript.jrlib
 
-import org.jreserve.jrlib.triangle.Triangle
 import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing
-import org.jreserve.grscript.util.MapUtil
+import org.jreserve.jrlib.triangle.Triangle
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 abstract class AbstractTriangleDelegate<T extends Triangle>  {
     
@@ -38,4 +38,3 @@ abstract class AbstractTriangleDelegate<T extends Triangle>  {
     abstract T smooth(T triangle, TriangleSmoothing smoothing);
 	
 }
-

@@ -5,6 +5,7 @@ import org.jreserve.grscript.FunctionProvider
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 class CsvReaderDelegate implements FunctionProvider {
     

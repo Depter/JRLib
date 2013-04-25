@@ -33,12 +33,16 @@
   </main-window>
     <editor-area state="joined" frame-state="0">
   <constraints>
-  <path orientation="horizontal" number="60" weight="0.7" />
+  <path orientation="horizontal" number="60" weight="0.4350547730829421" />
   <path orientation="vertical" number="40" weight="0.7" />
   <path orientation="horizontal" number="40" weight="0.7" />
   </constraints>
   <bounds x="475" y="208" width="604" height="382" />
     </editor-area>
     <screen width="1440" height="900"/>
+    <active-mode name="explorer"/>
     <toolbar configuration="Standard" preferred-icon-size="24"/>
+    <tc-list>
+  <tc-id id="ClassPathExplorerTopComponent"/>
+    </tc-list>
 </windowmanager>

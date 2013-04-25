@@ -1,7 +1,6 @@
 package org.jreserve.grscript.jrlib
 
 import org.jreserve.grscript.FunctionProvider
-import org.jreserve.grscript.PrintDelegate
 import org.jreserve.jrlib.triangle.factor.FactorTriangle
 import org.jreserve.jrlib.linkratio.LinkRatio
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio

@@ -1,15 +1,15 @@
 package org.jreserve.grscript.jrlib
 
 import org.jreserve.jrlib.triangle.Triangle
-
 /**
  * Class, that allows the use of builder syntax for triangles. The only difference
  * between de methods of this class, and the methods provided by the
  * {@link AbstractTriangleDelegate AbstractTriangleDelegate} class, is
  * this class already has an instance of a {@link org.jreserve.jrlib.Triangle Triangle)
  * instance, thus it does not have to be provided by the user.
- * 
+ *
  * @author Peter Decsi
+ * @version 1.0
  */
 class AbstractTriangleBuilder<T extends Triangle> {
     

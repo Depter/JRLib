@@ -3,6 +3,7 @@ package org.jreserve.grscript.util
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 class MapUtil {
 	
@@ -27,12 +28,7 @@ class MapUtil {
         def result = map.find {key, value -> 
             ((key instanceof String) && containsKey(key, names))
         }
-//        def result = null
-//        map.each {key, value ->
-//            if(result == null && (key instanceof String) && containsKey(key, names)) {
-//                result = value
-//            }
-//        }
+
         if(result)
             return result.value
         String parameters = getParamNames(names)
@@ -75,6 +71,6 @@ class MapUtil {
 	
     static String getString(Map map, String... names) {
         return getValue(map, names)
-    }
+    }	
 }
 

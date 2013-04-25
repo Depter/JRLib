@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="ClassPathExplorerTopComponent.settings">
+                <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="explorer">
+                <file name="ClassPathExplorerTopComponent.wstcref">
+                    <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="ClassPathExplorerTopComponent"/>
+  <state opened="true"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="org-jreserve-grscript-gui-classpath-explorer-ClassPathExplorerTopComponent.instance">
+                <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent"/>
+                <attr name="preferredID" stringvalue="ClassPathExplorerTopComponent"/>
+                <attr
+                    bundlevalue="org.jreserve.grscript.gui.classpath.explorer.Bundle#CTL_ClassPathExplorerAction" name="displayName"/>
+            </file>
+        </folder>
+        <folder name="Edit">
+            <file name="org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.instance">
+                <!--org.jreserve.grscript.gui.classpath.explorer.actions.AddClassPathItemAction-->
+                <attr
+                    bundlevalue="org.jreserve.grscript.gui.classpath.explorer.actions.Bundle#CTL_AddClassPathItemAction" name="displayName"/>
+                <attr
+                    methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="org.jreserve.grscript.gui.classpath.explorer.actions.AddClassPathItemAction"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <file name="org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.shadow">
+                <!--org.jreserve.grscript.gui.classpath.explorer.actions.AddClassPathItemAction-->
+                <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.instance"/>
+                <attr intvalue="1300" name="position"/>
+            </file>
+        </folder>
+        <folder name="Window">
+            <file name="org-jreserve-grscript-gui-classpath-explorer-ClassPathExplorerTopComponent.shadow">
+                <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-grscript-gui-classpath-explorer-ClassPathExplorerTopComponent.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Classpath">
+        <folder name="Actions">
+            <folder name="Node">
+                <folder name="Root">
+                    <file name="org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.shadow">
+                        <!--org.jreserve.grscript.gui.classpath.explorer.actions.AddClassPathItemAction-->
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.instance"/>
+                        <attr intvalue="100" name="position"/>
+                    </file>
+                    <folder name="Custom">
+                        <file name="org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.shadow">
+                            <!--org.jreserve.grscript.gui.classpath.explorer.actions.AddClassPathItemAction-->
+                            <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.instance"/>
+                            <attr intvalue="100" name="position"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="org_jreserve_grscript_gui_classpath_explorer">
+                <file name="ClassPathExplorer" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//org.jreserve.grscript.gui.classpath.explorer//ClassPathExplorer//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="org">
+                <folder name="jreserve">
+                    <folder name="grscript">
+                        <folder name="gui">
+                            <folder name="classpath">
+                                <folder name="explorer">
+                                    <file name="ClassPathExplorerTopComponent">
+                                    <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent-->
+                                    <attr
+                                    name="settings.providerPath" stringvalue="xml/lookups//org_jreserve_grscript_gui_classpath_explorer/ClassPathExplorer.instance"/>
+                                    </file>
+                                </folder>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="org_jreserve_grscript_gui_classpath_explorer">
+                <file name="ClassPathExplorer.instance">
+                    <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

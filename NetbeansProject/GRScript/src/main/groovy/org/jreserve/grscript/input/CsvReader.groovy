@@ -1,9 +1,10 @@
 package org.jreserve.grscript.input
-import java.text.DecimalFormatSymbols
 
+import java.text.DecimalFormatSymbols
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 class CsvReader {
     
@@ -207,5 +208,6 @@ class CsvReader {
         for(r in 0..<size)
             result[r] = rows[r]
         return result
-    }
+    }	
 }
+

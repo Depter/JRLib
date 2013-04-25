@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Wednesday, April 24, 2013 10:28:18 AM CEST
+>Log Session: Thursday, April 25, 2013 2:16:20 PM CEST
 >System Info: 
   Product Version         = grscript-gui 201207171143
   Operating System        = Windows XP version 5.1 running on x86
@@ -69,7 +69,11 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.core.netigso [1.16.1 201207171143]
 	org.netbeans.core.nativeaccess/1 [1.16.1 201207171143]
 	org.netbeans.core.io.ui/1 [1.16.1 201207171143]
-	org.jreserve.grscript.gui.branding [1.0 1.0-20130424 201304240827]
+	org.jreserve.grscript.gui.util.notification [1.0 1.0-20130424 201304241231]
+	org.jreserve.grscript.gui.util.eventbus [1.0 1.0-20130425 201304250728]
+	org.jreserve.grscript.gui.classpath [1.0 1.0-20130425 201304251145]
+	org.jreserve.grscript.gui.classpath.explorer [1.0 1.0-20130425 201304251216]
+	org.jreserve.grscript.gui.branding [1.0 1.0-20130425 201304250649]
 Diagnostic information
 Input arguments:
 	-Xms24m
@@ -79,6 +83,7 @@ Input arguments:
 	-ea
 	-Dnetbeans.user.dir=D:\Eigen\Programs\JAVA\Netbeans\grscript-gui\application
 	-Djdk.home=D:\Eigen\Programs\JAVA\jdk1.6.0_17
+	-splash:D:\Eigen\Programs\JAVA\Netbeans\grscript-gui\application\target\userdir\var\cache\splash.png
 	-Dnetbeans.home=D:\Eigen\Programs\JAVA\Netbeans\grscript-gui\application\target\grscript_gui\platform
 	-Dnetbeans.user=D:\Eigen\Programs\JAVA\Netbeans\grscript-gui\application\target\userdir
 	-Dnetbeans.default_userdir_root=
@@ -91,8 +96,9 @@ Input arguments:
 Compiler: HotSpot Tiered Compilers
 Heap memory usage: initial 24,0MB maximum 61,7MB
 Non heap memory usage: initial 18,2MB maximum 304,0MB
-Garbage collector: PS Scavenge (Collections=22 Total time spent=0s)
+Garbage collector: PS Scavenge (Collections=31 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=0 Total time spent=0s)
-Classes: loaded=3593 total loaded=3593 unloaded 0
+Classes: loaded=4006 total loaded=4006 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 2.147.483.647
 INFO [null]: Total physical memory 2.147.483.647
+WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Window/ marked with the position attribute: [org-jreserve-grscript-gui-classpath-explorer-ClassPathExplorerTopComponent.shadow], but some are: [org-netbeans-modules-favorites-View.shadow, org-netbeans-core-windows-actions-GlobalPropertiesAction.shadow, Output, SwitchToRecentDocumentAction.shadow, ProgressListAction.shadow, Separator3.instance, ConfigureWindow, org-netbeans-core-windows-actions-ResetWindowsAction.shadow, Separator4.instance, CloseWindowAction.shadow, CloseAllDocumentsAction.shadow, CloseAllButThisAction.shadow, DocumentsAction.shadow]

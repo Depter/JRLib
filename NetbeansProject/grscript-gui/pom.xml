@@ -56,6 +56,7 @@
     <module>classpath</module>
     <module>notificationutil</module>
     <module>eventbus</module>
+    <module>classpath-explorer</module>
   </modules>
 
     <properties>

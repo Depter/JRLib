@@ -130,6 +130,7 @@ class CsvReaderTest {
     
     @Test
     public void testRead() {
+        
         String path = "C:\\Munka\\Java\\NetbeansWS\\GRScript\\test\\org\\jreserve\\grscript\\input\\apc_paid.csv"
         reader.setColumnSeparator(",")
         double[][] values = reader.read(path)

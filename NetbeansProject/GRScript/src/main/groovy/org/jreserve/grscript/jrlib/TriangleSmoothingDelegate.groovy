@@ -1,15 +1,20 @@
 package org.jreserve.grscript.jrlib
 
 import org.jreserve.jrlib.triangle.smoothing.*
-import org.jreserve.grscript.util.MapUtil
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 class TriangleSmoothingDelegate {
+    private final static int ARITHMETIC_MA      = 0;
+    private final static int GEOMETRIC_MA       = 1;
+    private final static int HARMONIC_MA        = 2;
+    private final static int EXPONENTIAL        = 3;
+    private final static int DOUBLE_EXPONENTIAL = 4;
     
-    private SmoothTypes type
+    private int type
     private Map typeMap
     private def cells = []
     
@@ -21,29 +26,29 @@ class TriangleSmoothingDelegate {
             case "amovingaverage":
             case "ama":
             case "ma":
-                type = SmoothTypes.ARITHMETIC_MA
+                type = ARITHMETIC_MA
                 break
             case "geometricmovingaverage":
             case "gmovingaverage":
             case "gma":
-                type = SmoothTypes.GEOMETRIC_MA
+                type = GEOMETRIC_MA
                 break
             case "harmonicmovingaverage":
             case "hmovingaverage":
             case "hma":
-                type = SmoothTypes.HARMONIC_MA
+                type = HARMONIC_MA
                 break
             case "exponentialsmoothing":
             case "exponential":
             case "es":
             case "e":
-                type = SmoothTypes.EXPONENTIAL
+                type = EXPONENTIAL
                 break
             case "doubleexponentialsmoothing":
             case "doubleexponential":
             case "des":
             case "de":
-                type = SmoothTypes.DOUBLE_EXPONENTIAL
+                type = DOUBLE_EXPONENTIAL
                 break
             default:
                 throw new IllegalArgumentException("Unknown smoothing type '${name}'!")
@@ -68,15 +73,15 @@ class TriangleSmoothingDelegate {
     TriangleSmoothing getTriangleSmoothing() {
         SmoothingCell[] cellArr = createCellArray()
         switch(type) {
-            case SmoothTypes.ARITHMETIC_MA:
+            case ARITHMETIC_MA:
                 return createAMA(cellArr)
-            case SmoothTypes.GEOMETRIC_MA:
+            case GEOMETRIC_MA:
                 return createGMA(cellArr)
-            case SmoothTypes.HARMONIC_MA:
+            case HARMONIC_MA:
                 return createHMA(cellArr)
-            case SmoothTypes.EXPONENTIAL:
+            case EXPONENTIAL:
                 return createExponential(cellArr)
-            case SmoothTypes.DOUBLE_EXPONENTIAL:
+            case DOUBLE_EXPONENTIAL:
                 return createDoubleExponential(cellArr)
             default:
                 throw new IllegalStateException("Type is not set!")
@@ -120,6 +125,6 @@ class TriangleSmoothingDelegate {
         double alpha = MapUtil.getDouble(typeMap, "alpha")
         double beta = MapUtil.getDouble(typeMap, "beta")
         return new DoubleExponentialSmoothing(cellArr, alpha, beta);
-    }
+    }	
 }
 

@@ -3,6 +3,7 @@ package org.jreserve.grscript.input
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
 class CsvReaderBuilder {
 	
