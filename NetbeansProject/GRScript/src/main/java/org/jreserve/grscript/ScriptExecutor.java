@@ -8,9 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilerConfiguration;
 
@@ -28,7 +26,6 @@ public class ScriptExecutor {
     private Binding binding = new Binding();
     
     private ExpandoMetaClass emc;
-    private Class emcClazz;
     
     public ScriptExecutor() {
     }
@@ -123,22 +120,18 @@ public class ScriptExecutor {
     
     private void setOutput(CompilerConfiguration config) {
         if(out != null)
-            config.setOutput(out);
+            binding.setProperty("out", new PrintWriter(out));
+            //config.setOutput(out);
     }
     
     private void initScript(Script script) {
         Class clazz = script.getClass();
-        if(emc == null || !emcClazz.equals(clazz)) {
-            emcClazz = clazz;
-            createEMC();
-        }
-        script.setMetaClass(emc);
-    }
-    
-    private void createEMC() {
-        emc = new ExpandoMetaClass(emcClazz, false);
+        
+        emc = new ExpandoMetaClass(clazz, false);
         for(FunctionProvider provider : providers)
-            provider.initFunctions(emc);
+            provider.initFunctions(script, emc);
         emc.initialize();
+        
+        script.setMetaClass(emc);
     }
 }

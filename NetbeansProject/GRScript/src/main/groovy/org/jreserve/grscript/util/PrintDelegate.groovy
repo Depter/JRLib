@@ -10,45 +10,45 @@ import java.text.DecimalFormat
  */
 class PrintDelegate implements FunctionProvider {
     
-    private static DecimalFormat df = new DecimalFormat("#.###")
+    private DecimalFormat df = new DecimalFormat("#.###")
+    private Script script
     
     @Override
-    void initFunctions(ExpandoMetaClass emc) {
-        emc.printData = this.&printData
+    void initFunctions(Script script, ExpandoMetaClass emc) {
+        this.script = script;
         emc.setNumberFormat = this.&setNumberFormat
+        emc.printData = this.&printData
     }
     
-    static void printData(String title, double[][] data) {
-        println title
+    void printData(String title, double[][] data) {
+        script.println title
         printData data
     }
     
-    static void printData(double[][] data) {
-        data.each {
-            printData(it)
-        }
+    void printData(double[][] data) {
+        data.each {printData(it)}
     }
     
-    static void printData(String title, double[] data) {
-        println title
+    void printData(String title, double[] data) {
+        script.println title
         printData data
     }
     
-    static void printData(double[] data) {
+    void printData(double[] data) {
         int count = 0;
         data.each {
             String str = Double.isNaN(it)? "NaN" : df.format(it)
             if(count == 0) {
-                print "\t"+str
+                script.print "\t"+str
             } else {
-                print ",\t"+str
+                script.print ",\t"+str
             }
             count++
         }
-        println ""
+        script.println()
     }
     
-    static void setNumberFormat(String format) {
+    void setNumberFormat(String format) {
         df.applyPattern(format)
     }
 }

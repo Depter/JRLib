@@ -1,10 +1,12 @@
 package org.jreserve.grscript;
 
+import groovy.lang.MissingPropertyException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.jreserve.grscript.util.PrintDelegate;
 
 /**
  *
@@ -14,6 +16,7 @@ import static org.junit.Assert.*;
 public class ScriptExecutorTest {
 
     private ScriptExecutor engine;
+    private StringWriter output;
     
     public ScriptExecutorTest() {
     }
@@ -21,64 +24,95 @@ public class ScriptExecutorTest {
     @Before
     public void setUp() {
         engine = new ScriptExecutor();
+        output = new StringWriter();
+        engine.setOutput(new PrintWriter(output));
     }
 
     @Test
     public void testAddFunctionProvider() {
-        fail("The test case is a prototype.");
+        engine.addFunctionProvider(new PrintDelegate());
+        String script = "def data = new double[2]\n"+
+                        "printData \"Title\", data";
+        engine.runScript(script);
+        
+        String sep = System.getProperty("line.separator");
+        String expected = "Title"+sep+"\t0,\t0"+sep;
+        String found = output.toString();
+        assertEquals(expected, found);
+        
     }
 
     @Test
     public void testRemoveFunctionProvider() {
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testAddToClassPath() {
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testRemoveFromClassPath() {
-        fail("The test case is a prototype.");
+        FunctionProvider provider = new PrintDelegate();
+        engine.addFunctionProvider(provider);
+        String script = "def data = new double[2]\n"+
+                        "printData \"Title\", data";
+        engine.runScript(script);
+        
+        engine.removeFunctionProvider(provider);
+        try {
+            engine.runScript(script);
+        } catch (groovy.lang.MissingMethodException ex) {
+            return;
+        }
+        fail("Method should have thrown exception!");
     }
 
     @Test
     public void testSetOutput() {
-        StringWriter out = new StringWriter();
-        engine.setOutput(new PrintWriter(out));
         engine.runScript("print \"Hello world!\"");
-        assertEquals("Hello world!", out.toString());
-    }
-
-    @Test
-    public void testSetParentClassLoader() {
-        fail("The test case is a prototype.");
+        assertEquals("Hello world!", output.toString());
     }
 
     @Test
     public void testSetVariable() {
-        fail("The test case is a prototype.");
-    }
-
-    @Test
-    public void testRemoveVariable() {
-        fail("The test case is a prototype.");
+        engine.setVariable("x", 5);
+        engine.runScript("print x");
+        assertEquals("5", output.toString());
     }
 
     @Test
     public void testGetVariable() {
-        fail("The test case is a prototype.");
+        engine.setVariable("x", 5);
+        engine.runScript("x = 10");
+        Number n = (Number) engine.getVariable("x");
+        assertEquals(10, n.intValue());
+    }
+
+    @Test
+    public void testRemoveVariable() {
+        engine.setVariable("x", 5);
+        engine.runScript("x += 10");
+        engine.removeVariable("x");
+        
+        try {
+            engine.runScript("x += 10");
+        } catch (MissingPropertyException ex) {
+            return;
+        }
+        fail("Method should have thrown exception!");
     }
 
     @Test
     public void testClearVariables() {
-        fail("The test case is a prototype.");
+        engine.setVariable("x", 5);
+        engine.runScript("x += 10");
+        engine.clearVariables();
+        
+        try {
+            engine.runScript("x += 10");
+        } catch (MissingPropertyException ex) {
+            return;
+        }
+        fail("Method should have thrown exception!");
     }
 
     @Test
     public void testRunScript_File() throws Exception {
-        fail("The test case is a prototype.");
+        java.io.File file = new java.io.File("src/main/resources/org/jreserve/grscript/helloWorld.groovy");
+        engine.runScript(file);
+        assertEquals("Hello world!", output.toString());
     }
 
     @Test

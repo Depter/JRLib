@@ -1,6 +1,7 @@
 package org.jreserve.grscript;
 
 import groovy.lang.ExpandoMetaClass;
+import groovy.lang.Script;
 
 /**
  *
@@ -9,5 +10,5 @@ import groovy.lang.ExpandoMetaClass;
  */
 public interface FunctionProvider {
 
-    public void initFunctions(ExpandoMetaClass emc);
+    public void initFunctions(Script script, ExpandoMetaClass emc);
 }

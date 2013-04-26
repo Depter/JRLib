@@ -12,7 +12,7 @@ import org.jreserve.grscript.util.PrintDelegate
 class TriangleUtilDelegate implements FunctionProvider {
 	
     @Override
-    void initFunctions(ExpandoMetaClass emc) {
+    void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.cummulate    << {double[][] d -> TriangleUtil.cummulate(d); d}
         emc.cummulate    << {double[] d -> TriangleUtil.cummulate(d); d}
         emc.decummulate  << {double[][] d -> TriangleUtil.decummulate(d); d}

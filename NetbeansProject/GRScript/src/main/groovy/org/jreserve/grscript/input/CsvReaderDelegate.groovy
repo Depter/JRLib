@@ -10,7 +10,7 @@ import org.jreserve.grscript.FunctionProvider
 class CsvReaderDelegate implements FunctionProvider {
     
     @Override
-    void initFunctions(ExpandoMetaClass emc) {
+    void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.readCsv = this.&readCsv
     }
     

@@ -13,7 +13,7 @@ import org.jreserve.jrlib.triangle.claim.InputClaimTriangle
 class FactorTriangleDelegate extends AbstractTriangleDelegate<FactorTriangle> implements FunctionProvider {
 	
     @Override
-    void initFunctions(ExpandoMetaClass emc) {
+    void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.factors     << this.&factors
         emc.corrigate   << this.&corrigate  << {FactorTriangle t, Map map -> corrigate(t, map)}
         emc.exclude     << this.&exclude    << {FactorTriangle t, Map map -> exclude(t, map)}

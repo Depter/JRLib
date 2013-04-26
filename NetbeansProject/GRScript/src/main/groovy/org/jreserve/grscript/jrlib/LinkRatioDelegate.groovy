@@ -1,11 +1,13 @@
 package org.jreserve.grscript.jrlib
 
 import org.jreserve.grscript.FunctionProvider
+import org.jreserve.jrlib.triangle.factor.DevelopmentFactors
 import org.jreserve.jrlib.triangle.factor.FactorTriangle
 import org.jreserve.jrlib.linkratio.LinkRatio
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio
 import org.jreserve.jrlib.linkratio.WeightedAverageLRMethod
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle
+import org.jreserve.jrlib.triangle.claim.InputClaimTriangle
 
 /**
  *
@@ -13,8 +15,12 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle
  */
 class LinkRatioDelegate implements FunctionProvider {
     
-    void initFunctions(ExpandoMetaClass emc) {
+    void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.linkRatio << this.&linkRatio
+    }
+    
+    LinkRatio linkRatio(double[][] data) {
+        return linkRatio(new InputClaimTriangle(data))
     }
     
     LinkRatio linkRatio(FactorTriangle factors) {
