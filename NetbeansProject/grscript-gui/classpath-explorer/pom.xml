@@ -92,12 +92,6 @@
             <artifactId>grscript-gui-util-eventbus</artifactId>
             <version>${project.version}</version>
         </dependency>
-<!--
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>grscript-gui-util-eventbus</artifactId>
-            <version>${project.version}}</version>
-        </dependency>-->
     </dependencies>
 
     <build>

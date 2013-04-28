@@ -57,6 +57,8 @@
     <module>notificationutil</module>
     <module>eventbus</module>
     <module>classpath-explorer</module>
+    <module>script</module>
+    <module>groovy</module>
   </modules>
 
     <properties>

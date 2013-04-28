@@ -3,6 +3,7 @@ package org.jreserve.grscript.gui.notificationutil;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Icon;
+import javax.swing.SwingUtilities;
 import org.openide.awt.Notification;
 import org.openide.awt.NotificationDisplayer;
 import org.openide.awt.NotificationDisplayer.Priority;
@@ -91,7 +92,7 @@ public class BubbleUtil {
         private final String msg;
         private final Object dialogMsg;
         private final MessageType type;
-        private Notification nd;
+        private volatile Notification nd;
 
         public BubbleListener(String title, String msg, Object dialogMsg, MessageType type) {
             this.title = title;
@@ -101,9 +102,19 @@ public class BubbleUtil {
         }
         
         void showBubble() {
-            Priority priority = type.getPriority();
-            Icon icon = type.getIcon();
-            nd = NotificationDisplayer.getDefault().notify(title, icon, msg, this, priority);
+            final Priority priority = type.getPriority();
+            final Icon icon = type.getIcon();
+            
+            if(SwingUtilities.isEventDispatchThread()) {
+               nd = NotificationDisplayer.getDefault().notify(title, icon, msg, this, priority);
+            } else {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                       nd = NotificationDisplayer.getDefault().notify(title, icon, msg, BubbleListener.this, priority);
+                    }
+                });
+            }
         }
         
         @Override

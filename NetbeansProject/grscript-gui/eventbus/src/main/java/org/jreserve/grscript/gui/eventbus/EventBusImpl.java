@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import org.openide.util.Lookup;
-import org.openide.util.LookupEvent;
-import org.openide.util.LookupListener;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 
@@ -51,7 +49,7 @@ class EventBusImpl<T> implements EventBus<T> {
     
     private void publisContentChange(Collection<T> events) {
         content.set(events, null);
-        for(Registration r : registrations)
+        for(Registration r : new ArrayList<Registration>(registrations))
             r.publish();
         content.set(Collections.EMPTY_LIST, null);
     }
@@ -69,7 +67,7 @@ class EventBusImpl<T> implements EventBus<T> {
     @Override
     public synchronized void unsubscribe(EventBusListener listener) {
         List<Registration> toRemove = new ArrayList<Registration>();
-        for(Registration r : registrations)
+        for(Registration r : new ArrayList<Registration>(registrations))
             if(r.listener.equals(listener))
                 toRemove.add(r);
         registrations.removeAll(toRemove);

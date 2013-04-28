@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.util.eventbus">
-    <module_version install_time="1366874907220" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1367101840187" last="true" origin="installer" specification_version="1.0">
         <file crc="680297387" name="config/Modules/org-jreserve-grscript-gui-util-eventbus.xml"/>
-        <file crc="1088286045" name="modules/org-jreserve-grscript-gui-util-eventbus.jar"/>
+        <file crc="2410117592" name="modules/org-jreserve-grscript-gui-util-eventbus.jar"/>
     </module_version>
 </module>
