@@ -45,7 +45,23 @@
         
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>grscript-gui-script</artifactId>
+            <artifactId>grscript-gui-script-explorer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>grscript-gui-script-functions</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>grscript-gui-script-function-explorer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>grscript-gui-script-executor</artifactId>
             <version>${project.version}</version>
         </dependency>
         

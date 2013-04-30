@@ -1,12 +1,16 @@
 package org.jreserve.grscript.gui.script;
 
+import java.io.File;
 import java.io.IOException;
+import org.jreserve.grscript.gui.script.registry.ScriptFile;
+import org.jreserve.grscript.gui.script.registry.ScriptRegistry;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
@@ -18,16 +22,16 @@ import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
 @Messages({
-    "LBL_GRscript_LOADER=Files of GRscript"
+    "LBL_GRScript_LOADER=Files of GRScript"
 })
 @MIMEResolver.ExtensionRegistration(
-        displayName = "#LBL_GRscript_LOADER",
+        displayName = "#LBL_GRScript_LOADER",
         mimeType = "text/x-grscript",
         extension = {"grs", "GRS"})
 @DataObject.Registration(
         mimeType = "text/x-grscript",
         iconBase = "org/jreserve/grscript/gui/script/triangle.png",
-        displayName = "#LBL_GRscript_LOADER",
+        displayName = "#LBL_GRScript_LOADER",
         position = 300)
 @ActionReferences({
     @ActionReference(
@@ -81,31 +85,44 @@ import org.openide.windows.TopComponent;
             @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
             position = 1400)
 })
-public class GRscriptDataObject extends MultiDataObject {
+public class GRScriptDataObject extends MultiDataObject {
 
-    public GRscriptDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
+    public GRScriptDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/x-grscript", true);
     }
 
     @Override
+    protected Node createNodeDelegate() {
+        return new GRScriptDataNode(this);
+    }
+
+    @Override
+    protected void handleDelete() throws IOException {
+        super.handleDelete();
+        removeScriptFile();
+    }
+
+    private void removeScriptFile() {
+        File file = FileUtil.toFile(getPrimaryFile());
+        ScriptFile sf = ScriptRegistry.getScriptFile(file);
+        if(sf != null && sf.getParent() != null)
+            sf.getParent().removeFile(sf);
+    }
+    
+    @Override
     protected int associateLookup() {
         return 1;
     }
 
-    @Override
-    protected Node createNodeDelegate() {
-        return new GRScriptNode(this);
-    }
-
-//    @MultiViewElement.Registration(
-//            displayName = "#LBL_GRscript_EDITOR",
-//            iconBase = "org/jreserve/grscript/gui/script/triangle.png",
-//            mimeType = "text/x-grscript",
-//            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
-//            preferredID = "GRscript",
-//            position = 1000)
-//    @Messages("LBL_GRscript_EDITOR=Source")
+    @MultiViewElement.Registration(
+            displayName = "#LBL_GRScript_EDITOR",
+            iconBase = "org/jreserve/grscript/gui/script/triangle.png",
+            mimeType = "text/x-grscript",
+            persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED,
+            preferredID = "GRScript",
+            position = 1000)
+    @Messages("LBL_GRScript_EDITOR=Source")
     public static MultiViewEditorElement createEditor(Lookup lkp) {
         return new MultiViewEditorElement(lkp);
     }

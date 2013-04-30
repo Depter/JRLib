@@ -54,6 +54,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>groovy.*</publicPackage>
+                        <publicPackage>org.codehaus.groovy.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

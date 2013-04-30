@@ -22,12 +22,12 @@ import org.openide.util.NbBundle.Messages;
 @TopComponent.Registration(mode = "explorer", openAtStartup = true)
 @ActionID(category = "Window", id = "org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent")
 @ActionReference(path = "Menu/Window" /*, position = 333 */)
-@TopComponent.OpenActionRegistration(
-        displayName = "#CTL_ClassPathExplorerAction",
-        preferredID = "ClassPathExplorerTopComponent")
+//@TopComponent.OpenActionRegistration(
+//        displayName = "#CTL_ClassPathExplorerAction",
+//        preferredID = "ClassPathExplorerTopComponent")
 @Messages({
-    "CTL_ClassPathExplorerAction=Classpath",
-    "CTL_ClassPathExplorerTopComponent=Classpath Explorer",
+    "CTL_ClassPathExplorerAction=Classpath Explorer",
+    "CTL_ClassPathExplorerTopComponent=Classpath",
     "HINT_ClassPathExplorerTopComponent=Additionl classpath elements"
 })
 public final class ClassPathExplorerTopComponent extends TopComponent implements ExplorerManager.Provider {

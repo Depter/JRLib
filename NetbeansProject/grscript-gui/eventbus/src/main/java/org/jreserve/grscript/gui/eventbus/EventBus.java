@@ -14,7 +14,7 @@ public interface EventBus<T> {
      * 
      * @throws NullPointerException if `event` is null.
      */
-    public void publish(T event);
+    public void publishEvent(Object event);
     
     /**
      * Publishes the events to the listeners. Eache
@@ -22,7 +22,7 @@ public interface EventBus<T> {
      * 
      * @throws NullPointerException if any elements of `events` is null.
      */
-    public void publish(Collection<T> events);
+    public void publishEvents(Collection events);
     
     /**
      * Subscribes the listener for all kind of instances.

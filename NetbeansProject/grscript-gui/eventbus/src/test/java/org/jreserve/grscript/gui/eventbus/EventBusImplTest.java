@@ -28,7 +28,7 @@ public class EventBusImplTest {
 
     @Test(expected = NullPointerException.class)
     public void testPublish_Single_Null() {
-        bus.publish(null);
+        bus.publishEvents(null);
     }
 
     @Test(expected = NullPointerException.class)
@@ -37,7 +37,7 @@ public class EventBusImplTest {
         items.add(new Object());
         items.add(null);
         items.add(new Object());
-        bus.publish(items);
+        bus.publishEvents(items);
     }
 
     @Test
@@ -48,7 +48,7 @@ public class EventBusImplTest {
         items.add(new Object());
         bus.subscribe(listener);
         try {
-            bus.publish(items);
+            bus.publishEvents(items);
         } catch (NullPointerException ex) {}
         assertEquals(0, listener.callCount);
     }
@@ -59,12 +59,12 @@ public class EventBusImplTest {
         items.add(new Object());
         items.add(new Object());
         bus.subscribe(listener);
-        bus.publish(items);
+        bus.publishEvents(items);
         assertEquals(1, listener.callCount);
         assertEquals(2, listener.publishCount);
         
         items.set(1, items.get(0));
-        bus.publish(items);
+        bus.publishEvents(items);
         assertEquals(2, listener.callCount);
         assertEquals(3, listener.publishCount);
     }
@@ -79,7 +79,7 @@ public class EventBusImplTest {
         items.add(new Object());
         items.add(2);
         
-        bus.publish(items);
+        bus.publishEvents(items);
         assertEquals(1, listener.callCount);
         assertEquals(2, listener.publishCount);
         
@@ -96,12 +96,12 @@ public class EventBusImplTest {
         items.add(new Object());
         items.add(2);
         
-        bus.publish(items);
+        bus.publishEvents(items);
         assertEquals(1, listener.callCount);
         assertEquals(2, listener.publishCount);
         
         bus.unsubscribe(listener);
-        bus.publish(items);
+        bus.publishEvents(items);
         assertEquals(1, listener.callCount);
         assertEquals(2, listener.publishCount);
     }

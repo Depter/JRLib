@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/grscript/gui/notificati
  onutil/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130427
-OpenIDE-Module-Build-Version: 201304271923
+OpenIDE-Module-Implementation-Version: 1.0-20130430
+OpenIDE-Module-Build-Version: 201304300240
 OpenIDE-Module: org.jreserve.grscript.gui.util.notification
 OpenIDE-Module-Public-Packages: org.jreserve.grscript.gui.notification
  util.*

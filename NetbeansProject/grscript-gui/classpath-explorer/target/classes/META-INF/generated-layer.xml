@@ -26,17 +26,6 @@
         </folder>
     </folder>
     <folder name="Actions">
-        <folder name="Window">
-            <file name="org-jreserve-grscript-gui-classpath-explorer-ClassPathExplorerTopComponent.instance">
-                <!--org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent-->
-                <attr
-                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
-                <attr name="component" newvalue="org.jreserve.grscript.gui.classpath.explorer.ClassPathExplorerTopComponent"/>
-                <attr name="preferredID" stringvalue="ClassPathExplorerTopComponent"/>
-                <attr
-                    bundlevalue="org.jreserve.grscript.gui.classpath.explorer.Bundle#CTL_ClassPathExplorerAction" name="displayName"/>
-            </file>
-        </folder>
         <folder name="Edit">
             <file name="org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.instance">
                 <!--org.jreserve.grscript.gui.classpath.explorer.actions.AddClassPathItemAction-->

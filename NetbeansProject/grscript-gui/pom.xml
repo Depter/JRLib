@@ -57,8 +57,13 @@
     <module>notificationutil</module>
     <module>eventbus</module>
     <module>classpath-explorer</module>
-    <module>script</module>
     <module>groovy</module>
+    <module>grscript-wrapper</module>
+    <module>script</module>
+    <module>script-explorer</module>
+    <module>script-functions</module>
+    <module>script-function-explorer</module>
+    <module>script-executor</module>
   </modules>
 
     <properties>

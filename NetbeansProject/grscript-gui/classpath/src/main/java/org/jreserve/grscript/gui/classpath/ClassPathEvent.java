@@ -12,12 +12,12 @@ public class ClassPathEvent {
     
     public static void publishAdd(ClassPathItem item) {
         ClassPathEvent evt = new ClassPathEvent(item, Type.ADDED);
-        EventBusRegistry.getDefault().publish(evt);
+        EventBusRegistry.getDefault().publishEvent(evt);
     }
     
     public static void publishDelete(ClassPathItem item) {
         ClassPathEvent evt = new ClassPathEvent(item, Type.DELETED);
-        EventBusRegistry.getDefault().publish(evt);
+        EventBusRegistry.getDefault().publishEvent(evt);
     }
     
     private final ClassPathItem item;

@@ -32,14 +32,14 @@ class EventBusImpl<T> implements EventBus<T> {
     }
 
     @Override
-    public synchronized void publish(T event) {
-        publish(Collections.singleton(event));
+    public synchronized void publishEvent(Object event) {
+        publishEvents(Collections.singleton(event));
     }
 
     @Override
-    public synchronized void publish(Collection<T> events) {
-        Set<T> values = new HashSet<T>(events.size());
-        for(T event : events) {
+    public synchronized void publishEvents(Collection events) {
+        Set values = new HashSet(events.size());
+        for(Object event : events) {
             if(event == null)
                 throw new NullPointerException("Can not publish null events!");
             values.add(event);
@@ -48,7 +48,9 @@ class EventBusImpl<T> implements EventBus<T> {
     }
     
     private void publisContentChange(Collection<T> events) {
-        content.set(events, null);
+        for(T event : events)
+            content.add(event);
+
         for(Registration r : new ArrayList<Registration>(registrations))
             r.publish();
         content.set(Collections.EMPTY_LIST, null);

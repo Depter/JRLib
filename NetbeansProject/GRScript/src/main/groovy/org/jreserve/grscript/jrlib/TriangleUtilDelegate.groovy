@@ -30,10 +30,10 @@ class TriangleUtilDelegate implements FunctionProvider {
         emc.divide       << {double[][] d -> TriangleUtil.divide(d)}
         emc.multiply     << {double[][] d -> TriangleUtil.multiply(d)}
         
-        emc.printData   << {Triangle t -> PrintDelegate.printData(t.toArray())}
-        emc.printData   << {String title, Triangle t -> PrintDelegate.printData(title, t.toArray())}
-        emc.printData   << {org.jreserve.jrlib.vector.Vector v -> PrintDelegate.printData(v.toArray())}
-        emc.printData   << {String title, org.jreserve.jrlib.vector.Vector v -> PrintDelegate.printData(title, v.toArray())}
+        emc.printData   << {Triangle t -> printData(t.toArray())}
+        emc.printData   << {String title, Triangle t -> printData(title, t.toArray())}
+        emc.printData   << {org.jreserve.jrlib.vector.Vector v -> printData(v.toArray())}
+        emc.printData   << {String title, org.jreserve.jrlib.vector.Vector v -> printData(title, v.toArray())}
     }
 }
 
