@@ -2,10 +2,10 @@ package org.jreserve.grscript.gui.script;
 
 import java.io.File;
 import java.io.IOException;
+import org.jreserve.grscript.gui.script.editor.GRScriptEditor;
 import org.jreserve.grscript.gui.script.registry.ScriptFile;
 import org.jreserve.grscript.gui.script.registry.ScriptRegistry;
 import org.netbeans.core.spi.multiview.MultiViewElement;
-import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -123,7 +123,8 @@ public class GRScriptDataObject extends MultiDataObject {
             preferredID = "GRScript",
             position = 1000)
     @Messages("LBL_GRScript_EDITOR=Source")
-    public static MultiViewEditorElement createEditor(Lookup lkp) {
-        return new MultiViewEditorElement(lkp);
+    public static GRScriptEditor createEditor(Lookup lkp) {
+        return new GRScriptEditor(lkp);
+        //return new MultiViewEditorElement(lkp);
     }
 }

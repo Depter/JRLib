@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Tuesday, April 30, 2013 5:00:30 AM CEST
+>Log Session: Tuesday, April 30, 2013 7:51:18 PM CEST
 >System Info: 
   Product Version         = grscript-gui 201207171143
   Operating System        = Windows 7 version 6.1 running on amd64
@@ -77,7 +77,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.jreserve.grscript.gui.util.eventbus [1.0 1.0-20130430 201304300240]
 	org.jreserve.grscript.gui.grscript [1.0 1.0-20130430 201304300240]
 	org.jreserve.grscript.gui.groovy [1.0 1.0-20130430 201304300240]
-	org.jreserve.grscript.gui.script [1.0 1.0-20130430 201304300259]
+	org.jreserve.grscript.gui.script [1.0 1.0-20130430 201304301749]
 	org.jreserve.grscript.gui.script.functions [1.0 1.0-20130430 201304300240]
 	org.jreserve.grscript.gui.script.function.explorer [1.0 1.0-20130430 201304300240]
 	org.jreserve.grscript.gui.script.explorer [1.0 1.0-20130430 201304300240]
@@ -85,6 +85,73 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.jreserve.grscript.gui.classpath [1.0 1.0-20130430 201304300240]
 	org.jreserve.grscript.gui.classpath.explorer [1.0 1.0-20130430 201304300240]
 	org.jreserve.grscript.gui.branding [1.0 1.0-20130430 201304300239]
+INFO [org.netbeans.core.windows.persistence]: [PersistenceManager.getTopComponentForID] Problem when deserializing TopComponent for tcID:'MultiView-GRScript#007C'. Reason: java.lang.ClassNotFoundException: org.jreserve.grscript.gui.script.editor.GRScriptMultiViewCloneableEditor starting from SystemClassLoader[61 modules] with possible defining loaders [ModuleCL@92696c2[org.jreserve.grscript.gui.script]] and declared parents [ModuleCL@739abd2b[org.netbeans.modules.settings], ModuleCL@4b85c17[org.netbeans.core.multiview], ModuleCL@5ec24193[org.jreserve.grscript.gui.script.function.explorer], ModuleCL@571a4bd4[org.openide.windows], ModuleCL@10cbd8dc[org.jreserve.grscript.gui.groovy], ModuleCL@524c71d2[org.netbeans.modules.print], ModuleCL@5c4b82d2[org.netbeans.libs.jna], ModuleCL@2dc0435[org.jreserve.grscript.gui.script.functions], org.netbeans.MainImpl$BootClassLoader@1a0f73c1, ModuleCL@7ccfe049[org.netbeans.modules.masterfs.windows], ...46 more]
+java.lang.ClassNotFoundException: org.jreserve.grscript.gui.script.editor.GRScriptMultiViewCloneableEditor
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:202)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:190)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:306)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:301)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at org.netbeans.ProxyClassLoader.loadClass(ProxyClassLoader.java:262)
+Caused: java.lang.ClassNotFoundException: org.jreserve.grscript.gui.script.editor.GRScriptMultiViewCloneableEditor starting from SystemClassLoader[61 modules] with possible defining loaders [ModuleCL@92696c2[org.jreserve.grscript.gui.script]] and declared parents [ModuleCL@739abd2b[org.netbeans.modules.settings], ModuleCL@4b85c17[org.netbeans.core.multiview], ModuleCL@5ec24193[org.jreserve.grscript.gui.script.function.explorer], ModuleCL@571a4bd4[org.openide.windows], ModuleCL@10cbd8dc[org.jreserve.grscript.gui.groovy], ModuleCL@524c71d2[org.netbeans.modules.print], ModuleCL@5c4b82d2[org.netbeans.libs.jna], ModuleCL@2dc0435[org.jreserve.grscript.gui.script.functions], org.netbeans.MainImpl$BootClassLoader@1a0f73c1, ModuleCL@7ccfe049[org.netbeans.modules.masterfs.windows], ...46 more]
+	at org.netbeans.ProxyClassLoader.loadClass(ProxyClassLoader.java:264)
+	at org.netbeans.ModuleManager$SystemClassLoader.loadClass(ModuleManager.java:711)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:247)
+	at java.lang.Class.forName0(Native Method)
+	at java.lang.Class.forName(Class.java:247)
+	at org.openide.windows.TopComponent$Replacer.readObject(TopComponent.java:1784)
+Caused: java.io.IOException
+	at org.openide.windows.TopComponent$Replacer.readObject(TopComponent.java:1844)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at java.io.ObjectStreamClass.invokeReadObject(ObjectStreamClass.java:969)
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1848)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1752)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1328)
+	at java.io.ObjectInputStream.defaultReadFields(ObjectInputStream.java:1946)
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1870)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1752)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1328)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:350)
+	at org.netbeans.core.multiview.MultiViewPeer.peerReadExternal(MultiViewPeer.java:547)
+	at org.netbeans.core.multiview.MultiViewCloneableTopComponent.readExternal(MultiViewCloneableTopComponent.java:222)
+	at org.openide.windows.TopComponent$Replacer.readObject(TopComponent.java:1797)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at java.io.ObjectStreamClass.invokeReadObject(ObjectStreamClass.java:969)
+	at java.io.ObjectInputStream.readSerialData(ObjectInputStream.java:1848)
+	at java.io.ObjectInputStream.readOrdinaryObject(ObjectInputStream.java:1752)
+	at java.io.ObjectInputStream.readObject0(ObjectInputStream.java:1328)
+	at java.io.ObjectInputStream.readObject(ObjectInputStream.java:350)
+	at org.netbeans.modules.settings.convertors.XMLSettingsSupport$SettingsRecognizer.readSerial(XMLSettingsSupport.java:549)
+	at org.netbeans.modules.settings.convertors.XMLSettingsSupport$SettingsRecognizer.instanceCreate(XMLSettingsSupport.java:581)
+	at org.netbeans.modules.settings.convertors.SerialDataConvertor$SettingsInstance.instanceCreate(SerialDataConvertor.java:424)
+[catch] at org.netbeans.core.windows.persistence.PersistenceManager.getTopComponentPersistentForID(PersistenceManager.java:571)
+	at org.netbeans.core.windows.persistence.PersistenceManager.getTopComponentForID(PersistenceManager.java:681)
+	at org.netbeans.core.windows.PersistenceHandler.getTopComponentForID(PersistenceHandler.java:489)
+	at org.netbeans.core.windows.PersistenceHandler.load(PersistenceHandler.java:156)
+	at org.netbeans.core.windows.WindowSystemImpl.load(WindowSystemImpl.java:81)
+	at org.netbeans.core.GuiRunLevel$InitWinSys.run(GuiRunLevel.java:234)
+	at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:209)
+	at java.awt.EventQueue.dispatchEventImpl(EventQueue.java:646)
+	at java.awt.EventQueue.access$000(EventQueue.java:84)
+	at java.awt.EventQueue$1.run(EventQueue.java:607)
+	at java.awt.EventQueue$1.run(EventQueue.java:605)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.security.AccessControlContext$1.doIntersectionPrivilege(AccessControlContext.java:87)
+	at java.awt.EventQueue.dispatchEvent(EventQueue.java:616)
+	at org.netbeans.core.TimableEventQueue.dispatchEvent(TimableEventQueue.java:158)
+	at java.awt.EventDispatchThread.pumpOneEventForFilters(EventDispatchThread.java:269)
+	at java.awt.EventDispatchThread.pumpEventsForFilter(EventDispatchThread.java:184)
+	at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:174)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:169)
+	at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:161)
+	at java.awt.EventDispatchThread.run(EventDispatchThread.java:122)
 Diagnostic information
 Input arguments:
 	-Xms24m
@@ -109,18 +176,9 @@ Heap memory usage: initial 24,0MB maximum 56,9MB
 Non heap memory usage: initial 23,2MB maximum 432,0MB
 Garbage collector: PS Scavenge (Collections=9 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=0 Total time spent=0s)
-Classes: loaded=4471 total loaded=4471 unloaded 0
+Classes: loaded=4609 total loaded=4609 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 8 535 261 184
 INFO [null]: Total physical memory 8 535 261 184
 WARNING [org.openide.filesystems.Ordering]: Found same position 1 300 for both Menu/File/org-jreserve-grscript-gui-classpath-explorer-actions-AddClassPathItemAction.shadow and Menu/File/org-jreserve-grscript-gui-script-explorer-actions-CreateScriptFolderAction.shadow
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Window/ marked with the position attribute: [org-jreserve-grscript-gui-classpath-explorer-ClassPathExplorerTopComponent.shadow, org-jreserve-grscript-gui-script-explorer-ScriptExplorerTopComponent.shadow, org-jreserve-grscript-gui-script-function-explorer-FunctionExplorerTopComponent.shadow], but some are: [org-jreserve-grscript-gui-classpath-ClassPathExplorerTopComponent.shadow, org-netbeans-modules-favorites-View.shadow, org-netbeans-core-windows-actions-GlobalPropertiesAction.shadow, Output, SwitchToRecentDocumentAction.shadow, ProgressListAction.shadow, Separator3.instance, ConfigureWindow, org-netbeans-core-windows-actions-ResetWindowsAction.shadow, Separator4.instance, CloseWindowAction.shadow, CloseAllDocumentsAction.shadow, CloseAllButThisAction.shadow, DocumentsAction.shadow]
-WARNING [org.netbeans.ProxyClassLoader]: Will not load class groovyjarjarantlr.CommonToken arbitrarily from one of ModuleCL@56f449b8[org.jreserve.grscript.gui.grscript] and ModuleCL@2031688f[org.jreserve.grscript.gui.groovy] starting from SystemClassLoader[61 modules]; see http://wiki.netbeans.org/DevFaqModuleCCE
-INFO [org.netbeans.TopSecurityManager]
-java.lang.Exception: Dangerous reflection access to sun.misc.Cleaner by class org.netbeans.core.output2.FileMapStorage detected!
-[catch] at org.netbeans.TopSecurityManager.checkMemberAccess(TopSecurityManager.java:429)
-	at java.lang.Class.checkMemberAccess(Class.java:2157)
-	at java.lang.Class.getMethod(Class.java:1602)
-	at org.netbeans.core.output2.FileMapStorage.unmap(FileMapStorage.java:322)
-	at org.netbeans.core.output2.FileMapStorage.access$400(FileMapStorage.java:62)
-	at org.netbeans.core.output2.FileMapStorage$MappedBufferResource.releaseBuffer(FileMapStorage.java:459)
-	at org.netbeans.core.output2.FileMapStorage$1.run(FileMapStorage.java:127)
+WARNING [null]: Note - org.jreserve.grscript.gui.script.editor.GRScriptEditor ought to override getPersistenceType() rather than using the client property or accepting the default.

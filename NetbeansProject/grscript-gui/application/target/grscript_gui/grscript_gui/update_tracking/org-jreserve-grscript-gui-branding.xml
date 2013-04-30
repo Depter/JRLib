@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.branding">
-    <module_version install_time="1367290597099" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1367340184734" last="true" origin="installer" specification_version="1.0">
         <file crc="68503883" name="config/Modules/org-jreserve-grscript-gui-branding.xml"/>
         <file crc="1547456111" name="core/locale/core_grscript_gui.jar"/>
         <file crc="2360642644" name="modules/locale/org-netbeans-core-windows_grscript_gui.jar"/>
