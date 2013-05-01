@@ -2,8 +2,6 @@ package org.jreserve.grscript.gui.script.functions;
 
 import java.util.Map;
 import org.jreserve.grscript.FunctionProvider;
-import org.jreserve.grscript.gui.script.AbstractFunctionProviderAdapter;
-import org.jreserve.grscript.gui.script.FunctionProviderAdapter;
 import org.jreserve.grscript.util.PrintDelegate;
 import org.openide.util.NbBundle.Messages;
 
@@ -47,5 +45,9 @@ public class PrintDataAdapeter extends AbstractFunctionProviderAdapter {
     @Override
     public String getName() {
         return Bundle.LBL_PrintDataAdapeter_Name();
+    }
+
+    @Override
+    protected void initProperties(Map<String, String> properies) {
     }
 }

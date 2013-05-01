@@ -6,7 +6,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.grscript.ScriptExecutor;
-import org.jreserve.grscript.gui.script.FunctionProviderAdapter;
+import org.jreserve.grscript.gui.classpath.ClassPathUtil;
+import org.jreserve.grscript.gui.classpath.registry.ClassPathItem;
+import org.jreserve.grscript.gui.script.functions.FunctionProviderAdapter;
 import org.jreserve.grscript.gui.script.GRScriptDataObject;
 import org.jreserve.grscript.gui.script.functions.FunctionFolder;
 import org.netbeans.api.actions.Savable;
@@ -92,13 +94,34 @@ public class GRScriptExecutor {
         
         private ScriptExecutor createExecutor() {
             ScriptExecutor executor = new ScriptExecutor();
+            addClasspathElements(executor);
+            addFunctionProviders(executor);
+            return executor;
+        }
+        
+        private void addClasspathElements(ScriptExecutor executor) {
+            for(ClassPathItem item : ClassPathUtil.getRegistryItems())
+                executor.addToClassPath(item.getPath());
+        }
+        
+        private void addFunctionProviders(ScriptExecutor executor) {
             for(FunctionProviderAdapter adapter : getAdapters())
                 executor.addFunctionProvider(adapter.getFunctionProvider());
-            return executor;
         }
         
         private void printStackTrace(Exception ex, PrintWriter writer) {
             writer.println(ex.getLocalizedMessage());
+            for(StackTraceElement element : ex.getStackTrace())
+                printStackTrace(element, writer);
+        }
+
+        private void printStackTrace(StackTraceElement element, PrintWriter writer) {
+            writer.printf("\t%s.%s(%s:%d)%n",
+                    element.getClassName(),
+                    element.getMethodName(),
+                    element.getFileName(),
+                    element.getLineNumber()
+            );
         }
     }
 }

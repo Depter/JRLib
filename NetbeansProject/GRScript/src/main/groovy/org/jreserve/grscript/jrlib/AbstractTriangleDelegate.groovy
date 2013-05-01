@@ -2,6 +2,7 @@ package org.jreserve.grscript.jrlib
 
 import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing
 import org.jreserve.jrlib.triangle.Triangle
+import org.jreserve.grscript.util.MapUtil
 
 /**
  *
@@ -10,18 +11,20 @@ import org.jreserve.jrlib.triangle.Triangle
  */
 abstract class AbstractTriangleDelegate<T extends Triangle>  {
     
+    private MapUtil mapUtil = MapUtil.getInstance()
+    
     T corrigate(T triangle, Map map) {
-        int accident = MapUtil.getAccident(map) 
-        int development = MapUtil.getDevelopment(map) 
-        int correction = MapUtil.getDouble(map, "correction", "value") 
+        int accident = mapUtil.getAccident(map) 
+        int development = mapUtil.getDevelopment(map) 
+        int correction = mapUtil.getDouble(map, "correction", "value") 
         return corrigate(triangle, accident, development, correction)
     }
     
     abstract T corrigate(T triangle, int accident, int development, double correction);
     
     T exclude(T triangle, Map map) {
-        int accident = MapUtil.getAccident(map) 
-        int development = MapUtil.getDevelopment(map) 
+        int accident = mapUtil.getAccident(map) 
+        int development = mapUtil.getDevelopment(map) 
         return exclude(triangle, accident, development)
     }
     

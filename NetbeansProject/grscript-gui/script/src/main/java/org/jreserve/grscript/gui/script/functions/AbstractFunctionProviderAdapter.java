@@ -1,4 +1,4 @@
-package org.jreserve.grscript.gui.script;
+package org.jreserve.grscript.gui.script.functions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,7 @@ public abstract class AbstractFunctionProviderAdapter implements FunctionProvide
     
     private FunctionProvider provider;
     private Map<String, String> functions;
+    private Map<String, String> properties;
     
     @Override
     public synchronized FunctionProvider getFunctionProvider() {
@@ -58,4 +59,24 @@ public abstract class AbstractFunctionProviderAdapter implements FunctionProvide
         return desc == null? "" : desc;
     }
 
+    @Override
+    public List<String> getPropertyNames() {
+        return new ArrayList<String>(getProperties().keySet());
+    }
+    
+    private Map<String, String> getProperties() {
+        if(properties == null) {
+            properties = new TreeMap<String, String>();
+            initProperties(properties);
+        }
+        return properties;
+    }
+    
+    protected abstract void initProperties(Map<String, String> properies);
+    
+    @Override
+    public String getPropertyDescription(String name) {
+        String desc = getProperties().get(name);
+        return desc==null? "" : desc;
+    }
 }

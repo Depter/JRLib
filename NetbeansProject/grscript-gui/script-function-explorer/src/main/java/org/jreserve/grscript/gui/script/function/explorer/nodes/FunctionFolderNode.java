@@ -14,7 +14,7 @@ import org.openide.util.lookup.Lookups;
  */
 public class FunctionFolderNode extends AbstractNode {
 
-    private final static String IMG_PATH = "org/jreserve/grscript/gui/script/function/explorer/nodes/";
+    final static String IMG_PATH = "org/jreserve/grscript/gui/script/function/explorer/nodes/";
     private final static Image OPENED_IMG = ImageUtilities.loadImage(IMG_PATH+"folderOpen.gif");
     private final static Image CLOSED_IMG = ImageUtilities.loadImage(IMG_PATH+"folder.gif");
     

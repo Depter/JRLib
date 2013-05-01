@@ -1,6 +1,7 @@
 package org.jreserve.grscript.jrlib
 
 import org.jreserve.jrlib.triangle.smoothing.*
+import org.jreserve.grscript.util.MapUtil
 
 /**
  *
@@ -17,6 +18,7 @@ class TriangleSmoothingDelegate {
     private int type
     private Map typeMap
     private def cells = []
+    private MapUtil mapUtil = MapUtil.getInstance()
     
     void type(Map map) {
         String name = MapUtil.getString(map, "type", "name")?.toLowerCase()
@@ -57,9 +59,9 @@ class TriangleSmoothingDelegate {
     }
     
     void cell(Map map) {
-        int accident = MapUtil.getAccident(map) 
-        int development = MapUtil.getDevelopment(map) 
-        boolean applied = MapUtil.getBoolean(map, "applied", "apply")
+        int accident = mapUtil.getAccident(map) 
+        int development = mapUtil.getDevelopment(map) 
+        boolean applied = mapUtil.getBoolean(map, "applied", "apply")
         cell(accident, development, applied)
     }
     
@@ -105,7 +107,7 @@ class TriangleSmoothingDelegate {
     }
     
     private int getLength() {
-        return MapUtil.getInt(typeMap, "length", "size", "l")
+        return mapUtil.getInt(typeMap, "length", "size", "l")
     }
     
     private TriangleSmoothing createGMA(SmoothingCell[] cellArr) {
@@ -117,13 +119,13 @@ class TriangleSmoothingDelegate {
     }
     
     private TriangleSmoothing createExponential(SmoothingCell[] cellArr) {
-        double alpha = MapUtil.getDouble(typeMap, "alpha")
+        double alpha = mapUtil.getDouble(typeMap, "alpha")
         return new ExponentialSmoothing(cellArr, alpha);
     }
     
     private TriangleSmoothing createDoubleExponential(SmoothingCell[] cellArr) {
-        double alpha = MapUtil.getDouble(typeMap, "alpha")
-        double beta = MapUtil.getDouble(typeMap, "beta")
+        double alpha = mapUtil.getDouble(typeMap, "alpha")
+        double beta = mapUtil.getDouble(typeMap, "beta")
         return new DoubleExponentialSmoothing(cellArr, alpha, beta);
     }	
 }

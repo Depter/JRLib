@@ -13,7 +13,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
-import org.jreserve.grscript.gui.script.FunctionProviderAdapter;
+import org.jreserve.grscript.gui.script.functions.FunctionProviderAdapter;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -26,7 +26,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.grscript.gui.script.FunctionProviderAdapter.Registration")
+@SupportedAnnotationTypes("org.jreserve.grscript.gui.script.functions.FunctionProviderAdapter.Registration")
 public class FunctionProviderAdapterRegistrationProcessor extends LayerGeneratingProcessor {
     public final static String ENTITY_DIRECTORY = "Scripts/FunctionProviders/";
     public final static String POSITION = "priority";

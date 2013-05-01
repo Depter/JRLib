@@ -1,12 +1,7 @@
-package org.jreserve.grscript.gui.script;
+package org.jreserve.grscript.gui.script.functions;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jreserve.grscript.FunctionProvider;
-import org.jreserve.grscript.gui.script.registration.FunctionProviderAdapterRegistrationProcessor;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -23,6 +18,10 @@ public interface FunctionProviderAdapter {
 
     public String getFunctionDescription(String signiture);
 
+    public List<String> getPropertyNames();
+    
+    public String getPropertyDescription(String name);
+    
     public static @interface Registration {
 
         public String path();

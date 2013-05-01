@@ -21,10 +21,13 @@ import org.openide.util.NbBundle.Messages;
     category = "File",
     id = "org.jreserve.grscript.gui.script.executor.action.ExecuteGRScriptAction")
 @ActionRegistration(
-        displayName = "#CTL_ExecuteGRScriptAction")
+        displayName = "#CTL_ExecuteGRScriptAction",
+        iconBase = "org/jreserve/grscript/gui/script/executor/action/run.png"
+)
 @ActionReferences({
     @ActionReference(path = "Menu/File", position = 1380),
-    @ActionReference(path = GRScriptDataNode.ACTION_PATH, position = 100)
+    @ActionReference(path = GRScriptDataNode.ACTION_PATH, position = 100),
+    @ActionReference(path = "Toolbars/Script", position = 100)
 })
 @Messages({
     "CTL_ExecuteGRScriptAction=Run script",

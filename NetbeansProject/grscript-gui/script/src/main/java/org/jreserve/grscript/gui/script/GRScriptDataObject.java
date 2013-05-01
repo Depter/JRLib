@@ -16,6 +16,7 @@ import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.nodes.CookieSet;
 import org.openide.nodes.Node;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -123,8 +124,9 @@ public class GRScriptDataObject extends MultiDataObject {
             preferredID = "GRScript",
             position = 1000)
     @Messages("LBL_GRScript_EDITOR=Source")
-    public static GRScriptEditor createEditor(Lookup lkp) {
-        return new GRScriptEditor(lkp);
-        //return new MultiViewEditorElement(lkp);
+    public static MultiViewElement createEditor(Lookup lkp) {
+        GRScriptDataObject obj = lkp.lookup(GRScriptDataObject.class);
+        CookieSet cookies = obj.getCookieSet();
+        return new GRScriptEditor(obj, cookies);
     }
 }
