@@ -23,7 +23,7 @@ class LinkRatioCurveDelegate implements FunctionProvider {
     void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.smooth    << this.&smooth
         emc.smoothAll << this.&smoothAll
-        emc.rSquare   << this.rSquare
+        emc.rSquare   << this.&rSquare
     }
     
     LinkRatio smooth(LinkRatio lrs) {
@@ -51,13 +51,17 @@ class LinkRatioCurveDelegate implements FunctionProvider {
     
     private LinkRatioCurve createCurve(String type) {
         switch(type.toLowerCase()) {
+            case "exp":
             case "exponential":
                 return new ExponentialLRCurve();
+            case "pow":
             case "power":
                 return new PowerLRCurve();
             case "inversepower":
+            case "inv.pow":
             case "inverse-power":
                 return new InversePowerLRCurve();
+            case "wei":
             case "weibul":
                 return new WeibulLRCurve();
             default:
@@ -67,7 +71,7 @@ class LinkRatioCurveDelegate implements FunctionProvider {
         }
     }
     
-    LinkRatio smooth(LinkRatio lrs, int lenght, String type, int exclude) {
+    LinkRatio smooth(LinkRatio lrs, int length, String type, int exclude) {
         LinkRatioCurve curve = createCurve(type, exclude)
         return createSmooth(lrs, length,  curve)
     }
@@ -76,10 +80,10 @@ class LinkRatioCurveDelegate implements FunctionProvider {
         LinkRatioCurve curve = createCurve(type)
         if(curve instanceof Excludeable) {
             ((Excludeable)curve).setExcluded(exclude, true)
+            return curve;
         } else {
             throwNotExcludeable(type)
         }
-        return curve;
     }
     
     private void throwNotExcludeable(String type) {
@@ -97,6 +101,7 @@ class LinkRatioCurveDelegate implements FunctionProvider {
         if(curve instanceof Excludeable) {
             Excludeable e = (Excludeable) curve;
             exclude.each() {e.setExcluded(it, true)}
+            return e;
         } else {
             throwNotExcludeable(type)
         }
@@ -121,7 +126,7 @@ class LinkRatioCurveDelegate implements FunctionProvider {
         return createSmoothAll(lrs, length,  curve)
     }
     
-    LinkRatio smoothAll(LinkRatio lrs, int lenght, String type, int exclude) {
+    LinkRatio smoothAll(LinkRatio lrs, int length, String type, int exclude) {
         LinkRatioCurve curve = createCurve(type, exclude)
         return createSmoothAll(lrs, length,  curve)
     }
