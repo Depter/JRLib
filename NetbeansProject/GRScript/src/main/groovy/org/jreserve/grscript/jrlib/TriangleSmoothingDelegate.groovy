@@ -21,21 +21,29 @@ class TriangleSmoothingDelegate {
     private MapUtil mapUtil = MapUtil.getInstance()
     
     void type(Map map) {
-        String name = MapUtil.getString(map, "type", "name")?.toLowerCase()
+        String name = mapUtil.getString(map, "type", "name")?.toLowerCase()
         switch(name) {
             case "arithmeticmovingaverage":
+            case "arithmetic moving average":
+            case "arithmetic-moving-average":
             case "movingaverage":
+            case "moving-average":
+            case "moving average":
             case "amovingaverage":
             case "ama":
             case "ma":
                 type = ARITHMETIC_MA
                 break
             case "geometricmovingaverage":
+            case "geometric moving average":
+            case "geometric-moving-average":
             case "gmovingaverage":
             case "gma":
                 type = GEOMETRIC_MA
                 break
             case "harmonicmovingaverage":
+            case "harmonic moving average":
+            case "harmonic-moving-average":
             case "hmovingaverage":
             case "hma":
                 type = HARMONIC_MA

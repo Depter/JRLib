@@ -3,13 +3,13 @@ package org.jreserve.grscript.input
 import org.junit.Before
 import org.junit.Test
 import static org.junit.Assert.*
+import org.jreserve.grscript.TestConfig
 
 /**
  *
  * @author Peti
  */
 class CsvReaderTest {
-    private final static double EPSILON = 0.00000001
     
     private final static double[][] APC_PAID = [
         [4426765, 992330 , 88952 , 13240 , 38622 , 26720, 36818, 10750],
@@ -130,9 +130,7 @@ class CsvReaderTest {
     
     @Test
     public void testRead() {
-        
-        java.io.File file = new java.io.File("src/main/resources/org/jreserve/grscript/input/apc_paid.csv");
-        String path = file.getAbsolutePath();
+        String path = TestConfig.getPath(TestConfig.APC_PAID)
         reader.setColumnSeparator(",")
         double[][] values = reader.read(path)
         
@@ -143,7 +141,7 @@ class CsvReaderTest {
             assertEquals(cells, values[r].length)
             
             for(int c in 0..<cells)
-                assertEquals(APC_PAID[r][c], values[r][c], EPSILON)
+                assertEquals(APC_PAID[r][c], values[r][c], TestConfig.EPSILON)
         }
     }
 }

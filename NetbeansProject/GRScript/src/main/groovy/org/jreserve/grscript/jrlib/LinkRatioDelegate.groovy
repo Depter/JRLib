@@ -28,18 +28,18 @@ class LinkRatioDelegate implements FunctionProvider {
     }
     
     LinkRatio linkRatio(ClaimTriangle triangle) {
-        return new SimpleLinkRatio(factors, new WeightedAverageLRMethod())
+        return new SimpleLinkRatio(triangle, new WeightedAverageLRMethod())
     }
     
-    LinkRatio linkRatio(FactorTriangle factors, Closure cl) {
-        LinkRatioBuilder builder = new LinkRatioBuilder(factors)
-        cl.delegate = builder
-        cl.resolveStrategy = Closure.DELEGATE_FIRST
-        cl()
-        return builder.getLinkRatios()
+    LinkRatio linkRatio(double[][] data, Closure cl) {
+        return linkRatio(new InputClaimTriangle(data), cl)
     }
     
     LinkRatio linkRatio(ClaimTriangle triangle, Closure cl) {
+        return linkRatio(new DevelopmentFactors(triangle), cl)
+    }
+    
+    LinkRatio linkRatio(FactorTriangle factors, Closure cl) {
         LinkRatioBuilder builder = new LinkRatioBuilder(factors)
         cl.delegate = builder
         cl.resolveStrategy = Closure.DELEGATE_FIRST

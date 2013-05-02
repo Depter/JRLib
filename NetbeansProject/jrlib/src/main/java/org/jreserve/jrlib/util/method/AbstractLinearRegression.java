@@ -11,26 +11,20 @@ import org.jreserve.jrlib.util.RegressionUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractLinearRegression<T> implements SelectableMethod<T> {
+public abstract class AbstractLinearRegression<T> implements SelectableMethod<T>, Excludeable {
 
     private boolean[] isExcluded = new boolean[0];
     protected double intercept;
     protected double slope;
     
-    /**
-     * Excludes/Includes the element at the given index from the fitting 
-     * procedure.
-     */
+    @Override
     public void setExcluded(int index, boolean excluded) {
         if(isExcluded.length <= index)
             isExcluded = Arrays.copyOf(isExcluded, index+1);
         isExcluded[index] = excluded;
     }
     
-    /**
-     * Returns `true` if the given element is included in the
-     * fitting procedure.
-     */
+    @Override
     public boolean isExcluded(int index) {
         if(index < 0 || index >=isExcluded.length)
             return false;

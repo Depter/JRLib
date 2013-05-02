@@ -1,8 +1,5 @@
 package org.jreserve.jrlib.triangle;
 
-import org.jreserve.jrlib.triangle.Triangle;
-import org.jreserve.jrlib.triangle.TriangleCorrection;
-import org.jreserve.jrlib.triangle.InputTriangle;
 import static org.jreserve.jrlib.TestConfig.EPSILON;
 import static org.junit.Assert.*;
 import org.junit.Before;

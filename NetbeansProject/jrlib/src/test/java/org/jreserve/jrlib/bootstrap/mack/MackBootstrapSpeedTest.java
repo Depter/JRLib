@@ -1,8 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mack;
 
-import org.jreserve.jrlib.bootstrap.mack.MackGammaProcessSimulator;
-import org.jreserve.jrlib.bootstrap.mack.MackBootstrapEstimate;
-import org.jreserve.jrlib.bootstrap.mack.MackPseudoFactorTriangle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.EstimateBootstrapper;
@@ -18,6 +15,7 @@ import org.jreserve.jrlib.util.random.JavaRandom;
 import org.jreserve.jrlib.util.random.Random;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -33,6 +31,11 @@ public class MackBootstrapSpeedTest {
     private final static long TIMEOUT = 2L * ((long)LIMIT * 1000L);
     private EstimateBootstrapper<MackBootstrapEstimate> bootstrap;
 
+    @BeforeClass
+    public static void setUpClass() {
+        org.junit.Assume.assumeTrue("Mack-Bootstrapper speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
+    }
+    
     @Before
     public void setUp() {
         Random rnd = new JavaRandom(SEED);
@@ -51,10 +54,6 @@ public class MackBootstrapSpeedTest {
 
     @Test(timeout=TIMEOUT)
     public void testSpeed() {
-        if(!TestConfig.EXECUTE_SPEED_TESTS) {
-            System.err.println("Mack-Bootstrapper speed test skipped...");
-            return;
-        }
         System.out.println("Begin Mack-Bootstrapper speed test.\n\tTimeout: "+(TIMEOUT/1000));
         
         long begin = System.currentTimeMillis();

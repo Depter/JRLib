@@ -31,7 +31,7 @@ public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
     @Override
     protected void smooth(double[] input) {
         int size = input.length;
-        if(size <= maLength)
+        if(size < maLength)
             return;
         
         double[] temp = new double[size];

@@ -15,10 +15,6 @@ class LinkRatioBuilder {
     private java.util.Map<Integer, LinkRatioMethod> methods = new HashMap<Integer, LinkRatioMethod>()
     private Map methodInstances = [:]
     
-    LinkRatioBuilder(ClaimTriangle triangle) {
-        this(new DevelopmentFactors(triangle))
-    }
-    
     LinkRatioBuilder(FactorTriangle factors) {
         WeightedAverageLRMethod method = new WeightedAverageLRMethod()
         methodInstances[WeightedAverageLRMethod.class] = method
@@ -35,7 +31,7 @@ class LinkRatioBuilder {
     }
     
     private LinkRatioMethod getCachedMethod(Class clazz, Closure cl) {
-        LinkRatioMethod method = methodInstances[AverageLRMethod.class]
+        LinkRatioMethod method = methodInstances[clazz]
         if(method == null) {
             method = cl()
             methodInstances[clazz] = method

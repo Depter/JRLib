@@ -1,7 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mcl;
 
-import org.jreserve.jrlib.bootstrap.mcl.MclBootstrapEstimateBundle;
-import org.jreserve.jrlib.bootstrap.mcl.MclBootstrapper;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.mack.MackGammaProcessSimulator;
@@ -28,6 +26,7 @@ import org.jreserve.jrlib.util.random.JavaRandom;
 import org.jreserve.jrlib.util.random.Random;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -41,6 +40,11 @@ public class MclBootstrapSpeedTest {
     private final static double LIMIT = 30d;
     private final static long TIMEOUT = 2L * ((long)LIMIT * 1000L);
     private MclBootstrapper bootstrap;
+
+    @BeforeClass
+    public static void setUpClass() {
+        org.junit.Assume.assumeTrue("Mcl-Bootstrapper speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
+    }
 
     @Before
     public void setUp() {
@@ -81,10 +85,6 @@ public class MclBootstrapSpeedTest {
 
     @Test(timeout=TIMEOUT)
     public void testSpeed() {
-        if(!TestConfig.EXECUTE_SPEED_TESTS) {
-            System.err.println("MCL-Bootstrapper speed test skipped...");
-            return;
-        }
         System.out.println("Begin MCL-Bootstrapper speed test.\n\tTimeout: "+(TIMEOUT/1000));
         
         long begin = System.currentTimeMillis();

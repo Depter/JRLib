@@ -1,7 +1,5 @@
 package org.jreserve.jrlib.triangle.smoothing;
 
-import org.jreserve.jrlib.triangle.smoothing.ArithmeticMovingAverage;
-import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.jreserve.jrlib.TestConfig;
 import static org.junit.Assert.assertArrayEquals;
 import org.junit.Before;

@@ -1,8 +1,5 @@
 package org.jreserve.jrlib.bootstrap.odp;
 
-import org.jreserve.jrlib.bootstrap.odp.OdpPseudoClaimTriangle;
-import org.jreserve.jrlib.bootstrap.odp.OdpGammaProcessSimulator;
-import org.jreserve.jrlib.bootstrap.odp.OdpEstimate;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.EstimateBootstrapper;
@@ -16,6 +13,7 @@ import org.jreserve.jrlib.util.random.JavaRandom;
 import org.jreserve.jrlib.util.random.Random;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -30,6 +28,11 @@ public class OdpBootstrapSpeedTest {
     private final static double LIMIT = 5d;
     private final static long TIMEOUT = 2L * ((long)LIMIT * 1000L);
     private EstimateBootstrapper<OdpEstimate> bootstrap;
+
+    @BeforeClass
+    public static void setUpClass() {
+        org.junit.Assume.assumeTrue("ODP-Bootstrapper speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
+    }
 
     @Before
     public void setUp() {
@@ -48,10 +51,6 @@ public class OdpBootstrapSpeedTest {
 
     @Test(timeout=TIMEOUT)
     public void testSpeed() {
-        if(!TestConfig.EXECUTE_SPEED_TESTS) {
-            System.err.println("ODP-Bootstrapper speed test skipped...");
-            return;
-        }
         System.out.println("Begin ODP-Bootstrapper speed test.\n\tTimeout: "+(TIMEOUT/1000));
         
         long begin = System.currentTimeMillis();

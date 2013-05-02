@@ -1,7 +1,5 @@
 package org.jreserve.jrlib.triangle.claim;
 
-import org.jreserve.jrlib.triangle.claim.CummulatedClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import static org.junit.Assert.assertArrayEquals;
