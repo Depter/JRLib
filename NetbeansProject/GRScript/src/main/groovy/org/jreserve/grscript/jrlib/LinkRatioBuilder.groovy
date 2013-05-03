@@ -9,15 +9,12 @@ import org.jreserve.jrlib.triangle.factor.DevelopmentFactors
  *
  * @author Peter Decsi
  */
-class LinkRatioBuilder {
+class LinkRatioBuilder extends AbstractMethodSelectionBuilder<LinkRatioMethod> {
     
     private DefaultLinkRatioSelection lrs
-    private java.util.Map<Integer, LinkRatioMethod> methods = new HashMap<Integer, LinkRatioMethod>()
-    private Map methodInstances = [:]
     
     LinkRatioBuilder(FactorTriangle factors) {
-        WeightedAverageLRMethod method = new WeightedAverageLRMethod()
-        methodInstances[WeightedAverageLRMethod.class] = method
+        LinkRatioMethod method = getCachedMethod(WeightedAverageLRMethod.class) {new WeightedAverageLRMethod()}
         lrs = new DefaultLinkRatioSelection(factors, method);
     }
     
@@ -28,15 +25,6 @@ class LinkRatioBuilder {
     void average(int index) {
         LinkRatioMethod method = getCachedMethod(AverageLRMethod.class) {new AverageLRMethod()}
         lrs.setMethod(method, index)
-    }
-    
-    private LinkRatioMethod getCachedMethod(Class clazz, Closure cl) {
-        LinkRatioMethod method = methodInstances[clazz]
-        if(method == null) {
-            method = cl()
-            methodInstances[clazz] = method
-        }
-        return method
     }
     
     void average(Collection<Integer> indices) {

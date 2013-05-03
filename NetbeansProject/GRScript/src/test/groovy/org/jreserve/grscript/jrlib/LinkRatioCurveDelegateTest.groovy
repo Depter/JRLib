@@ -224,5 +224,47 @@ class LinkRatioCurveDelegateTest {
         double rSquare = (Double) executor.runScript(BASE_SCRIPT + script)
         assertTrue(0 <= rSquare && rSquare <= 1)
     }
+    
+    @Test
+    public void testBuilder() {
+        String script = 
+        "smooth(lrs, 10) {\n"       +
+        "   exponential {\n"        +
+        "       apply(7)\n"         +
+        "       apply(8..9)\n"      +
+        "       exclude(0)\n"       +
+        "       exclude(1..2)\n"    +
+        "   }\n"                    +
+        "   power {\n"              +
+        "       apply(8)\n"         +
+        "       apply(0..2)\n"      +
+        "       exclude(0)\n"       +
+        "       exclude(1..2)\n"    +
+        "   }\n"                    +
+        "   inversePower {\n"       +
+        "       apply(8)\n"         +
+        "       apply(0..2)\n"      +
+        "       exclude(0)\n"       +
+        "       exclude(1..2)\n"    +
+        "   }\n"                    +
+        "   weibul {\n"             +
+        "       apply(8)\n"         +
+        "       apply(0..2)\n"      +
+        "       exclude(0)\n"       +
+        "       exclude(1..2)\n"    +
+        "   }\n"                    +
+        "   fixed(1, 231.2)\n"      +
+        "   fixed {\n"              +
+        "       cell(1, 100.1)\n"   +
+        "       cell(2, 200.1)\n"   +
+        "   }\n"                    +
+        "}";
+        
+        LinkRatioSmoothing s = runScript(script)
+        assertEquals(10, s.getLength())
+        for(d in 0..<10) {
+            assertFalse(Double.isNaN(s.getValue(d)))
+        }
+    }
 }
 

@@ -16,7 +16,7 @@ import org.jreserve.grscript.util.MapUtil
  * @author Peter Decsi
  * @version 1.0
  */
-class LinkRatioCurveBuilder {
+class LinkRatioCurveBuilder extends AbstractMethodSelectionBuilder<LinkRatioCurve> {
     
     DefaultLinkRatioSmoothing smoothing;
     
@@ -26,31 +26,42 @@ class LinkRatioCurveBuilder {
     }
     
     void exponential(Closure cl) {
-        delegate(cl, new ExponentialLRCurve())
+        LinkRatioCurve curve = getCachedMethod(ExponentialLRCurve.class) {new ExponentialLRCurve()}
+        delegate(cl, curve)
     }
     
     void power(Closure cl) {
-        delegate(cl, new PowerLRCurve())
+        LinkRatioCurve curve = getCachedMethod(PowerLRCurve.class) {new PowerLRCurve()}
+        delegate(cl, curve)
     }
     
     void inversePower(Closure cl) {
-        delegate(cl, new InversePowerLRCurve())
+        LinkRatioCurve curve = getCachedMethod(InversePowerLRCurve.class) {new InversePowerLRCurve()}
+        delegate(cl, curve)
     }
     
     void weibul(Closure cl) {
-        delegate(cl, new WeibulLRCurve())
+        LinkRatioCurve curve = getCachedMethod(WeibulLRCurve.class) {new WeibulLRCurve()}
+        delegate(cl, curve)
     }
     
     private void delegate(Closure cl, LinkRatioCurve curve) {
         CurveBuilder builder = new CurveBuilder(smoothing, curve)
-        cl.delegate = cl
+        cl.delegate = builder
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
     }
     
+    void fixed(int index, double value) {
+        UserInputLRCurve curve = (UserInputLRCurve) getCachedMethod(UserInputLRCurve.class) {new UserInputLRCurve()}
+        curve.setValue(index, value)
+        smoothing.setMethod(curve, index)
+    }
+    
     void fixed(Closure cl) {
-        FixedBuilder builder = new FixedBuilder(smoothing)
-        cl.delegate = cl
+        UserInputLRCurve curve = (UserInputLRCurve) getCachedMethod(UserInputLRCurve.class) {new UserInputLRCurve()}
+        FixedBuilder builder = new FixedBuilder(smoothing, curve)
+        cl.delegate = builder
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
     }
@@ -74,7 +85,7 @@ class LinkRatioCurveBuilder {
         
         void exclude(int development) {
             if(curve instanceof Excludeable) {
-                ((Excludeable)curve).setExcluded(exclude, true)
+                ((Excludeable)curve).setExcluded(development, true)
             } else {
                 throwNotExcludeable(type)
             }
@@ -97,11 +108,12 @@ class LinkRatioCurveBuilder {
 
     class FixedBuilder {
         private DefaultLinkRatioSmoothing smoothing
-        private UserInputLRCurve curve = new UserInputLRCurve()
+        private UserInputLRCurve curve
         private MapUtil mapUtil = MapUtil.getInstance()
         
-        FixedBuilder(DefaultLinkRatioSmoothing smoothing) {
-            this.smoothing = smoothing;
+        FixedBuilder(DefaultLinkRatioSmoothing smoothing, UserInputLRCurve curve) {
+            this.smoothing = smoothing
+            this.curve = curve
         }
         
         void cell(int development, double value) {
