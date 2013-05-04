@@ -76,23 +76,20 @@ class LinkRatioScaleDelegateTest {
     @Test
     public void testBuilder() {
         String script = 
-        "scale(lrs) {\n"            +
-        "   minMax(0)\n"            +
-        "   minMax(0..2)\n"         +
-        "   logLinear(0)\n"         +
-        "   logLinear(0..2)\n"      +
-        "   fixed(3, 50.42)\n"      +
-        "   fixed {\n"              +
-        "       cell(d:1, value:200.45)\n"  +
-        "       cell(d:2, value:122.5)\n"   +
-        "   }\n"                    +
+        "scale(lrs) {\n"                +
+        "   minMax(0)\n"                +
+        "   minMax(5..6)\n"             +
+        "   logLinear(0)\n"             +
+        "   logLinear(0..2)\n"          +
+        "   fixed(3, 50.42)\n"          +
+        "   fixed(1:200.45, 2:122.5)\n" +
         "}\n"
         ;
         
         LinkRatioScale scale = runScript(script)
-        assertEquals(7, scale .getLength())
+        assertEquals(7, scale.getLength())
         for(d in 0..<7) {
-            assertFalse(Double.isNaN(scale .getValue(d)))
+            assertFalse(Double.isNaN(scale.getValue(d)))
         }
     }
 }

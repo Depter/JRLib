@@ -46,33 +46,7 @@ class LinkRatioScaleBuilder extends AbstractMethodSelectionBuilder<ScaleEstimato
         scales.setMethod(estimator, index)
     }
     
-    void fixed(Closure cl) {
-        ScaleEstimator estimator = getCachedMethod(UserInputScaleEstimator.class) {new UserInputScaleEstimator()}
-        FixedBuilder builder = new FixedBuilder(scales, (UserInputScaleEstimator) estimator)
-        cl.delegate = cl
-        cl.resolveStrategy = Closure.DELEGATE_FIRST
-        cl()
-    }
-
-    class FixedBuilder {
-        private DefaultLinkRatioScaleSelection scales
-        private UserInputScaleEstimator estimator
-        private MapUtil mapUtil = MapUtil.getInstance()
-        
-        FixedBuilder(DefaultLinkRatioScaleSelection scales, UserInputScaleEstimator estimator) {
-            this.scales = scales
-            this.estimator = estimator
-        }
-        
-        void cell(int development, double value) {
-            estimator.setValue(development, value)
-            scales.setMethod(estimator, development)
-        }
-        
-        void cell(Map map) {
-            int development = mapUtil.getDevelopment(map) 
-            double value = mapUtil.getDouble(map, "value", "v")
-            cell(development, value)
-        }
+    void fixed(Map map) {
+        map.each {index, value -> fixed(index, value)}
     }
 }

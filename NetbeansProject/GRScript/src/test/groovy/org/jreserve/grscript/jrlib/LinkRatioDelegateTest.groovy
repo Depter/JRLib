@@ -76,7 +76,7 @@ class LinkRatioDelegateTest {
         String script = 
         "lrs2 = linkRatio(data) {\n"      +
         "   average(0..2)\n"              +
-        "   fixed(5..6, 1.02, 1.01)\n"    +
+        "   fixed(5:1.02, 6:1.01)\n"    +
         "}";
         
         LinkRatio lrs2 = runScript(script)

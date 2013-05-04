@@ -7,43 +7,29 @@ import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
-import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultLinkRatioSESelectionTest {
+public class SimpleLinkRatioSETest {
     private final static double[] EXPECTED_SES = {
         2.24376318, 0.51681801, 0.12200144, 0.05117008, 
         0.04207692, 0.02303354, 0.01465199, 0.01222874
     };
 
-    private DefaultLinkRatioSESelection ses;
+    private SimpleLinkRatioSE ses;
     
-    public DefaultLinkRatioSESelectionTest() {
-    }
-
     @Before
     public void setUp() {
         ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.MACK_DATA);
         LinkRatio lrs = new SimpleLinkRatio(cik);
         LinkRatioScale scales = new SimpleLinkRatioScale(lrs);
-        ses = new DefaultLinkRatioSESelection(new LinkRatioSECalculator(scales));
-    }
-
-    @Test
-    public void testSetDefaultMethod() {
-        assertTrue(ses.getDefaultMethod() instanceof DefaultLinkRatioSEFunction);
-        
-        ses.setDefaultMethod(new UserInputLinkRatioSEFunction());
-        assertTrue(ses.getDefaultMethod() instanceof UserInputLinkRatioSEFunction);
-        
-        ses.setDefaultMethod(null);
-        assertTrue(ses.getDefaultMethod() instanceof DefaultLinkRatioSEFunction);
+        ses = new SimpleLinkRatioSE(scales);
     }
 
     @Test

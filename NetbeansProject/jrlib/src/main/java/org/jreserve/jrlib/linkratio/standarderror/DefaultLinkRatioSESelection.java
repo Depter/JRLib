@@ -3,7 +3,6 @@ package org.jreserve.jrlib.linkratio.standarderror;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScaleInput;
-import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.util.method.AbstractMethodSelection;

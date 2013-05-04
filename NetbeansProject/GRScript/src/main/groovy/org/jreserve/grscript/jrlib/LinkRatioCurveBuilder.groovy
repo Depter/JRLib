@@ -58,12 +58,8 @@ class LinkRatioCurveBuilder extends AbstractMethodSelectionBuilder<LinkRatioCurv
         smoothing.setMethod(curve, index)
     }
     
-    void fixed(Closure cl) {
-        UserInputLRCurve curve = (UserInputLRCurve) getCachedMethod(UserInputLRCurve.class) {new UserInputLRCurve()}
-        FixedBuilder builder = new FixedBuilder(smoothing, curve)
-        cl.delegate = builder
-        cl.resolveStrategy = Closure.DELEGATE_FIRST
-        cl()
+    void fixed(Map map) {
+        map.each {index, value -> fixed(index, value)}
     }
     
     class CurveBuilder {
@@ -103,28 +99,6 @@ class LinkRatioCurveBuilder extends AbstractMethodSelectionBuilder<LinkRatioCurv
             } else {
                 throwNotExcludeable(type)
             }
-        }
-    }
-
-    class FixedBuilder {
-        private DefaultLinkRatioSmoothing smoothing
-        private UserInputLRCurve curve
-        private MapUtil mapUtil = MapUtil.getInstance()
-        
-        FixedBuilder(DefaultLinkRatioSmoothing smoothing, UserInputLRCurve curve) {
-            this.smoothing = smoothing
-            this.curve = curve
-        }
-        
-        void cell(int development, double value) {
-            curve.setValue(development, value)
-            smoothing.setMethod(curve, development)
-        }
-        
-        void cell(Map map) {
-            int development = mapUtil.getDevelopment(map) 
-            double value = mapUtil.getDouble(map, "value", "v")
-            cell(development, value)
         }
     }
 }

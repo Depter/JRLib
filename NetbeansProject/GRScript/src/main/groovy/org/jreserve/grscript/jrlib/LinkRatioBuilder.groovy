@@ -78,10 +78,8 @@ class LinkRatioBuilder extends AbstractMethodSelectionBuilder<LinkRatioMethod> {
         lrs.setMethod(method, index)
     }
     
-    void fixed(Collection<Integer> indices, double... values) {
-        int count = 0
-        for(i in indices)
-            fixed(i, values[count++])
+    void fixed(Map map) {
+        map.each {index, value -> fixed(index, value)}
     }
 }
 

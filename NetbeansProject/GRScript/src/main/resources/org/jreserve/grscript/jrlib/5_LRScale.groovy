@@ -14,8 +14,6 @@ lrScales = scale(lrs) {
     minMax(0..2)
     logLinear(0)
     logLinear(0..2)
-    fixed {
-        cell(1, 200.45)
-        cell(2, 122.5)
-    }
+    fixed(1, 200.45)
+    fixed(1:200.45, 2:122.5)
 }

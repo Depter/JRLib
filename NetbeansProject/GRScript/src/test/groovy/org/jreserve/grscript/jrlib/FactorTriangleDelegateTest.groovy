@@ -29,7 +29,6 @@ class FactorTriangleDelegateTest {
         executor.addFunctionProvider(new TriangleUtilDelegate())
         executor.addFunctionProvider(new FactorTriangleDelegate())
     }
-	
     
     @Test
     public void testConstructor() {
