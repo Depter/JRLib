@@ -17,6 +17,8 @@ import org.jreserve.jrlib.scale.ScaleEstimator
  */
 class LinkRatioScaleDelegate implements FunctionProvider {
     
+    private ScaleEstimatorFactory estimators = ScaleEstimatorFactory.getInstance()
+    
     void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.scale    << this.&scale
     }
@@ -26,31 +28,8 @@ class LinkRatioScaleDelegate implements FunctionProvider {
     }
     
     LinkRatioScale scale(LinkRatio lrs, String type) {
-        ScaleEstimator estimator = createEstimator(type);
+        ScaleEstimator estimator = estimators.createEstimator(type);
         return new SimpleLinkRatioScale(lrs, estimator)
-    }
-
-    private ScaleEstimator createEstimator(String type) {
-        switch(type.toLowerCase()) {
-            case "minmax":
-            case "min max":
-            case "min-max":
-                return new MinMaxScaleEstimator();
-            case "extrapolation":
-            case "loglin":
-            case "log lin":
-            case "log-lin":
-            case "loglinear":
-            case "log linear":
-            case "log-linear":
-                return new ScaleExtrapolation()
-            default:
-                String msg = "Unknow scale estimator type: ${type}! Valid "+
-                "types are ([MinMax | Min Max | Min-Max] | "+
-                "[Extrapolation | LogLinear | Log-Linear | Log Linear | "+
-                "LogLin | Log Lin | Log-Lin]).";
-                throw new IllegalArgumentException(msg)
-        }
     }
     
     LinkRatioScale scale(LinkRatio lrs, Closure cl) {

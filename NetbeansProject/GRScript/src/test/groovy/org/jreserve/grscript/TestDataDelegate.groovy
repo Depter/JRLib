@@ -21,6 +21,7 @@ class TestDataDelegate implements FunctionProvider {
     @Override
     void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.apcPaid = this.&apcPaid
+        emc.apcIncurred = this.&apcIncurred
     }
     
     def apcPaid() {
@@ -30,6 +31,10 @@ class TestDataDelegate implements FunctionProvider {
     private double[][] load(String name) {
         String path = TestConfig.getPath(name)
         return reader.read(path)
+    }
+    
+    def apcIncurred() {
+        return load(TestConfig.APC_INCURRED)
     }
 }
 

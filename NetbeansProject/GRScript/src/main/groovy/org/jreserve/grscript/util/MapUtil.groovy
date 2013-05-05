@@ -33,7 +33,7 @@ class MapUtil {
         }
     }
     
-    private def getValue(Map map, String... names) {
+    def getValue(Map map, String... names) {
         def result = map.find {key, value -> 
             ((key instanceof String) && containsKey(key, names))
         }
