@@ -1,11 +1,9 @@
 package org.jreserve.jrlib.triangle.smoothing;
 
-import org.jreserve.jrlib.triangle.smoothing.AbstractVectorSmoothing;
-import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing;
-import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.triangle.InputTriangle;
 import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothingMethod;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -46,7 +44,17 @@ public class AbstractVectorSmoothingTest {
     
     @Test(expected=NullPointerException.class)
     public void testConstructor_CellsNull() {
-        new AbstractVectorSmoothingImpl(null);
+        smoothing = new AbstractVectorSmoothingImpl(null);
+    }
+    
+    @Test(expected=NullPointerException.class)
+    public void testConstructor_CellNull() {
+        SmoothingCell[] cells = {
+            new SmoothingCell(0, 0, true), 
+            null, 
+            new SmoothingCell(2, 0, false)
+        };
+        smoothing = new AbstractVectorSmoothingImpl(cells);
     }
 
     @Test
@@ -78,17 +86,19 @@ public class AbstractVectorSmoothingTest {
     private class AbstractVectorSmoothingImpl extends AbstractVectorSmoothing {
 
         private AbstractVectorSmoothingImpl(SmoothingCell[] cells) {
-            super(cells);
-        }
-
-        @Override
-        public void smooth(double[] input) {
-            for(int i=0; i<input.length; i++)
-                input[i] = SMOOTH_VALUE;
+            super(cells, new Smoother());
         }
 
         public TriangleSmoothing copy() {
             throw new UnsupportedOperationException("Not supported yet.");
+        }
+    }
+    
+    private class Smoother implements VectorSmoothingMethod {
+
+        public void smooth(double[] input) {
+            for(int i=0; i<input.length; i++)
+                input[i] = SMOOTH_VALUE;
         }
     }
 

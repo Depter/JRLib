@@ -2,6 +2,7 @@ package org.jreserve.jrlib.triangle.smoothing;
 
 import java.util.Arrays;
 import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothingMethod;
 
 /**
  * Base class for most of the smoothing methods. Extending classes
@@ -15,22 +16,28 @@ import org.jreserve.jrlib.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractVectorSmoothing implements TriangleSmoothing {
+public class AbstractVectorSmoothing implements TriangleSmoothing {
 
     private int cellCount;
     private int[][] cells;
     private boolean[] applied;
+    private VectorSmoothingMethod method;
     
     /**
-     * Creates an instance, which will use the given cells.
+     * Creates an instance, which will use the given cells and method.
      * 
-     * @throws NullPointerException if `cells` or one of it's element is null.
+     * @throws NullPointerException if 'method' or `cells` or one of 
+     * it's element is null.
      */
-    protected AbstractVectorSmoothing(SmoothingCell[] cells) {
+    public AbstractVectorSmoothing(SmoothingCell[] cells, VectorSmoothingMethod method) {
         if(cells == null)
             throw new NullPointerException("Cells were null!");
         this.cellCount = cells.length;
         initCells(cells);
+        
+        if(method == null)
+            throw new NullPointerException("Method is null!");
+        this.method = method;
     }
     
     protected AbstractVectorSmoothing() {
@@ -47,6 +54,10 @@ public abstract class AbstractVectorSmoothing implements TriangleSmoothing {
         }
     }
     
+    public VectorSmoothingMethod getMethod() {
+        return method;
+    }
+    
     @Override
     public double[][] smooth(Triangle input) {
         double[] smoothInput = getSmoothedVector(input);
@@ -57,7 +68,7 @@ public abstract class AbstractVectorSmoothing implements TriangleSmoothing {
     
     private double[] getSmoothedVector(Triangle input) {
         double[] values = getValues(input);
-        smooth(values);
+        method.smooth(values);
         return values;
     }
     
@@ -67,17 +78,6 @@ public abstract class AbstractVectorSmoothing implements TriangleSmoothing {
             result[i] = input.getValue(cells[i][0], cells[i][1]);
         return result;
     }
-    
-    /**
-     * Extending classes should smooth this array. The values will 
-     * contain the values from the input triangle, sorted based on 
-     * their coordinates. The implementing class should smooth the 
-     * whole array, this class will sort out, which value should
-     * be used in the output of the calculation.
-     * 
-     * @see org.jreserve.jrlib.triangle.Cell#compareTo(org.jreserve.jrlib.triangle.Cell) 
-     */
-    protected abstract void smooth(double[] input);
     
     private void smooth(double[][] values, double[] smoothInput) {
         for(int i=0; i<cellCount; i++) {

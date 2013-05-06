@@ -1,5 +1,7 @@
 package org.jreserve.jrlib.triangle.smoothing;
 
+import org.jreserve.jrlib.vector.smoothing.GeometricMovingAverageMethod;
+
 /**
  * Smoothes the input by replacing the values by
  * their geometric moving average.
@@ -13,9 +15,7 @@ package org.jreserve.jrlib.triangle.smoothing;
  * @author Peter Decsi
  * @version 1.0
  */
-public class GeometricMovingAverage extends AbstractMovingAverage {
-    
-    private double power;
+public class GeometricMovingAverage extends AbstractVectorSmoothing {
     
     /**
      * Creates an instance for the given cells and length for the moving 
@@ -25,18 +25,6 @@ public class GeometricMovingAverage extends AbstractMovingAverage {
      * @throws IllegalArgumentException if `length` is less then 1.
      */
     public GeometricMovingAverage(SmoothingCell[] cells, int length) {
-        super(cells, length);
-        this.power = 1d/(double)length;
-    }
-    
-    private GeometricMovingAverage() {
-    }
-    
-    @Override
-    protected double mean(double[] input, int index) {
-        double product = 1d;
-        for(int i=index-maLength+1; i<=index; i++)
-            product *= input[i];
-        return Math.pow(product, power);
+        super(cells, new GeometricMovingAverageMethod(length));
     }
 }

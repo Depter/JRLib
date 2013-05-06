@@ -1,7 +1,5 @@
-package org.jreserve.jrlib.triangle.smoothing;
+package org.jreserve.jrlib.vector.smoothing;
 
-import org.jreserve.jrlib.triangle.smoothing.ExponentialSmoothing;
-import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import static org.jreserve.jrlib.TestConfig.EPSILON;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -13,7 +11,7 @@ import org.junit.Test;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ExponentialSmoothingTest {
+public class ExponentialSmoothingMethodTest {
 
     private final static double[] INPUT = {
         4873558, 5130849, 5945610, 6632221, 
@@ -21,10 +19,7 @@ public class ExponentialSmoothingTest {
     };
     
     private double[] input;
-    private ExponentialSmoothing smoothing;
-
-    public ExponentialSmoothingTest() {
-    }
+    private ExponentialSmoothingMethod smoothing;
 
     @Before
     public void setUp() {
@@ -35,17 +30,17 @@ public class ExponentialSmoothingTest {
 
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_AlphaLess0() {
-        new ExponentialSmoothing(new SmoothingCell[0], -EPSILON);
+        new ExponentialSmoothingMethod(-EPSILON);
     }
 
     @Test(expected=IllegalArgumentException.class)
     public void testConstructor_AlphaMore1() {
-        new ExponentialSmoothing(new SmoothingCell[0], 1+EPSILON);
+        new ExponentialSmoothingMethod(1+EPSILON);
     }
     
     @Test
     public void testSmooth_Alpha0() {
-        smoothing = new ExponentialSmoothing(new SmoothingCell[0], 0d);
+        smoothing = new ExponentialSmoothingMethod(0d);
         smoothing.smooth(input);
         for(int i=0; i<input.length; i++)
             assertEquals(INPUT[0], input[i], EPSILON);
@@ -53,7 +48,7 @@ public class ExponentialSmoothingTest {
     
     @Test
     public void testSmooth_Alpha1() {
-        smoothing = new ExponentialSmoothing(new SmoothingCell[0], 1d);
+        smoothing = new ExponentialSmoothingMethod(1d);
         smoothing.smooth(input);
         for(int i=0; i<input.length; i++)
             assertEquals(INPUT[i], input[i], EPSILON);
@@ -61,7 +56,7 @@ public class ExponentialSmoothingTest {
     
     @Test
     public void testSmooth_Alpha0_2() {
-        smoothing = new ExponentialSmoothing(new SmoothingCell[0], 0.2);
+        smoothing = new ExponentialSmoothingMethod(0.2);
         double[] expected = new double[] {
             4873558.00000000, 4925016.20000000, 5129134.96000000, 5429752.16800000, 
             5747996.53440000, 6253487.62752000, 6802863.50201600, 7344598.60161280
@@ -72,7 +67,7 @@ public class ExponentialSmoothingTest {
     
     @Test
     public void testSmooth_Alpha0_8() {
-        smoothing = new ExponentialSmoothing(new SmoothingCell[0], 0.8);
+        smoothing = new ExponentialSmoothingMethod(0.8);
         double[] expected = new double[] {
             4873558.00000000, 5079390.80000000, 5772366.16000000, 6460250.03200000, 
             6908829.20640000, 8002127.44128000, 8800719.08825600, 9369375.01765120

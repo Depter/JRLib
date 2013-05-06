@@ -24,7 +24,6 @@ public class SmoothedTriangle<T extends Triangle> extends AbstractTriangleModifi
         if(smoothing == null)
             throw new NullPointerException("Smoothing is null!");
         this.smoothing = smoothing;
-        this.values = smoothing.smooth(source);
         doRecalculate();
     }
     

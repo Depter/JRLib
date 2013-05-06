@@ -12,6 +12,8 @@ public class TestConfig {
     
     public final static String APC_PAID = "apc_paid.csv";
     public final static String APC_INCURRED = "apc_incurred.csv";
+    public final static String APC_EXPOSURE = "apc_exposure.csv";
+    public final static String APC_NOC = "apc_noc.csv";
     private final static String DATA_HOME = "src/main/resources/org/jreserve/grscript/input/";
     
     public static String getPath(String dataName) {

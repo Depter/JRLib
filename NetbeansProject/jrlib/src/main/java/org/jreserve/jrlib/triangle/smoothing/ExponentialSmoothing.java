@@ -1,5 +1,7 @@
 package org.jreserve.jrlib.triangle.smoothing;
 
+import org.jreserve.jrlib.vector.smoothing.ExponentialSmoothingMethod;
+
 /**
  * Smoothies the values using exponential smoothing.
  * 
@@ -13,9 +15,6 @@ package org.jreserve.jrlib.triangle.smoothing;
  */
 public class ExponentialSmoothing extends AbstractVectorSmoothing {
     
-    private double alpha;
-    private double alpha2;
-    
     /**
      * Creates an instance for the given cells and alpha parameter.
      * 
@@ -24,26 +23,6 @@ public class ExponentialSmoothing extends AbstractVectorSmoothing {
      * interval.
      */
     public ExponentialSmoothing(SmoothingCell[] cells, double alpha) {
-        super(cells);
-        if(alpha < 0d || alpha > 1d)
-            throw new IllegalArgumentException("Alpha must be within [0; 1], but it was "+alpha+"!");
-        this.alpha = alpha;
-        this.alpha2 = 1d-alpha;
-    }
-    
-    private ExponentialSmoothing() {
-    }
-
-    @Override
-    protected void smooth(double[] input) {
-        int size = input.length;
-        if(size < 2)
-            return;
-        
-        double s = input[0];
-        for(int i=1; i<size; i++) {
-            s = alpha * input[i] + alpha2 * s;
-            input[i] = s;
-        }
+        super(cells, new ExponentialSmoothingMethod(alpha));
     }
 }

@@ -123,5 +123,4 @@ public class ScriptExecutorTest {
         Number n = (Number) engine.getVariable("x");
         assertEquals(10, n.intValue());
     }
-
 }

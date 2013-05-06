@@ -22,19 +22,30 @@ class TestDataDelegate implements FunctionProvider {
     void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.apcPaid = this.&apcPaid
         emc.apcIncurred = this.&apcIncurred
+        emc.apcNoC = this.&apcNoC
+        emc.apcExposure = this.&apcExposure
     }
     
     def apcPaid() {
-        return load(TestConfig.APC_PAID)
+        load(TestConfig.APC_PAID)
     }
     
     private double[][] load(String name) {
         String path = TestConfig.getPath(name)
-        return reader.read(path)
+        reader.read(path)
     }
     
     def apcIncurred() {
-        return load(TestConfig.APC_INCURRED)
+        load(TestConfig.APC_INCURRED)
+    }
+    
+    def apcNoC() {
+        load(TestConfig.APC_PAID)
+    }
+    
+    def apcExposure() {
+        double[][] exposure = load(TestConfig.APC_EXPOSURE)
+        exposure[0]
     }
 }
 

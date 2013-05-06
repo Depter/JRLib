@@ -1,4 +1,4 @@
-package org.jreserve.jrlib.triangle.smoothing;
+package org.jreserve.jrlib.vector.smoothing;
 
 /**
  * Abstract class for smoothing data based on some kind of moving average
@@ -7,29 +7,24 @@ package org.jreserve.jrlib.triangle.smoothing;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
-
+public abstract class AbstractMovingAverageMethod implements VectorSmoothingMethod {
+    
     protected int maLength;
     
     /**
-     * Creates an instance for the given cells and length for the moving 
+     * Creates an instance for the given length for the moving 
      * average.
      * 
-     * @throws NullPointerException if `cells` or one of it's element is null.
      * @throws IllegalArgumentException if `length` is ;ess then 1.
      */
-    protected AbstractMovingAverage(SmoothingCell[] cells, int maLength) {
-        super(cells);
+    protected AbstractMovingAverageMethod(int maLength) {
         if(maLength <= 0)
             throw new IllegalArgumentException("Length must be at least 1, but was "+maLength+"!");
         this.maLength = maLength;
     }
-
-    protected AbstractMovingAverage() {
-    }
     
     @Override
-    protected void smooth(double[] input) {
+    public void smooth(double[] input) {
         int size = input.length;
         if(size < maLength)
             return;
@@ -45,4 +40,5 @@ public abstract class AbstractMovingAverage extends AbstractVectorSmoothing {
      * Extending classes should calculate a mean for the given location.
      */
     protected abstract double mean(double[] input, int index);
+    
 }
