@@ -27,6 +27,7 @@ class PrintDelegate implements FunctionProvider {
         this.script = script;
         script.setProperty(DECIMAL_FORMAT, DEFAULT_DECIMAL_FORMAT)
         script.setProperty(PERCENTAGE_FORMAT, DEFAULT_PERCENTAGE_FORMAT)
+        script.setProperty(PRINT_DELEGATE, this)
         
         emc.setNumberFormat = this.&setNumberFormat
         emc.setPercentageFormat = this.&setPercentageFormat

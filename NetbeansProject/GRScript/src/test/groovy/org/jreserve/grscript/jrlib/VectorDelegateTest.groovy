@@ -42,6 +42,14 @@ class VectorDelegateTest {
     }
     
     @Test
+    public void testConstructor_int_double() {
+        JRVector v = runScript("exposure = vector(5, 3.4)")
+        assertEquals(5, v.getLength())
+        for(i in 0..<5)
+            assertEquals(3.4, v.getValue(i), TestConfig.EPSILON)
+    }
+    
+    @Test
     public void testCorrigate_int_double() {
         JRVector v = runScript("exposure = corrigate(exposure, 2, 100.5)\n")
         double[] data = (double[]) executor.getVariable("data")

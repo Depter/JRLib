@@ -5,11 +5,11 @@ setNumberFormat "0.00000"
 String path = "C:\\Munka\\Java\\NetbeansWS\\GRScript\\test\\org\\jreserve\\grscript\\input\\apc_paid.csv"
 data = readCsv(path, [columnSeparator:","])
 cummulate(data)
-lrs = linkRatio(data)
+scales = scale(linkRatio(data))
 
-res = residuals(lrs)        //Not adjusted
-res = residuals(lrs, true)  //adjusted
-res = adjust(res)           //adjust residuals
+res = residuals(scales)        //Not adjusted
+res = residuals(scales, true)  //adjusted
+res = adjust(scales)           //adjust residuals
 
 res = exclude(res, [a:0, d:2])
 res = exclude(res, [accident:0, development:2])

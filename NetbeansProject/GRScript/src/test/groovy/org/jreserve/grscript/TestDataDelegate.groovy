@@ -40,7 +40,7 @@ class TestDataDelegate implements FunctionProvider {
     }
     
     def apcNoC() {
-        load(TestConfig.APC_PAID)
+        load(TestConfig.APC_NOC)
     }
     
     def apcExposure() {

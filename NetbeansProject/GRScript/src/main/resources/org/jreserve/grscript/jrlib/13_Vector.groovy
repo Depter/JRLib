@@ -6,6 +6,7 @@ String path = "C:\\Munka\\Java\\NetbeansWS\\GRScript\\test\\org\\jreserve\\grscr
 data = readCsv(path, [columnSeparator:","])
 data = data[0]
 
+exposure = vector(5, 11.5)
 exposure = vector(data)
 exposure = corrigate(exposure, 1, 90000)
 exposure = corrigate(exposure, [1:90000, 2:50000])

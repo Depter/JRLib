@@ -9,7 +9,9 @@ import org.jreserve.jrlib.vector.AbstractVector;
  * EmptyOdpResidualScale has a scale parameter of 1, for each valid 
  * development period, and NaN for development periods outside the boudns.
  * Valid developmetn periods are 
- * `0 <= development && development < {@link OdpResidualTriangle#getDevelopmentCount() source.getDevelopmentCount()}`.
+ * <pre>
+ * `0 <= d && dt < {@link OdpResidualTriangle#getDevelopmentCount() source.getDevelopmentCount()}`.
+ * </pre>
  * @author Peter Decsi
  * @version 1.0
  */
@@ -23,6 +25,7 @@ public class EmptyOdpResidualScale
 
     public EmptyOdpResidualScale(OdpResidualTriangle source) {
         super(source);
+        doRecalculate();
     }
     
     @Override

@@ -40,6 +40,12 @@ class VectorDelegate implements FunctionProvider {
         return new InputVector(data)
     }
     
+    JRVector vector(int length, double value) {
+        double[] data = new double[length]
+        Arrays.fill(data, value)
+        return this.vector(data)
+    }
+    
     JRVector corrigate(JRVector vector, int index, double value) {
         return new VectorCorrection(vector, index, value)
     }

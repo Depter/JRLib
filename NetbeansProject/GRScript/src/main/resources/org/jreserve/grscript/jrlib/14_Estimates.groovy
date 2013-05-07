@@ -9,8 +9,8 @@ def incurredData = readCsv(HOME+"apc_incurred.csv", [columnSeparator:","])
 estimate = averageCostEstimate(numberLrs, costLrs)
 estimate = estimate(method:"Average-Cost", numbers:numberLrs, costs:costLrs)
 
-estimate = bornhuetterFergussonEstimate(lrs, exposure, lossRatio)
-estimate = estimate(method:"Bornhuetter-Fergusson", 
+estimate = bornhuetterFergusonEstimate(lrs, exposure, lossRatio)
+estimate = estimate(method:"Bornhuetter-Ferguson", 
                     linkRatios:lrs, 
                     exposure:exposure, 
                     lossRatio:lossRatio)
@@ -32,6 +32,12 @@ estimate = estimate(method:"Chain-Ladder",
 
 estimate = mackEstimate(lrSE)
 estimate = estimate(method:"Mack",
-                    linkRatios:lrs)
+                    linkRatiosSE:lrs)
 
+estimate = munichChainLadderEstimate {
+    lrPaid lrPaidRes
+    crPaid iPerPRes
+    lrIncurred lrIncurredRes
+    crIncurred pPerIRes
+}
 summary(estimate)
