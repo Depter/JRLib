@@ -55,6 +55,16 @@ class ClaimResidualScaleDelegateTest {
     }
     
     @Test
+    public void testConstantScale_LinkRatio() {
+        OdpResidualScale scales = runScript("scales = constantScale(lrs)")
+        
+        assertTrue(scales instanceof ConstantOdpResidualScale)
+        assertEquals(8, scales.getLength())
+        for(d in 0..<8)
+            assertFalse(Double.isNaN(scales.getValue(d)))
+    }
+    
+    @Test
     public void testConstantScale_double() {
         OdpResidualScale scales = runScript("scales = constantScale(paidResiduals, 100)")
         
@@ -66,6 +76,16 @@ class ClaimResidualScaleDelegateTest {
     @Test
     public void testVariableScale() {
         OdpResidualScale scales = runScript("scales = variableScale(paidResiduals)")
+        
+        assertTrue(scales instanceof VariableOdpResidualScale)
+        assertEquals(8, scales.getLength())
+        for(d in 0..<8)
+            assertFalse(Double.isNaN(scales.getValue(d)))
+    }
+    
+    @Test
+    public void testVariableScale_LinkRatio() {
+        OdpResidualScale scales = runScript("scales = variableScale(lrs)")
         
         assertTrue(scales instanceof VariableOdpResidualScale)
         assertEquals(8, scales.getLength())

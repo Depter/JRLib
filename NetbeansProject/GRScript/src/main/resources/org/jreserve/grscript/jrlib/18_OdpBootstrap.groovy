@@ -6,26 +6,22 @@ paidData = cummulate(data)
 
 //Basic data
 paidTriangle = triangle(paidData)
-paidLr = linkRatio(data)   //WeightedAverage
+paidLr = linkRatio(data)                    //WeightedAverage
 paidLr = smooth(paidLr, 10, "exponential")
 
-//Residuals
-paidResiduals = odpResiduals(paidLr) {
-    exclude(accident:0, development:8)
-    exclude(accident:8, development:0)
-    adjust()
-}
-
 //Residual scales
-paidResScale = variableScale(paidResiduals)
+paidResScale = variableScale(paidLr)
+paidRes = residuals(paidResScale) {
+    exclude(0, 8)
+    exclude(8, 0)
+}
 
 //Bootstrap
 bootstrap = odpBootstrap {
     count 1000
-    linkRatio paidLr
     random "Java", 10   //random(String) , random(Random), DEFAULT = Java
-    scale "Constant"    //Constant | Variable            , DEFAULT = "Constant"
-    scales paidResScale
+    residuals paidRes
+    process "Gamma"     //Default: Gamma, values: [Gamma, Constant]
     segment {
         from(accient:0, development:0)
         to(a:8, d:2)

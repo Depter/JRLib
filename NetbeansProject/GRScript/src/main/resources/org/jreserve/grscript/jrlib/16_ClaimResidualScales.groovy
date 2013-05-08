@@ -16,6 +16,9 @@ paidResiduals = residuals(paidLr) {
 }
 
 //Residual scales
+paidResScale = constantScale(paidLr)
+paidResScale = variableScale(paidLr)
+
 paidResScale = constantScale(paidResiduals)
 paidResScale = constantScale(paidResiduals, scale)  //fixed user input scale
 paidResScale = variableScale(paidResiduals)

@@ -1,6 +1,8 @@
-package org.jreserve.jrlib.bootstrap.odp.residuals;
+package org.jreserve.jrlib.bootstrap.odp.scaledresiduals;
 
 import org.jreserve.jrlib.bootstrap.AbstractAdjustedResidualTriangle;
+import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle;
+import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
@@ -9,34 +11,30 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * the bootstrap bias.
  * 
  * The adjustment factor `a` is calculated with the following formula:
- * <pre>
  *               N
  *     adj^2 = -----
  *             N - p
- * </pre>
  * where:
- * <ul>
- * <li>`N` is the number of cells, where the residual is not NaN.</li>
- * <li>`p` is equals to the number of accident periods in the source
+ * -   `N` is the number of cells, where the residual is not NaN.
+ * -   `p` is equals to the number of accident periods in the source
  *     claims triangle, plus the number of development periods in
  *     the source triangle plus 1
- *     ({@link ClaimTriangle#getAccidentCount() cik.getAccidentCount()} + {@link ClaimTriangle#getDevelopmentCount() cik.getDevelopmentCount()} - 1).</li>
- * </ul>
+ *     ({@link ClaimTriangle#getAccidentCount() cik.getAccidentCount()} + {@link ClaimTriangle#getDevelopmentCount() cik.getDevelopmentCount()} - 1).
+* 
  * @author Peter Decsi
  * @version 1.0
  */
-public class AdjustedOdpResidualTriangle 
-    extends AbstractAdjustedResidualTriangle<OdpResidualTriangle> 
-    implements ModifiedOdpResidualTriangle {
+public class AdjustedOdpScaledResidualTriangle
+    extends AbstractAdjustedResidualTriangle<OdpScaledResidualTriangle> 
+    implements ModifiedOdpScaledResidualTriangle {
     
     /**
-     * Creates an instance for the given link-ratios.
+     * Creates a new instance for the given source.
      * 
      * @throws NullPointerException if `source` is null.
-     * @see InputOdpResidualTriangle#InputOdpResidualTriangle(LinkRatio) 
      */
-    public AdjustedOdpResidualTriangle(LinkRatio lrs) {
-        this(new InputOdpResidualTriangle(lrs));
+    public AdjustedOdpScaledResidualTriangle(OdpResidualScale source) {
+        this(new DefaultOdpScaledResidualTriangle(source));
     }
     
     /**
@@ -44,32 +42,36 @@ public class AdjustedOdpResidualTriangle
      * 
      * @throws NullPointerException if `source` is null.
      */
-    public AdjustedOdpResidualTriangle(OdpResidualTriangle source) {
+    public AdjustedOdpScaledResidualTriangle(OdpScaledResidualTriangle source) {
         super(source);
     }
 
-    @Override
-    public OdpResidualTriangle getSourceOdpResidualTriangle() {
+    public OdpScaledResidualTriangle getSourceOdpScaledResidualTriangle() {
         return source;
     }
 
-    @Override
+    public OdpResidualScale getSourceOdpResidualScales() {
+        return source.getSourceOdpResidualScales();
+    }
+
+    public OdpResidualTriangle getSourceOdpResidualTriangle() {
+        return source.getSourceOdpResidualTriangle();
+    }
+
     public LinkRatio getSourceLinkRatios() {
         return source.getSourceLinkRatios();
     }
 
-    @Override
     public ClaimTriangle getSourceTriangle() {
         return source.getSourceTriangle();
     }
 
-    @Override
     public double getFittedValue(int accident, int development) {
         return source.getFittedValue(accident, development);
     }
-    
-    @Override
+
     public double[][] toArrayFittedValues() {
         return source.toArrayFittedValues();
     }
+
 }

@@ -1,11 +1,7 @@
 package org.jreserve.jrlib.bootstrap.odp.scale;
 
-import org.jreserve.jrlib.bootstrap.odp.scale.VariableOdpResidualScale;
-import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
-import org.jreserve.jrlib.bootstrap.odp.residuals.AdjustedOdpResidualTriangle;
-import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
@@ -25,15 +21,13 @@ public class VariableOdpResidualScaleTest {
         386.56072129, 296.72570659,  83.87334564,  99.56258727,   0.00000000
     };
     
-    private OdpResidualTriangle residuals;
     private OdpResidualScale scales;
     
     @Before
     public void setUp() {
         ClaimTriangle cik = TestData.getCummulatedTriangle(TestData.TAYLOR_ASHE);
         LinkRatio lrs = new SimpleLinkRatio(cik);
-        residuals = new AdjustedOdpResidualTriangle(lrs);
-        scales = new VariableOdpResidualScale(residuals);
+        scales = new VariableOdpResidualScale(lrs);
     }
     
     @Test

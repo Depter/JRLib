@@ -9,12 +9,16 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * InputOdpResidualTriangle calculates the adjusted pearson residuals for
  * a given set of link-ratios. The formula to calculate the residual
  * for accident period `a` and development period `d` is:
+ * <pre>
  *               o(a,d) - f(a,d)
  *     r(a,d) =  ---------------
  *                 f(a,d)^0.5
+ * </pre>
  * where:
- * -   `o(a,d)` is the original incremental value.
- * -   `f(a,d)` is teh fitted incremental value
+ * <ul>
+ *   <li>`o(a,d)` is the original incremental value.</li>
+ *   <li>`f(a,d)` is teh fitted incremental value.</li>
+ * </ul>
  * 
  * @author Peter Decsi
  * @version 1.0

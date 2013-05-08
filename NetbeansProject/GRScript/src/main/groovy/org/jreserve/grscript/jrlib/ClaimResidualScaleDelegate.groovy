@@ -11,6 +11,7 @@ import org.jreserve.jrlib.bootstrap.odp.scale.UserInputOdpSMethod
 import org.jreserve.jrlib.bootstrap.odp.scale.SimpleOdpRSEstimate
 import org.jreserve.jrlib.bootstrap.odp.scale.EmptyOdpResidualScale
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpRSMethod
+import org.jreserve.jrlib.linkratio.LinkRatio
 
 /**
  *
@@ -22,6 +23,10 @@ class ClaimResidualScaleDelegate implements FunctionProvider {
     void initFunctions(Script script, ExpandoMetaClass emc) {
         emc.constantScale << this.&constantScale
         emc.variableScale << this.&variableScale
+    }
+    
+    OdpResidualScale constantScale(LinkRatio lrs) {
+        return new ConstantOdpResidualScale(lrs)
     }
     
     OdpResidualScale constantScale(OdpResidualTriangle residuals) {
@@ -41,6 +46,10 @@ class ClaimResidualScaleDelegate implements FunctionProvider {
         return new VariableOdpResidualScale(residuals)
     }
     
+    OdpResidualScale variableScale(LinkRatio lrs) {
+        return new VariableOdpResidualScale(lrs)
+    }
+    
     OdpResidualScale variableScale(OdpResidualTriangle residuals, Closure cl) {
         Builder builder = new Builder(residuals)
         cl.delegate = builder
@@ -51,6 +60,11 @@ class ClaimResidualScaleDelegate implements FunctionProvider {
     
     private class Builder extends AbstractMethodSelectionBuilder<OdpRSMethod> {
         private DefaultOdpResidualScaleSelection scales
+        
+        Builder(LinkRatio lrs) {
+            OdpResidualScale s = new VariableOdpResidualScale(lrs)
+            scales = new DefaultOdpResidualScaleSelection(s)
+        }
         
         Builder(OdpResidualTriangle residuals) {
             OdpResidualScale s = new VariableOdpResidualScale(residuals)

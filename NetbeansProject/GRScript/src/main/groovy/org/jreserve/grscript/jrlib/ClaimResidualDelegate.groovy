@@ -4,7 +4,6 @@ import org.jreserve.grscript.FunctionProvider
 import org.jreserve.grscript.util.MapUtil
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.AdjustedOdpResidualTriangle
-import org.jreserve.jrlib.bootstrap.odp.residuals.DefaultOdpScaledResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.InputOdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangleCorrection
 import org.jreserve.jrlib.linkratio.LinkRatio

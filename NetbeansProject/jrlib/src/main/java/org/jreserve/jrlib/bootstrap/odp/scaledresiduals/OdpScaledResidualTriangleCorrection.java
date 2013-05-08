@@ -1,5 +1,6 @@
-package org.jreserve.jrlib.bootstrap.odp.residuals;
+package org.jreserve.jrlib.bootstrap.odp.scaledresiduals;
 
+import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle;
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.triangle.Cell;

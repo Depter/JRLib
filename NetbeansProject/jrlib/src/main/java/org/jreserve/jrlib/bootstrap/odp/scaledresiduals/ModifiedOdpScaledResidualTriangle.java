@@ -1,4 +1,4 @@
-package org.jreserve.jrlib.bootstrap.odp.residuals;
+package org.jreserve.jrlib.bootstrap.odp.scaledresiduals;
 
 /**
  *

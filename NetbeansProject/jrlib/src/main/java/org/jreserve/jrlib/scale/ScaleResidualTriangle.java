@@ -7,18 +7,22 @@ import org.jreserve.jrlib.triangle.AbstractTriangle;
  * {@link Scale Scale} implementation.
  * 
  * The values are calculated as follows:
+ * <pre>
  *     res(a,d) = w(a,d)^0.5 * (r(a,d) - r(d)) / s(d)
+ * </pre>
  * where:
- * -   `res(a,d)` is the calculated residual for accident period `a` and
- *      development period `d`.
- * -   `w(a,d)` is the used weight, returned by 
- *     {@link ScaleInput#getWeight(int, int) ScaleInput.getWeight(a,d)}.
- * -   `r(a,d)` is the observed ratio returned by 
- *     {@link ScaleInput#getRatio(int, int) ScaleInput.getRatio(a,d)}.
- * -   `r(d)` is the estimated ratio returned by 
- *     {@link ScaleInput#getRatio(int) ScaleInput.getRatio(d)}.
- * -   `s(d)` is the scale parameter returned by
- *     {@link Scale#getValue(int) Scale.getValue(d)}.
+ * <ul>
+ * <li>`res(a,d)` is the calculated residual for accident period `a` and
+ *      development period `d`.</li>
+ * <li>`w(a,d)` is the used weight, returned by 
+ *     {@link ScaleInput#getWeight(int, int) ScaleInput.getWeight(a,d)}.</li>
+ * <li>`r(a,d)` is the observed ratio returned by 
+ *     {@link ScaleInput#getRatio(int, int) ScaleInput.getRatio(a,d)}.</li>
+ * <li>`r(d)` is the estimated ratio returned by 
+ *     {@link ScaleInput#getRatio(int) ScaleInput.getRatio(d)}.</li>
+ * <li>`s(d)` is the scale parameter returned by
+ *     {@link Scale#getValue(int) Scale.getValue(d)}.</li>
+ * </ul>
  * 
  * The dimensions of the resulting triangle are decided based on the values 
  * obtained from {@link ScaleInput#getAccidentCount() ScaleInput.getAccidentCount()} and

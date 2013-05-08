@@ -1,6 +1,6 @@
-package org.jreserve.jrlib.bootstrap.odp.residuals;
+package org.jreserve.jrlib.bootstrap.odp.scaledresiduals;
 
-import org.jreserve.jrlib.bootstrap.odp.residuals.DefaultOdpScaledResidualTriangle;
+import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.DefaultOdpScaledResidualTriangle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.odp.scale.VariableOdpResidualScale;

@@ -17,7 +17,7 @@ def scales = scale(crs)
 
 res = residuals(scales)        //Not adjusted
 res = residuals(scales, true)  //adjusted
-res = adjust(scales)           //adjust residuals
+res = adjust(rs)           //adjust residuals
 
 res = exclude(scales, [a:0, d:2])
 res = exclude(scales, [accident:0, development:2])
