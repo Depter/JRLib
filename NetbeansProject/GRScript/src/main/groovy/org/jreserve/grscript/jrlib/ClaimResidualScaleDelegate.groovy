@@ -58,6 +58,14 @@ class ClaimResidualScaleDelegate implements FunctionProvider {
         return builder.scales
     }
     
+    OdpResidualScale variableScale(LinkRatio lrs, Closure cl) {
+        Builder builder = new Builder(lrs)
+        cl.delegate = builder
+        cl.resolveStrategy = Closure.DELEGATE_FIRST
+        cl()
+        return builder.scales
+    }
+    
     private class Builder extends AbstractMethodSelectionBuilder<OdpRSMethod> {
         private DefaultOdpResidualScaleSelection scales
         

@@ -35,8 +35,13 @@ public class OdpGammaProcessSimulator implements ProcessSimulator {
     }
     
     private double getScale(int development) {
-        return (0<= development && development < scaleCount)?
-                scales[development] :
-                Double.NaN;
+        if(development < 0)
+            development = 0;
+        if(development >= scaleCount)
+            development = (scaleCount-1);
+        return scales[development];
+//        return (0<= development && development < scaleCount)?
+//                scales[development] :
+//                Double.NaN;
     }
 }

@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.bootstrap.odp;
 
-import org.jreserve.jrlib.bootstrap.odp.OdpPseudoClaimTriangle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.FixedRandom;

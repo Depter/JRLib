@@ -114,17 +114,10 @@ public class RegressionUtil {
     private static boolean[] getUsed(double[] x, double[] y) {
         int size = x.length;
         boolean[] used = new boolean[size];
-        int usedCount = 0;
         
-        for(int i=0; i<size; i++) {
-            if(isValidInput(x[i]) && isValidInput(y[i])) {
+        for(int i=0; i<size; i++)
+            if(isValidInput(x[i]) && isValidInput(y[i]))
                 used[i] = true;
-                usedCount++;
-            }
-        }
-        
-        if(usedCount < 2)
-            throw new IllegalArgumentException("Less then two rows contains valid values!");
         
         return used;
     }
