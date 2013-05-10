@@ -170,6 +170,11 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     }
     
     @Override
+    public void setSource(RatioTriangle ratioTriangle) {
+        source.setSource(ratioTriangle);
+    }
+    
+    @Override
     public void setDevelopmentCount(int developments) {
         this.developments = (developments<0)? 0 : developments;
         doRecalculate();

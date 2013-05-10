@@ -159,6 +159,5 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
 
     @Override
     protected void recalculateLayer() {
-        throw new UnsupportedOperationException("Do not call recalculate on an MclPseudoTriangle!");
     }
 }

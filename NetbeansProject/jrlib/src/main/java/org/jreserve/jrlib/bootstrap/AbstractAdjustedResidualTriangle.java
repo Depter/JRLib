@@ -32,7 +32,11 @@ public class AbstractAdjustedResidualTriangle<T extends Triangle>
      * @throws NullPointerException if `source` is null.
      */
     protected AbstractAdjustedResidualTriangle(T source) {
-        super(source);
+        this(source, true);
+    }
+    
+    protected AbstractAdjustedResidualTriangle(T source, boolean isAttached) {
+        super(source, isAttached);
         doRecalculate();
     }
     

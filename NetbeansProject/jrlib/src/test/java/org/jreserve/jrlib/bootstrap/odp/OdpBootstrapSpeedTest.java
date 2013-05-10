@@ -44,7 +44,7 @@ public class OdpBootstrapSpeedTest {
     
     @BeforeClass
     public static void setUpClass() {
-        //org.junit.Assume.assumeTrue("ODP-Bootstrapper speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
+        org.junit.Assume.assumeTrue("ODP-Bootstrapper speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
     }
 
     @Before
@@ -85,7 +85,7 @@ public class OdpBootstrapSpeedTest {
         return reserve;
     }
     
-    @Test//(timeout=TIMEOUT)
+    @Test(timeout=TIMEOUT)
     public void testSpeed() {
         System.out.println("Begin ODP-Bootstrapper speed test.\n\tTimeout: "+(TIMEOUT/1000));
         
@@ -96,11 +96,12 @@ public class OdpBootstrapSpeedTest {
         long end = System.currentTimeMillis();
         
         double[][] reserves = bootstrap.getReserves();
-        double bsMean = BootstrapUtil.getMeanTotalReserve(reserves);
-        //printHistogram(reserves);
         
         long dif = end - begin;
         double seconds = (double)dif / 1000d;
+        
+        double bsMean = BootstrapUtil.getMeanTotalReserve(reserves);
+        //printHistogram(reserves);
         
         System.out.printf("ODP-Bootstrapping %d times took %.3f seconds.%n\t Reserve: %.0f%n\tOriginal: %.0f%n", N, seconds, bsMean, mean);
         assertTrue(
@@ -111,7 +112,11 @@ public class OdpBootstrapSpeedTest {
     private void printHistogram(double[][] reserves) {
         double[] total = BootstrapUtil.getTotalReserves(reserves);
         BootstrapUtil.scaleAdjustment(total, mean);
-        HistogramData data = new HistogramDataFactory(total).buildData();
+        
+        double firstUpper = 1850000;
+        double interval = 60000;
+        HistogramData data = new HistogramDataFactory(total).setIntervals(firstUpper, interval).buildData();
+        //HistogramData data = new HistogramDataFactory(total).buildData();
         
         int count = data.getIntervalCount();
         System.out.println("Interval\tLower\tUpper\tCount");

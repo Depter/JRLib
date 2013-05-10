@@ -1,5 +1,6 @@
 package org.jreserve.jrlib.claimratio;
 
+import org.jreserve.jrlib.MutableSource;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangleInput;
@@ -12,7 +13,7 @@ import org.jreserve.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ClaimRatio extends Vector {
+public interface ClaimRatio extends Vector, MutableSource<RatioTriangle> {
     
     /**
      * Returns the ratio triangle used to calculate the expected ratios.

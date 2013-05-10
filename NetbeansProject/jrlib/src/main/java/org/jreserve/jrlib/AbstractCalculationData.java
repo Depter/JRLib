@@ -26,8 +26,28 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
      * @throws NullPointerException if `source` is null.
      */
     protected AbstractCalculationData(T source) {
+        this(source, true);
         this.source = source;
         this.source.addChangeListener(sourceListener);
+    }
+    
+    /**
+     * Creates an instance, with the given source. If 'isAttached' is true,
+     * then the instance attaches itself to the source, if false, it will
+     * be created in a detached state.
+     * 
+     * @throws NullPointerException if `source` is null.
+     */
+    protected AbstractCalculationData(T source, boolean isAttached) {
+        this.source = source;
+        
+        if(isAttached) {
+            this.source.addChangeListener(sourceListener);
+        } else {
+            super.setEventsFired(false);
+            listeners = null;
+            sourceListener = null;
+        }
     }
 
     /**

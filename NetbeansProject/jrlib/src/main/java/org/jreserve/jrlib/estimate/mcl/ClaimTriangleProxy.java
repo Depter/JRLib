@@ -1,7 +1,6 @@
 package org.jreserve.jrlib.estimate.mcl;
 
 import org.jreserve.jrlib.AbstractCalculationData;
-import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 

@@ -29,6 +29,19 @@ public abstract class AbstractMultiSourceCalculationData<T extends CalculationDa
         attachSources();
     }
     
+    protected AbstractMultiSourceCalculationData(boolean isAttached, T... sources) {
+        sourceCount = sources.length;
+        this.sources = sources;
+        
+        if(isAttached) {
+            attachSources();
+        } else {
+            super.setEventsFired(false);
+            listeners = null;
+            sourceListener = null;
+        }
+    }
+    
     private void attachSources() {
         for(int i=0; i<sourceCount; i++)
             sources[i].addChangeListener(sourceListener);

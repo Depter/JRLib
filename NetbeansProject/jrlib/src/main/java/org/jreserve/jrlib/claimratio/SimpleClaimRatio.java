@@ -92,6 +92,11 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
     }
     
     @Override
+    public void setSource(RatioTriangle ratioTriangle) {
+        source.setSource(ratioTriangle);
+    }
+    
+    @Override
     public RatioTriangle getSourceRatioTriangle() {
         return source.getSourceRatioTriangle();
     }

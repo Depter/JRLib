@@ -23,6 +23,10 @@ public abstract class AbstractTriangle<T extends CalculationData> extends Abstra
         super(source);
     }
     
+    protected AbstractTriangle(T source, boolean isAttached) {
+        super(source, isAttached);
+    }
+    
     /**
      * Creates an instance with no source.
      */

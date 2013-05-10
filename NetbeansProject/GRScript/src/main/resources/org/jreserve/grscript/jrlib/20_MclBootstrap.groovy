@@ -24,14 +24,14 @@ incurredLrScales = scale(paidLr)                //Min-Max
 //          LINK-RATIO RESIDUALS            //
 //////////////////////////////////////////////
 paidLrRes = residuals(paidLrScales) {
-    exclude(accident:0, development:8)
-    exclude(accident:8, development:0)
+    exclude(accident:0, development:6)
+    exclude(accident:6, development:0)
     adjust()
 }
 
 incurredLrRes = residuals(incurredLrScales) {
-    exclude(accident:0, development:8)
-    exclude(accident:8, development:0)
+    exclude(accident:0, development:6)
+    exclude(accident:6, development:0)
     adjust()
 }
 

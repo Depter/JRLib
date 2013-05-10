@@ -37,11 +37,18 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
     }
 
     @Override
-    protected void recalculateLayer() {
+    public void recalculate() {
         pseudoData.recalculate();
-        super.recalculateLayer();
+        super.recalculate();
         simulateProcess();
     }
+    
+//    @Override
+//    protected void recalculateLayer() {
+//        pseudoData.recalculate();
+//        super.recalculate();
+//        simulateProcess();
+//    }
     
     private void simulateProcess() {
         for(int a=0; a<accidents; a++)
