@@ -120,7 +120,11 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     }
 
     @Override
-    protected void recalculateLayer() {
+    public void recalculate() {
+    }
+    
+    @Override
+    public void recalculateLayer() {
     }
     
     void setValueAt(int accident, int development, MclResidualCell cell) {

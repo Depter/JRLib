@@ -4,6 +4,11 @@ import java.util.Collections;
 import java.util.List;
 import org.jreserve.jrlib.AbstractCalculationData;
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
+import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
+import org.jreserve.jrlib.estimate.mcl.MclCorrelationInput;
+import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
 import org.jreserve.jrlib.util.random.Random;
@@ -36,6 +41,12 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     private int[] developments;
     
     private MclResidualGenerator residuals;
+    
+    private MclPseudoLRResidualTriangle incurredLRRes;
+    private MclPseudoLRResidualTriangle paidLRRes;
+    private MclPseudoCRResidualTriangle incurredCRRes;
+    private MclPseudoCRResidualTriangle paidCRRes;
+    
     private MclPseudoFactorTriangle paidFactors;
     private MclPseudoFactorTriangle incurredFactors;
     private MclPseudoRatioTriangle paidRatios;
@@ -59,6 +70,12 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     }
     
     private void initPseudoTriangles(MclResidualBundle bundle) {
+        paidLRRes = MclPseudoLRResidualTriangle.createPaid(bundle);
+        incurredLRRes = MclPseudoLRResidualTriangle.createIncurred(bundle);
+        paidCRRes = MclPseudoCRResidualTriangle.createPaid(bundle);
+        incurredCRRes = MclPseudoCRResidualTriangle.createIncurred(bundle);
+        
+        
         paidFactors = MclPseudoFactorTriangle.createPaid(bundle);
         incurredFactors = MclPseudoFactorTriangle.createIncurred(bundle);
         paidRatios = MclPseudoRatioTriangle.createPaid(bundle);
@@ -81,6 +98,22 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         return incurredRatios;
     }
     
+    public LRResidualTriangle getPaidLRResidualTriangle() {
+        return paidLRRes;
+    }
+    
+    public LRResidualTriangle getIncurredLRResidualTriangle() {
+        return incurredLRRes;
+    }
+    
+    public CRResidualTriangle getPaidCRResidualTriangle() {
+        return paidCRRes;
+    }
+    
+    public CRResidualTriangle getIncurredCRResidualTriangle() {
+        return incurredCRRes;
+    }
+    
     @Override
     protected void recalculateLayer() {
         for(int a=0; a<accidents; a++) {
@@ -96,5 +129,26 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         paidRatios.setValueAt(accident, development, cell);
         incurredFactors.setValueAt(accident, development, cell);
         incurredRatios.setValueAt(accident, development, cell);
+        
+        paidLRRes.setValueAt(accident, development, cell);
+        incurredLRRes.setValueAt(accident, development, cell);
+        paidCRRes.setValueAt(accident, development, cell);
+        incurredCRRes.setValueAt(accident, development, cell);
     }
+    
+    public MclCalculationBundle createPseudoBundle(MclCalculationBundle bundle) {
+        MclCorrelationInput paid = bundle.getSourcePaidCorrelation().getSourceInput();
+        paid.getSourceLinkRatios().setSource(paidFactors);
+        paid.getSourceClaimRatios().setSource(paidRatios);
+        
+        MclCorrelationInput incurred = bundle.getSourceIncurredCorrelation().getSourceInput();
+        incurred.getSourceLinkRatios().setSource(incurredFactors);
+        incurred.getSourceClaimRatios().setSource(incurredRatios);
+        
+        MclCorrelation paidC = new MclCorrelation(paidLRRes, paidCRRes);
+        MclCorrelation incurredC = new MclCorrelation(incurredLRRes, incurredCRRes);
+        return new MclCalculationBundle(paidC, incurredC);
+    }
+    
+    
 }

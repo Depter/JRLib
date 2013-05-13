@@ -88,10 +88,7 @@ public class MclBootstrapSpeedTest {
         MackProcessSimulator ps = new MackGammaProcessSimulator(rnd, paidScales);
         MackProcessSimulator is = new MackGammaProcessSimulator(rnd, incurredScales);
         
-        paidLr.setSource(pseudoData.getPaidFactorTriangle());
-        incurredLr.setSource(pseudoData.getIncurredFactorTriangle());
-        paidCrResiduals.getSourceClaimRatios().setSource(pseudoData.getPaidRatioTriangle());
-        incurredCrResiduals.getSourceClaimRatios().setSource(pseudoData.getIncurredRatioTriangle());
+        calcBundle = pseudoData.createPseudoBundle(calcBundle);
         
         MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(calcBundle, pseudoData, ps, is);
         bootstrap = new MclBootstrapper(estimate, N);

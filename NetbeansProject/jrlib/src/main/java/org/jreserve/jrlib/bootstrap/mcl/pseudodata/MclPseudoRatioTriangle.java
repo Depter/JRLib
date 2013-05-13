@@ -158,6 +158,10 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
     }
 
     @Override
-    protected void recalculateLayer() {
+    public void recalculate() {
+    }
+    
+    @Override
+    public void recalculateLayer() {
     }
 }
