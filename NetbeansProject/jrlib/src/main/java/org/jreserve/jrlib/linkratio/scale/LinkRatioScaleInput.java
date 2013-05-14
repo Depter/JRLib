@@ -135,10 +135,9 @@ public class LinkRatioScaleInput extends AbstractCalculationData<LinkRatio> impl
         return claims.getValue(accident, development);
     }
     
-    /**
-     * Does nothing.
-     */
     @Override
     protected void recalculateLayer() {
+        this.factors = source.getSourceFactors();
+        this.claims = factors.getSourceTriangle();
     }
 }

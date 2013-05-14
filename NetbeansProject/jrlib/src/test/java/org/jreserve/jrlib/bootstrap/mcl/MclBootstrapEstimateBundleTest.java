@@ -11,7 +11,9 @@ import org.jreserve.jrlib.claimratio.ClaimRatio;
 import org.jreserve.jrlib.claimratio.SimpleClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
+import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
 import org.jreserve.jrlib.estimate.Estimate;
 import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
@@ -20,8 +22,8 @@ import org.jreserve.jrlib.estimate.mcl.MclEstimateBundle;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
+import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
-import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -34,11 +36,11 @@ import org.junit.Test;
  */
 public class MclBootstrapEstimateBundleTest {
 
+    private MclBootstrapEstimateBundle bsBundle;
     private Estimate paid;
     private Estimate incurred;
     private Estimate bsPaid;
     private Estimate bsIncurred;
-    
     
     @Before
     public void setUp() {
@@ -48,10 +50,10 @@ public class MclBootstrapEstimateBundleTest {
         LinkRatio paidLr = new SimpleLinkRatio(paidCik);
         LinkRatio incurredLr = new SimpleLinkRatio(incurredCik);
         
-        LRResidualTriangle paidLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(paidLr));
+        LRResidualTriangle paidLrResiduals = new AdjustedLinkRatioResiduals(new SimpleLinkRatioScale(paidLr));
         CRResidualTriangle paidCrResiduals = createCrResiduals(incurredCik, paidCik, incurredLr, paidLr);
         
-        LRResidualTriangle incurredLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(incurredLr));
+        LRResidualTriangle incurredLrResiduals = new AdjustedLinkRatioResiduals(new SimpleLinkRatioScale(incurredLr));
         CRResidualTriangle incurredCrResiduals = createCrResiduals(paidCik, incurredCik, paidLr, incurredLr);
         
         createEstimate(paidLrResiduals, incurredLrResiduals, paidCrResiduals, incurredCrResiduals);
@@ -64,7 +66,7 @@ public class MclBootstrapEstimateBundleTest {
         MackProcessSimulator ps = new DummyMackProcessSimulator();
         MackProcessSimulator is = new DummyMackProcessSimulator();
         
-        MclBootstrapEstimateBundle bsBundle = new MclBootstrapEstimateBundle(pseudoData, ps, is);
+        bsBundle = new MclBootstrapEstimateBundle(pseudoData, ps, is);
         bsPaid = bsBundle.getPaidEstimate();
         bsIncurred = bsBundle.getIncurredEstimate();
     }
@@ -82,18 +84,27 @@ public class MclBootstrapEstimateBundleTest {
     private CRResidualTriangle createCrResiduals(ClaimTriangle numerator, ClaimTriangle denumerator, LinkRatio lrN, LinkRatio lrD) {
         ClaimRatio crs = new SimpleClaimRatio(numerator, denumerator);
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
-        return new ClaimRatioResiduals(scales);
+        return excludeDiagonal(new ClaimRatioResiduals(scales));
+    }
+    
+    private CRResidualTriangle excludeDiagonal(CRResidualTriangle res) {
+        int accidents = res.getAccidentCount();
+        for(int a=0; a<accidents; a++)
+            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
+        return new AdjustedClaimRatioResiduals(res);
     }
     
     @Test
     public void testRecalculate() {
+        bsBundle.recalculate();
         int accidents = paid.getAccidentCount();
         int developments = paid.getDevelopmentCount();
         
         for(int a=0; a<accidents; a++) {
             for(int d=0; d<developments; d++) {
                 double ePaid = getExpectedValue(paid, a, d);
-                assertEquals(ePaid, bsPaid.getValue(a, d), TestConfig.EPSILON);
+                double fPaid = bsPaid.getValue(a, d);
+                assertEquals(ePaid, fPaid, TestConfig.EPSILON);
 
                 double eIncurred = getExpectedValue(incurred, a, d);
                 assertEquals(eIncurred, bsIncurred.getValue(a, d), TestConfig.EPSILON);

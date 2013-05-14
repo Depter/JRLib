@@ -29,10 +29,10 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
         this.detach();
         this.pseudoData = pseudoData;
         paidSimulator = paidProcessSimulator;
-        paidSimulator.setEstimate(super.paidProxy);
+        paidSimulator.setEstimate(super.getPaidEstimate());
         
         incurredSimulator = incurredProcessSimulator;
-        incurredSimulator.setEstimate(super.incurredProxy);
+        incurredSimulator.setEstimate(super.getIncurredEstimate());
         simulateProcess();
     }
     

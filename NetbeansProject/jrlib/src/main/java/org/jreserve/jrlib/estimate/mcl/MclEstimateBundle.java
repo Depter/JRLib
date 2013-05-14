@@ -16,8 +16,8 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  */
 public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput> {
     
-    protected Estimate paidProxy;
-    protected Estimate incurredProxy;
+    private EstimateProxy paidProxy;
+    private EstimateProxy incurredProxy;
     
     protected int accidents;
     protected int developments;
@@ -35,9 +35,9 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     
     public MclEstimateBundle(MclEstimateInput source, boolean isAttached) {
         super(source, isAttached);
-        doRecalculate();
         paidProxy = new EstimateProxy(true);
         incurredProxy = new EstimateProxy(false);
+        doRecalculate();
     }
     
     public int getAccidentCount() {
@@ -82,6 +82,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         initCalculationState();
         fillTriangles();
         clearCalculationState();
+        setProxyState();
     }
     
     private void initCalculationState() {
@@ -171,6 +172,11 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         incurredRatio = null;
     }
     
+    private void setProxyState() {
+        paidProxy.recalculateLayer();
+        incurredProxy.recalculateLayer();
+    }
+    
     private class EstimateProxy extends AbstractEstimate<MclEstimateBundle> {
         
         private boolean isPaid;
@@ -178,18 +184,13 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         private EstimateProxy(boolean isPaid) {
             super(MclEstimateBundle.this);
             this.isPaid = isPaid;
-            readState();
-        }
-        
-        private void readState() {
-            super.accidents = MclEstimateBundle.this.accidents;
-            super.developments = MclEstimateBundle.this.developments;
-            super.values = isPaid? paidValues : incurredValues;
         }
         
         @Override
         protected void recalculateLayer() {
-            readState();
+            super.accidents = MclEstimateBundle.this.accidents;
+            super.developments = MclEstimateBundle.this.developments;
+            super.values = isPaid? paidValues : incurredValues;
         }
 
         @Override

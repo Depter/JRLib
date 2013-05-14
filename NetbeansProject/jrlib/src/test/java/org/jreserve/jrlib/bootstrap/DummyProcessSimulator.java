@@ -1,7 +1,5 @@
 package org.jreserve.jrlib.bootstrap;
 
-import org.jreserve.jrlib.bootstrap.ProcessSimulator;
-
 /**
  * Dummy implementation of the {@link ProcessSimulator ProcessSimulator}
  * interface, which simply adds 1 to the estimated value.

@@ -155,6 +155,7 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         private MclCorrelation incurredCorrelation;
 
         public PseudoEstimateInput(MclCorrelation paidCorrelation, MclCorrelation incurredCorrelation) {
+            super(false, paidCorrelation, incurredCorrelation);
             this.paidCorrelation = paidCorrelation;
             this.incurredCorrelation = incurredCorrelation;
         }

@@ -38,7 +38,7 @@ public class MclPseudoLRResidualTriangle extends AbstractTriangle<LinkRatioScale
         this.isPaid = isPaid;
         initState(bundle);
         detach();
-        super.setCallsForwarded(false);
+        //super.setCallsForwarded(false);
     }
     
     private void initState(MclResidualBundle bundle) {

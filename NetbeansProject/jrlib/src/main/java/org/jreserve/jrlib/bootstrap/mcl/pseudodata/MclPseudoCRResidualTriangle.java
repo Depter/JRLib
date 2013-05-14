@@ -39,7 +39,7 @@ public class MclPseudoCRResidualTriangle
     private MclPseudoCRResidualTriangle(MclResidualBundle bundle, boolean isPaid) {
         super(getLinkRatioScales(bundle, isPaid));
         detach();
-        super.setCallsForwarded(false);
+        //super.setCallsForwarded(false);
         
         this.isPaid = isPaid;
         initState(bundle);
@@ -76,9 +76,9 @@ public class MclPseudoCRResidualTriangle
         if(cell == null)
             return Double.NaN;
         else if(isPaid)
-            return cell.getPaidLRResidual();
+            return cell.getPaidCRResidual();
         else
-            return cell.getIncurredLRResidual();
+            return cell.getIncurredCRResidual();
     }
     
     @Override
