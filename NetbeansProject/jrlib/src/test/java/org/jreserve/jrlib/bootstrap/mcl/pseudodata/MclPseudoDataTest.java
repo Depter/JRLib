@@ -1,8 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclAdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.FixedRandom;
@@ -10,7 +7,12 @@ import org.jreserve.jrlib.claimratio.ClaimRatio;
 import org.jreserve.jrlib.claimratio.SimpleClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
+import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
+import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
+import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
+import org.jreserve.jrlib.estimate.mcl.MclEstimateInput;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
@@ -20,8 +22,7 @@ import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -117,7 +118,14 @@ public class MclPseudoDataTest {
     private CRResidualTriangle createCRResiduals(ClaimTriangle numerator, ClaimTriangle denominator) {
         ClaimRatio crs = new SimpleClaimRatio(numerator, denominator);
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
-        return new MclAdjustedClaimRatioResiduals(scales);
+        CRResidualTriangle res = new ClaimRatioResiduals(scales);
+        return new AdjustedClaimRatioResiduals(excludeLastDiagonal(res));
+    }
+    
+    private CRResidualTriangle excludeLastDiagonal(CRResidualTriangle res) {
+        for(int a=0; a<res.getAccidentCount(); a++)
+            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
+        return res;
     }
     
     @Test
@@ -210,6 +218,21 @@ public class MclPseudoDataTest {
         expected = INCURRED_CR[accident][development];
         found = incurredR.getValue(accident, development);
         assertEquals(expected, found, TestConfig.EPSILON);
+    }
+    
+    @Test
+    public void testCreatePseudoBundle() {
+        MclEstimateInput bundle = data.createPseudoBundle();
+        MclCorrelation c = bundle.getSourceIncurredCorrelation();
+        assertSources(c, incurredR, incurredF);
+
+        c = bundle.getSourcePaidCorrelation();
+        assertSources(c, paidR, paidF);
+    }
+    
+    private void assertSources(MclCorrelation c, RatioTriangle r, FactorTriangle f) {
+        assertEquals(r, c.getSourceRatioTriangle());
+        assertEquals(f, c.getSourceFactors());
     }
 }
  

@@ -14,7 +14,7 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBundle>{
+public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput> {
     
     protected Estimate paidProxy;
     protected Estimate incurredProxy;
@@ -29,11 +29,11 @@ public class MclEstimateBundle extends AbstractCalculationData<MclCalculationBun
         this(new MclCalculationBundle(paidCorrelation, incurredCorrelation));
     }
     
-    public MclEstimateBundle(MclCalculationBundle source) {
+    public MclEstimateBundle(MclEstimateInput source) {
         this(source, true);
     }
     
-    public MclEstimateBundle(MclCalculationBundle source, boolean isAttached) {
+    public MclEstimateBundle(MclEstimateInput source, boolean isAttached) {
         super(source, isAttached);
         doRecalculate();
         paidProxy = new EstimateProxy(true);

@@ -56,37 +56,32 @@ public class AbstractAdjustedResidualTriangle<T extends Triangle>
     }
 
     private void doRecalculate() {
-        double n = recalculateN();
-        double p = recalculateP();
-        adjustment = Math.sqrt(n / (n - p));
-    }
-    
-    /**
-     * Calculates the number of residuals in the
-     * input triangle.
-     */
-    protected int recalculateN() {
         int accidents = source.getAccidentCount();
+        int devs = source.getDevelopmentCount();
+        
+        int[] pA = new int[accidents];
+        int[] pD = new int[devs];
+        
         int n = 0;
         for(int a=0; a<accidents; a++) {
-            int devs = source.getDevelopmentCount();
-            for(int d=0; d<devs; d++)
-                if(!Double.isNaN(source.getValue(a, d)))
+            for(int d=0; d<devs; d++) {
+                if(!Double.isNaN(source.getValue(a, d))) {
                     n++;
+                    pA[a] = 1;
+                    pD[d] = 1;
+                }
+            }
         }
-        return n;
+        
+        double p = sum(pA) + sum(pD) - 1;
+        double dN = n;
+        adjustment = Math.sqrt(dN / (dN - p));
     }
-
-    /**
-     * Calculates the number of parameters in the model.
-     * The default implementation is `p = nA + nD - 1`,
-     * where `nA` is the number of accident periods
-     * and `nD` is teh number of development periods
-     * in the source triangle.
-     */
-    protected int recalculateP() {
-        int a = source.getAccidentCount();
-        int d = source.getDevelopmentCount();
-        return a + d - 1;
+    
+    private int sum(int[] arr) {
+        int sum = 0;
+        for(int i : arr)
+            sum += i;
+        return sum;
     }
 }

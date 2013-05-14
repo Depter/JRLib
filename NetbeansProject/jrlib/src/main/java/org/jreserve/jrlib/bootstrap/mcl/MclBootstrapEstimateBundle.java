@@ -2,8 +2,8 @@ package org.jreserve.jrlib.bootstrap.mcl;
 
 import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
-import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
 import org.jreserve.jrlib.estimate.mcl.MclEstimateBundle;
+import org.jreserve.jrlib.estimate.mcl.MclEstimateInput;
 
 /**
  * Utility class for {@link MclBootstrapper MclBootstrapper}. The class
@@ -24,8 +24,8 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
      * 
      * @throws NullPointerException if one of the parameters is null.
      */
-    public MclBootstrapEstimateBundle(MclCalculationBundle source, MclPseudoData pseudoData, MackProcessSimulator paidProcessSimulator, MackProcessSimulator incurredProcessSimulator) {
-        super(source);
+    public MclBootstrapEstimateBundle(MclPseudoData pseudoData, MackProcessSimulator paidProcessSimulator, MackProcessSimulator incurredProcessSimulator) {
+        super(pseudoData.createPseudoBundle());
         this.detach();
         this.pseudoData = pseudoData;
         paidSimulator = paidProcessSimulator;
@@ -34,6 +34,10 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
         incurredSimulator = incurredProcessSimulator;
         incurredSimulator.setEstimate(super.incurredProxy);
         simulateProcess();
+    }
+    
+    public MclEstimateInput getSourceCalculationBundle() {
+        return source;
     }
 
     @Override

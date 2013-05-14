@@ -3,11 +3,11 @@ package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 import java.util.Collections;
 import java.util.List;
 import org.jreserve.jrlib.AbstractCalculationData;
+import org.jreserve.jrlib.AbstractMultiSourceCalculationData;
 import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
-import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
 import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
-import org.jreserve.jrlib.estimate.mcl.MclCorrelationInput;
+import org.jreserve.jrlib.estimate.mcl.MclEstimateInput;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
@@ -77,9 +77,16 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         
         
         paidFactors = MclPseudoFactorTriangle.createPaid(bundle);
+        paidLRRes.getSourceLinkRatios().setSource(paidFactors);
+        
         incurredFactors = MclPseudoFactorTriangle.createIncurred(bundle);
+        incurredLRRes.getSourceLinkRatios().setSource(incurredFactors);
+        
         paidRatios = MclPseudoRatioTriangle.createPaid(bundle);
+        paidCRRes.getSourceClaimRatios().setSource(paidRatios);
+        
         incurredRatios = MclPseudoRatioTriangle.createIncurred(bundle);
+        incurredCRRes.getSourceClaimRatios().setSource(incurredRatios);
     }
     
     public FactorTriangle getPaidFactorTriangle() {
@@ -136,19 +143,35 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         incurredCRRes.setValueAt(accident, development, cell);
     }
     
-    public MclCalculationBundle createPseudoBundle(MclCalculationBundle bundle) {
-        MclCorrelationInput paid = bundle.getSourcePaidCorrelation().getSourceInput();
-        paid.getSourceLinkRatios().setSource(paidFactors);
-        paid.getSourceClaimRatios().setSource(paidRatios);
-        
-        MclCorrelationInput incurred = bundle.getSourceIncurredCorrelation().getSourceInput();
-        incurred.getSourceLinkRatios().setSource(incurredFactors);
-        incurred.getSourceClaimRatios().setSource(incurredRatios);
-        
+    public MclEstimateInput createPseudoBundle() {
         MclCorrelation paidC = new MclCorrelation(paidLRRes, paidCRRes);
         MclCorrelation incurredC = new MclCorrelation(incurredLRRes, incurredCRRes);
-        return new MclCalculationBundle(paidC, incurredC);
+        return new PseudoEstimateInput(paidC, incurredC);
     }
     
+    private static class PseudoEstimateInput extends AbstractMultiSourceCalculationData implements MclEstimateInput {
+        
+        private MclCorrelation paidCorrelation;
+        private MclCorrelation incurredCorrelation;
+
+        public PseudoEstimateInput(MclCorrelation paidCorrelation, MclCorrelation incurredCorrelation) {
+            this.paidCorrelation = paidCorrelation;
+            this.incurredCorrelation = incurredCorrelation;
+        }
+        
+        @Override
+        protected void recalculateLayer() {
+        }
+
+        @Override
+        public MclCorrelation getSourcePaidCorrelation() {
+            return paidCorrelation;
+        }
+
+        @Override
+        public MclCorrelation getSourceIncurredCorrelation() {
+            return incurredCorrelation;
+        }
     
+    }
 }

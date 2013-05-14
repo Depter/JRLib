@@ -22,10 +22,6 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @version 1.0
  */
 public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> implements RatioTriangle {
-//TODO write test
-    
-    private ClaimTriangle numerator;
-    private ClaimTriangle denominator;
     
     private int accidents;
     private int developments;
@@ -47,8 +43,8 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
      */
     public DefaultRatioTriangle(RatioTriangleInput source) {
         super(source);
-        this.numerator = source.getSourceNumeratorTriangle();
-        this.denominator = source.getSourceDenominatorTriangle();
+        //this.numerator = source.getSourceNumeratorTriangle();
+        //this.denominator = source.getSourceDenominatorTriangle();
         doRecalculate();
     }
 
@@ -68,7 +64,7 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
      */
     @Override
     public ClaimTriangle getSourceNumeratorTriangle() {
-        return numerator;
+        return source.getSourceNumeratorTriangle();
     }
 
     /**
@@ -79,7 +75,7 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
      */
     @Override
     public ClaimTriangle getSourceDenominatorTriangle() {
-        return denominator;
+        return source.getSourceDenominatorTriangle();
     }
     
     @Override
@@ -110,25 +106,28 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
     }
 
     private void doRecalculate() {
-        calculateAccidentBounds();
-        calculateDevelopmentBounds();
+        ClaimTriangle numerator = getSourceNumeratorTriangle();
+        ClaimTriangle denominator = getSourceDenominatorTriangle();
+        
+        calculateAccidentBounds(numerator, denominator);
+        calculateDevelopmentBounds(numerator, denominator);
         
         for(int a=0; a<accidents; a++) {
             double[] vals = values[a];
             int devs = vals.length;
             for(int d=0; d<devs; d++)
-                vals[d] = calculateRatio(a, d);
+                vals[d] =  numerator.getValue(a, d) / denominator.getValue(a, d);
         }
     }
     
-    private void calculateAccidentBounds() {
+    private void calculateAccidentBounds(ClaimTriangle numerator, ClaimTriangle denominator) {
         int a1 = numerator.getAccidentCount();
         int a2 = denominator.getAccidentCount();
         accidents = Math.min(a1, a2);
         values = new double[accidents][];
     }
     
-    private void calculateDevelopmentBounds() {
+    private void calculateDevelopmentBounds(ClaimTriangle numerator, ClaimTriangle denominator) {
         developments = 0;
         for(int a=0; a<accidents;a++) {
             int d1 = numerator.getDevelopmentCount(a);
@@ -138,11 +137,5 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
             if(a==0)
                 developments = d;
         }
-    }
-    
-    private double calculateRatio(int accident, int development) {
-        double n = numerator.getValue(accident, development);
-        double d = denominator.getValue(accident, development);
-        return n / d;
     }
 }

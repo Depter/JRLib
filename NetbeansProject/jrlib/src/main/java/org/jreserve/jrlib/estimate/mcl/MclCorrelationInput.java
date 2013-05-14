@@ -53,7 +53,9 @@ public class MclCorrelationInput extends AbstractMultiSourceCalculationData<Calc
     private IllegalArgumentException unmatchingInputException() {
         String msg = "LinkRatio residuals is based on another triangle "+
                 "then ClaimRatio residuals! \"%s\" != \"%s\"";
-        msg = String.format(msg, lrResiduals, crResiduals);
+        ClaimTriangle lrC = lrResiduals.getSourceTriangle();
+        ClaimTriangle crC = crResiduals.getSourceDenominatorTriangle();
+        msg = String.format(msg, lrC, crC);
         return new IllegalArgumentException(msg);
     }
     

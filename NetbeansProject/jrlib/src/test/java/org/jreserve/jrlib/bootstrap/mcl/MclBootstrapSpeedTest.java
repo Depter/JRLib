@@ -13,7 +13,9 @@ import org.jreserve.jrlib.claimratio.DefaultClaimRatioSelection;
 import org.jreserve.jrlib.claimratio.LrCrExtrapolation;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
+import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
 import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
 import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
@@ -73,25 +75,9 @@ public class MclBootstrapSpeedTest {
         LRResidualTriangle incurredLrResiduals = createLrResiduals(incurredScales);
         CRResidualTriangle paidCrResiduals =     createCrResiduals(incurredLr, paidLr);
         CRResidualTriangle incurredCrResiduals = createCrResiduals(paidLr, incurredLr);
-
-        MclCorrelation paidLambda = new MclCorrelation(paidLrResiduals, paidCrResiduals);
-        MclCorrelation incurredLambda = new MclCorrelation(incurredLrResiduals, incurredCrResiduals);
-        MclCalculationBundle calcBundle = new MclCalculationBundle(paidLambda, incurredLambda);
-
-        MclEstimateBundle eb = new MclEstimateBundle(calcBundle, false);
-        paidMean = eb.getPaidEstimate().getReserve();
-        incurredMean = eb.getIncurredEstimate().getReserve();
         
-        MclResidualBundle resBundle = new MclResidualBundle(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
-        Random rnd = new JavaRandom(SEED);
-        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle);
-        MackProcessSimulator ps = new MackGammaProcessSimulator(rnd, paidScales);
-        MackProcessSimulator is = new MackGammaProcessSimulator(rnd, incurredScales);
-        
-        calcBundle = pseudoData.createPseudoBundle(calcBundle);
-        
-        MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(calcBundle, pseudoData, ps, is);
-        bootstrap = new MclBootstrapper(estimate, N);
+        createMeans(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
+        createBs(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
     }    
     
     private LRResidualTriangle createLrResiduals(LinkRatioScale scales) {
@@ -111,7 +97,8 @@ public class MclBootstrapSpeedTest {
     private CRResidualTriangle createCrResiduals(LinkRatio lrN, LinkRatio lrD) {
         ClaimRatio crs = createClaimRatio(lrN, lrD);
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
-        return new ClaimRatioResiduals(scales);
+        CRResidualTriangle res = new ClaimRatioResiduals(scales);
+        return adjustResiduals(res);
     }
 
     private ClaimRatio createClaimRatio(LinkRatio numerator, LinkRatio denominator) {
@@ -125,6 +112,33 @@ public class MclBootstrapSpeedTest {
             crs.setMethod(method, i);
         
         return crs;
+    }
+    
+    private CRResidualTriangle adjustResiduals(CRResidualTriangle res) {
+        int accidents = res.getAccidentCount();
+        for(int a=0; a<accidents; a++)
+            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
+        return new AdjustedClaimRatioResiduals(res);
+    }
+    
+    private void createMeans(LRResidualTriangle paidLr, CRResidualTriangle paidCr, LRResidualTriangle incurredLr, CRResidualTriangle incurredCr) {
+        MclCorrelation paidLambda = new MclCorrelation(paidLr, paidCr);
+        MclCorrelation incurredLambda = new MclCorrelation(incurredLr, incurredCr);
+        MclCalculationBundle calcBundle = new MclCalculationBundle(paidLambda, incurredLambda);
+        MclEstimateBundle eb = new MclEstimateBundle(calcBundle, false);
+        paidMean = eb.getPaidEstimate().getReserve();
+        incurredMean = eb.getIncurredEstimate().getReserve();
+    }
+    
+    private void createBs(LRResidualTriangle paidLr, CRResidualTriangle paidCr, LRResidualTriangle incurredLr, CRResidualTriangle incurredCr) {
+        MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
+        Random rnd = new JavaRandom(SEED);
+        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle);
+        MackProcessSimulator ps = new MackGammaProcessSimulator(rnd, paidLr.getSourceLinkRatioScales());
+        MackProcessSimulator is = new MackGammaProcessSimulator(rnd, incurredLr.getSourceLinkRatioScales());
+        
+        MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(pseudoData, ps, is);
+        bootstrap = new MclBootstrapper(estimate, N);
     }
 
     @Test//(timeout=TIMEOUT)

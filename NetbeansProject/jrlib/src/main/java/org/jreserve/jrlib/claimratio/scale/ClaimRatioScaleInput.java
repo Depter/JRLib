@@ -21,14 +21,9 @@ import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
  * @version 1.0
  */
 public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> implements ScaleInput{
-
-    private RatioTriangle ratios;
-    private ClaimTriangle weights;
     
     public ClaimRatioScaleInput(ClaimRatio source) {
         super(source);
-        this.ratios = source.getSourceRatioTriangle();
-        this.weights = ratios.getSourceDenominatorTriangle();
     }
     
     /**
@@ -42,7 +37,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      * Returns the ratio-triangle which is used to calculate the claim-ratios.
      */
     public RatioTriangle getSourceRatioTriangle() {
-        return ratios;
+        return source.getSourceRatioTriangle();
     }
     
     /**
@@ -51,7 +46,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      * @see #getSourceRatioTriangle().
      */
     public ClaimTriangle getSourceNumeratorTriangle() {
-        return ratios.getSourceNumeratorTriangle();
+        return source.getSourceNumeratorTriangle();
     }
     
     /**
@@ -60,7 +55,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      * @see #getSourceRatioTriangle().
      */
     public ClaimTriangle getSourceDenominatorTriangle() {
-        return ratios.getSourceDenominatorTriangle();
+        return source.getSourceDenominatorTriangle();
     }
     
     /**
@@ -70,7 +65,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      */
     @Override
     public int getAccidentCount() {
-        return ratios.getAccidentCount();
+        return getSourceRatioTriangle().getAccidentCount();
     }
     
     /**
@@ -91,7 +86,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      */
     @Override
     public int getDevelopmentCount(int accident) {
-        return ratios.getDevelopmentCount(accident);
+        return getSourceRatioTriangle().getDevelopmentCount(accident);
     }
 
     /**
@@ -112,7 +107,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      */
     @Override
     public double getRatio(int accident, int development) {
-        return ratios.getValue(accident, development);
+        return getSourceRatioTriangle().getValue(accident, development);
     }
 
     /**
@@ -123,7 +118,7 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
      */
     @Override
     public double getWeight(int accident, int development) {
-        return weights.getValue(accident, development);
+        return getSourceDenominatorTriangle().getValue(accident, development);
     }
 
     /**

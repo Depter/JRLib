@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mcl;
 
-import org.jreserve.jrlib.bootstrap.mcl.MclBootstrapEstimateBundle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.FixedRandom;
@@ -51,25 +50,33 @@ public class MclBootstrapEstimateBundleTest {
         
         LRResidualTriangle paidLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(paidLr));
         CRResidualTriangle paidCrResiduals = createCrResiduals(incurredCik, paidCik, incurredLr, paidLr);
-        MclCorrelation paidLambda = new MclCorrelation(paidLrResiduals, paidCrResiduals);
         
         LRResidualTriangle incurredLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(incurredLr));
         CRResidualTriangle incurredCrResiduals = createCrResiduals(paidCik, incurredCik, paidLr, incurredLr);
-        MclCorrelation incurredLambda = new MclCorrelation(incurredLrResiduals, incurredCrResiduals);
+        
+        createEstimate(paidLrResiduals, incurredLrResiduals, paidCrResiduals, incurredCrResiduals);
+        createBs(paidLrResiduals, incurredLrResiduals, paidCrResiduals, incurredCrResiduals);
+    }
+    
+    private void createBs(LRResidualTriangle paidLr, LRResidualTriangle incurredLr, CRResidualTriangle paidCr, CRResidualTriangle incurredCr) {
+        MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
+        MclPseudoData pseudoData = new MclPseudoData(new FixedRandom(), resBundle);
+        MackProcessSimulator ps = new DummyMackProcessSimulator();
+        MackProcessSimulator is = new DummyMackProcessSimulator();
+        
+        MclBootstrapEstimateBundle bsBundle = new MclBootstrapEstimateBundle(pseudoData, ps, is);
+        bsPaid = bsBundle.getPaidEstimate();
+        bsIncurred = bsBundle.getIncurredEstimate();
+    }
+    
+    private void createEstimate(LRResidualTriangle paidLr, LRResidualTriangle incurredLr, CRResidualTriangle paidCr, CRResidualTriangle incurredCr) {
+        MclCorrelation paidLambda = new MclCorrelation(paidLr, paidCr);
+        MclCorrelation incurredLambda = new MclCorrelation(incurredLr, incurredCr);
         MclCalculationBundle calcBundle = new MclCalculationBundle(paidLambda, incurredLambda);
         
         MclEstimateBundle bundle = new MclEstimateBundle(calcBundle);
         paid = bundle.getPaidEstimate();
         incurred = bundle.getIncurredEstimate();
-        
-        MclResidualBundle resBundle = new MclResidualBundle(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
-        MclPseudoData pseudoData = new MclPseudoData(new FixedRandom(), resBundle);
-        MackProcessSimulator ps = new DummyMackProcessSimulator();
-        MackProcessSimulator is = new DummyMackProcessSimulator();
-        
-        MclBootstrapEstimateBundle bsBundle = new MclBootstrapEstimateBundle(calcBundle, pseudoData, ps, is);
-        bsPaid = bsBundle.getPaidEstimate();
-        bsIncurred = bsBundle.getIncurredEstimate();
     }
     
     private CRResidualTriangle createCrResiduals(ClaimTriangle numerator, ClaimTriangle denumerator, LinkRatio lrN, LinkRatio lrD) {

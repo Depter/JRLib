@@ -32,7 +32,7 @@ import org.jreserve.jrlib.triangle.ratio.RatioTriangleInput;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MclCalculationBundle extends AbstractMultiSourceCalculationData<ClaimTriangle> {
+public class MclCalculationBundle extends AbstractMultiSourceCalculationData<ClaimTriangle> implements MclEstimateInput {
     
     private final static int PAID = 0;
     private final static int INCURRED = 1;
@@ -97,10 +97,12 @@ public class MclCalculationBundle extends AbstractMultiSourceCalculationData<Cla
         incurredCorrelation.addChangeListener(correlationListener);
     }
     
+    @Override
     public MclCorrelation getSourcePaidCorrelation() {
         return paidCorrelation;
     }
     
+    @Override
     public MclCorrelation getSourceIncurredCorrelation() {
         return incurredCorrelation;
     }
@@ -152,9 +154,9 @@ public class MclCalculationBundle extends AbstractMultiSourceCalculationData<Cla
 // | pCr: ClaimRatio|   | pLr: LossRatio|      | iCr: ClaimRatio |   | iLr: LossRatio |
 // +----------------+   +---------------+      +-----------------+   +----------------+
 //        |   |                  |                   |        |                |
-//        |   |          +---------------+           |        |       +----------------+
-//        |   |          | pLr: LossRatio|           |        |       | iLr: LossRatio |
-//        |   |          +---------------+           |        |       +----------------+
+//        |   |       +--------------------+         |        |     +--------------------+
+//        |   |       | pF: FactorTriangle |         |        |     | iF: FactorTriangle |
+//        |   |       +--------------------+         |        |     +--------------------+
 //        |   |________________|_________________    |        |            /
 //        \_________           |         ________\___|        |           /
 //                  \          |        /         \           |          /
