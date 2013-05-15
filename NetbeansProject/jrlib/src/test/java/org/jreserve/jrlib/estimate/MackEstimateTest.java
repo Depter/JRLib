@@ -78,7 +78,8 @@ public class MackEstimateTest {
     
     private LinkRatioScaleSelection createLRScales() {
         LinkRatioScaleInput input = new LinkRatioScaleInput(createLinkRatios());
-        LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(input, new MinMaxScaleEstimator<LinkRatioScaleInput>());
+        LinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(input);
+        scales.setMethod(new MinMaxScaleEstimator<LinkRatioScaleInput>(), 7);
         scales.setMethod(new UserInputScaleEstimator<LinkRatioScaleInput>(8, 71d), 8);
         return scales;
     }

@@ -88,6 +88,7 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
         super(source, 
               (method instanceof DefaultCRMethod)? method : new DefaultCRMethod(),
               method);
+        this.developments = source.getLength();
         super.recalculateLayer();
     }
     
@@ -122,11 +123,21 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
      */
     @Override
     protected void initCalculation() {
-        developments = source.getLength();
+        //developments = source.getLength();
     }
 
     @Override
     public int getLength() {
         return developments;
+    }
+    
+    /**
+     * Sets the length for the claim ratios. If 'developments' is less 
+     * then 0, 0 will be used isntead. Calling this method fires a 
+     * change event.
+     */
+    public void setDevelopmentCount(int developments) {
+        this.developments = developments<0? 0 : developments;
+        fireChange();
     }
 }

@@ -2,6 +2,7 @@ package org.jreserve.jrlib.bootstrap.mcl;
 
 import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
+import org.jreserve.jrlib.estimate.Estimate;
 import org.jreserve.jrlib.estimate.mcl.MclEstimateBundle;
 import org.jreserve.jrlib.estimate.mcl.MclEstimateInput;
 
@@ -33,7 +34,6 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
         
         incurredSimulator = incurredProcessSimulator;
         incurredSimulator.setEstimate(super.getIncurredEstimate());
-        simulateProcess();
     }
     
     public MclEstimateInput getSourceCalculationBundle() {
@@ -44,28 +44,28 @@ public class MclBootstrapEstimateBundle extends MclEstimateBundle {
     public void recalculate() {
         pseudoData.recalculate();
         super.recalculate();
-        simulateProcess();
     }
     
-//    @Override
-//    protected void recalculateLayer() {
-//        pseudoData.recalculate();
-//        super.recalculate();
-//        simulateProcess();
-//    }
-    
-    private void simulateProcess() {
-        for(int a=0; a<accidents; a++)
-            for(int d=devIndices[a]; d<developments; d++)
-                simulateProcess(a, d);
+    @Override
+    protected double calculateIncurred(int a, int d) {
+        double value = super.calculateIncurred(a, d);
+        if(shouldSimulateProcess(a, d, false))
+            value = incurredSimulator.simulateEstimate(value, a, d);
+        return value;
     }
     
-    private void simulateProcess(int a, int d) {
-        double cad = paidValues[a][d];
-        paidValues[a][d] = paidSimulator.simulateEstimate(cad, a, d);
-        
-        cad = incurredValues[a][d];
-        incurredValues[a][d] = incurredSimulator.simulateEstimate(cad, a, d);
+    private boolean shouldSimulateProcess(int accident, int development, boolean isPaid) {
+        MackProcessSimulator s = isPaid? paidSimulator : incurredSimulator;
+        Estimate estimate = isPaid? getPaidEstimate() : getIncurredEstimate();
+        return s!=null && 
+               development >= estimate.getObservedDevelopmentCount(accident);
     }
     
+    @Override
+    protected double calculatePaid(int a, int d) {
+        double value = super.calculatePaid(a, d);
+        if(shouldSimulateProcess(a, d, true))
+            value = paidSimulator.simulateEstimate(value, a, d);
+        return value;
+    }
 }

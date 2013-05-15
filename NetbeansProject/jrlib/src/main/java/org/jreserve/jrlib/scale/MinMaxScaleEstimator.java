@@ -50,10 +50,19 @@ public class MinMaxScaleEstimator<T extends ScaleInput> implements ScaleEstimato
     private double estimate(int development) {
         double min2 = source[0];
         double min1 = source[1];
-        double current = Double.NaN;
+        double current;
         int index = 1;
         
-        while(++index <= development) {
+//        while(++index <= development) {
+//            current = index<sourceLength? source[index] : Double.NaN;
+//            if(Double.isNaN(current) && canEstimate(min1, min2))
+//                current = estimate(min1, min2);
+//            min2 = min1;
+//            min1 = current;
+//        }
+//        
+//        return current;
+        while(++index < development) {
             current = index<sourceLength? source[index] : Double.NaN;
             if(Double.isNaN(current) && canEstimate(min1, min2))
                 current = estimate(min1, min2);
@@ -61,7 +70,7 @@ public class MinMaxScaleEstimator<T extends ScaleInput> implements ScaleEstimato
             min1 = current;
         }
         
-        return current;
+        return estimate(min1, min2);
     }
     
     private boolean canEstimate(double min1, double min2) {

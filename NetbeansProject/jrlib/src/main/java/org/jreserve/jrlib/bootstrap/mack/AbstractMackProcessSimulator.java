@@ -9,16 +9,14 @@ import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
  * @version 1.0
  */
 public abstract class AbstractMackProcessSimulator implements MackProcessSimulator {
-    private final int developments;
-    private final double[] scales;
-    
+
     private Estimate estimate;
+    private LinkRatioScale scales;
+    private final double[] originalScales;
     
     protected AbstractMackProcessSimulator(LinkRatioScale scales) {
-        this.developments = scales.getLength();
-        this.scales = scales.toArray();
-        for(int d=0; d<developments; d++)
-            this.scales[d] = Math.pow(this.scales[d], 2d);
+        this.scales = scales;
+        this.originalScales = scales.toArray();
     }
 
     @Override
@@ -42,17 +40,17 @@ public abstract class AbstractMackProcessSimulator implements MackProcessSimulat
     protected double getVariance(int accident, int development) {
         int d = development - 1;
         double cik = estimate.getValue(accident, d);
-        double scale = getScale(d);
+        double scale = getScale(accident, d);
         return cik * scale * scale;
     }
     
     /**
      * Returns the scale parameter for the variance.
      */
-    protected double getScale(int development) {
-        return (0<=development && development<developments)?
-                scales[development] :
-                Double.NaN;
+    protected double getScale(int accident, int development) {
+        if(0 <= development && development <= estimate.getObservedDevelopmentCount(accident))
+            return originalScales[development];
+        return scales.getValue(development);
     }
     
     /**

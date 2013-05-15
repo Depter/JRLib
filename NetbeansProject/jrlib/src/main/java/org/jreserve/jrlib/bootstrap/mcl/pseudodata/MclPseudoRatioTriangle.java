@@ -68,6 +68,15 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
         accidents = ratios.getAccidentCount();
         developments = ratios.getDevelopmentCount();
         pseudoValues = ratios.toArray();
+        excludeLastDiagonal();
+    }
+    
+    private void excludeLastDiagonal() {
+        for(int a=0; a<accidents; a++) {
+            int devs = pseudoValues[a].length - 1;
+            if(devs >= 0)
+                pseudoValues[a][devs] = Double.NaN;
+        }
     }
     
     private ClaimTriangle getSourceWeightTriangle(MclResidualBundle bundle) {

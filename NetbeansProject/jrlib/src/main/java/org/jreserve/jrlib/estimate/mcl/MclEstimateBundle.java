@@ -82,7 +82,6 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         initCalculationState();
         fillTriangles();
         clearCalculationState();
-        setProxyState();
     }
     
     private void initCalculationState() {
@@ -127,8 +126,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     }
     
     private void fillTriangles() {
-        paidValues = new double[accidents][developments];
-        incurredValues = new double[accidents][developments];
+        initValues();
         for(int a=0; a<accidents; a++) {
             for(int d=0; d<developments; d++) {
                 paidValues[a][d] = calculatePaid(a, d);
@@ -137,7 +135,13 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         }
     }
     
-    private double calculateIncurred(int a, int d) {
+    private void initValues() {
+        paidValues = new double[accidents][developments];
+        incurredValues = new double[accidents][developments];
+        setProxyState();
+    }
+    
+    protected double calculateIncurred(int a, int d) {
         if(d == 0 || d < incurred.getDevelopmentCount(a))
             return incurred.getValue(a, d);
         
@@ -149,7 +153,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         return iPrev * (iLr + incurredLSPR[pD] * (pPrev/iPrev - rPrev));
     }
     
-    private double calculatePaid(int a, int d) {
+    protected double calculatePaid(int a, int d) {
         if(d == 0 || d < paid.getDevelopmentCount(a))
             return paid.getValue(a, d);
         

@@ -1,7 +1,5 @@
 package org.jreserve.jrlib.scale;
 
-import org.jreserve.jrlib.scale.DefaultScaleCalculator;
-import org.jreserve.jrlib.scale.MinMaxScaleEstimator;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.linkratio.LinkRatio;
@@ -19,8 +17,8 @@ import org.junit.Test;
 public class MinMaxScaleEstimatorTest {
     
     private final static double[] EXPECTED = {
-        111.6702265, 55.8828250, 32.6734950, 23.2743446, 
-         19.9898831,  1.0129175, 0.0513261
+        111.67022649, 55.88282502, 27.96528879, 19.10349518, 
+         16.57903797, 17.16892279,  0.05132606
     };
     
     private DefaultScaleCalculator<LinkRatioScaleInput> source;

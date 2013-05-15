@@ -33,6 +33,8 @@ public class TestData {
     public final static String Q_INCURRED   = DIR + "q_incurred.csv";
     public final static String Q_PAID       = DIR + "q_paid.csv";
     public final static String TAYLOR_ASHE  = DIR + "taylor_ashe.csv";
+    public final static String MCL_INCURRED   = DIR + "mcl_incurred.csv";
+    public final static String MCL_PAID       = DIR + "mcl_paid.csv";
     
     private final static Map<String, double[][]> CAHCE = new HashMap<String, double[][]>();
     

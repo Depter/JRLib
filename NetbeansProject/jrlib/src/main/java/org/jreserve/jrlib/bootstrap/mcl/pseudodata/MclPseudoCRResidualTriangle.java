@@ -2,9 +2,13 @@ package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 
 import org.jreserve.jrlib.claimratio.ClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
+import org.jreserve.jrlib.claimratio.scale.ClaimRatioScaleInput;
+import org.jreserve.jrlib.claimratio.scale.DefaultClaimRatioScaleSelection;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.scale.MinMaxScaleEstimator;
 import org.jreserve.jrlib.triangle.AbstractTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
 
 /**
@@ -24,11 +28,31 @@ public class MclPseudoCRResidualTriangle
         return new MclPseudoCRResidualTriangle(bundle, false);
     }
     
-    private static ClaimRatioScale getLinkRatioScales(MclResidualBundle bundle, boolean isPaid) {
+    private static ClaimRatioScale createScales(MclResidualBundle bundle, boolean isPaid) {
+        int dev = getFactors(bundle, isPaid).getDevelopmentCount() - 1;
+        ClaimRatioScale scale = getClaimRatioScales(bundle, isPaid);
+        if(dev < scale.getLength())
+            return createMinMaxScale(scale, dev);
+        return scale;
+    }
+    
+    private static ClaimRatioScale getClaimRatioScales(MclResidualBundle bundle, boolean isPaid) {
         CRResidualTriangle s = isPaid? 
                 bundle.getSourcePaidCRResidualTriangle() : 
                 bundle.getSourceIncurredCRResidualTriangle();
         return s.getSourceClaimRatioScales();
+    }
+    
+    private static FactorTriangle getFactors(MclResidualBundle bundle, boolean isPaid) {
+        return isPaid?
+                bundle.getSourcePaidLRResidualTriangle().getSourceFactors() :
+                bundle.getSourceIncurredLRResidualTriangle().getSourceFactors();
+    }
+    
+    private static ClaimRatioScale createMinMaxScale(ClaimRatioScale scale, int dev) {
+        DefaultClaimRatioScaleSelection sel = new DefaultClaimRatioScaleSelection(scale);
+        sel.setMethod(new MinMaxScaleEstimator<ClaimRatioScaleInput>(), dev);
+        return sel;
     }
 
     private boolean isPaid;
@@ -37,7 +61,8 @@ public class MclPseudoCRResidualTriangle
     private double[][] residuals;
     
     private MclPseudoCRResidualTriangle(MclResidualBundle bundle, boolean isPaid) {
-        super(getLinkRatioScales(bundle, isPaid));
+        //super(getClaimRatioScales(bundle, isPaid));
+        super(createScales(bundle, isPaid));
         detach();
         //super.setCallsForwarded(false);
         
