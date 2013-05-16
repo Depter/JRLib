@@ -119,14 +119,14 @@ public class MclPseudoDataTest {
         ClaimRatio crs = new SimpleClaimRatio(numerator, denominator);
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
         CRResidualTriangle res = new ClaimRatioResiduals(scales);
-        return new AdjustedClaimRatioResiduals(excludeLastDiagonal(res));
+        return new AdjustedClaimRatioResiduals(res);
     }
     
-    private CRResidualTriangle excludeLastDiagonal(CRResidualTriangle res) {
-        for(int a=0; a<res.getAccidentCount(); a++)
-            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
-        return res;
-    }
+//    private CRResidualTriangle excludeLastDiagonal(CRResidualTriangle res) {
+//        for(int a=0; a<res.getAccidentCount(); a++)
+//            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
+//        return res;
+//    }
     
     @Test
     public void testAccidentCounts() {

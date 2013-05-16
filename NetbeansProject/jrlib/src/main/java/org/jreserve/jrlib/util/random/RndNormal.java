@@ -24,11 +24,19 @@ public class RndNormal {
         this.rnd = random;
     }
     
+    /**
+     * Draws a number from a normal distribution with the given
+     * mean and variance.
+     */
     public double nextNormalFromVariance(double mean, double variance) {
         double sigma = Math.sqrt(variance);
         return nextNormal(mean, sigma);
     }
     
+    /**
+     * Draws a number from a normal distribution with the given
+     * mean and standard deviation.
+     */
     public double nextNormal(double mean, double sigma) {
         double srnd;
         if(hasNext) {

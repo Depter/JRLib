@@ -40,12 +40,8 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     private int accidents;
     private int[] developments;
     
+    private MclResidualBundle bundle;
     private MclResidualGenerator residuals;
-    
-    private MclPseudoLRResidualTriangle incurredLRRes;
-    private MclPseudoLRResidualTriangle paidLRRes;
-    private MclPseudoCRResidualTriangle incurredCRRes;
-    private MclPseudoCRResidualTriangle paidCRRes;
     
     private MclPseudoFactorTriangle paidFactors;
     private MclPseudoFactorTriangle incurredFactors;
@@ -57,36 +53,24 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     }
 
     public MclPseudoData(Random rnd, MclResidualBundle bundle, List<int[][]> segments) {
-        initBounds(bundle);
-        initPseudoTriangles(bundle);
+        this.bundle = bundle;
         residuals = new MclResidualGenerator(rnd, bundle, segments);
+        initBounds();
+        initPseudoTriangles();
     }
     
-    private void initBounds(MclResidualBundle bundle) {
+    private void initBounds() {
         this.accidents = bundle.getAccidentCount();
         developments = new int[accidents];
         for(int a=0; a<accidents; a++)
             developments[a] = bundle.getDevelopmentCount(a);
     }
     
-    private void initPseudoTriangles(MclResidualBundle bundle) {
-        paidLRRes = MclPseudoLRResidualTriangle.createPaid(bundle);
-        incurredLRRes = MclPseudoLRResidualTriangle.createIncurred(bundle);
-        paidCRRes = MclPseudoCRResidualTriangle.createPaid(bundle);
-        incurredCRRes = MclPseudoCRResidualTriangle.createIncurred(bundle);
-        
-        
+    private void initPseudoTriangles() {
         paidFactors = MclPseudoFactorTriangle.createPaid(bundle);
-        paidLRRes.getSourceLinkRatios().setSource(paidFactors);
-        
         incurredFactors = MclPseudoFactorTriangle.createIncurred(bundle);
-        incurredLRRes.getSourceLinkRatios().setSource(incurredFactors);
-        
         paidRatios = MclPseudoRatioTriangle.createPaid(bundle);
-        paidCRRes.getSourceClaimRatios().setSource(paidRatios);
-        
         incurredRatios = MclPseudoRatioTriangle.createIncurred(bundle);
-        incurredCRRes.getSourceClaimRatios().setSource(incurredRatios);
     }
     
     public FactorTriangle getPaidFactorTriangle() {
@@ -105,22 +89,6 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         return incurredRatios;
     }
     
-    public LRResidualTriangle getPaidLRResidualTriangle() {
-        return paidLRRes;
-    }
-    
-    public LRResidualTriangle getIncurredLRResidualTriangle() {
-        return incurredLRRes;
-    }
-    
-    public CRResidualTriangle getPaidCRResidualTriangle() {
-        return paidCRRes;
-    }
-    
-    public CRResidualTriangle getIncurredCRResidualTriangle() {
-        return incurredCRRes;
-    }
-    
     @Override
     protected void recalculateLayer() {
         for(int a=0; a<accidents; a++) {
@@ -136,14 +104,21 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         paidRatios.setValueAt(accident, development, cell);
         incurredFactors.setValueAt(accident, development, cell);
         incurredRatios.setValueAt(accident, development, cell);
-        
-        paidLRRes.setValueAt(accident, development, cell);
-        incurredLRRes.setValueAt(accident, development, cell);
-        paidCRRes.setValueAt(accident, development, cell);
-        incurredCRRes.setValueAt(accident, development, cell);
     }
     
     public MclEstimateInput createPseudoBundle() {
+        LRResidualTriangle paidLRRes = bundle.getSourcePaidLRResidualTriangle();
+        paidLRRes.getSourceLinkRatios().setSource(paidFactors);
+        
+        LRResidualTriangle incurredLRRes = bundle.getSourceIncurredLRResidualTriangle();
+        incurredLRRes.getSourceLinkRatios().setSource(incurredFactors);
+        
+        CRResidualTriangle paidCRRes = bundle.getSourcePaidCRResidualTriangle();
+        paidCRRes.getSourceClaimRatios().setSource(paidRatios);
+        
+        CRResidualTriangle incurredCRRes = bundle.getSourceIncurredCRResidualTriangle();
+        incurredCRRes.getSourceClaimRatios().setSource(incurredRatios);
+        
         MclCorrelation paidC = new MclCorrelation(paidLRRes, paidCRRes);
         MclCorrelation incurredC = new MclCorrelation(incurredLRRes, incurredCRRes);
         return new PseudoEstimateInput(paidC, incurredC);

@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.claimratio.ClaimRatio;
@@ -38,13 +37,14 @@ public class MclResidualBundleTest {
     };
     
     private final static double[][] PAID_CR = {
-        {-1.33089143, -1.80917390, -1.72446110, -1.73477463, -1.34141175, -0.95840097, -0.70536960},
-        {-0.66745059, -0.57102319,  0.05194833,  0.70711037,  1.03845917,  1.03757548},
-        {-1.18758856, -0.29273228,  0.21038152,  0.00328244, -0.06770761},
-        {-0.21723010,  0.31651779, -0.40077902,  0.21503292},
-        { 0.14074161, -0.09213231,  0.21948460},
-        { 0.20104705,  0.66479279},
-        { 1.47963872}
+        {-1.33089143, -1.80917390, -1.72446110, -1.73477463, -1.34141175, -0.95840097, -0.70536960, 0.00000000},
+        {-0.66745059, -0.57102319,  0.05194833,  0.70711037,  1.03845917,  1.03757548,  0.70883970},
+        {-1.18758856, -0.29273228,  0.21038152,  0.00328244, -0.06770761, -0.07003361},
+        {-0.21723010,  0.31651779, -0.40077902,  0.21503292,  0.34297629},
+        { 0.14074161, -0.09213231,  0.21948460,  0.66655980},
+        { 0.20104705,  0.66479279,  1.33059294},
+        { 1.47963872,  1.32834815},
+        { 1.03736365}
     };
     
     private final static double[][] INCURRED_LR = {
@@ -58,13 +58,14 @@ public class MclResidualBundleTest {
     };
     
     private final static double[][] INCURRED_CR = {
-        { 1.39958504,  1.86536889,  1.77570549,  1.75243837,  1.36352406,  0.97804564, 0.71982972},
-        { 0.68114843,  0.56811963, -0.05077841, -0.68370632, -1.01089507, -1.01906564},
-        { 1.23488527,  0.28878655, -0.20484734, -0.00321301,  0.06721063},
-        { 0.21719074, -0.30762038,  0.39634032, -0.20978264},
-        {-0.13884318,  0.09042502, -0.21374329},
-        {-0.19801119, -0.64177892},
-        {-1.39841391}
+        { 1.39958504,  1.86536889,  1.77570549,  1.75243837,  1.36352406,  0.97804564,  0.71982972, 0.00000000},
+        { 0.68114843,  0.56811963, -0.05077841, -0.68370632, -1.01089507, -1.01906564, -0.69415068},
+        { 1.23488527,  0.28878655, -0.20484734, -0.00321301,  0.06721063,  0.07022793},
+        { 0.21719074, -0.30762038,  0.39634032, -0.20978264, -0.33819524},
+        {-0.13884318,  0.09042502, -0.21374329, -0.64613184},
+        {-0.19801119, -0.64177892, -1.26473606},
+        {-1.39841391, -1.26473482},
+        {-0.99550881}
     };
     
     private MclResidualBundle bundle;
@@ -96,12 +97,12 @@ public class MclResidualBundleTest {
     
     @Test
     public void testGetAccidentCount() {
-        assertEquals(PAID_LR.length, bundle.getAccidentCount());
+        assertEquals(PAID_CR.length, bundle.getAccidentCount());
     }
     
     @Test
     public void testGetDevelopmentCount() {
-        assertEquals(PAID_LR[0].length, bundle.getDevelopmentCount());
+        assertEquals(PAID_CR[0].length, bundle.getDevelopmentCount());
     }
     
     @Test
@@ -109,7 +110,7 @@ public class MclResidualBundleTest {
         int accidents = bundle.getAccidentCount();
         assertEquals(0, bundle.getDevelopmentCount(-1));
         for(int a=0; a<accidents; a++)
-            assertEquals(PAID_LR[a].length, bundle.getDevelopmentCount(a));
+            assertEquals(PAID_CR[a].length, bundle.getDevelopmentCount(a));
         assertEquals(0, bundle.getDevelopmentCount(accidents));
     }
     
@@ -135,7 +136,7 @@ public class MclResidualBundleTest {
     }
     
     private void assertNonNaN(int accident, int development) {
-        double expected = PAID_LR[accident][development];
+        double expected = getValue(PAID_LR, accident, development);
         double found = bundle.getPaidLRResidual(accident, development);
         assertEquals(expected, found, TestConfig.EPSILON);
         
@@ -143,12 +144,19 @@ public class MclResidualBundleTest {
         found = bundle.getPaidCRResidual(accident, development);
         assertEquals(expected, found, TestConfig.EPSILON);
         
-        expected = INCURRED_LR[accident][development];
+        expected = getValue(INCURRED_LR, accident, development);
         found = bundle.getIncurredLRResidual(accident, development);
         assertEquals(expected, found, TestConfig.EPSILON);
         
         expected = INCURRED_CR[accident][development];
         found = bundle.getIncurredCRResidual(accident, development);
         assertEquals(expected, found, TestConfig.EPSILON);
+    }
+    
+    private double getValue(double[][] arr, int accident, int development) {
+        if(arr.length <= accident)
+            return Double.NaN;
+        double[] a = arr[accident];
+        return a.length<= development? Double.NaN : a[development];
     }
 }

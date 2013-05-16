@@ -39,29 +39,25 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
     }
     
     private void initState(MclResidualBundle bundle) {
-        initSource(bundle);
-        initRatios(getSourceRatioTriangle(bundle));
-        initWeights(getSourceWeightTriangle(bundle));
-        initClaimRatios(bundle);
-        initScales(bundle);
-    }
-    
-    private void initSource(MclResidualBundle bundle) {
-        CRResidualTriangle t = getSourceResidualss(bundle);
-        ClaimTriangle n = t.getSourceNumeratorTriangle();
-        ClaimTriangle d = t.getSourceDenominatorTriangle();
-        this.source = new RatioTriangleInput(n, d);
-        this.source.detach();
-    }
-    
-    private RatioTriangle getSourceRatioTriangle(MclResidualBundle bundle) {
-        return getSourceResidualss(bundle).getSourceRatioTriangle();
+        CRResidualTriangle res = getSourceResidualss(bundle);
+        initSource(res);
+        initRatios(res.getSourceRatioTriangle());
+        initWeights(res.getSourceDenominatorTriangle());
+        initClaimRatios(res.getSourceClaimRatios());
+        initScales(res.getSourceClaimRatioScales());
     }
     
     private CRResidualTriangle getSourceResidualss(MclResidualBundle bundle) {
         return isPaid? 
                 bundle.getSourcePaidCRResidualTriangle() :
                 bundle.getSourceIncurredCRResidualTriangle();
+    }
+    
+    private void initSource(CRResidualTriangle res) {
+        ClaimTriangle n = res.getSourceNumeratorTriangle();
+        ClaimTriangle d = res.getSourceDenominatorTriangle();
+        this.source = new RatioTriangleInput(n, d);
+        this.source.detach();
     }
     
     private void initRatios(RatioTriangle ratios) {
@@ -79,10 +75,6 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
         }
     }
     
-    private ClaimTriangle getSourceWeightTriangle(MclResidualBundle bundle) {
-        return getSourceResidualss(bundle).getSourceDenominatorTriangle();
-    }
-    
     private void initWeights(ClaimTriangle cik) {
         wik = new double[accidents][];
         for(int a=0; a<accidents; a++) {
@@ -93,18 +85,16 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
         }
     }
     
-    private void initClaimRatios(MclResidualBundle bundle) {
-        ClaimRatio ratios = getSourceResidualss(bundle).getSourceClaimRatios();
+    private void initClaimRatios(ClaimRatio ratios) {
         this.crs = new double[developments];
         for(int d=0; d<developments; d++)
             this.crs[d] = ratios.getValue(d);
     }
     
-    private void initScales(MclResidualBundle bundle) {
-        ClaimRatioScale sigma = getSourceResidualss(bundle).getSourceClaimRatioScales();
+    private void initScales(ClaimRatioScale rho) {
         this.scales = new double[developments];
         for(int d=0; d<developments; d++)
-            this.scales[d] = sigma.getValue(d);
+            this.scales[d] = rho.getValue(d);
     }
     
     @Override

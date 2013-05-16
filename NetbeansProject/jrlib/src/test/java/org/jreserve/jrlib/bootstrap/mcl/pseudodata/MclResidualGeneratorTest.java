@@ -1,8 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualCell;
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualGenerator;
-import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.FixedRandom;
@@ -43,6 +40,7 @@ public class MclResidualGeneratorTest {
         { 1.39958504,  1.86536889,  1.77570549,  1.75243837};
     
     private final static int[][] INDICES = {
+        {0, 1, 2, 3, 0, 1, 2, 3},
         {0, 1, 2, 3, 0, 1, 2},
         {3, 0, 1, 2, 3, 0},
         {1, 2, 3, 0, 1},

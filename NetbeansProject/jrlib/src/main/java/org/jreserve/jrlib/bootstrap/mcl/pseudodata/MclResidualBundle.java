@@ -173,7 +173,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
     }
     
     private void recalculateAccidents() {
-        accidents = min(
+        accidents = max(
                 sourcePaidLr.getAccidentCount(),
                 sourcePaidCr.getAccidentCount(),
                 sourceIncurredLr.getAccidentCount(),
@@ -181,12 +181,12 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
                 );
     }
     
-    private int min(int i1, int i2, int i3, int i4) {
-        return Math.min(Math.min(i1, i2), Math.min(i3, i4));
+    private int max(int i1, int i2, int i3, int i4) {
+        return Math.max(Math.max(i1, i2), Math.max(i3, i4));
     }
     
     private void recalculateDevelopments() {
-        developments = min(
+        developments = max(
                 sourcePaidLr.getDevelopmentCount(),
                 sourcePaidCr.getDevelopmentCount(),
                 sourceIncurredLr.getDevelopmentCount(),
@@ -197,7 +197,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
     private void recalculateAccidentDevelopments() {
         accidentDevelopments = new int[accidents];
         for(int a=0; a<accidents; a++)
-            accidentDevelopments[a] = min(
+            accidentDevelopments[a] = max(
                 sourcePaidLr.getDevelopmentCount(a), 
                 sourcePaidCr.getDevelopmentCount(a),
                 sourceIncurredLr.getDevelopmentCount(a),

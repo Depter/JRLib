@@ -40,8 +40,8 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     }
 
     private void initState(MclResidualBundle bundle) {
-        initFactors(bundle);
         LinkRatio linkRatios = getLinkRatio(bundle);
+        initFactors(linkRatios);
         initWeights(linkRatios);
         initLinkRatios(linkRatios);
         initScales(bundle);
@@ -57,12 +57,13 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
                 bundle.getSourceIncurredLRResidualTriangle();
     }
     
-    private void initFactors(MclResidualBundle bundle) {
-        accidents = bundle.getAccidentCount();
-        developments = bundle.getDevelopmentCount();
+    private void initFactors(LinkRatio linkRatios) {
+        FactorTriangle original = linkRatios.getSourceFactors();
+        accidents = original.getAccidentCount();
+        developments = original.getDevelopmentCount();
         pseudoValues = new double[accidents][];
         for(int a=0; a<accidents; a++)
-            pseudoValues[a] = new double[bundle.getDevelopmentCount(a)];
+            pseudoValues[a] = new double[original.getDevelopmentCount(a)];
     }
     
     private void initWeights(LinkRatio lrs) {
@@ -128,11 +129,13 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     }
     
     void setValueAt(int accident, int development, MclResidualCell cell) {
-        double r = getResidualFromCell(cell);
-        double l = lrs[development];
-        double s = scales[development];
-        double w = wik[accident][development];
-        pseudoValues[accident][development] = l + r * s / w;
+        if(withinBounds(accident, development)) {
+            double r = getResidualFromCell(cell);
+            double l = lrs[development];
+            double s = scales[development];
+            double w = wik[accident][development];
+            pseudoValues[accident][development] = l + r * s / w;
+        }
     }
     
     private double getResidualFromCell(MclResidualCell cell) {
@@ -143,4 +146,6 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
         else
             return cell.getIncurredLRResidual();
     }
+    
+    
 }

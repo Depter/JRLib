@@ -39,9 +39,14 @@ public abstract class AbstractMackProcessSimulator implements MackProcessSimulat
      */
     protected double getVariance(int accident, int development) {
         int d = development - 1;
-        double cik = estimate.getValue(accident, d);
+        double cik = getClaim(accident, d);
         double scale = getScale(accident, d);
         return cik * scale * scale;
+    }
+    
+    private double getClaim(int accident, int development) {
+        double cik = estimate.getValue(accident, development);
+        return cik < 0d? -cik : cik;
     }
     
     /**
