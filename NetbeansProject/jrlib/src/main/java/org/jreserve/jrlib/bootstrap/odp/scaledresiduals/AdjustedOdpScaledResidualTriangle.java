@@ -1,9 +1,9 @@
 package org.jreserve.jrlib.bootstrap.odp.scaledresiduals;
 
-import org.jreserve.jrlib.bootstrap.AbstractAdjustedResidualTriangle;
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle;
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale;
 import org.jreserve.jrlib.linkratio.LinkRatio;
+import org.jreserve.jrlib.triangle.AbstractTriangleModification;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
@@ -25,8 +25,10 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @version 1.0
  */
 public class AdjustedOdpScaledResidualTriangle
-    extends AbstractAdjustedResidualTriangle<OdpScaledResidualTriangle> 
+    extends AbstractTriangleModification<OdpScaledResidualTriangle> 
     implements ModifiedOdpScaledResidualTriangle {
+    
+    private double adjustment;
     
     /**
      * Creates a new instance for the given source.
@@ -44,34 +46,85 @@ public class AdjustedOdpScaledResidualTriangle
      */
     public AdjustedOdpScaledResidualTriangle(OdpScaledResidualTriangle source) {
         super(source);
+        doRecalculate();
+    }
+    
+    public double getAdjustment() {
+        return adjustment;
     }
 
+    @Override
     public OdpScaledResidualTriangle getSourceOdpScaledResidualTriangle() {
         return source;
     }
 
+    @Override
     public OdpResidualScale getSourceOdpResidualScales() {
         return source.getSourceOdpResidualScales();
     }
 
+    @Override
     public OdpResidualTriangle getSourceOdpResidualTriangle() {
         return source.getSourceOdpResidualTriangle();
     }
 
+    @Override
     public LinkRatio getSourceLinkRatios() {
         return source.getSourceLinkRatios();
     }
 
+    @Override
     public ClaimTriangle getSourceTriangle() {
         return source.getSourceTriangle();
     }
 
+    @Override
     public double getFittedValue(int accident, int development) {
         return source.getFittedValue(accident, development);
     }
 
+    @Override
     public double[][] toArrayFittedValues() {
         return source.toArrayFittedValues();
     }
 
+    @Override
+    public double getValue(int accident, int development) {
+        return source.getValue(accident, development) * adjustment;
+    }
+    
+    @Override
+    protected void recalculateLayer() {
+        doRecalculate();
+    }
+
+    private void doRecalculate() {
+        int accidents = source.getAccidentCount();
+        int devs = source.getDevelopmentCount();
+        
+        int[] pA = new int[accidents];
+        int[] pD = new int[devs];
+        
+        int n = 0;
+        for(int a=0; a<accidents; a++) {
+            for(int d=0; d<devs; d++) {
+                if(!Double.isNaN(source.getValue(a, d))) {
+                    n++;
+                    pA[a] = 1;
+                    pD[d] = 1;
+                }
+            }
+        }
+        
+        double p = sum(pA) + sum(pD) - 1;
+        double dN = n;
+        adjustment = Math.sqrt(dN / (dN - p));
+    }
+    
+    private int sum(int[] arr) {
+        int sum = 0;
+        for(int i : arr)
+            sum += i;
+        return sum;
+    }
 }

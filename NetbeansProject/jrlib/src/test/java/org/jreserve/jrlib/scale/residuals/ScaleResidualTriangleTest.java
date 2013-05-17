@@ -1,7 +1,7 @@
-package org.jreserve.jrlib.scale;
+package org.jreserve.jrlib.scale.residuals;
 
 import org.jreserve.jrlib.scale.MinMaxScaleEstimator;
-import org.jreserve.jrlib.scale.ScaleResidualTriangle;
+import org.jreserve.jrlib.scale.residuals.ScaleResidualTriangle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.linkratio.LinkRatio;
@@ -13,6 +13,7 @@ import org.jreserve.jrlib.linkratio.curve.UserInputLRCurve;
 import org.jreserve.jrlib.linkratio.scale.DefaultLinkRatioScaleSelection;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScaleSelection;
+import org.jreserve.jrlib.scale.MinMaxScaleEstimator;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;

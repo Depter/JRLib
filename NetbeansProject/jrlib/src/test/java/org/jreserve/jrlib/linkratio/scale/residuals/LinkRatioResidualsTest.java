@@ -1,7 +1,5 @@
 package org.jreserve.jrlib.linkratio.scale.residuals;
 
-import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
-import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.linkratio.LinkRatio;

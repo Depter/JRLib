@@ -1,20 +1,20 @@
 package org.jreserve.jrlib.linkratio.scale.residuals;
 
-import org.jreserve.jrlib.bootstrap.AbstractAdjustedResidualTriangle;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
+import org.jreserve.jrlib.scale.residuals.AdjustedResidualTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 
 /**
- * Adjust the residuals for bootstrap-bias.
+ * Adjust the source residual triangle.
  * 
- * @see AbstractAdjustedResidualTriangle
+ * @see AdjustedResidualTriangle
  * @author Peter Decsi
  * @version 1.0
  */
 public class AdjustedLinkRatioResiduals 
-    extends AbstractAdjustedResidualTriangle<LRResidualTriangle> 
+    extends AdjustedResidualTriangle<LRResidualTriangle> 
     implements ModifiedLRResidualTriangle {
     
     /**

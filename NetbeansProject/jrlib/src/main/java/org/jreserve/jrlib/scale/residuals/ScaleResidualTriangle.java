@@ -1,5 +1,7 @@
-package org.jreserve.jrlib.scale;
+package org.jreserve.jrlib.scale.residuals;
 
+import org.jreserve.jrlib.scale.Scale;
+import org.jreserve.jrlib.scale.ScaleInput;
 import org.jreserve.jrlib.triangle.AbstractTriangle;
 
 /**

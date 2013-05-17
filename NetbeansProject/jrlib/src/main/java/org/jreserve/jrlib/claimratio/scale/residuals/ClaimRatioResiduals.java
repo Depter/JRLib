@@ -3,7 +3,7 @@ package org.jreserve.jrlib.claimratio.scale.residuals;
 import org.jreserve.jrlib.claimratio.ClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScaleInput;
-import org.jreserve.jrlib.scale.ScaleResidualTriangle;
+import org.jreserve.jrlib.scale.residuals.ScaleResidualTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
 

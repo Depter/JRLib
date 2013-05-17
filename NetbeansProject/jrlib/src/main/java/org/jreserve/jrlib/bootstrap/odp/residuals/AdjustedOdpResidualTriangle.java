@@ -1,7 +1,7 @@
 package org.jreserve.jrlib.bootstrap.odp.residuals;
 
-import org.jreserve.jrlib.bootstrap.AbstractAdjustedResidualTriangle;
 import org.jreserve.jrlib.linkratio.LinkRatio;
+import org.jreserve.jrlib.triangle.AbstractTriangleModification;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
@@ -25,9 +25,9 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AdjustedOdpResidualTriangle 
-    extends AbstractAdjustedResidualTriangle<OdpResidualTriangle> 
-    implements ModifiedOdpResidualTriangle {
+public class AdjustedOdpResidualTriangle extends AbstractTriangleModification<OdpResidualTriangle> implements ModifiedOdpResidualTriangle {
+
+    private double adjustment;
     
     /**
      * Creates an instance for the given link-ratios.
@@ -46,6 +46,7 @@ public class AdjustedOdpResidualTriangle
      */
     public AdjustedOdpResidualTriangle(OdpResidualTriangle source) {
         super(source);
+        doRecalculate();
     }
 
     @Override
@@ -71,5 +72,50 @@ public class AdjustedOdpResidualTriangle
     @Override
     public double[][] toArrayFittedValues() {
         return source.toArrayFittedValues();
+    }
+    
+    public double getAdjustment() {
+        return adjustment;
+    }
+
+    @Override
+    public double getValue(int accident, int development) {
+        double v = source.getValue(accident, development);
+        return Double.isNaN(v)? Double.NaN : adjustment * v;
+    }
+
+    @Override
+    protected void recalculateLayer() {
+        doRecalculate();
+    }
+
+    private void doRecalculate() {
+        int accidents = source.getAccidentCount();
+        int devs = source.getDevelopmentCount();
+        
+        int[] pA = new int[accidents];
+        int[] pD = new int[devs];
+        
+        int n = 0;
+        for(int a=0; a<accidents; a++) {
+            for(int d=0; d<devs; d++) {
+                if(!Double.isNaN(source.getValue(a, d))) {
+                    n++;
+                    pA[a] = 1;
+                    pD[d] = 1;
+                }
+            }
+        }
+        
+        double p = sum(pA) + sum(pD) - 1;
+        double dN = n;
+        adjustment = Math.sqrt(dN / (dN - p));
+    }
+    
+    private int sum(int[] arr) {
+        int sum = 0;
+        for(int i : arr)
+            sum += i;
+        return sum;
     }
 }

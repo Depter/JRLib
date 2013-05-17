@@ -51,6 +51,14 @@ public abstract class AbstractSimpleMethodSelection<T extends CalculationData, M
         doRecalculate();
     }
     
+    public M getDefaultMethod() {
+        return defaultMethod;
+    }
+    
+    public M getEstimatorMethod() {
+        return estimatorMethod;
+    }
+    
     /**
      * Returns the value for the given index;
      */
