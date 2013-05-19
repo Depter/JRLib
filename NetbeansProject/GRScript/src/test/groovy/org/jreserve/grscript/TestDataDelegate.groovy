@@ -20,10 +20,12 @@ class TestDataDelegate implements FunctionProvider {
     
     @Override
     void initFunctions(Script script, ExpandoMetaClass emc) {
-        emc.apcPaid = this.&apcPaid
+        emc.apcPaid     = this.&apcPaid
         emc.apcIncurred = this.&apcIncurred
-        emc.apcNoC = this.&apcNoC
+        emc.apcNoC      = this.&apcNoC
         emc.apcExposure = this.&apcExposure
+        emc.mclPaid     = this.&mclPaid
+        emc.mclIncurred = this.&mclIncurred
     }
     
     def apcPaid() {
@@ -46,6 +48,14 @@ class TestDataDelegate implements FunctionProvider {
     def apcExposure() {
         double[][] exposure = load(TestConfig.APC_EXPOSURE)
         exposure[0]
+    }
+    
+    def mclPaid() {
+        load(TestConfig.MCL_PAID)
+    }
+    
+    def mclIncurred() {
+        load(TestConfig.MCL_INCURRED)
     }
 }
 

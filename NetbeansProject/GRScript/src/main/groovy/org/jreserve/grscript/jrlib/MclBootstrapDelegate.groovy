@@ -5,23 +5,26 @@ import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle
 import org.jreserve.jrlib.bootstrap.mcl.MclBootstrapper
 import org.jreserve.grscript.util.MapUtil
-import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator
 import org.jreserve.jrlib.util.random.Random as JRandom
-import org.jreserve.jrlib.bootstrap.mack.MackConstantProcessSimulator
-import org.jreserve.jrlib.bootstrap.mack.MackGammaProcessSimulator
-import org.jreserve.jrlib.bootstrap.mack.MackNormalProcessSimulator
 import org.jreserve.jrlib.estimate.mcl.MclCorrelation
+import org.jreserve.jrlib.bootstrap.mcl.MclProcessSimulator
+import org.jreserve.jrlib.bootstrap.mcl.SimpleGammaMclProcessSimulator
+import org.jreserve.jrlib.bootstrap.mcl.SimpleNormalMclProcessSimulator
+import org.jreserve.jrlib.bootstrap.mcl.WeightedGammaMclProcessSimulator
+import org.jreserve.jrlib.bootstrap.mcl.WeightedNormalMclProcessSimulator
+import org.jreserve.jrlib.bootstrap.mcl.MclConstantProcessSimulator
 import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData
 import org.jreserve.jrlib.bootstrap.mcl.MclBootstrapEstimateBundle
+import org.jreserve.jrlib.linkratio.scale.LinkRatioScale
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class MclBootstrapDelegate extends AbstractBootstrapDelegate implements FunctionProvider {
+class MclBootstrapDelegate extends AbstractBootstrapDelegate {
     
     private MapUtil mapUtil = MapUtil.getInstance()
     
@@ -33,9 +36,8 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate implements Function
     private LRResidualTriangle incurredLrRes
     private CRResidualTriangle incurredCrRes
     
-    //private OdpScaledResidualTriangle residuals
-    
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.mclBootstrap << this.&mclBootstrap
     }
     
@@ -82,18 +84,16 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate implements Function
         super.checkState()
         checkResiduals()
         
-        MclCorrelation paidLambda = new MclCorrelation(paidLrRes, paidCrRes)
-        MclCorrelation incurredLambda = new MclCorrelation(incurredLrRes, incurredCrRes)
-        MclCalculationBundle calcBundle = new MclCalculationBundle(paidLambda, incurredLambda)
-        MclResidualBundle resBundle = new MclResidualBundle(paidLrRes, paidCrRes, incurredLrRes, incurredCrRes)
 
         JRandom rnd = super.getRandom()
-        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle, super.getSegments());
-        MackProcessSimulator ps = createProcessSimulator(rnd, paidProcessType, paidLrRes)
-        MackProcessSimulator is = createProcessSimulator(rnd, incurredProcessType, incurredLrRes)
+        MclProcessSimulator ps = createProcessSimulator(rnd, paidProcessType, paidLrRes, true)
+        MclProcessSimulator is = createProcessSimulator(rnd, incurredProcessType, incurredLrRes, false)
         
-        MclBootstrapEstimateBundle extimate = new MclBootstrapEstimateBundle(calcBundle, pseudoData, ps, is);
-        return new MclBootstrapper(extimate, super.getCount());
+        MclResidualBundle resBundle = new MclResidualBundle(paidLrRes, paidCrRes, incurredLrRes, incurredCrRes)
+        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle, super.getSegments());
+        
+        MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(pseudoData, ps, is);
+        return new MclBootstrapper(estimate, super.getCount());
     }
     
     private void checkResiduals() {
@@ -107,14 +107,25 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate implements Function
             throw new IllegalStateException("Paid/Incurred residuals are not set!")
     }
     
-    private MackProcessSimulator createProcessSimulator(JRandom rnd, String type, LRResidualTriangle residuals) {
+    private MclProcessSimulator createProcessSimulator(JRandom rnd, String type, LRResidualTriangle residuals, boolean isPaid) {
+        LinkRatioScale scale = residuals.getSourceLinkRatioScales()
         switch(type.toLowerCase()) {
             case "gamma":
-                return new MackGammaProcessSimulator(rnd, residuals.getSourceOdpResidualScales())
+            case "simple gamma":
+            case "simple-gamma":
+               return new SimpleGammaMclProcessSimulator(scale, rnd, isPaid)
             case "normal":
-                return new MackNormalProcessSimulator(rnd, residuals.getSourceOdpResidualScales())
+            case "simple normal":
+            case "simple-normal":
+                return new SimpleNormalMclProcessSimulator(scale, rnd, isPaid)
+            case "weighted gamma":
+            case "weighted-gamma":
+               return new WeightedGammaMclProcessSimulator(scale, rnd, isPaid)
+            case "weighted normal":
+            case "weighted-normal":
+                return new WeightedNormalMclProcessSimulator(scale, rnd, isPaid)
             case "constant":
-                return new MackConstantProcessSimulator();
+                return new MclConstantProcessSimulator();
             default:
                 throw new IllegalStateException("Unknown process type: ${processType}!")
         }
@@ -141,6 +152,10 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate implements Function
             this.mbd = mbd
         }
         
+        def getProperty(String name) {
+            mbd.getProperty(name)
+        }
+        
         void paidLr(LRResidualTriangle res) {
             mbd.paidLrRes = res
         }
@@ -149,11 +164,19 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate implements Function
             mbd.paidCrRes = res
         }
         
+        void paidCr(CRResidualTriangle res) {
+            mbd.paidCrRes = res
+        }
+        
         void incurredLr(LRResidualTriangle res) {
             mbd.incurredLrRes = res
         }
         
         void pPerI(CRResidualTriangle res) {
+            mbd.incurredCrRes = res
+        }
+        
+        void incurredCr(CRResidualTriangle res) {
             mbd.incurredCrRes = res
         }
     }

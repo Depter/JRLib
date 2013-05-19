@@ -4,22 +4,26 @@ import org.jreserve.grscript.FunctionProvider
 import org.jreserve.grscript.util.MapUtil
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
 import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection
 import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class LRResidualTriangleDelegate implements FunctionProvider {
+class LRResidualTriangleDelegate extends AbstractDelegate {
     
     private MapUtil mapUtil = MapUtil.getInstance();
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.residuals    << this.&residuals
         emc.adjust       << this.&adjust
+        emc.center       << this.&center
         emc.exclude      << this.&exclude
     }
     
@@ -35,6 +39,10 @@ class LRResidualTriangleDelegate implements FunctionProvider {
     
     LRResidualTriangle adjust(LRResidualTriangle residuals) {
         return new AdjustedLinkRatioResiduals(residuals)
+    }
+    
+    LRResidualTriangle center(LRResidualTriangle residuals) {
+        return new CenteredLinkRatioResiduals(residuals)
     }
     
     LRResidualTriangle exclude(LRResidualTriangle residuals, int accident, int development) {
@@ -66,6 +74,10 @@ class LRResidualTriangleDelegate implements FunctionProvider {
 
         void adjust() {
             residuals = new AdjustedLinkRatioResiduals(residuals)
+        }
+        
+        void center() {
+            residuals = new CenteredLinkRatioResiduals(residuals)
         }
         
         void exclude(int accident, int development) {

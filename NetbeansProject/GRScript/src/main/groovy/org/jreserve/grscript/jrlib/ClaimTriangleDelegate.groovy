@@ -8,10 +8,11 @@ import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing
  *
  * @author Peter Decsi
  */
-class ClaimTriangleDelegate extends AbstractTriangleDelegate<ClaimTriangle> implements FunctionProvider {
+class ClaimTriangleDelegate extends AbstractTriangleDelegate<ClaimTriangle> {
 	
     @Override
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.triangle    << this.&triangle
         emc.corrigate   << this.&corrigate  << {ClaimTriangle t, Map map -> corrigate(t, map)}
         emc.exclude     << this.&exclude    << {ClaimTriangle t, Map map -> exclude(t, map)}

@@ -16,12 +16,13 @@ import org.jreserve.grscript.util.MapUtil
  * @author Peter Decsi
  * @version 1.0
  */
-class RatioTriangleDelegate extends AbstractTriangleDelegate<RatioTriangle> implements FunctionProvider {
+class RatioTriangleDelegate extends AbstractTriangleDelegate<RatioTriangle> {
 	
     private MapUtil mapUtil = MapUtil.getInstance()
     
     @Override
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.ratioTriangle    << this.&ratioTriangle
         emc.corrigate   << this.&corrigate  << {RatioTriangle t, Map map -> corrigate(t, map)}
         emc.exclude     << this.&exclude    << {RatioTriangle t, Map map -> exclude(t, map)}

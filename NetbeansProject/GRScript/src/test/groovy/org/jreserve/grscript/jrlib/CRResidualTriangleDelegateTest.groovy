@@ -8,6 +8,7 @@ import org.jreserve.grscript.TestDataDelegate
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle
 import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals
+import org.jreserve.jrlib.claimratio.scale.residuals.CenteredClaimRatioResiduals
 
 /**
  *
@@ -101,6 +102,20 @@ class CRResidualTriangleDelegateTest {
     }
     
     @Test
+    public void testCenter() {
+        String script = 
+        "res = residuals(scales, false)\n" + 
+        "adjusted = center(res)";
+        
+        CenteredClaimRatioResiduals adjusted = (CenteredClaimRatioResiduals) runScript(script)
+        CRResidualTriangle res = (CRResidualTriangle) executor.getVariable("res")
+        
+        assertTrue(res instanceof ClaimRatioResiduals)
+        assertTrue(adjusted instanceof CenteredClaimRatioResiduals)
+        assertTrue(res.is(adjusted.getSourceResidualTriangle()))
+    }
+    
+    @Test
     public void testExclude_int_int() {
         String script = 
         "res = residuals(scales, false)\n" + 
@@ -139,11 +154,12 @@ class CRResidualTriangleDelegateTest {
     @Test
     public void testBuilder() {
         String script = 
-        "res = residuals(scales) {\n"                  +
+        "res = residuals(scales) {\n"               +
         "   adjust()\n"                             +
         "   exclude(0, 0)\n"                        +
         "   exclude(a:1, d:0)\n"                    +
         "   exclude(accident:2, development:0)\n"   +
+        "   center()\n"                             +
         "}\n";
         
         CRResidualTriangle res = runScript(script)

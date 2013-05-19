@@ -67,10 +67,10 @@ bootstrap = mackBootstrap {
     
     //Process error
     process {
-        paid "Gamma"        //Default: Gamma, values: [Gamma | Normal | Constant]
-        incurred "Gamma"    //Default: Gamma, values: [Gamma | Normal | Constant]
+        paid "Gamma"        //Default: Gamma, values: [Gamma | Weighted-Gamma | Normal | Weighted-Normal | Constant]
+        incurred "Gamma"    //Default: Gamma, values: [Gamma | Weighted-Gamma | Normal | Weighted-Normal | Constant]
     }
-    process paid:"Gamma", incurred:"Gamma" //Default: Gamma, values: [Gamma | Normal | Constant]
+    process paid:"Gamma", incurred:"Gamma" //Gamma, values: [Gamma | Weighted-Gamma | Normal | Weighted-Normal | Constant]
     
     //Segments
     segment {

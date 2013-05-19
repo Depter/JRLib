@@ -18,6 +18,7 @@ def scales = scale(crs)
 res = residuals(scales)        //Not adjusted
 res = residuals(scales, true)  //adjusted
 res = adjust(rs)           //adjust residuals
+res = center(res)              //center the resiuals
 
 res = exclude(scales, [a:0, d:2])
 res = exclude(scales, [accident:0, development:2])
@@ -28,4 +29,5 @@ res = residuals(scales) {
     exclude(0, 0)
     exclude(a:1, d:0)
     exclude(accident:2, development:0)
+    center()
 }

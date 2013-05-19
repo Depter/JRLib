@@ -9,17 +9,19 @@ import org.jreserve.jrlib.scale.MinMaxScaleEstimator
 import org.jreserve.jrlib.scale.ScaleExtrapolation
 import org.jreserve.jrlib.scale.UserInputScaleEstimator
 import org.jreserve.jrlib.scale.ScaleEstimator
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class LinkRatioScaleDelegate implements FunctionProvider {
+class LinkRatioScaleDelegate extends AbstractDelegate {
     
     private ScaleEstimatorFactory estimators = ScaleEstimatorFactory.getInstance()
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.scale    << this.&scale
     }
     

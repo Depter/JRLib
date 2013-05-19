@@ -9,6 +9,7 @@ import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
 import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection
 import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals
 
 /**
  *
@@ -92,6 +93,20 @@ class LRResidualTriangleDelegateTest {
     }
     
     @Test
+    public void testCenter() {
+        String script = 
+        "res = residuals(scales, false)\n" + 
+        "centered = center(res)";
+        
+        CenteredLinkRatioResiduals centered = (CenteredLinkRatioResiduals) runScript(script)
+        LRResidualTriangle res = (LRResidualTriangle) executor.getVariable("res")
+        
+        assertTrue(res instanceof LinkRatioResiduals)
+        assertTrue(centered instanceof CenteredLinkRatioResiduals)
+        assertTrue(res.is(centered.getSourceLRResidualTriangle()))
+    }
+    
+    @Test
     public void testExclude_int_int() {
         String script = 
         "res = residuals(scales, false)\n" + 
@@ -135,6 +150,7 @@ class LRResidualTriangleDelegateTest {
         "   exclude(0, 0)\n"                        +
         "   exclude(a:1, d:0)\n"                    +
         "   exclude(accident:2, development:0)\n"   +
+        "   center()\n"                             +
         "}\n";
         
         LRResidualTriangle res = runScript(script)

@@ -12,6 +12,7 @@ paidLr = smooth(paidLr, 10, "exponential")
 paidResiduals = residuals(paidLr)        //Not adjusted
 paidResiduals = residuals(paidLr, true)  //adjusted
 paidResiduals = adjust(paidResiduals)
+paidResiduals = center(paidResiduals)
 
 paidResiduals = exclude(paidResiduals , [a:0, d:2])
 paidResiduals = exclude(paidResiduals , [accident:0, development:2])
@@ -21,4 +22,5 @@ paidResiduals = odpResiduals(paidLr) {
     exclude(0, 0)
     exclude(a:1, d:0)
     exclude(accident:2, development:0)
+    center()
 }

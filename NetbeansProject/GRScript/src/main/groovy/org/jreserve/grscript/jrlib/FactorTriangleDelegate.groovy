@@ -10,10 +10,11 @@ import org.jreserve.jrlib.triangle.claim.InputClaimTriangle
  *
  * @author Peter Decsi
  */
-class FactorTriangleDelegate extends AbstractTriangleDelegate<FactorTriangle> implements FunctionProvider {
+class FactorTriangleDelegate extends AbstractTriangleDelegate<FactorTriangle> {
 	
     @Override
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.factors     << this.&factors
         emc.corrigate   << this.&corrigate  << {FactorTriangle t, Map map -> corrigate(t, map)}
         emc.exclude     << this.&exclude    << {FactorTriangle t, Map map -> exclude(t, map)}

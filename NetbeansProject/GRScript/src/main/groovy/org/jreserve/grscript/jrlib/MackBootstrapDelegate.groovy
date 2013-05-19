@@ -24,6 +24,7 @@ class MackBootstrapDelegate extends AbstractBootstrapDelegate implements Functio
     private LRResidualTriangle residuals
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.mackBootstrap << this.&mackBootstrap
     }
     

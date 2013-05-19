@@ -8,14 +8,16 @@ import org.jreserve.jrlib.linkratio.SimpleLinkRatio
 import org.jreserve.jrlib.linkratio.WeightedAverageLRMethod
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle
 import org.jreserve.jrlib.triangle.claim.InputClaimTriangle
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  */
-class LinkRatioDelegate implements FunctionProvider {
+class LinkRatioDelegate extends AbstractDelegate {
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.linkRatio << this.&linkRatio
     }
     

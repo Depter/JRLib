@@ -12,15 +12,17 @@ import org.jreserve.jrlib.bootstrap.odp.scale.SimpleOdpRSEstimate
 import org.jreserve.jrlib.bootstrap.odp.scale.EmptyOdpResidualScale
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpRSMethod
 import org.jreserve.jrlib.linkratio.LinkRatio
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class ClaimResidualScaleDelegate implements FunctionProvider {
+class ClaimResidualScaleDelegate extends AbstractDelegate {
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.constantScale << this.&constantScale
         emc.variableScale << this.&variableScale
     }

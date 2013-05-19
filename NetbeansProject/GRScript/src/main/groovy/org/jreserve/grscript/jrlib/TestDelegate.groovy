@@ -6,21 +6,20 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle
 import org.jreserve.jrlib.test.Test
 import org.jreserve.jrlib.test.CalendarEffectTest
 import org.jreserve.jrlib.test.UncorrelatedDevelopmentFactorsTest
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class TestDelegate implements FunctionProvider {
-    
-    private Script script
+class TestDelegate extends AbstractDelegate {
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.testCalendarEffect          << this.&testCalendarEffect
         emc.testUncorrelatedDevFactors  << this.&testUncorrelatedDevFactors
         emc.summary                     << this.&summary
-        this.script = script
     }
     
     Test testCalendarEffect(ClaimTriangle claims) {
@@ -60,11 +59,11 @@ class TestDelegate implements FunctionProvider {
         test.getAlpha()
         test.getPValue()
         test.isTestPassed()
-        script.println getTestTitle(test)
-        script.println "\t Test value: ${test.getTestValue()}"
-        script.println "\t alpha: ${test.getAlpha()}"
-        script.println "\t p-value: ${test.getPValue()}"
-        script.println "\t passed: ${test.isTestPassed()}"
+        super.script.println getTestTitle(test)
+        super.script.println "\t Test value: ${test.getTestValue()}"
+        super.script.println "\t alpha: ${test.getAlpha()}"
+        super.script.println "\t p-value: ${test.getPValue()}"
+        super.script.println "\t passed: ${test.isTestPassed()}"
     }
     
     private String getTestTitle(Test test) {

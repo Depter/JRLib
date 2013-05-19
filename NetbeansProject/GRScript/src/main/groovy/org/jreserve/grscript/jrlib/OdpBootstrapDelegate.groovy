@@ -23,6 +23,7 @@ class OdpBootstrapDelegate extends AbstractBootstrapDelegate implements Function
     private OdpScaledResidualTriangle residuals
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.odpBootstrap << this.&odpBootstrap
     }
     

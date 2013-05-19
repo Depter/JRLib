@@ -12,15 +12,17 @@ import org.jreserve.jrlib.linkratio.LinkRatio
 import org.jreserve.jrlib.util.method.Excludeable
 import org.jreserve.jrlib.linkratio.curve.LinkRatioSmoothing
 import org.jreserve.jrlib.util.RegressionUtil
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class LinkRatioCurveDelegate implements FunctionProvider {
+class LinkRatioCurveDelegate extends AbstractDelegate {
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.smooth    << this.&smooth
         emc.smoothAll << this.&smoothAll
         emc.rSquare   << this.&rSquare

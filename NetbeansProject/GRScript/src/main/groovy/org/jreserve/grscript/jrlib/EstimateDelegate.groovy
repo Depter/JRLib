@@ -14,16 +14,17 @@ import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle
 import org.jreserve.jrlib.estimate.mcl.MclCorrelation
 import org.jreserve.jrlib.estimate.mcl.MclEstimateBundle
-
+import org.jreserve.jrlib.vector.Vector as RVector
 import org.jreserve.grscript.util.MapUtil
 import org.jreserve.grscript.util.PrintDelegate
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class EstimateDelegate implements FunctionProvider {
+class EstimateDelegate extends AbstractDelegate {
     
     private final static String[] NUMBER_LRS = ["numbers", "numberlrs", "number"]
     private final static String[] COST_LRS = ["costs", "costlrs", "cost"]
@@ -33,10 +34,9 @@ class EstimateDelegate implements FunctionProvider {
     private final static String[] LINK_RATIO_SE = ["se", "lrse", "standarderror"]
     
     private MapUtil mapUtil = MapUtil.getInstance()
-    private Script script
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
-        this.script = script
+        super.initFunctions(script, emc)
         
         emc.averageCostEstimate         << this.&averageCostEstimate
         emc.bornhuetterFergusonEstimate << this.&bornhuetterFergusonEstimate
@@ -54,27 +54,19 @@ class EstimateDelegate implements FunctionProvider {
         return new AverageCostEstimate(numberLrs, costLrs)
     }
 
-    Estimate bornhuetterFergusonEstimate(LinkRatio lrs, 
-        org.jreserve.jrlib.vector.Vector exposure, 
-        org.jreserve.jrlib.vector.Vector lossRatio) {
-        
+    Estimate bornhuetterFergusonEstimate(LinkRatio lrs, RVector exposure, RVector lossRatio) {
         return new BornhuetterFergusonEstimate(lrs, exposure, lossRatio)
     }
 
-    Estimate BFEstimate(LinkRatio lrs, 
-        org.jreserve.jrlib.vector.Vector exposure, 
-        org.jreserve.jrlib.vector.Vector lossRatio) {
-        
+    Estimate BFEstimate(LinkRatio lrs, RVector exposure, RVector) {
         return this.bornhuetterFergusonEstimate(lrs, exposure, lossRatio)
     }
 
-    Estimate expectedLossRatioEstimate(LinkRatio lrs, 
-        org.jreserve.jrlib.vector.Vector exposure, 
-        org.jreserve.jrlib.vector.Vector lossRatio) {
+    Estimate expectedLossRatioEstimate(LinkRatio lrs, RVector exposure, RVector lossRatio) {
         return new ExpectedLossRatioEstimate(lrs, exposure, lossRatio)
     }
                 
-    Estimate capeCodEstimate(LinkRatio lrs, org.jreserve.jrlib.vector.Vector exposure) {
+    Estimate capeCodEstimate(LinkRatio lrs, RVector exposure) {
         return new CapeCodEstimate(lrs, exposure)
     }
 
@@ -133,25 +125,25 @@ class EstimateDelegate implements FunctionProvider {
     }
     
     void printData(String title, Estimate estimate) {
-        script.println(title)
+        super.script.println(title)
         printData estimate
     }
     
     void printData(Estimate estimate) {
         if(estimate instanceof MackEstimate) {
-            new MackEstimatePrinter(script).printEstimate((MackEstimate)estimate)
+            new MackEstimatePrinter(super.script).printEstimate((MackEstimate)estimate)
         } else {
-            new EstimatePrinter(script).printEstimate(estimate)
+            new EstimatePrinter(super.script).printEstimate(estimate)
         }
     }
     
     void printData(MclEstimateBundle bundle) {
-        EstimatePrinter printer = new EstimatePrinter(script)
-        script.println("Paid estimate:")
+        EstimatePrinter printer = new EstimatePrinter(super.script)
+        super.script.println("Paid estimate:")
         printer.printEstimate(bundle.getPaidEstimate())
         
-        script.println()
-        script.println("Incurred estimate:")
+        super.script.println()
+        super.script.println("Incurred estimate:")
         printer.printEstimate(bundle.getIncurredEstimate())
     }
     
@@ -170,7 +162,7 @@ class EstimateDelegate implements FunctionProvider {
         }
         
         private PrintDelegate getDelegateFromScript() {
-            return script?.binding?.variables?.get(PrintDelegate.PRINT_DELEGATE)
+            return this.script?.binding?.variables?.get(PrintDelegate.PRINT_DELEGATE)
         }
         
         void printEstimate(Estimate estimate) {
@@ -181,7 +173,7 @@ class EstimateDelegate implements FunctionProvider {
             double tU = 0d;
             double tR = 0d;
         
-            script.println "Accident\tLast\tUltimate\tReserve"
+            this.script.println "Accident\tLast\tUltimate\tReserve"
             for(int a=0; a<accidents; a++) {
                 int lastO = estimate.getObservedDevelopmentCount(a)-1
                 double last = estimate.getValue(a, lastO)
@@ -196,15 +188,15 @@ class EstimateDelegate implements FunctionProvider {
                 printRow(a+1, last, ultimate, reserve)
             }
         
-            script.println()
+            this.script.println()
             printRow("Total", tLast, tU, tR)
         }
         
         private void printRow(def rowId, double... values) {
             int count = 0;
-            script.print(rowId)
+            this.script.print(rowId)
             values.each {script.print("\t${printer.formatNumber(it)}")}
-            script.println()
+            this.script.println()
         }
     }
     
@@ -222,9 +214,9 @@ class EstimateDelegate implements FunctionProvider {
             double tU = 0d;
             double tR = 0d;
         
-            script.println "Accident\tLast\tUltimate\tReserve\tProc.SE\tProc.SE%\tParam.SE\tParam.SE%\tSE\tSE%"
+            this.script.println "Accident\tLast\tUltimate\tReserve\tProc.SE\tProc.SE%\tParam.SE\tParam.SE%\tSE\tSE%"
             for(int a=0; a<accidents; a++) {
-                script.print(a+1)
+                this.script.print(a+1)
                 
                 tLast += printValue {estimate.getValue(a, estimate.getObservedDevelopmentCount(a)-1)}
                 tU += printValue {estimate.getValue(a, devs)}
@@ -235,33 +227,33 @@ class EstimateDelegate implements FunctionProvider {
                 printSE(reserve) {estimate.getProcessSE(a)}
                 printSE(reserve) {estimate.getParameterSE(a)}
                 printSE(reserve) {estimate.getSE(a)}
-                script.println()
+                this.script.println()
             }
         
-            script.println()
-            script.print "Total"
+            this.script.println()
+            this.script.print "Total"
             printValue {tLast}
             printValue {tU}
             printValue {tR}
             printSE(tR) {estimate.getProcessSE()}
             printSE(tR) {estimate.getParameterSE()}
             printSE(tR) {estimate.getSE()}
-            script.println()
+            this.script.println()
         }
         
         private double printValue(Closure cl) {
             double value = cl()
-            script.print "\t"+printer.formatNumber(value)
+            this.script.print "\t"+printer.formatNumber(value)
             return value
         }
         
         private void printSE(double r, Closure cl) {
             double se = cl()
-            script.print "\t"+printer.formatNumber(se)
+            this.script.print "\t"+printer.formatNumber(se)
             if(r == 0d) {
-                script.print "\t-"
+                this.script.print "\t-"
             } else {
-                script.print "\t"+getPercentage(r, se)
+                this.script.print "\t"+getPercentage(r, se)
             }
         }
         

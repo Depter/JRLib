@@ -238,18 +238,14 @@ public class BootstrapUtil {
             return Double.NaN;
         if(size == 1)
             return reserves[0];
+        if(percentile == 1d)
+            return reserves[size-1];
         
         Arrays.sort(reserves);
-        double dI = percentile * (double)(size+1);
-        if(dI < 1d) return reserves[0];
-        if(dI >= size) return reserves[size-1];
-        
-        int i = (int) dI;
-        double w = 1-(dI - (double)i);
-        
-        double lower = reserves[i-1];
-        double upper = reserves[i];
-        return lower + w * (upper-lower);
+        double rank = percentile * (size - 1);
+        int index = (int)rank;
+        double w0 = 1d - rank + (double)index;
+        return reserves[index] * w0 + reserves[index+1] * (1d - w0);
     }
     
     private BootstrapUtil() {}

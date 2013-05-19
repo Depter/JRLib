@@ -2,13 +2,14 @@ package org.jreserve.grscript.jrlib
 
 import org.jreserve.jrlib.util.random.Random
 import org.jreserve.jrlib.util.random.JavaRandom
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class AbstractBootstrapDelegate {
+class AbstractBootstrapDelegate extends AbstractDelegate {
 
     private int count = -1;
     private Random rnd;

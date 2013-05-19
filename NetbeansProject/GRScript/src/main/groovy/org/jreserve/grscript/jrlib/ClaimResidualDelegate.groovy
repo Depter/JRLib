@@ -4,22 +4,26 @@ import org.jreserve.grscript.FunctionProvider
 import org.jreserve.grscript.util.MapUtil
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.AdjustedOdpResidualTriangle
+import org.jreserve.jrlib.bootstrap.odp.residuals.CenteredOdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.InputOdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangleCorrection
 import org.jreserve.jrlib.linkratio.LinkRatio
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class ClaimResidualDelegate implements FunctionProvider {
+class ClaimResidualDelegate extends AbstractDelegate {
     
     private MapUtil mapUtil = MapUtil.getInstance();
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.residuals    << this.&residuals
         emc.adjust       << this.&adjust
+        emc.center       << this.&center
         emc.exclude      << this.&exclude
     }
     
@@ -35,6 +39,10 @@ class ClaimResidualDelegate implements FunctionProvider {
     
     OdpResidualTriangle adjust(OdpResidualTriangle residuals) {
         return new AdjustedOdpResidualTriangle(residuals)
+    }
+    
+    OdpResidualTriangle center(OdpResidualTriangle residuals) {
+        return new CenteredOdpResidualTriangle(residuals)
     }
     
     OdpResidualTriangle exclude(OdpResidualTriangle residuals, Map map) {
@@ -66,6 +74,10 @@ class ClaimResidualDelegate implements FunctionProvider {
 
         void adjust() {
             residuals = delegate.adjust(residuals)
+        }
+
+        void center() {
+            residuals = delegate.center(residuals)
         }
         
         void exclude(int accident, int development) {

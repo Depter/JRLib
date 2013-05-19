@@ -9,17 +9,19 @@ import org.jreserve.jrlib.linkratio.standarderror.LinkRatioSEFunction
 import org.jreserve.jrlib.linkratio.standarderror.LogLinearRatioSEFunction
 import org.jreserve.jrlib.linkratio.standarderror.SimpleLinkRatioSE
 import org.jreserve.jrlib.linkratio.standarderror.UserInputLinkRatioSEFunction
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class LinkRatioSEDelegate implements FunctionProvider {
+class LinkRatioSEDelegate extends AbstractDelegate {
     
     private final static String STANDARD_METHOD = "Log-Linear";
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.standardError    << this.&standardError
     }
     

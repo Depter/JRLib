@@ -10,17 +10,19 @@ import org.jreserve.jrlib.claimratio.scale.ClaimRatioScaleInput
 import org.jreserve.jrlib.claimratio.scale.DefaultClaimRatioScaleSelection
 import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale
 import org.jreserve.jrlib.claimratio.ClaimRatio
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class ClaimRatioScaleDelegate implements FunctionProvider {
+class ClaimRatioScaleDelegate extends AbstractDelegate {
     
     private ScaleEstimatorFactory estimators = ScaleEstimatorFactory.getInstance()
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.scale    << this.&scale
     }
     

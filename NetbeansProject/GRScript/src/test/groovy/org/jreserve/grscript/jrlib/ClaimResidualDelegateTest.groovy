@@ -7,6 +7,7 @@ import org.jreserve.grscript.ScriptExecutor
 import org.jreserve.grscript.TestDataDelegate
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.AdjustedOdpResidualTriangle
+import org.jreserve.jrlib.bootstrap.odp.residuals.CenteredOdpResidualTriangle
 
 /**
  *
@@ -87,6 +88,19 @@ class ClaimResidualDelegateTest {
     }
     
     @Test
+    public void testCenter() {
+        String script = 
+        "res = residuals(lrs, false)\n" + 
+        "centered = center(res)";
+        
+        CenteredOdpResidualTriangle centered = (CenteredOdpResidualTriangle) runScript(script)
+        OdpResidualTriangle res = (OdpResidualTriangle) executor.getVariable("res")
+        assertTrue(res instanceof OdpResidualTriangle)
+        assertTrue(centered instanceof CenteredOdpResidualTriangle)
+        assertTrue(res.is(centered.getSourceOdpResidualTriangle()))
+    }
+    
+    @Test
     public void testExclude_int_int() {
         String script = 
         "res = residuals(lrs, false)\n" + 
@@ -130,6 +144,7 @@ class ClaimResidualDelegateTest {
         "   exclude(0, 0)\n"                        +
         "   exclude(a:1, d:0)\n"                    +
         "   exclude(accident:2, development:0)\n"   +
+        "   center()\n"                             +
         "}\n";
         
         OdpResidualTriangle res = runScript(script)

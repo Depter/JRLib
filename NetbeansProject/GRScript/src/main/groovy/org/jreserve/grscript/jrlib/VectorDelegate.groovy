@@ -15,13 +15,15 @@ import org.jreserve.jrlib.vector.smoothing.HarmonicMovingAverageMethod
 import org.jreserve.jrlib.vector.smoothing.ExponentialSmoothingMethod
 import org.jreserve.jrlib.vector.smoothing.DoubleExponentialSmoothingMethod
 import org.jreserve.jrlib.vector.SmoothedVector
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class VectorDelegate implements FunctionProvider {
+class VectorDelegate extends AbstractDelegate {
+    
     private final static int ARITHMETIC_MA      = 0;
     private final static int GEOMETRIC_MA       = 1;
     private final static int HARMONIC_MA        = 2;
@@ -30,6 +32,7 @@ class VectorDelegate implements FunctionProvider {
 	
     @Override
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.vector    << this.&vector
         emc.corrigate << this.&corrigate
         emc.exclude   << this.&exclude

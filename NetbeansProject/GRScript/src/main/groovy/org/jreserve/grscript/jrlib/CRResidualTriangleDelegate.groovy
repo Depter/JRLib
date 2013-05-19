@@ -6,19 +6,24 @@ import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals
 import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals
+import org.jreserve.jrlib.claimratio.scale.residuals.CenteredClaimRatioResiduals
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection
+import org.jreserve.grscript.AbstractDelegate
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class CRResidualTriangleDelegate implements FunctionProvider {
+class CRResidualTriangleDelegate extends AbstractDelegate {
     
     private MapUtil mapUtil = MapUtil.getInstance();
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.residuals    << this.&residuals
         emc.adjust       << this.&adjust
+        emc.center       << this.&center
         emc.exclude      << this.&exclude
     }
     
@@ -34,6 +39,10 @@ class CRResidualTriangleDelegate implements FunctionProvider {
     
     CRResidualTriangle adjust(CRResidualTriangle residuals) {
         return new AdjustedClaimRatioResiduals(residuals)
+    }
+    
+    CRResidualTriangle center(CRResidualTriangle residuals) {
+        return new CenteredClaimRatioResiduals(residuals)
     }
     
     CRResidualTriangle exclude(CRResidualTriangle residuals, int accident, int development) {
@@ -65,6 +74,10 @@ class CRResidualTriangleDelegate implements FunctionProvider {
 
         void adjust() {
             residuals = new AdjustedClaimRatioResiduals(residuals)
+        }
+        
+        void center() {
+            residuals = new CenteredClaimRatioResiduals(residuals)
         }
         
         void exclude(int accident, int development) {

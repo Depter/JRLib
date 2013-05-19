@@ -12,17 +12,19 @@ import org.jreserve.jrlib.claimratio.UserInputCRMethod
 import org.jreserve.jrlib.claimratio.SimpleClaimRatio
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle
 import org.jreserve.grscript.util.MapUtil
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class ClaimRatioDelegate implements FunctionProvider {
+class ClaimRatioDelegate extends AbstractDelegate {
     
     private MapUtil mapUtil = MapUtil.getInstance()
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.ratios << this.&ratios
     }
     

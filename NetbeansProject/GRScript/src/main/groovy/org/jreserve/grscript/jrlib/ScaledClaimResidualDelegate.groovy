@@ -7,17 +7,19 @@ import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.OdpScaledResidualTriangl
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.AdjustedOdpScaledResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.DefaultOdpScaledResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.OdpScaledResidualTriangleCorrection
+import org.jreserve.grscript.AbstractDelegate
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class ScaledClaimResidualDelegate implements FunctionProvider {
+class ScaledClaimResidualDelegate extends AbstractDelegate {
     
     private MapUtil mapUtil = MapUtil.getInstance();
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
+        super.initFunctions(script, emc)
         emc.residuals    << this.&residuals
         emc.adjust       << this.&adjust
         emc.exclude      << this.&exclude

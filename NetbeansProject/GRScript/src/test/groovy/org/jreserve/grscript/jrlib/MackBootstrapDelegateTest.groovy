@@ -61,7 +61,6 @@ class MackBootstrapDelegateTest {
         def bs = executor.runScript(BASE_SCRIPT)
         assertTrue(bs instanceof EstimateBootstrapper)
     }
-	
     
     @Test
     public void testWorking() {

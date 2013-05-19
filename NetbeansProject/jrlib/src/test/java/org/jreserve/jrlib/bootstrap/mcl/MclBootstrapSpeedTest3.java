@@ -94,8 +94,8 @@ public class MclBootstrapSpeedTest3 {
     private CRResidualTriangle createCrResiduals(LinkRatio lrN, LinkRatio lrD) {
         ClaimRatioScale scales = createClaimRatioScale(lrN, lrD);
         CRResidualTriangle res = new ClaimRatioResiduals(scales);
-            res = new AdjustedClaimRatioResiduals(res);
-            return new CenteredClaimRatioResiduals(res);
+        res = new AdjustedClaimRatioResiduals(res);
+        return new CenteredClaimRatioResiduals(res);
     }
     
     private ClaimRatioScale createClaimRatioScale(LinkRatio lrN, LinkRatio lrD) {
