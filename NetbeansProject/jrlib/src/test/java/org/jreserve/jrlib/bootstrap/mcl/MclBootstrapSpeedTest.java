@@ -1,9 +1,9 @@
 package org.jreserve.jrlib.bootstrap.mcl;
 
+import java.util.Collections;
+import java.util.List;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
-import org.jreserve.jrlib.bootstrap.mack.MackGammaProcessSimulator;
-import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
 import org.jreserve.jrlib.bootstrap.util.BootstrapUtil;
@@ -13,10 +13,11 @@ import org.jreserve.jrlib.claimratio.ClaimRatio;
 import org.jreserve.jrlib.claimratio.DefaultClaimRatioSelection;
 import org.jreserve.jrlib.claimratio.LrCrExtrapolation;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
-import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
+import org.jreserve.jrlib.claimratio.scale.ClaimRatioScaleInput;
+import org.jreserve.jrlib.claimratio.scale.DefaultClaimRatioScaleSelection;
 import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
-import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
+import org.jreserve.jrlib.claimratio.scale.residuals.CenteredClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
 import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
 import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
@@ -26,11 +27,14 @@ import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.linkratio.curve.ExponentialLRCurve;
 import org.jreserve.jrlib.linkratio.curve.LinkRatioSmoothing;
 import org.jreserve.jrlib.linkratio.curve.SimpleLinkRatioSmoothing;
+import org.jreserve.jrlib.linkratio.scale.DefaultLinkRatioScaleSelection;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
-import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
+import org.jreserve.jrlib.linkratio.scale.LinkRatioScaleInput;
+import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals;
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
-import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection;
 import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
+import org.jreserve.jrlib.scale.UserInputScaleEstimator;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.ratio.DefaultRatioTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
@@ -69,24 +73,23 @@ public class MclBootstrapSpeedTest {
         LinkRatio paidLr = createLinkRatio(paidCik);
         LinkRatio incurredLr = createLinkRatio(incurredCik);
         
-        LinkRatioScale paidScales = new SimpleLinkRatioScale(paidLr);
-        LinkRatioScale incurredScales = new SimpleLinkRatioScale(incurredLr);
+        LinkRatioScale paidScales = createLRScale(paidLr, 3.84, 2.51, 1.65, 1.08); //lr regression
+        LinkRatioScale incurredScales = createLRScale(incurredLr, 1.45, 0.67, 0.31, 0.14);
         
         LRResidualTriangle paidLrResiduals =     createLrResiduals(paidScales);
         LRResidualTriangle incurredLrResiduals = createLrResiduals(incurredScales);
-        CRResidualTriangle paidCrResiduals =     createCrResiduals(incurredLr, paidLr);
-        CRResidualTriangle incurredCrResiduals = createCrResiduals(paidLr, incurredLr);
+        
+        ClaimRatio paidCr = createClaimRatio(incurredLr, paidLr);
+        ClaimRatioScale paidCrScales = createClaimRatioScale(paidCr, 91.88, 84.41, 77.55);
+        CRResidualTriangle paidCrResiduals =     createCrResiduals(paidCrScales);
+        
+        ClaimRatio incurredCr = createClaimRatio(paidLr, incurredLr);
+        ClaimRatioScale incurredCrScales = createClaimRatioScale(incurredCr, 86.54, 81.74, 77.2);
+        CRResidualTriangle incurredCrResiduals = createCrResiduals(incurredCrScales);
         
         createMeans(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
         createBs(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
     }    
-    
-    private LRResidualTriangle createLrResiduals(LinkRatioScale scales) {
-        LRResidualTriangle residuals = new LinkRatioResiduals(scales);
-        residuals = new LRResidualTriangleCorrection(residuals, 0, 6, Double.NaN);
-        residuals = new LRResidualTriangleCorrection(residuals, 6, 0, Double.NaN);
-        return residuals;
-    }
     
     private LinkRatio createLinkRatio(ClaimTriangle claims) {
         LinkRatio lrs = new SimpleLinkRatio(claims);
@@ -95,11 +98,37 @@ public class MclBootstrapSpeedTest {
         return lrs;
     }
     
-    private CRResidualTriangle createCrResiduals(LinkRatio lrN, LinkRatio lrD) {
-        ClaimRatio crs = createClaimRatio(lrN, lrD);
-        ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
+    private LinkRatioScale createLRScale(LinkRatio lr, double t1, double t2, double t3, double t4) {
+        UserInputScaleEstimator<LinkRatioScaleInput> method = new UserInputScaleEstimator<LinkRatioScaleInput>();
+        method.setValue(6, t1);
+        method.setValue(7, t2);
+        method.setValue(8, t3);
+        method.setValue(9, t4);
+        DefaultLinkRatioScaleSelection scale = new DefaultLinkRatioScaleSelection(lr);
+        scale.setMethod(method, 6, 7, 8, 9);
+        return scale;
+    }
+    
+    private LRResidualTriangle createLrResiduals(LinkRatioScale scales) {
+        LRResidualTriangle res = new LinkRatioResiduals(scales);
+        res = new AdjustedLinkRatioResiduals(res);
+        return new CenteredLinkRatioResiduals(res);
+    }
+    
+    private CRResidualTriangle createCrResiduals(ClaimRatioScale scales) {
         CRResidualTriangle res = new ClaimRatioResiduals(scales);
-        return adjustResiduals(res);
+        res = new AdjustedClaimRatioResiduals(res);
+        return new CenteredClaimRatioResiduals(res);
+    }
+    
+    private ClaimRatioScale createClaimRatioScale(ClaimRatio crs, double t1, double t2, double t3) {
+        DefaultClaimRatioScaleSelection scales = new DefaultClaimRatioScaleSelection(crs);
+        UserInputScaleEstimator<ClaimRatioScaleInput> m = new UserInputScaleEstimator<ClaimRatioScaleInput>();
+        m.setValue(7, t1);
+        m.setValue(8, t2);
+        m.setValue(9, t3);
+        scales.setMethod(m, 7, 8, 9);
+        return scales;
     }
 
     private ClaimRatio createClaimRatio(LinkRatio numerator, LinkRatio denominator) {
@@ -115,13 +144,6 @@ public class MclBootstrapSpeedTest {
         return crs;
     }
     
-    private CRResidualTriangle adjustResiduals(CRResidualTriangle res) {
-        int accidents = res.getAccidentCount();
-        for(int a=0; a<accidents; a++)
-            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
-        return new AdjustedClaimRatioResiduals(res);
-    }
-    
     private void createMeans(LRResidualTriangle paidLr, CRResidualTriangle paidCr, LRResidualTriangle incurredLr, CRResidualTriangle incurredCr) {
         MclCorrelation paidLambda = new MclCorrelation(paidLr, paidCr);
         MclCorrelation incurredLambda = new MclCorrelation(incurredLr, incurredCr);
@@ -133,14 +155,18 @@ public class MclBootstrapSpeedTest {
     
     private void createBs(LRResidualTriangle paidLr, CRResidualTriangle paidCr, LRResidualTriangle incurredLr, CRResidualTriangle incurredCr) {
         Random rnd = new JavaRandom(SEED);
-        MackProcessSimulator ps = new MackGammaProcessSimulator(rnd, paidLr.getSourceLinkRatioScales());
-        MackProcessSimulator is = new MackGammaProcessSimulator(rnd, incurredLr.getSourceLinkRatioScales());
+        MclProcessSimulator ps = new SimpleGammaMclProcessSimulator(paidLr.getSourceLinkRatioScales(), rnd, true);
+        MclProcessSimulator is = new SimpleGammaMclProcessSimulator(incurredLr.getSourceLinkRatioScales(), rnd, false);
         
         MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
-        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle);
+        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle, createSegments());
         
         MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(pseudoData, ps, is);
         bootstrap = new MclBootstrapper(estimate, N);
+    }
+    
+    private List<int[][]> createSegments() {
+        return Collections.singletonList(new int[][] {{0, 6}});
     }
 
     @Test(timeout=TIMEOUT)
@@ -157,8 +183,8 @@ public class MclBootstrapSpeedTest {
         
         double bsPaidMean = BootstrapUtil.getMeanTotalReserve(bootstrap.getPaidReserves());
         double bsIncurredMean = BootstrapUtil.getMeanTotalReserve(bootstrap.getIncurredReserves());
-        printHistogram(bootstrap.getPaidReserves(), paidMean);
-        printHistogram(bootstrap.getIncurredReserves(), incurredMean);
+        //printHistogram(bootstrap.getPaidReserves(), paidMean);
+        //printHistogram(bootstrap.getIncurredReserves(), incurredMean);
         
         String msg = "MCL-Bootstrapping %d times took %.3f seconds.%n";
         msg += "\tPaid-reserve:%n\t\tBootstrap: %.0f%n\t\tOriginal: %.0f%n";

@@ -3,12 +3,9 @@ package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 import java.util.Collections;
 import java.util.List;
 import org.jreserve.jrlib.AbstractCalculationData;
-import org.jreserve.jrlib.AbstractMultiSourceCalculationData;
 import org.jreserve.jrlib.CalculationData;
-import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
-import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
-import org.jreserve.jrlib.estimate.mcl.MclEstimateInput;
-import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
+import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
 import org.jreserve.jrlib.util.random.Random;
@@ -47,7 +44,16 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     private MclPseudoFactorTriangle incurredFactors;
     private MclPseudoRatioTriangle paidRatios;
     private MclPseudoRatioTriangle incurredRatios;
-
+    private PseudoLambdaCalculator lambdas = new PseudoLambdaCalculator();
+    
+    private MclPseudoClaimRatio paidCr;
+    private MclPseudoClaimRatio incurredCr;
+    
+    private MclPseudoClaimRatioScale paidCrScale;
+    private MclPseudoClaimRatioScale incurredCrScale;
+    private LinkRatioScale paidLrScale;
+    private LinkRatioScale incurredLrScale;
+    
     public MclPseudoData(Random rnd, MclResidualBundle bundle) {
         this(rnd, bundle, Collections.EMPTY_LIST);
     }
@@ -55,8 +61,14 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     public MclPseudoData(Random rnd, MclResidualBundle bundle, List<int[][]> segments) {
         this.bundle = bundle;
         residuals = new MclResidualGenerator(rnd, bundle, segments);
+        initialise();
+    }
+    
+    private void initialise() {
         initBounds();
-        initPseudoTriangles();
+        initPseudoData();
+        detachData();
+        linkData();
     }
     
     private void initBounds() {
@@ -66,11 +78,40 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
             developments[a] = bundle.getDevelopmentCount(a);
     }
     
-    private void initPseudoTriangles() {
+    private void initPseudoData() {
         paidFactors = MclPseudoFactorTriangle.createPaid(bundle);
         incurredFactors = MclPseudoFactorTriangle.createIncurred(bundle);
         paidRatios = MclPseudoRatioTriangle.createPaid(bundle);
         incurredRatios = MclPseudoRatioTriangle.createIncurred(bundle);
+        
+        paidCr = MclPseudoClaimRatio.createPaid(bundle);
+        incurredCr = MclPseudoClaimRatio.createIncurred(bundle);
+        
+        paidCrScale = MclPseudoClaimRatioScale.createPaid(bundle);
+        incurredCrScale = MclPseudoClaimRatioScale.createIncurred(bundle);
+        
+        paidLrScale = bundle.getSourcePaidLRResidualTriangle().getSourceLinkRatioScales();
+        incurredLrScale = bundle.getSourceIncurredLRResidualTriangle().getSourceLinkRatioScales();
+    }
+    
+    public int getAccidentCount() {
+        return accidents;
+    }
+    
+    private void detachData() {
+        paidCrScale.detach();
+        incurredCrScale.detach();
+        paidLrScale.detach();
+        incurredCrScale.detach();
+    }
+    
+    private void linkData() {
+        paidLrScale.getSourceLinkRatios().setSource(paidFactors);
+        incurredLrScale.getSourceLinkRatios().setSource(incurredFactors);
+        paidCr.setSource(paidRatios);
+        incurredCr.setSource(incurredRatios);
+        paidCrScale.getSourceInput().setSource(paidCr);
+        incurredCrScale.getSourceInput().setSource(incurredCr);
     }
     
     public FactorTriangle getPaidFactorTriangle() {
@@ -89,8 +130,39 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         return incurredRatios;
     }
     
+    public ClaimRatioScale getPaidClaimRatioScale() {
+        return paidCrScale;
+    }
+    
+    public ClaimRatioScale getIncurredClaimRatioScale() {
+        return incurredCrScale;
+    }
+    
+    public LinkRatioScale getPaidLinkRatioScale() {
+        return paidLrScale;
+    }
+    
+    public LinkRatioScale getIncurredLinkRatioScale() {
+        return incurredLrScale;
+    }
+    
+    public double getPaidLambda() {
+        return lambdas.getPaidLambda();
+    }
+    
+    public double getIncurredLambda() {
+        return lambdas.getIncurredLambda();
+    }
+    
     @Override
     protected void recalculateLayer() {
+        lambdas.clearValues();
+        recalculateCells();
+        recalculateScales();
+        lambdas.finnishCalculation();
+    }
+    
+    private void recalculateCells() {
         for(int a=0; a<accidents; a++) {
             int devs = developments[a];
             for(int d=0; d<devs; d++)
@@ -104,50 +176,65 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
         paidRatios.setValueAt(accident, development, cell);
         incurredFactors.setValueAt(accident, development, cell);
         incurredRatios.setValueAt(accident, development, cell);
+        lambdas.processCell(cell);
     }
     
-    public MclEstimateInput createPseudoBundle() {
-        LRResidualTriangle paidLRRes = bundle.getSourcePaidLRResidualTriangle();
-        paidLRRes.getSourceLinkRatios().setSource(paidFactors);
-        
-        LRResidualTriangle incurredLRRes = bundle.getSourceIncurredLRResidualTriangle();
-        incurredLRRes.getSourceLinkRatios().setSource(incurredFactors);
-        
-        CRResidualTriangle paidCRRes = bundle.getSourcePaidCRResidualTriangle();
-        paidCRRes.getSourceClaimRatios().setSource(paidRatios);
-        
-        CRResidualTriangle incurredCRRes = bundle.getSourceIncurredCRResidualTriangle();
-        incurredCRRes.getSourceClaimRatios().setSource(incurredRatios);
-        
-        MclCorrelation paidC = new MclCorrelation(paidLRRes, paidCRRes);
-        MclCorrelation incurredC = new MclCorrelation(incurredLRRes, incurredCRRes);
-        return new PseudoEstimateInput(paidC, incurredC);
+    private void recalculateScales() {
+        paidLrScale.recalculate();
+        incurredLrScale.recalculate();
+        paidCrScale.recalculate();
+        incurredCrScale.recalculate();
     }
     
-    private static class PseudoEstimateInput extends AbstractMultiSourceCalculationData implements MclEstimateInput {
+    private class PseudoLambdaCalculator {
+        private double spLrCr = 0d; //sum(lr(p) * i/p)
+        private double spCrCr = 0d; //sum(i/p ^2)
+        private double siLrCr = 0d; //sum(lr(i) * p/i)
+        private double siCrCr = 0d; //sum(p/i ^2)
+        private double lambdaP = 0d;
+        private double lambdaI = 0d;
         
-        private MclCorrelation paidCorrelation;
-        private MclCorrelation incurredCorrelation;
-
-        public PseudoEstimateInput(MclCorrelation paidCorrelation, MclCorrelation incurredCorrelation) {
-            super(false, paidCorrelation, incurredCorrelation);
-            this.paidCorrelation = paidCorrelation;
-            this.incurredCorrelation = incurredCorrelation;
+        void clearValues() {
+            spLrCr = 0d;
+            spCrCr = 0d;
+            siLrCr = 0d;
+            siCrCr = 0d;
+            lambdaP = 0d;
+            lambdaI = 0d;
         }
         
-        @Override
-        protected void recalculateLayer() {
+        void processCell(MclResidualCell cell) {
+            if(cell == null)
+                return;
+            double pLr = cell.getPaidLRResidual();
+            double pCr = cell.getPaidCRResidual();
+            double iLr = cell.getIncurredLRResidual();
+            double iCr = cell.getIncurredCRResidual();
+            
+            if(canProcessValues(pLr, pCr, iLr, iCr)) {
+                spLrCr += pLr * pCr;
+                spCrCr += pCr * pCr;
+                siLrCr += iLr * iCr;
+                siCrCr += iCr * iCr;
+            }
         }
-
-        @Override
-        public MclCorrelation getSourcePaidCorrelation() {
-            return paidCorrelation;
+        
+        private boolean canProcessValues(double pLr, double pCr, double iLr, double iCr) {
+            return !Double.isNaN(pLr) && !Double.isNaN(pCr) &&
+                   !Double.isNaN(iLr) && !Double.isNaN(iCr);
         }
-
-        @Override
-        public MclCorrelation getSourceIncurredCorrelation() {
-            return incurredCorrelation;
+        
+        void finnishCalculation() {
+            lambdaP = spLrCr / spCrCr;
+            lambdaI = siLrCr / siCrCr;
         }
-    
+        
+        double getPaidLambda() {
+            return lambdaP;
+        }
+        
+        double getIncurredLambda() {
+            return lambdaI;
+        }
     }
 }

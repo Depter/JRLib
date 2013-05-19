@@ -99,8 +99,12 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
      * falls outside the bounds, than NaN is returned.
      */
     public double getPaidLRResidual(int accident, int development) {
+        return getValue(paidLr, accident, development);
+    }
+    
+    private double getValue(double[][] values, int accident, int development) {
         return withinBounds(accident, development)?
-                paidLr[accident][development] :
+                values[accident][development] :
                 Double.NaN;
     }
     
@@ -116,9 +120,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
      * falls outside the bounds, than NaN is returned.
      */
     public double getPaidCRResidual(int accident, int development) {
-        return withinBounds(accident, development)?
-                paidCr[accident][development] :
-                Double.NaN;
+        return getValue(paidCr, accident, development);
     }
     
     /**
@@ -127,9 +129,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
      * falls outside the bounds, than NaN is returned.
      */
     public double getIncurredLRResidual(int accident, int development) {
-        return withinBounds(accident, development)?
-                incurredLr[accident][development] :
-                Double.NaN;
+        return getValue(incurredLr, accident, development);
     }
     
     /**
@@ -138,9 +138,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
      * falls outside the bounds, than NaN is returned.
      */
     public double getIncurredCRResidual(int accident, int development) {
-        return withinBounds(accident, development)?
-                incurredCr[accident][development] :
-                Double.NaN;
+        return getValue(incurredCr, accident, development);
     }
     
     /**
@@ -173,7 +171,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
     }
     
     private void recalculateAccidents() {
-        accidents = max(
+        accidents = min(
                 sourcePaidLr.getAccidentCount(),
                 sourcePaidCr.getAccidentCount(),
                 sourceIncurredLr.getAccidentCount(),
@@ -181,12 +179,12 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
                 );
     }
     
-    private int max(int i1, int i2, int i3, int i4) {
-        return Math.max(Math.max(i1, i2), Math.max(i3, i4));
+    private int min(int i1, int i2, int i3, int i4) {
+        return Math.min(Math.min(i1, i2), Math.min(i3, i4));
     }
     
     private void recalculateDevelopments() {
-        developments = max(
+        developments = min(
                 sourcePaidLr.getDevelopmentCount(),
                 sourcePaidCr.getDevelopmentCount(),
                 sourceIncurredLr.getDevelopmentCount(),
@@ -197,7 +195,7 @@ public class MclResidualBundle extends AbstractMultiSourceCalculationData<Calcul
     private void recalculateAccidentDevelopments() {
         accidentDevelopments = new int[accidents];
         for(int a=0; a<accidents; a++)
-            accidentDevelopments[a] = max(
+            accidentDevelopments[a] = min(
                 sourcePaidLr.getDevelopmentCount(a), 
                 sourcePaidCr.getDevelopmentCount(a),
                 sourceIncurredLr.getDevelopmentCount(a),

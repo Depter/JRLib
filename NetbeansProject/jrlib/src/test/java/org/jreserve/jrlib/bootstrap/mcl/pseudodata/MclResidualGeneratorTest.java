@@ -40,7 +40,6 @@ public class MclResidualGeneratorTest {
         { 1.39958504,  1.86536889,  1.77570549,  1.75243837};
     
     private final static int[][] INDICES = {
-        {0, 1, 2, 3, 0, 1, 2, 3},
         {0, 1, 2, 3, 0, 1, 2},
         {3, 0, 1, 2, 3, 0},
         {1, 2, 3, 0, 1},

@@ -1,32 +1,37 @@
 package org.jreserve.jrlib.bootstrap.mcl;
 
+import java.util.Collections;
+import java.util.List;
 import org.jreserve.jrlib.TestData;
-import org.jreserve.jrlib.bootstrap.mack.MackNormalProcessSimulator;
-import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
 import org.jreserve.jrlib.bootstrap.util.BootstrapUtil;
 import org.jreserve.jrlib.bootstrap.util.HistogramData;
 import org.jreserve.jrlib.bootstrap.util.HistogramDataFactory;
 import org.jreserve.jrlib.claimratio.ClaimRatio;
-import org.jreserve.jrlib.claimratio.LrCrExtrapolation;
 import org.jreserve.jrlib.claimratio.SimpleClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
-import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
+import org.jreserve.jrlib.claimratio.scale.ClaimRatioScaleInput;
+import org.jreserve.jrlib.claimratio.scale.DefaultClaimRatioScaleSelection;
 import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.residuals.CenteredClaimRatioResiduals;
+import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
 import org.jreserve.jrlib.estimate.mcl.MclCalculationBundle;
 import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
 import org.jreserve.jrlib.estimate.mcl.MclEstimateBundle;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
+import org.jreserve.jrlib.linkratio.scale.DefaultLinkRatioScaleSelection;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
-import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
+import org.jreserve.jrlib.linkratio.scale.LinkRatioScaleInput;
 import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals;
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
+import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
+import org.jreserve.jrlib.scale.MinMaxScaleEstimator;
+import org.jreserve.jrlib.scale.UserInputScaleEstimator;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
-import org.jreserve.jrlib.triangle.ratio.DefaultRatioTriangle;
-import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
 import org.jreserve.jrlib.util.random.JavaRandom;
 import org.jreserve.jrlib.util.random.Random;
 import org.junit.Before;
@@ -41,7 +46,7 @@ import static org.junit.Assert.*;
  */
 public class MclBootstrapSpeedTest3 {
     private final static long SEED = 100;
-    private final static int N = 10000;
+    private final static int N = 100000;
     private final static double LIMIT = 30d;
     private final static long TIMEOUT = 2L * ((long)LIMIT * 1000L);
     
@@ -62,8 +67,8 @@ public class MclBootstrapSpeedTest3 {
         LinkRatio paidLr = new SimpleLinkRatio(paidCik);
         LinkRatio incurredLr = new SimpleLinkRatio(incurredCik);
         
-        LinkRatioScale paidScales = new SimpleLinkRatioScale(paidLr);
-        LinkRatioScale incurredScales = new SimpleLinkRatioScale(incurredLr);
+        LinkRatioScale paidScales = createLrScale(paidLr);
+        LinkRatioScale incurredScales = createLrScale(incurredLr);
         
         LRResidualTriangle paidLrResiduals     = createLrResiduals(paidScales);
         LRResidualTriangle incurredLrResiduals = createLrResiduals(incurredScales);
@@ -74,20 +79,30 @@ public class MclBootstrapSpeedTest3 {
         createBs(paidLrResiduals, paidCrResiduals, incurredLrResiduals, incurredCrResiduals);
     }    
     
+    private LinkRatioScale createLrScale(LinkRatio lr) {
+        DefaultLinkRatioScaleSelection scales = new DefaultLinkRatioScaleSelection(lr);
+        scales.setMethod(new UserInputScaleEstimator<LinkRatioScaleInput>(5, 0.1d), 5);
+        return scales;
+    }
+    
     private LRResidualTriangle createLrResiduals(LinkRatioScale scales) {
-        return new AdjustedLinkRatioResiduals(scales);
+        LRResidualTriangle res = new LinkRatioResiduals(scales);
+        res = new AdjustedLinkRatioResiduals(res);
+        return new CenteredLinkRatioResiduals(res);
     }
     
     private CRResidualTriangle createCrResiduals(LinkRatio lrN, LinkRatio lrD) {
-        ClaimRatio crs = createClaimRatio(lrN, lrD);
-        ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
-        return new AdjustedClaimRatioResiduals(scales);
+        ClaimRatioScale scales = createClaimRatioScale(lrN, lrD);
+        CRResidualTriangle res = new ClaimRatioResiduals(scales);
+            res = new AdjustedClaimRatioResiduals(res);
+            return new CenteredClaimRatioResiduals(res);
     }
-
-    private ClaimRatio createClaimRatio(LinkRatio numerator, LinkRatio denominator) {
-        RatioTriangle ratios = new  DefaultRatioTriangle(numerator.getSourceTriangle(), denominator.getSourceTriangle());
-        LrCrExtrapolation method = new LrCrExtrapolation(numerator, denominator);
-        return new SimpleClaimRatio(ratios, method);
+    
+    private ClaimRatioScale createClaimRatioScale(LinkRatio lrN, LinkRatio lrD) {
+        ClaimRatio crs = new SimpleClaimRatio(lrN.getSourceTriangle(), lrD.getSourceTriangle());
+        DefaultClaimRatioScaleSelection scales = new DefaultClaimRatioScaleSelection(crs);
+        scales.setMethod(new MinMaxScaleEstimator<ClaimRatioScaleInput>(), 6);
+        return scales;
     }
     
     private void createMeans(LRResidualTriangle paidLr, CRResidualTriangle paidCr, LRResidualTriangle incurredLr, CRResidualTriangle incurredCr) {
@@ -101,26 +116,30 @@ public class MclBootstrapSpeedTest3 {
     
     private void createBs(LRResidualTriangle paidLr, CRResidualTriangle paidCr, LRResidualTriangle incurredLr, CRResidualTriangle incurredCr) {
         Random rnd = new JavaRandom(SEED);
-        MackProcessSimulator ps = new MackNormalProcessSimulator(rnd, paidLr.getSourceLinkRatioScales());
-        MackProcessSimulator is = new MackNormalProcessSimulator(rnd, incurredLr.getSourceLinkRatioScales());
+        MclProcessSimulator ps = new WeightedNormalMclProcessSimulator(paidLr.getSourceLinkRatioScales(), rnd, true);
+        MclProcessSimulator is = new WeightedNormalMclProcessSimulator(incurredLr.getSourceLinkRatioScales(), rnd, false);
         
         MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
-        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle);
+        MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle, createSegments());
         
         MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(pseudoData, ps, is);
         bootstrap = new MclBootstrapper(estimate, N);
     }
+    
+    private List<int[][]> createSegments() {
+        return Collections.singletonList(new int[][] {{0, 5}});
+    }
 
     @Test//(timeout=TIMEOUT)
     public void testSpeed() {
-        System.out.println("Begin MCL-Bootstrapper2 speed test.\n\tTimeout: "+(TIMEOUT/1000));
+        System.out.println("Begin MCL-Bootstrapper3 speed test.\n\tTimeout: "+(TIMEOUT/1000));
         
         long begin = System.currentTimeMillis();
         bootstrap.run();
         long dif = System.currentTimeMillis() - begin;
         double seconds = (double)dif / 1000d;
         assertTrue(
-                String.format("MCL-Bootstrapping2 %d times took %.3f seconds! Limit is %.3f seconds.", N, seconds, LIMIT), 
+                String.format("MCL-Bootstrapping3 %d times took %.3f seconds! Limit is %.3f seconds.", N, seconds, LIMIT), 
                 seconds <= LIMIT);
         
         double bsPaidMean = BootstrapUtil.getMeanTotalReserve(bootstrap.getPaidReserves());
@@ -128,7 +147,7 @@ public class MclBootstrapSpeedTest3 {
         printHistogram(bootstrap.getPaidReserves(), paidMean);
         printHistogram(bootstrap.getIncurredReserves(), incurredMean);
         
-        String msg = "MCL-Bootstrapping2 %d times took %.3f seconds.%n";
+        String msg = "MCL-Bootstrapping3 %d times took %.3f seconds.%n";
         msg += "\tPaid-reserve:%n\t\tBootstrap: %.0f%n\t\tOriginal: %.0f%n";
         msg += "\tIncurred-reserve:%n\t\tBootstrap: %.0f%n\t\tOriginal: %.0f%n";
         System.out.printf(msg, N, seconds, bsPaidMean, paidMean, bsIncurredMean, incurredMean);

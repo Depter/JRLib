@@ -138,6 +138,7 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
      */
     public void setDevelopmentCount(int developments) {
         this.developments = developments<0? 0 : developments;
+        super.recalculateLayer();
         fireChange();
     }
 }

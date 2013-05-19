@@ -7,20 +7,25 @@ import org.jreserve.jrlib.bootstrap.mack.DummyMackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
-import org.jreserve.jrlib.claimratio.ClaimRatio;
+import org.jreserve.jrlib.claimratio.LrCrExtrapolation;
 import org.jreserve.jrlib.claimratio.SimpleClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.residuals.CenteredClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
-import org.jreserve.jrlib.estimate.Estimate;
 import org.jreserve.jrlib.linkratio.LinkRatio;
-import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
+import org.jreserve.jrlib.linkratio.curve.SimpleLinkRatioSmoothing;
+import org.jreserve.jrlib.linkratio.curve.UserInputLRCurve;
+import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals;
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
+import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection;
+import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
@@ -55,68 +60,87 @@ public class MclBootstrapEstimateBundleTest {
         {9511539.00000000, 10867401.87421090, 10767544.72251430, 10654808.80779250, 10702854.69232320, 10644638.07481610, 10645475.89007310, 10517510.06862970}
     };
     
+    private final static double[] PAID = {
+        403783.90321660, 419400.56126229,  538785.112981640, 572116.39713354, 
+        759173.95179094, 972443.78679230, 1159094.28380353, 3343637.65101975
+    };
+    private final static double[] INCURRED = {
+        233415.49511676, 175187.73725859,  207033.74944159, 180047.92227524, 
+        241281.11337455, 72044.023432950, -117507.87416500, 1486479.53310586
+    };
+    private final static double[] PAID_INCURRED = {
+        391116.495116760, 911001.737258590,  795416.74944159,  901836.92227524, 
+        1183151.11337455, 1744442.02343295, 1859541.12583500, 3803431.53310586
+    };
+    
     private MclBootstrapEstimateBundle bsBundle;
-    private Estimate paid;
-    private Estimate incurred;
     
     @Before
     public void setUp() {
         ClaimTriangle paidCik = TestData.getCummulatedTriangle(TestData.PAID);
         ClaimTriangle incurredCik = TestData.getCummulatedTriangle(TestData.INCURRED);
         
-        LinkRatio paidLr = new SimpleLinkRatio(paidCik);
-        LinkRatio incurredLr = new SimpleLinkRatio(incurredCik);
+        LinkRatio paidLr = createLinkRatio(paidCik, 1.05, 1.02);
+        LinkRatio incurredLr = createLinkRatio(incurredCik, 1.03, 1.01);
         
-        LRResidualTriangle paidLrResiduals = new AdjustedLinkRatioResiduals(new SimpleLinkRatioScale(paidLr));
+        LRResidualTriangle paidLrResiduals = createLrResiduals(paidLr);
         CRResidualTriangle paidCrResiduals = createCrResiduals(incurredCik, paidCik, incurredLr, paidLr);
         
-        LRResidualTriangle incurredLrResiduals = new AdjustedLinkRatioResiduals(new SimpleLinkRatioScale(incurredLr));
+        LRResidualTriangle incurredLrResiduals = createLrResiduals(incurredLr);
         CRResidualTriangle incurredCrResiduals = createCrResiduals(paidCik, incurredCik, paidLr, incurredLr);
         
         createBs(paidLrResiduals, incurredLrResiduals, paidCrResiduals, incurredCrResiduals);
     }
     
-    private void createBs(LRResidualTriangle paidLr, LRResidualTriangle incurredLr, CRResidualTriangle paidCr, CRResidualTriangle incurredCr) {
-        MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
-        MclPseudoData pseudoData = new MclPseudoData(new FixedRandom(), resBundle);
-        MackProcessSimulator ps = new DummyMackProcessSimulator();
-        MackProcessSimulator is = new DummyMackProcessSimulator();
-        
-        bsBundle = new MclBootstrapEstimateBundle(pseudoData, ps, is);
-        paid = bsBundle.getPaidEstimate();
-        incurred = bsBundle.getIncurredEstimate();
+    private LinkRatio createLinkRatio(ClaimTriangle cik, double t1, double t2) {
+        UserInputLRCurve method = new UserInputLRCurve();
+        method.setValue(7, t1);
+        method.setValue(8, t2);
+        SimpleLinkRatioSmoothing lrs = new SimpleLinkRatioSmoothing(cik, method);
+        lrs.setDevelopmentCount(9);
+        return lrs;
+    }
+    
+    private LRResidualTriangle createLrResiduals(LinkRatio lrs) {
+        LinkRatioScale scale = new SimpleLinkRatioScale(lrs);
+        LRResidualTriangle res = new LinkRatioResiduals(scale);
+        res = new LRResidualTriangleCorrection(res, 0, 6, Double.NaN);
+        res = new AdjustedLinkRatioResiduals(res);
+        return new CenteredLinkRatioResiduals(res);
     }
     
     private CRResidualTriangle createCrResiduals(ClaimTriangle numerator, ClaimTriangle denumerator, LinkRatio lrN, LinkRatio lrD) {
-        ClaimRatio crs = new SimpleClaimRatio(numerator, denumerator);
+        SimpleClaimRatio crs = new SimpleClaimRatio(numerator, denumerator, new LrCrExtrapolation(lrN, lrD));
+        crs.setDevelopmentCount(9);
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
-        return excludeDiagonal(new ClaimRatioResiduals(scales));
+        CRResidualTriangle res = new ClaimRatioResiduals(scales);
+        res = new ClaimRatioResidualTriangleCorrection(res, 0, 7, Double.NaN);
+        res = new AdjustedClaimRatioResiduals(res);
+        return new CenteredClaimRatioResiduals(res);
     }
     
-    private CRResidualTriangle excludeDiagonal(CRResidualTriangle res) {
-        int accidents = res.getAccidentCount();
-        for(int a=0; a<accidents; a++)
-            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
-        return new AdjustedClaimRatioResiduals(res);
+    private void createBs(LRResidualTriangle paidLr, LRResidualTriangle incurredLr, CRResidualTriangle paidCr, CRResidualTriangle incurredCr) {
+        MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
+        MclPseudoData pseudoData = new MclPseudoData(new FixedRandom(), resBundle);
+        MclProcessSimulator ps = new DummyMclProcessSimulator();
+        MclProcessSimulator is = new DummyMclProcessSimulator();
+        
+        bsBundle = new MclBootstrapEstimateBundle(pseudoData, ps, is);
     }
     
     @Test
     public void testRecalculate() {
         bsBundle.recalculate();
-        int accidents = EXPECTED_PAID.length;
-        int developments = EXPECTED_PAID[0].length;
+        int accidents = PAID.length;
+        
+        double[] paid = bsBundle.getPaidReserves();
+        double[] incurred = bsBundle.getIncurredReserves();
+        double[] pi = bsBundle.getPaidIncurredReserves();
         
         for(int a=0; a<accidents; a++) {
-            for(int d=0; d<developments; d++) {
-                double expected = EXPECTED_PAID[a][d];
-                double found = paid.getValue(a, d);
-                String msg = String.format("At paid, [%d; %d].", a, d);
-                assertEquals(msg, expected, found, TestConfig.EPSILON);
-
-                expected = EXPECTED_INCURRED[a][d];
-                found = incurred.getValue(a, d);
-                assertEquals(expected, found, TestConfig.EPSILON);
-            }
+            assertEquals(PAID[a], paid[a], TestConfig.EPSILON);
+            assertEquals(INCURRED[a], incurred[a], TestConfig.EPSILON);
+            assertEquals(PAID_INCURRED[a], pi[a], TestConfig.EPSILON);
         }
     }
 }

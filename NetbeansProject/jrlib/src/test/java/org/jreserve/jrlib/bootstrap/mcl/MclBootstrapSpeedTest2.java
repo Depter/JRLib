@@ -1,13 +1,7 @@
 package org.jreserve.jrlib.bootstrap.mcl;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
-import org.jreserve.jrlib.bootstrap.mack.MackConstantProcessSimulator;
-import org.jreserve.jrlib.bootstrap.mack.MackGammaProcessSimulator;
-import org.jreserve.jrlib.bootstrap.mack.MackNormalProcessSimulator;
-import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
 import org.jreserve.jrlib.bootstrap.util.BootstrapUtil;
@@ -33,7 +27,6 @@ import org.jreserve.jrlib.linkratio.curve.UserInputLRCurve;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
-import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection;
 import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.ratio.DefaultRatioTriangle;
@@ -134,8 +127,8 @@ public class MclBootstrapSpeedTest2 {
         //MackProcessSimulator is = new MackGammaProcessSimulator(rnd, incurredLr.getSourceLinkRatioScales());
         //MackProcessSimulator ps = new MackNormalProcessSimulator(rnd, paidLr.getSourceLinkRatioScales());
         //MackProcessSimulator is = new MackNormalProcessSimulator(rnd, incurredLr.getSourceLinkRatioScales());
-        MackProcessSimulator ps = new MackConstantProcessSimulator();
-        MackProcessSimulator is = new MackConstantProcessSimulator();
+        MclProcessSimulator ps = new MclConstantProcessSimulator();
+        MclProcessSimulator is = new MclConstantProcessSimulator();
         
         MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
         MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle, getSegments());

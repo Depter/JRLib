@@ -97,12 +97,12 @@ public class MclResidualBundleTest {
     
     @Test
     public void testGetAccidentCount() {
-        assertEquals(PAID_CR.length, bundle.getAccidentCount());
+        assertEquals(PAID_LR.length, bundle.getAccidentCount());
     }
     
     @Test
     public void testGetDevelopmentCount() {
-        assertEquals(PAID_CR[0].length, bundle.getDevelopmentCount());
+        assertEquals(PAID_LR[0].length, bundle.getDevelopmentCount());
     }
     
     @Test
@@ -110,7 +110,7 @@ public class MclResidualBundleTest {
         int accidents = bundle.getAccidentCount();
         assertEquals(0, bundle.getDevelopmentCount(-1));
         for(int a=0; a<accidents; a++)
-            assertEquals(PAID_CR[a].length, bundle.getDevelopmentCount(a));
+            assertEquals(PAID_LR[a].length, bundle.getDevelopmentCount(a));
         assertEquals(0, bundle.getDevelopmentCount(accidents));
     }
     

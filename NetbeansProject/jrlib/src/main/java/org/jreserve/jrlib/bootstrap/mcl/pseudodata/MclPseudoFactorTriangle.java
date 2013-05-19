@@ -33,7 +33,7 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     
     private MclPseudoFactorTriangle(MclResidualBundle bundle, boolean isPaid) {
         this.isPaid = isPaid;
-        source = getSourceResidualss(bundle).getSourceTriangle();
+        source = getSourceResiduals(bundle).getSourceTriangle();
         initState(bundle);
         detach();
         super.setCallsForwarded(false);
@@ -48,10 +48,10 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     }
     
     private LinkRatio getLinkRatio(MclResidualBundle bundle) {
-        return getSourceResidualss(bundle).getSourceLinkRatios();
+        return getSourceResiduals(bundle).getSourceLinkRatios();
     }
     
-    private LRResidualTriangle getSourceResidualss(MclResidualBundle bundle) {
+    private LRResidualTriangle getSourceResiduals(MclResidualBundle bundle) {
         return isPaid? 
                 bundle.getSourcePaidLRResidualTriangle() :
                 bundle.getSourceIncurredLRResidualTriangle();
@@ -90,7 +90,7 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     }
     
     private LinkRatioScale getLinkRatioScales(MclResidualBundle bundle) {
-        return getSourceResidualss(bundle).getSourceLinkRatioScales();
+        return getSourceResiduals(bundle).getSourceLinkRatioScales();
     }
     
     @Override

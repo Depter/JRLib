@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.bootstrap.mack;
 
-import org.jreserve.jrlib.bootstrap.mack.MackProcessSimulator;
 import org.jreserve.jrlib.bootstrap.DummyProcessSimulator;
 import org.jreserve.jrlib.estimate.Estimate;
 

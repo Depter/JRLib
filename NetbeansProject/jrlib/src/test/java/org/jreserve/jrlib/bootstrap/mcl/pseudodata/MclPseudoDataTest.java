@@ -9,16 +9,18 @@ import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.SimpleClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.residuals.AdjustedClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
+import org.jreserve.jrlib.claimratio.scale.residuals.CenteredClaimRatioResiduals;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResidualTriangleCorrection;
 import org.jreserve.jrlib.claimratio.scale.residuals.ClaimRatioResiduals;
-import org.jreserve.jrlib.estimate.mcl.MclCorrelation;
-import org.jreserve.jrlib.estimate.mcl.MclEstimateInput;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals;
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
+import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection;
+import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
@@ -35,47 +37,68 @@ public class MclPseudoDataTest {
 
 
     private final static double[][] PAID_LR = {
-        {1.21582326, 1.01662234, 0.99981929, 1.00606193, 1.00218851, 1.0038334, 0.9997944, Double.NaN},
-        {1.22776731, 1.01042516, 1.01030501, 1.0001398, 1.00268624, 0.99999318, Double.NaN},
-        {1.25103501, 1.00772819, 1.00618285, 1.00439495, 1.0036468, Double.NaN},
-        {1.2006619, 1.0128477, 1.00419236, 1.01027704, Double.NaN},
-        {1.20135468, 1.01302196, 1.00448616, Double.NaN},
-        {1.25060502, 1.00860147, Double.NaN},
-        {1.23130962, Double.NaN},
-        {Double.NaN},
+        {1.222573822, 1.016509107, 1.001614612, 1.006643418, 1.002468533, 1.003763071, 1.000188673},
+        {1.230970667, 1.011601285, 1.010181589, 1.001890861, 1.002818739, 1.000721752},
+        {1.250437383, 1.009240123, 1.006730299, 1.005511630, 1.003622351},
+        {1.209280583, 1.013348753, 1.005335016, 1.010169798},
+        {1.209844351, 1.013493899, 1.005565084},
+        {1.250070204, 1.009950773},
+        {1.233921256}
     };
     
     private final static double[][] PAID_CR = {
-        {1.05067331, 1.01482745, 0.98461964, 1.00838366, 1.02202514, 0.98550925, 0.93817525, Double.NaN},
-        {0.99273096, 1.05567868, 0.97622313, 1.00848813, 1.00009870, 1.01268499, Double.NaN},
-        {1.00480192, 1.03531094, 0.99665069, 1.03622913, 1.00568821, Double.NaN},
-        {1.01912897, 1.03543308, 1.03000960, 1.01389165, Double.NaN},
-        {1.02240735, 1.04332097, 1.03579342, Double.NaN},
-        {1.02932814, 1.04992814, Double.NaN},
-        {1.03806396, Double.NaN},
-        {Double.NaN},
+        {1.096145803, 1.050456708, 1.017050830, 1.026791300, 1.039443564, 1.009039351, 0.970571839, Double.NaN},
+        {1.042028657, 1.083701525, 1.012104518, 1.028398639, 1.018928425, 1.031143930, Double.NaN},
+        {1.057965470, 1.064872213, 1.024183022, 1.051702202, 1.025771508, Double.NaN},
+        {1.066770210, 1.062707343, 1.055163367, 1.033514800, Double.NaN},
+        {1.069335467, 1.069010756, 1.059544295, Double.NaN},
+        {1.076903814, 1.076309844, Double.NaN},
+        {1.078255416, Double.NaN},
+        {Double.NaN}
     };
     
     private final static double[][] INCURRED_LR = {
-        {1.16783245, 0.98184459, 1.01626443, 1.0163654, 0.99869228, 1.00007425, 0.98797939, Double.NaN},
-        {1.22600071, 0.98337766, 0.98744149, 1.02462197, 1.00816568, 1.00010284, Double.NaN},
-        {1.16812341, 1.02678885, 1.00261677, 1.0056269, 0.9988537, Double.NaN},
-        {1.26152203, 1.00805281, 0.98874796, 1.00525547, Double.NaN},
-        {1.25964626, 1.00743552, 0.989192, Double.NaN},
-        {1.17217609, 1.02281323, Double.NaN},
-        {1.21833782, Double.NaN},
-        {Double.NaN},
+        {1.172030119, 0.983871008, 1.012025068, 1.015131713, 0.999381847, 1.000110563, 0.987972858},
+        {1.219760034, 0.985255564, 0.988582216, 1.021732802, 1.007156875, 1.000136316},
+        {1.172097521, 1.020509934, 1.001112290, 1.006337985, 0.999489558},
+        {1.248156490, 1.005529760, 0.989735849, 1.005991548},
+        {1.246656020, 1.005035626, 0.990110565},
+        {1.175544639, 1.017329743},
+        {1.213625917}
     };
     
     private final static double[][] INCURRED_CR = {
-        {0.94519202, 0.98016959, 1.01041044, 0.98972134, 0.97946696, 1.0098367, 1.05246977, Double.NaN},
-        {0.97549262, 0.94568634, 1.01092904, 0.98766904, 0.99257158, 0.9845530, Double.NaN},
-        {0.97361666, 0.95873932, 0.99151685, 0.96570512, 0.99090579, Double.NaN},
-        {0.95723856, 0.95513118, 0.96962144, 0.98379078, Double.NaN},
-        {0.95303846, 0.95018603, 0.96347673, Double.NaN},
-        {0.94832840, 0.94544760, Double.NaN},
-        {0.93437849, Double.NaN},
+        {0.910373342, 0.950330085, 0.981364576, 0.972774293, 0.962946792, 0.988255456, 1.022462985, Double.NaN},
+        {0.940224701, 0.922428249, 0.980494558, 0.969883105, 0.976105533, 0.967818780, Double.NaN},
+        {0.934423884, 0.934995827, 0.968515470, 0.951367901, 0.972793835, Double.NaN},
+        {0.923389192, 0.933841480, 0.947453222, 0.966145431, Double.NaN},
+        {0.920139563, 0.929935482, 0.942864140, Double.NaN},
+        {0.915107731, 0.924711979, Double.NaN},
+        {0.907750133, Double.NaN},
         {Double.NaN},
+    };
+    
+    private final static double PAID_LAMBDA =     0.25038130;
+    private final static double INCURRED_LAMBDA = 0.12928930;
+    
+    private final static double[] PAID_LR_SCALE = {
+        40.46646639, 6.66739124, 7.21581945, 8.42345536, 
+         1.48140652, 5.07876309, 1.48140652
+    };
+    
+    private final static double[] INCURRED_LR_SCALE = {
+        86.47283684, 40.61146537, 25.38690835, 19.53756799, 
+        11.26495390, 0.044876680, 0.00017878
+    };
+    
+    private final static double[] PAID_CR_SCALE = {
+        36.62101644, 27.61167624, 56.36355726, 28.74532478, 
+        24.67800645, 36.91290868, 24.67800645, 16.49840189
+    };
+    
+    private final static double[] INCURRED_CR_SCALE = {
+        30.02025726, 25.04911906, 48.30719762, 24.90724891, 
+        16.78107963, 35.61313638, 16.78107963, 7.90732471
     };
     
     private MclPseudoData data;
@@ -84,12 +107,11 @@ public class MclPseudoDataTest {
     private RatioTriangle paidR;
     private RatioTriangle incurredR;
     
-    
     @Before
     public void setUp() {
         MclResidualBundle bundle = createBundle();
         data = new MclPseudoData(new FixedRandom(), bundle);
-        data.recalculate();
+        //data.recalculate();
         
         paidF = data.getPaidFactorTriangle();
         paidR = data.getPaidRatioTriangle();
@@ -112,38 +134,37 @@ public class MclPseudoDataTest {
     private LRResidualTriangle createLRResiduals(ClaimTriangle cik) {
         LinkRatio lrs = new SimpleLinkRatio(cik);
         LinkRatioScale scales = new SimpleLinkRatioScale(lrs);
-        return new AdjustedLinkRatioResiduals(scales);
+        LRResidualTriangle res = new LinkRatioResiduals(scales);
+        res = new LRResidualTriangleCorrection(res, 0, 6, Double.NaN);
+        res = new AdjustedLinkRatioResiduals(res);
+        return new CenteredLinkRatioResiduals(res);
     }
     
     private CRResidualTriangle createCRResiduals(ClaimTriangle numerator, ClaimTriangle denominator) {
         ClaimRatio crs = new SimpleClaimRatio(numerator, denominator);
         ClaimRatioScale scales = new SimpleClaimRatioScale(crs);
         CRResidualTriangle res = new ClaimRatioResiduals(scales);
-        return new AdjustedClaimRatioResiduals(res);
+        res = new ClaimRatioResidualTriangleCorrection(res, 0, 7, Double.NaN);
+        res = new AdjustedClaimRatioResiduals(res);
+        return new CenteredClaimRatioResiduals(res);
     }
-    
-//    private CRResidualTriangle excludeLastDiagonal(CRResidualTriangle res) {
-//        for(int a=0; a<res.getAccidentCount(); a++)
-//            res = new ClaimRatioResidualTriangleCorrection(res, a, res.getDevelopmentCount(a)-1, Double.NaN);
-//        return res;
-//    }
     
     @Test
     public void testAccidentCounts() {
         int accidents = PAID_LR.length;
-        assertEquals(accidents-1, paidF.getAccidentCount());
-        assertEquals(accidents-1, incurredF.getAccidentCount());
-        assertEquals(accidents, paidR.getAccidentCount());
-        assertEquals(accidents, incurredR.getAccidentCount());
+        assertEquals(accidents, paidF.getAccidentCount());
+        assertEquals(accidents, incurredF.getAccidentCount());
+        assertEquals(accidents+1, paidR.getAccidentCount());
+        assertEquals(accidents+1, incurredR.getAccidentCount());
     }
     
     @Test
     public void testDevelopmentCounts() {
         int developments = PAID_LR[0].length;
-        assertEquals(developments-1, paidF.getDevelopmentCount());
-        assertEquals(developments-1, incurredF.getDevelopmentCount());
-        assertEquals(developments, paidR.getDevelopmentCount());
-        assertEquals(developments, incurredR.getDevelopmentCount());
+        assertEquals(developments, paidF.getDevelopmentCount());
+        assertEquals(developments, incurredF.getDevelopmentCount());
+        assertEquals(developments+1, paidR.getDevelopmentCount());
+        assertEquals(developments+1, incurredR.getDevelopmentCount());
     }
     
     @Test
@@ -159,19 +180,62 @@ public class MclPseudoDataTest {
         
         assertEquals(0, paidF.getDevelopmentCount(accidents));
         assertEquals(0, incurredF.getDevelopmentCount(accidents));
-        assertEquals(0, paidR.getDevelopmentCount(accidents));
-        assertEquals(0, incurredR.getDevelopmentCount(accidents));
+        assertEquals(1, paidR.getDevelopmentCount(accidents));
+        assertEquals(1, incurredR.getDevelopmentCount(accidents));
+        assertEquals(0, paidR.getDevelopmentCount(accidents+1));
+        assertEquals(0, incurredR.getDevelopmentCount(accidents+1));
     }
     
     private void assertDevelopmentEquals(int accident, int developments) {
-        assertEquals(developments-1, paidF.getDevelopmentCount(accident));
-        assertEquals(developments-1, incurredF.getDevelopmentCount(accident));
-        assertEquals(developments, paidR.getDevelopmentCount(accident));
-        assertEquals(developments, incurredR.getDevelopmentCount(accident));
+        assertEquals(developments, paidF.getDevelopmentCount(accident));
+        assertEquals(developments, incurredF.getDevelopmentCount(accident));
+        assertEquals(developments+1, paidR.getDevelopmentCount(accident));
+        assertEquals(developments+1, incurredR.getDevelopmentCount(accident));
     }
     
     @Test
-    public void testRecalculate() {
+    public void testRecalculateLambda() {
+        data.recalculate();
+        assertEquals(PAID_LAMBDA, data.getPaidLambda(), TestConfig.EPSILON);
+        assertEquals(INCURRED_LAMBDA, data.getIncurredLambda(), TestConfig.EPSILON);
+    }
+    
+    @Test
+    public void testRecalculateLRScale() {
+        LinkRatioScale p = data.getPaidLinkRatioScale();
+        LinkRatioScale i = data.getIncurredLinkRatioScale();
+        data.recalculate();
+        
+        int length = PAID_LR_SCALE.length;
+        assertEquals(Double.NaN, p.getValue(-1), TestConfig.EPSILON);
+        assertEquals(Double.NaN, i.getValue(-1), TestConfig.EPSILON);
+        for(int d=0; d<length; d++) {
+            assertEquals(PAID_LR_SCALE[d], p.getValue(d), TestConfig.EPSILON);
+            assertEquals(INCURRED_LR_SCALE[d], i.getValue(d), TestConfig.EPSILON);
+        }
+        assertEquals(Double.NaN, p.getValue(length), TestConfig.EPSILON);
+        assertEquals(Double.NaN, i.getValue(length), TestConfig.EPSILON);
+    }
+    
+    @Test
+    public void testRecalculateCRScale() {
+        ClaimRatioScale p = data.getPaidClaimRatioScale();
+        ClaimRatioScale i = data.getIncurredClaimRatioScale();
+        data.recalculate();
+        
+        int length = PAID_CR_SCALE.length;
+        assertEquals(Double.NaN, p.getValue(-1), TestConfig.EPSILON);
+        assertEquals(Double.NaN, i.getValue(-1), TestConfig.EPSILON);
+        for(int d=0; d<length; d++) {
+            assertEquals(PAID_CR_SCALE[d], p.getValue(d), TestConfig.EPSILON);
+            assertEquals(INCURRED_CR_SCALE[d], i.getValue(d), TestConfig.EPSILON);
+        }
+        assertEquals(Double.NaN, p.getValue(length), TestConfig.EPSILON);
+        assertEquals(Double.NaN, i.getValue(length), TestConfig.EPSILON);
+    }
+    
+    @Test
+    public void testRecalculateTriangles() {
         data.recalculate();
         
         assertNaN(-1, 0);
@@ -220,19 +284,5 @@ public class MclPseudoDataTest {
         assertEquals(expected, found, TestConfig.EPSILON);
     }
     
-    @Test
-    public void testCreatePseudoBundle() {
-        MclEstimateInput bundle = data.createPseudoBundle();
-        MclCorrelation c = bundle.getSourceIncurredCorrelation();
-        assertSources(c, incurredR, incurredF);
-
-        c = bundle.getSourcePaidCorrelation();
-        assertSources(c, paidR, paidF);
-    }
-    
-    private void assertSources(MclCorrelation c, RatioTriangle r, FactorTriangle f) {
-        assertEquals(r, c.getSourceRatioTriangle());
-        assertEquals(f, c.getSourceFactors());
-    }
 }
  

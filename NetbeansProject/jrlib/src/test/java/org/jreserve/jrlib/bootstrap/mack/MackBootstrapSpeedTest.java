@@ -15,8 +15,10 @@ import org.jreserve.jrlib.linkratio.curve.SimpleLinkRatioSmoothing;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.SimpleLinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.residuals.AdjustedLinkRatioResiduals;
+import org.jreserve.jrlib.linkratio.scale.residuals.CenteredLinkRatioResiduals;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection;
+import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.util.random.JavaRandom;
 import org.jreserve.jrlib.util.random.Random;
@@ -57,9 +59,7 @@ public class MackBootstrapSpeedTest {
         mean = calculateReserve(lrs);
         
         LinkRatioScale scales = new SimpleLinkRatioScale(lrs); //MinMaxScaleEstimate
-        LRResidualTriangle residuals = new AdjustedLinkRatioResiduals(scales);
-        residuals = new LRResidualTriangleCorrection(residuals, 0, 6, Double.NaN);
-        residuals = new LRResidualTriangleCorrection(residuals, 6, 0, Double.NaN);
+        LRResidualTriangle residuals = createResiduals(scales);
         
         MackPseudoFactorTriangle pseudoFik = new MackPseudoFactorTriangle(rnd, residuals);
         MackGammaProcessSimulator procSim = new MackGammaProcessSimulator(rnd, scales);
@@ -74,6 +74,13 @@ public class MackBootstrapSpeedTest {
         e.setCallsForwarded(false);
         e.detach();
         return reserve;
+    }
+    
+    private LRResidualTriangle createResiduals(LinkRatioScale scales) {
+        LRResidualTriangle residuals = new LinkRatioResiduals(scales);
+        residuals = new LRResidualTriangleCorrection(residuals, 0, 6, Double.NaN);
+        residuals = new AdjustedLinkRatioResiduals(residuals);
+        return new CenteredLinkRatioResiduals(residuals);
     }
 
     @Test(timeout=TIMEOUT)

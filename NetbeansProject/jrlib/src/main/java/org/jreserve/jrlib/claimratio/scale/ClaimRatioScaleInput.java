@@ -127,4 +127,9 @@ public class ClaimRatioScaleInput extends AbstractCalculationData<ClaimRatio> im
     @Override
     protected void recalculateLayer() {
     }
+    
+    @Override
+    public void setSource(ClaimRatio source) {
+        super.setSource(source);
+    }
 }
