@@ -12,22 +12,22 @@ import org.jreserve.grscript.FunctionProvider;
  * @version 1.0
  */
 public abstract class AbstractFunctionProviderAdapter implements FunctionProviderAdapter {
-    
-    protected static String surroundHtml(String str) {
-        return "<html><head></head><body>"+escapeString(str)+"</body></html>";
-    }
-    
-    private static String escapeString(String str) {
-        str = str.replaceAll("'", "&quot;");
-        str = str.replaceAll("\"", "&quot;");
-        str = str.replaceAll("<", "&lt;");
-        str = str.replaceAll(">", "&gt;");
-        return str;
-    }
+//    
+//    protected static String surroundHtml(String str) {
+//        return "<html><head></head><body>"+escapeString(str)+"</body></html>";
+//    }
+//    
+//    private static String escapeString(String str) {
+//        str = str.replaceAll("'", "&quot;");
+//        str = str.replaceAll("\"", "&quot;");
+//        str = str.replaceAll("<", "&lt;");
+//        str = str.replaceAll(">", "&gt;");
+//        return str;
+//    }
     
     private FunctionProvider provider;
-    private Map<String, String> functions;
-    private Map<String, String> properties;
+    private List<String> functions;
+    private List<String> properties;
     
     @Override
     public synchronized FunctionProvider getFunctionProvider() {
@@ -40,43 +40,35 @@ public abstract class AbstractFunctionProviderAdapter implements FunctionProvide
     
     @Override
     public synchronized List<String> getFunctionSignitures() {
-        return new ArrayList<String>(getFunctions().keySet());
-    }
-
-    private Map<String, String> getFunctions() {
         if(functions == null) {
-            functions = new TreeMap<String, String>();
+            functions = new ArrayList<String>();
             initFunctions(functions);
         }
         return functions;
     }
     
-    protected abstract void initFunctions(Map<String, String> functions);
+    protected abstract void initFunctions(List<String> functions);
     
-    @Override
-    public synchronized String getFunctionDescription(String signiture) {
-        String desc = getFunctions().get(signiture);
-        return desc == null? "" : desc;
-    }
+//    @Override
+//    public synchronized String getFunctionDescription(String signiture) {
+//        String desc = getFunctions().get(signiture);
+//        return desc == null? "" : desc;
+//    }
 
     @Override
     public List<String> getPropertyNames() {
-        return new ArrayList<String>(getProperties().keySet());
-    }
-    
-    private Map<String, String> getProperties() {
         if(properties == null) {
-            properties = new TreeMap<String, String>();
+            properties = new ArrayList<String>();
             initProperties(properties);
         }
         return properties;
     }
     
-    protected abstract void initProperties(Map<String, String> properies);
-    
-    @Override
-    public String getPropertyDescription(String name) {
-        String desc = getProperties().get(name);
-        return desc==null? "" : desc;
-    }
+    protected abstract void initProperties(List<String> properies);
+//    
+//    @Override
+//    public String getPropertyDescription(String name) {
+//        String desc = getProperties().get(name);
+//        return desc==null? "" : desc;
+//    }
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="1" time="0.016" errors="0" skipped="0" tests="2" name="org.jreserve.grscript.gui.ApplicationTest">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk1.6.0_33\jre\bin"/>
+    <property name="java.vm.version" value="20.8-b03"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="HU"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="Service Pack 1"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application"/>
+    <property name="java.runtime.version" value="1.6.0_33-b05"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk1.6.0_33\jre\lib\endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="C:\Users\Peti\AppData\Local\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows 7"/>
+    <property name="classworlds.conf" value="C:\Program Files\NetBeans 7.3\java\maven\bin\m2.conf"/>
+    <property name="sun.jnu.encoding" value="Cp1250"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk1.6.0_33\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\AMD APP\bin\x86_64;C:\Program Files (x86)\AMD APP\bin\x86;C:\Oracle\oracleexe\app\oracle\product\11.2.0\server\bin;;C:\Program Files (x86)\HP SimplePass 2012\;C:\Program Files\Common Files\Microsoft Shared\Windows Live;C:\Program Files (x86)\Common Files\Microsoft Shared\Windows Live;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Program Files (x86)\Windows Live\Shared;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files (x86)\Intel\Services\IPT\;C:\Program Files\Java\jdk1.7.0_03\bin;C:\Program Files (x86)\MiKTeX 2.9\miktex\bin\;C:\Program Files\Git\cmd;C:\Program Files (x86)\QuickTime\QTSystem\;C:\Program Files (x86)\Java\scala_2_10_1\\bin;C:\Ruby\Ruby200_x64\bin;."/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="6.1"/>
+    <property name="user.home" value="C:\Users\Peti"/>
+    <property name="user.timezone" value="Europe/Prague"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="file.encoding" value="Cp1250"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="Peti"/>
+    <property name="java.class.path" value="C:\Program Files\NetBeans 7.3\java\maven\boot\plexus-classworlds-2.4.jar"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk1.6.0_33\jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher integration-test"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="hu"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_33"/>
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jdk1.6.0_33\jre\lib\ext;C:\Windows\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk1.6.0_33\jre\lib\resources.jar;C:\Program Files\Java\jdk1.6.0_33\jre\lib\rt.jar;C:\Program Files\Java\jdk1.6.0_33\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk1.6.0_33\jre\lib\jsse.jar;C:\Program Files\Java\jdk1.6.0_33\jre\lib\jce.jar;C:\Program Files\Java\jdk1.6.0_33\jre\lib\charsets.jar;C:\Program Files\Java\jdk1.6.0_33\jre\lib\modules\jdk.boot.jar;C:\Program Files\Java\jdk1.6.0_33\jre\classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="maven.home" value="C:\Program Files\NetBeans 7.3\java\maven"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="amd64"/>
+  </properties>
+  <testcase time="0.001" classname="org.jreserve.grscript.gui.ApplicationTest" name="testApplication"/>
+  <testcase time="0.015" classname="org.jreserve.grscript.gui.ApplicationTest" name="testApplication">
+    <failure message="NbModuleSuite has been started with failOnMessage(WARNING) and failOnException(INFO). The following failures have been captured:
+[org.netbeans.core.startup.NbEvents] THREAD: main MSG: The extension C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application\target\grscript_gui\grscript_gui\modules\ext\org.codehaus.groovy\groovy-all-2.1.3.jar may be multiply loaded by modules: [C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application\target\grscript_gui\grscript_gui\modules\org-jreserve-grscript-gui-groovy.jar, C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application\target\grscript_gui\grscript_gui\modules\org-jreserve-grscript-gui-grscript.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
+[org.openide.filesystems.Ordering] THREAD: Folder recognizer MSG: Not all children in Services/MIMEResolver/ marked with the position attribute: [org-jreserve-grscript-gui-script-GRScriptDataObject-Extension.xml], but some are: [org-openide-loaders-DataLoaderPool$InstanceLoaderSystem-Extension.xml, org-netbeans-core-startup-layers-SystemFileSystem-Extension.xml]
+[org.openide.filesystems.Ordering] THREAD: Folder recognizer MSG: Not all children in Services/MIMEResolver/ marked with the position attribute: [org-jreserve-grscript-gui-script-GRScriptDataObject-Extension.xml], but some are: [org-openide-loaders-DataLoaderPool$InstanceLoaderSystem-Extension.xml, org-netbeans-core-startup-layers-SystemFileSystem-Extension.xml]
+" type="junit.framework.AssertionFailedError">junit.framework.AssertionFailedError: NbModuleSuite has been started with failOnMessage(WARNING) and failOnException(INFO). The following failures have been captured:
+[org.netbeans.core.startup.NbEvents] THREAD: main MSG: The extension C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application\target\grscript_gui\grscript_gui\modules\ext\org.codehaus.groovy\groovy-all-2.1.3.jar may be multiply loaded by modules: [C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application\target\grscript_gui\grscript_gui\modules\org-jreserve-grscript-gui-groovy.jar, C:\Munka\GitRepos\JRLib\NetbeansProject\grscript-gui\application\target\grscript_gui\grscript_gui\modules\org-jreserve-grscript-gui-grscript.jar]; see: http://www.netbeans.org/download/dev/javadoc/org-openide-modules/org/openide/modules/doc-files/classpath.html#class-path
+[org.openide.filesystems.Ordering] THREAD: Folder recognizer MSG: Not all children in Services/MIMEResolver/ marked with the position attribute: [org-jreserve-grscript-gui-script-GRScriptDataObject-Extension.xml], but some are: [org-openide-loaders-DataLoaderPool$InstanceLoaderSystem-Extension.xml, org-netbeans-core-startup-layers-SystemFileSystem-Extension.xml]
+[org.openide.filesystems.Ordering] THREAD: Folder recognizer MSG: Not all children in Services/MIMEResolver/ marked with the position attribute: [org-jreserve-grscript-gui-script-GRScriptDataObject-Extension.xml], but some are: [org-openide-loaders-DataLoaderPool$InstanceLoaderSystem-Extension.xml, org-netbeans-core-startup-layers-SystemFileSystem-Extension.xml]
+
+	at org.netbeans.junit.internal.NbModuleLogHandler.checkFailures(NbModuleLogHandler.java:218)
+	at org.netbeans.junit.NbModuleSuite$NbTestSuiteLogCheck.runTest(NbModuleSuite.java:1477)
+	at junit.framework.TestSuite.run(TestSuite.java:238)
+	at junit.framework.TestSuite.runTest(TestSuite.java:243)
+	at junit.framework.TestSuite.run(TestSuite.java:238)
+	at org.netbeans.junit.NbModuleSuite$S.runInRuntimeContainer(NbModuleSuite.java:932)
+	at org.netbeans.junit.NbModuleSuite$S.access$100(NbModuleSuite.java:660)
+	at org.netbeans.junit.NbModuleSuite$S$1.protect(NbModuleSuite.java:679)
+	at junit.framework.TestResult.runProtected(TestResult.java:128)
+	at org.netbeans.junit.NbModuleSuite$S.run(NbModuleSuite.java:677)
+	at org.junit.internal.runners.JUnit38ClassRunner.run(JUnit38ClassRunner.java:83)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:113)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+</failure>
+  </testcase>
+</testsuite>

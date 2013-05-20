@@ -1,6 +1,6 @@
 package org.jreserve.grscript.gui.script.functions;
 
-import java.util.Map;
+import java.util.List;
 import org.jreserve.grscript.FunctionProvider;
 import org.jreserve.grscript.jrlib.ClaimTriangleDelegate;
 import org.openide.util.NbBundle;
@@ -11,7 +11,7 @@ import org.openide.util.NbBundle;
  * @version 1.0
  */
 @FunctionProviderAdapter.Registration(
-    path = "Triangles",
+    path = "Triangle",
     position = 100
 )
 @NbBundle.Messages({
@@ -19,29 +19,7 @@ import org.openide.util.NbBundle;
 })
 public class ClaimTriangleAdapter extends AbstractFunctionProviderAdapter {
     
-    private final static String CONSTRUCTOR_SIMPLE = 
-        surroundHtml("Creates a claim triangle from the input.");
-    private final static String CONTRUCTOR_CLOSURE =
-        surroundHtml("Builder for triangle. Within the builder simply use the "+
-            "'corrigate' and 'exclude' without the triangle parameter.");
-    private final static String CORRIGATE_SIMPLE = 
-        surroundHtml("Corrigates the given triangle. First int is accident, second is development.");
-    private final static String CORRIGATE = 
-        "<html><head/><body>Corrigates the given triangle. The map can "+
-        "contain the following parameters:<ul>"+
-           "<li>&quot;a&quot; or &quot;accident&quot; for accident period,</li>"+
-           "<li>&quot;d&quot; or &quot;development&quot; for the development period,</li>"+
-           "<li>&quot;correction&quot; or &quot;value&quot; for the new value.</li>"+
-        "</ul></body></html>";
-    private final static String EXCLUDE_SIMPLE = 
-        surroundHtml("Excludes a cell from the given triangle. First "+
-        "int is accident, second is development.");    
-    private final static String EXCLUDE = 
-        "<html><head/><body>Excludes a cell from the given triangle. "+
-        "The map can contain the following parameters:<ul>"+
-        "<li>&quot;a&quot; or &quot;accident&quot; for accident period,</li>"+
-        "<li>&quot;d&quot; or &quot;development&quot; for the development period.</li>"+
-        "</ul></body></html>";
+    private final static String HELP_ID = "org.jreserve.grscript.gui.script.functions.claimTriangle";
 
     @Override
     protected FunctionProvider createFunctionProvider() {
@@ -49,13 +27,14 @@ public class ClaimTriangleAdapter extends AbstractFunctionProviderAdapter {
     }
 
     @Override
-    protected void initFunctions(Map<String, String> functions) {
-        functions.put("triangle(double[][])", CONSTRUCTOR_SIMPLE);
-        functions.put("triangle(double[][]) {}", CONTRUCTOR_CLOSURE);
-        functions.put("corrigate(ClaimTriangle, int, int, double)", CORRIGATE_SIMPLE);
-        functions.put("corrigate(ClaimTriangle, Map)", CORRIGATE);
-        functions.put("exclude(ClaimTriangle, int, int, double)", EXCLUDE_SIMPLE);
-        functions.put("exclude(ClaimTriangle, Map)", EXCLUDE);
+    protected void initFunctions(List<String> functions) {
+        functions.add("triangle(double[][])");
+        functions.add("triangle(double[][]) {}");
+        functions.add("cummulate(ClaimTriangle)");
+        functions.add("corrigate(ClaimTriangle, int, int, double)");
+        functions.add("corrigate(ClaimTriangle, Map)");
+        functions.add("exclude(ClaimTriangle, int, int, double)");
+        functions.add("exclude(ClaimTriangle, Map)");
     }
 
     @Override
@@ -64,6 +43,16 @@ public class ClaimTriangleAdapter extends AbstractFunctionProviderAdapter {
     }
 
     @Override
-    protected void initProperties(Map<String, String> properies) {
+    protected void initProperties(List<String> properies) {
+    }
+
+    @Override
+    public String getFunctionHelpId(String function) {
+        return HELP_ID;
+    }
+
+    @Override
+    public String getPropertyHelpId(String property) {
+        return HELP_ID;
     }
 }

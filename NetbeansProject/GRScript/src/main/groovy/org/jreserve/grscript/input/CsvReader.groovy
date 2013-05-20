@@ -134,21 +134,26 @@ class CsvReader {
     }
     
     double[][] read(File file) {
+        file.withReader {read(it)}
+    }
+    
+    double[][] read(Reader reader) {
+        if(!(reader instanceof BufferedReader))
+            reader = new BufferedReader(reader)
+        
         int row = 0
         def rows = []
-        file.withReader {reader -> 
-            String line
-            while(line = reader.readLine()) {
-                switch(row) {
-                    case 0:
-                        if(!hasColumnHeader)
-                            rows << readLine(line, row)
-                        break
-                    default:
+        
+        String line
+        while(line = reader.readLine()) {
+            switch(row++) {
+                case 0:
+                    if(!hasColumnHeader)
                         rows << readLine(line, row)
-                }
+                    break
+                default:
+                    rows << readLine(line, row)
             }
-            row++
         }
         return rowsToDouble(rows)
     }

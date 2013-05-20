@@ -101,6 +101,21 @@ class ClaimTriangleDelegateTest {
     }
     
     @Test
+    public void testCummulate() {
+        String script = 
+            "data = apcPaid()\n"    +
+            "t = triangle(data)\n"  +
+            "t = cummulate(t)"      ;
+        
+        Triangle t = executor.runScript script
+        assertEquals(8, t.getAccidentCount())
+        assertEquals(8, t.getDevelopmentCount())
+        for(a in 0..<8)
+            for(d in 0..<(8-a))
+                assertFalse(Double.isNaN(t.getValue(a, d)))
+    }
+    
+    @Test
     public void testBuilder() {
         String script = 
         "t = triangle(data) {\n"                            +

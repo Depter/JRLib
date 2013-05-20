@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.branding">
-    <module_version install_time="1367393917430" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1369053769319" last="true" origin="installer" specification_version="1.0">
         <file crc="68503883" name="config/Modules/org-jreserve-grscript-gui-branding.xml"/>
-        <file crc="1271962098" name="core/locale/core_grscript_gui.jar"/>
-        <file crc="4037741668" name="modules/locale/org-netbeans-core-windows_grscript_gui.jar"/>
-        <file crc="1491460278" name="modules/locale/org-netbeans-core_grscript_gui.jar"/>
-        <file crc="232460341" name="modules/org-jreserve-grscript-gui-branding.jar"/>
+        <file crc="76691175" name="core/locale/core_grscript_gui.jar"/>
+        <file crc="2578395204" name="modules/locale/org-netbeans-core-windows_grscript_gui.jar"/>
+        <file crc="198849484" name="modules/locale/org-netbeans-core_grscript_gui.jar"/>
+        <file crc="3916228524" name="modules/org-jreserve-grscript-gui-branding.jar"/>
     </module_version>
 </module>

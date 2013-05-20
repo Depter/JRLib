@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Link-Ratios</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Link-Ratios</h2>
+        <p>
+            GRScripts provides several methods to create link-ratios based on
+            FactorTriangles.
+        </p>
+        <ul>
+            <li>
+                <b>linkRatio(double[][]):</b> creates a LinkRatio from the
+                given triangle, using the weighted-average method for
+                all development periopds.
+            </li>
+            <li>
+                <b>linkRatio(ClaimTriangle):</b> creates a LinkRatio from the
+                given triangle, using the weighted-average method for
+                all development periopds.
+            </li>
+            <li>
+                <b>linkRatio(FactorTriangle):</b> creates a LinkRatio from the
+                given factors, using the weighted-average method for
+                all development periopds.
+            </li>
+        </ul>
+        
+        <h2>Builder Syntax</h2>
+        <p>
+            The builder syntax allows the use of different methods for
+            different development periods.
+        </p>
+        <pre>
+data = cummulate(apcPaid())
+lr = linkRatios(data) {
+    average(0)          //-> use simple average for the first column
+    mack(1)             //-> use mack (linear-regression) method
+    max(2)              //-> use the maximum of the individual factors
+    min(3)              //-> use the minimum of the individual factors
+    weightedAverage(4)  //-> use the weighted average
+    fixed(5, 1.05)      //-> use a constant value for the 6th column
+}
+
+//In addition multiple indices can be specified
+lr = linkRatios(data) {
+    average(0..2)          //-> use simple average for the first 3 columns
+    mack(3, 5)             //-> use mack (linear-regression) method for column 4 and 6
+    fixed(5:1.05, 7:1.01)  //-> for fixed, the map-syntax can be used
+}
+        </pre>
+    </body>
+</html>

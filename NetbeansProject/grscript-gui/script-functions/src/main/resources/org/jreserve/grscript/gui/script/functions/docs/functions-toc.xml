@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+    <tocitem text="GRScript">
+        <tocitem text="Functions">
+            <tocitem text="Printing Data" target="org.jreserve.grscript.gui.script.functions.printData"/>
+            <tocitem text="Test Data" target="org.jreserve.grscript.gui.script.functions.testData"/>
+            <tocitem text="Triangle Utilities" target="org.jreserve.grscript.gui.script.functions.triangleUtil"/>
+            <tocitem text="Claim Triangle" target="org.jreserve.grscript.gui.script.functions.claimTriangle"/>
+            <tocitem text="Factor Triangle" target="org.jreserve.grscript.gui.script.functions.factorTriangle"/>
+            <tocitem text="Link Ratio" target="org.jreserve.grscript.gui.script.functions.linkRatio"/>
+        </tocitem>
+    </tocitem>
+</toc>

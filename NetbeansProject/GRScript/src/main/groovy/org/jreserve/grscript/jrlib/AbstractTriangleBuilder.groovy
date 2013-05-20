@@ -13,7 +13,7 @@ import org.jreserve.jrlib.triangle.Triangle
  */
 class AbstractTriangleBuilder<T extends Triangle> {
     
-    private T triangle
+    protected T triangle
     private AbstractTriangleDelegate<T> delegate
 
     AbstractTriangleBuilder(T triangle, AbstractTriangleDelegate<T> delegate) {

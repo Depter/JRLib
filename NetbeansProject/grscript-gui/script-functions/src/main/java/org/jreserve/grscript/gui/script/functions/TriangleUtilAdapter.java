@@ -1,5 +1,6 @@
 package org.jreserve.grscript.gui.script.functions;
 
+import java.util.List;
 import java.util.Map;
 import org.jreserve.grscript.FunctionProvider;
 import org.jreserve.grscript.jrlib.TriangleUtilDelegate;
@@ -19,27 +20,7 @@ import org.openide.util.NbBundle;
 })
 public class TriangleUtilAdapter extends AbstractFunctionProviderAdapter {
 
-    private final static String CUMMULATE_D =
-        surroundHtml("Cummulates the given accident period.");
-    private final static String CUMMULATE_DD =
-        surroundHtml("Cummulates the given triangle.");
-    private final static String DECUMMULATE_D =
-        surroundHtml("Decummulates the given accident period.");
-    private final static String DECUMMULATE_DD =
-        surroundHtml("Decummulates the given triangle.");
-    private final static String COPY_D =
-        surroundHtml("Copies the given vector.");
-    private final static String COPY_DD =
-        surroundHtml("Copies the given triangle.");
-    
-    private final static String PRINT_T =
-        surroundHtml("Prints the given triangle.");
-    private final static String PRINT_TS =
-        surroundHtml("Prints the given triangle with the given title.");
-    private final static String PRINT_V =
-        surroundHtml("Prints the given vector.");
-    private final static String PRINT_VS =
-        surroundHtml("Prints the given vector with the given title.");
+    private final static String HELP_ID = "org.jreserve.grscript.gui.script.functions.triangleUtil";
     
     @Override
     protected FunctionProvider createFunctionProvider() {
@@ -47,18 +28,18 @@ public class TriangleUtilAdapter extends AbstractFunctionProviderAdapter {
     }
 
     @Override
-    protected void initFunctions(Map<String, String> functions) {
-        functions.put("cummulate(double[][])",       CUMMULATE_DD);
-        functions.put("cummulate(double[])",         CUMMULATE_D);
-        functions.put("decummulate(double[][])",     DECUMMULATE_DD);
-        functions.put("decummulate(double[])",       DECUMMULATE_D);
-        functions.put("copy(double[][])",            COPY_DD);
-        functions.put("copy(double[])",              COPY_DD);
+    protected void initFunctions(List<String> functions) {
+        functions.add("cummulate(double[][])");
+        functions.add("cummulate(double[])");
+        functions.add("decummulate(double[][])");
+        functions.add("decummulate(double[])");
+        functions.add("copy(double[][])");
+        functions.add("copy(double[])");
 
-        functions.put("printData(Triangle)",         PRINT_T);
-        functions.put("printData(String, Triangle)", PRINT_TS);
-        functions.put("printData(Vector)",           PRINT_V);
-        functions.put("printData(String, Vector)",   PRINT_VS);
+        functions.add("printData(Triangle)");
+        functions.add("printData(String, Triangle)");
+        functions.add("printData(Vector)");
+        functions.add("printData(String, Vector)");
     }
 
     @Override
@@ -67,6 +48,16 @@ public class TriangleUtilAdapter extends AbstractFunctionProviderAdapter {
     }
 
     @Override
-    protected void initProperties(Map<String, String> properties) {
+    protected void initProperties(List<String> properties) {
+    }
+
+    @Override
+    public String getFunctionHelpId(String function) {
+        return HELP_ID;
+    }
+
+    @Override
+    public String getPropertyHelpId(String property) {
+        return HELP_ID;
     }
 }

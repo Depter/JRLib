@@ -49,13 +49,18 @@ class TriangleSmoothingDelegate {
                 type = HARMONIC_MA
                 break
             case "exponentialsmoothing":
+            case "exponential-smoothing":
+            case "exponential smoothing":
             case "exponential":
             case "es":
             case "e":
                 type = EXPONENTIAL
                 break
             case "doubleexponentialsmoothing":
-            case "doubleexponential":
+            case "double exponential smoothing":
+            case "double-exponential-smoothing":
+            case "double exponential":
+            case "double-exponential":
             case "des":
             case "de":
                 type = DOUBLE_EXPONENTIAL

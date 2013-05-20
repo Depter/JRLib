@@ -15,17 +15,17 @@ public interface FunctionProviderAdapter {
     public FunctionProvider getFunctionProvider();
 
     public List<String> getFunctionSignitures();
-
-    public String getFunctionDescription(String signiture);
-
+    
+    public String getFunctionHelpId(String function);
+    
     public List<String> getPropertyNames();
     
-    public String getPropertyDescription(String name);
+    public String getPropertyHelpId(String property);
     
     public static @interface Registration {
 
         public String path();
-
+        
         public int position() default Integer.MAX_VALUE;
     }
 

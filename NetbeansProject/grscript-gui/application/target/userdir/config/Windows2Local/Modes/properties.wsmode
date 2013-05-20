@@ -5,12 +5,13 @@
   <kind type="view" />
   <state type="joined"  />
   <constraints>
-    <path orientation="horizontal" number="60" weight="0.7"/>
+    <path orientation="horizontal" number="60" weight="0.7970173985086992"/>
     <path orientation="vertical" number="40" weight="0.7"/>
-    <path orientation="horizontal" number="80" weight="0.3"/>
+    <path orientation="horizontal" number="80" weight="0.3822937625754527"/>
     <path orientation="vertical" number="80" weight="0.5"/>
   </constraints>
-  <bounds x="1200" y="487" width="240" height="278" />
+  <bounds x="1024" y="413" width="204" height="236" />
   <frame state="0"/>
+    <active-tc  id="HelpTopComponent" />
     <empty-behavior permanent="true"/>
 </mode>

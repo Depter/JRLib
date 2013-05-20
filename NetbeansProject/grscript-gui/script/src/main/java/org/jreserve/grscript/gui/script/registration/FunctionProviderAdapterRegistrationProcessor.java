@@ -59,8 +59,7 @@ public class FunctionProviderAdapterRegistrationProcessor extends LayerGeneratin
     private void processElement(TypeElement element) throws LayerGenerationException {
         checkImplementsInterface(element);
         checkConstructor(element);
-        int priority = getPriority(element);
-        addClass(element, priority);
+        addClass(element);
     }
     
     private void checkImplementsInterface(TypeElement element) throws LayerGenerationException {
@@ -107,14 +106,10 @@ public class FunctionProviderAdapterRegistrationProcessor extends LayerGeneratin
         return new LayerGenerationException(msg);
     }
     
-    private int getPriority(TypeElement element) throws LayerGenerationException {
-        return element.getAnnotation(ANNOTATION).position();
-    }
-    
-    private void addClass(TypeElement element, int priority) {
+    private void addClass(TypeElement element) throws LayerGenerationException {
         String name = getFileLocation(element);
         LayerBuilder.File file = layer(element).file(name);
-        file.intvalue(POSITION, priority);
+        file.intvalue(POSITION, getPriority(element));
         file.write();
     }
     
@@ -131,5 +126,9 @@ public class FunctionProviderAdapterRegistrationProcessor extends LayerGeneratin
     
     private String getFileName(TypeElement element) {
         return getClassName(element).replaceAll("\\.", "-")+".instance";
+    }
+    
+    private int getPriority(TypeElement element) throws LayerGenerationException {
+        return element.getAnnotation(ANNOTATION).position();
     }
 }

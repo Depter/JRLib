@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Test Data</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Test Data</h2>
+        <p>
+            There are some datasets readily avaiable to try out some other functions.
+        </p>
+        <ul>
+            <li>
+                <b>apcPaid():</b> paid incremental triangle from the APC dataset.
+            </li>
+            <li>
+                <b>apcPaid():</b> incurred incremental triangle from the APC dataset.
+            </li>
+            <li>
+                <b>apcNoC():</b> incremental claim numbers from the APC data set.
+            </li>
+            <li>
+                <b>apcExposure():</b> burning costs from the APC dataset.
+            </li>
+            <li>
+                <b>mclPaid():</b> paid incremental triangle from 
+                <i>&quot;Bootstrap Estimation of the Predictive Distributions of 
+                   Reserves Using Paid and Incurred Claims&quot;</i>, by 
+                   <i>Huijuan Liu</i> and <i>Richard Verrall</i>.
+            </li>
+            <li>
+                <b>mclIncurred():</b> incurred incremental triangle from 
+                <i>&quot;Bootstrap Estimation of the Predictive Distributions of 
+                   Reserves Using Paid and Incurred Claims&quot;</i>, by 
+                   <i>Huijuan Liu</i> and <i>Richard Verrall</i>.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+data = mclPaid()
+printData "MCL-Paid", data
+
+exposure = apcExposure()
+printData "Exposure", exposure
+        </pre>
+    </body>
+</html>

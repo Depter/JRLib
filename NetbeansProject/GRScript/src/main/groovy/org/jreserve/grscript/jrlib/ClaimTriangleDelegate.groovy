@@ -14,6 +14,7 @@ class ClaimTriangleDelegate extends AbstractTriangleDelegate<ClaimTriangle> {
     void initFunctions(Script script, ExpandoMetaClass emc) {
         super.initFunctions(script, emc)
         emc.triangle    << this.&triangle
+        emc.cummulate   << this.&cummulate
         emc.corrigate   << this.&corrigate  << {ClaimTriangle t, Map map -> corrigate(t, map)}
         emc.exclude     << this.&exclude    << {ClaimTriangle t, Map map -> exclude(t, map)}
         emc.smooth      << this.&smooth     << {ClaimTriangle t, Closure cl -> smooth(t, cl)}
@@ -25,7 +26,7 @@ class ClaimTriangleDelegate extends AbstractTriangleDelegate<ClaimTriangle> {
     
     ClaimTriangle triangle(double[][] data, Closure cl) {
         ClaimTriangle triangle = new InputClaimTriangle(data);
-        AbstractTriangleBuilder<ClaimTriangle> builder = new AbstractTriangleBuilder<ClaimTriangle>(triangle, this)
+        ClaimTriangleBuilder builder = new ClaimTriangleBuilder(triangle, this)
         cl.delegate = builder
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
@@ -45,6 +46,21 @@ class ClaimTriangleDelegate extends AbstractTriangleDelegate<ClaimTriangle> {
     @Override
     ClaimTriangle smooth(ClaimTriangle triangle, TriangleSmoothing smoothing) {
         return new SmoothedClaimTriangle(triangle, smoothing)
+    }
+    
+    ClaimTriangle cummulate(ClaimTriangle triangle) {
+        return new CummulatedClaimTriangle(triangle)
+    }
+    
+    private class ClaimTriangleBuilder extends AbstractTriangleBuilder<ClaimTriangle> {
+        
+        ClaimTriangleBuilder(ClaimTriangle triangle, ClaimTriangleDelegate delegate) {
+            super(triangle, delegate)
+        }
+        
+        void cummulate() {
+            triangle = new CummulatedClaimTriangle(triangle)
+        }
     }
 }
 
