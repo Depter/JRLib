@@ -9,8 +9,8 @@ import org.jreserve.jrlib.vector.Vector;
  * 
  * The class will extract the values represented by the input cells. It is
  * not expected that the class is initialized with a sorted array of cells, 
- * but the {@link #smooth(double[]) smooth()} method will be called with 
- * sorted values (sorted according to the input cells).
+ * but the {@link VectorSmoothingMethod#smooth(double[]) VectorSmoothingMethod.smooth()} 
+ * method will be called with sorted values (sorted according to the input cells).
  * 
  * @author Peter Decsi
  * @version 1.0

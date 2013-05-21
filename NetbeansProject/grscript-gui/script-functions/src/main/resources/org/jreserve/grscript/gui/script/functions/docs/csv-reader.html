@@ -1,0 +1,116 @@
+<html>
+    <head>
+        <title>Import Data</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Import Data</h2>
+        <p>
+            GRscript provides some convenience methods to read and import
+            csv files as matrices.
+        </p>
+        
+        <ul>
+            <li>
+                <b>readCsv(String):</b> reads the file, denoted by the 
+                supplied path, using the default settings (see 
+                <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(File):</b> reads the file, using the default 
+                settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(Reader):</b> reads the data from the given
+                reader, using the default settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(String, Map):</b> reads the file, denoted by the 
+                supplied path, using the give settings (see 
+                <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(File, Map):</b> reads the file, using the give 
+                settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(Reader, Map):</b> reads the data from the given
+                reader, using the give settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(String, Closure):</b> reads the file, denoted by the 
+                supplied path, using the give settings (see 
+                <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(File, Closure):</b> reads the file, using the give 
+                settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>readCsv(Reader, Closure):</b> reads the data from the given
+                reader, using the give settings (see <i>Default Settings</i>).
+            </li>
+        </ul>
+        
+        <h2>Default Settings</h2>
+        <ul>
+            <li>
+                <b>Decimal Separator:</b> the property denotes the
+                character used as decimal separator. The default value
+                is choosen according to the System Locale. Use
+                <i>[decimal | decimals | decimalseparator]</i> in the
+                map settings, or <i>decimalSeparator()</i> in the builder
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Column Separator:</b> the property denotes the
+                character used as column separator. The default value
+                is the tab character (&quot;\t&quot;). Use
+                <i>[column | columns | columnseparator]</i> in the
+                map settings, or <i>columnSeparator()</i> in the builder
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Row Headers:</b> the property denotes whether the 
+                input file contains row titles. The default value
+                is <i>false</i>. Use
+                <i>[rowheader | rowheaders | hasrowheader | hasrowheaders]</i> 
+                in the map settings, or <i>rowHeader()</i> in the builder
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Column Headers:</b> the property denotes whether the 
+                input file contains column titles. The default value
+                is <i>false</i>. Use
+                <i>[columnheader | columnheaders | hascolumnheader | hascolumnheaders]</i> 
+                in the map settings, or <i>columnHeader()</i> in the builder
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Quotes:</b> the property denotes whether the cells in the
+                input files are surrounded with quotes. The default value
+                is <i>false</i>. Use
+                <i>[quote | quotes | hasquote | hasquotes]</i> 
+                in the map settings, or <i>quotes()</i> in the builder
+                syntax to change this property.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+String path = "D:/Temp/test.csv"
+data = readCsv(path)
+
+data = readCsv(path [decimal:'.', column:';'])
+
+data = readCsv(path) {
+    decimalSeparator '.'
+    columnSeparator ';'
+    rowHeader true
+    columnHeader true
+    quotes false
+}
+        </pre>
+    </body>
+</html>

@@ -1,0 +1,97 @@
+<html>
+    <head>
+        <title>Link-Ratio Scales</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Link-Ratio Scales</h2>
+        <p>
+            This page describes the possible ways to calculate the scale 
+            parameters (&sigma;) for the development periods, based on Thomas 
+            Mack's article <i>&quot;Measuring the Variability of Chian Ladder 
+            Reserve Estimates&quot;</i>.
+        </p>
+        
+        <ul>
+            <li>
+                <b>scale(LinkRatio lrs):</b> Calculates the scales for the
+                given link-ratios, using the Min-Max estimation where needed
+                (see <i>Estimator Methods</i>).
+            </li>
+            <li>
+                <b>scale(LinkRatio lrs, Stirng estimator):</b> Calculates the 
+                scales for the given link-ratios, using the the given estimation
+                type where needed (see <i>Estimator Methods</i>).
+            </li>
+        </ul>
+        
+        <h2>Estimator Methods</h2>
+        <p>
+            There are several methods provided, to calculate the scale parameter,
+            for development periods, where it can not be estimated from the
+            input data (basically for the last development period of the 
+            factor triangle and for the tail-factors).
+        </p>
+        
+        <h3>Min-Max</h3>
+        Uses the min-max formula, based on the previous two values (if needed
+        the recursively estimated). To use the min-max method use <i>[
+        MinMax | Min Max | Min-Max]</i> as the type parameter.
+        <pre>
+    &sigma;(d)^2 = min(C; min(A; B))
+
+    where:
+    A = &sigma;(d-1)^2,
+    B = &sigma;(d-2)^2,
+        A^2
+    C = ---
+         B
+        </pre>
+        
+        <h3>Log-Linear regression</h3>
+        Uses a log-linear regression to estimate the values. To use log-linear
+        regression use <i>[extrapolation | LogLin | Log Lin | Log-Lin | 
+        LogLinear | Log Linear | Log-Linear]</i> as the type parameter.
+        <pre>
+    &sigma;(d) ~ exp(a + b * t)
+    where: t = d + 1
+        </pre>
+        
+        <h2>Builder Syntax</h2>
+        <p>
+            It is possible to use different estimator methods for different
+            development periods. To achive this the builder syntax must be 
+            used. It is important, that one curve type can only be used once.
+        </p>
+        
+        <p>
+            To use min-max <b>minMax{int}</b> or <b>minMax{Colelction}</b>, 
+            for log-linear regression use <b>logLinear{int}</b> or
+            <b>logLinear{Collection}</b>. It is also possible to assign
+            constant values via the <b>fixed(int, double)</b> or
+            <b>fixed(Map)</b> methods.
+        </p>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data
+paid = triangle(cummulate(apcPaid()))
+//Simple link-ratios, length=7
+lrs = linkRatio(paid)
+
+//Simply use Min-Max formula if needed
+scale = scale(lrs)
+
+//Use Log-Linear regression, if needed
+scale = scale(lrs, "Log-Linear")
+
+//Definitly use Log-Linear regression for the 4th and 5th development period,
+//and fixed values of 0.15 and 0.1 fr the 6th and 7th period.
+scale = scale(lrs) {
+    logLinear(3..4)
+    fixed(5:0.15, 6:0.1)
+}
+        </pre>
+    </body>
+</html>

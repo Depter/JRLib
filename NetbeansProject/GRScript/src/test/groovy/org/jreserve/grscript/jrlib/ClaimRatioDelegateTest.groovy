@@ -95,8 +95,8 @@ class ClaimRatioDelegateTest {
     @Test
     public void testConstructor_LinkRatios() {
         String script = 
-        "def lrPaid = smooth(linkRatio(paid), 10)\n"+
-        "def lrIncurred = smooth(linkRatio(incurred), 10)\n"+
+        "lrPaid = smooth(linkRatio(paid), 10)\n"+
+        "lrIncurred = smooth(linkRatio(incurred), 10)\n"+
         "cr = ratios(lrPaid, lrIncurred)";
         
         ClaimRatio cr = runScript(script)
@@ -108,8 +108,8 @@ class ClaimRatioDelegateTest {
     @Test
     public void testBuilder_RatioTriangle() {
         String script = 
-        "def lrPaid = smooth(linkRatio(paid), 10)\n"+
-        "def lrIncurred = smooth(linkRatio(incurred), 10)\n"+
+        "lrPaid = smooth(linkRatio(paid), 10)\n"+
+        "lrIncurred = smooth(linkRatio(incurred), 10)\n"+
         "cr = ratios(ratios, 10) {\n"+
         "   lrExtrapolation(lrPaid, lrIncurred, 7, 8)\n"+
         "   lrExtrapolation(lrPaid, lrIncurred, 2..4)\n"+
@@ -126,8 +126,8 @@ class ClaimRatioDelegateTest {
     @Test
     public void testBuilder_LinkRatios_int() {
         String script = 
-        "def lrPaid = smooth(linkRatio(paid), 10)\n"+
-        "def lrIncurred = smooth(linkRatio(incurred), 10)\n"+
+        "lrPaid = smooth(linkRatio(paid), 10)\n"+
+        "lrIncurred = smooth(linkRatio(incurred), 10)\n"+
         "cr = ratios(lrPaid, lrIncurred, 9) {\n"+
         "   lrExtrapolation(lrPaid, lrIncurred, 7, 8)\n"+
         "   lrExtrapolation(lrPaid, lrIncurred, 2..4)\n"+
@@ -144,8 +144,8 @@ class ClaimRatioDelegateTest {
     @Test
     public void testBuilder_LinkRatios() {
         String script = 
-        "def lrPaid = smooth(linkRatio(paid), 10)\n"+
-        "def lrIncurred = smooth(linkRatio(incurred), 10)\n"+
+        "lrPaid = smooth(linkRatio(paid), 10)\n"+
+        "lrIncurred = smooth(linkRatio(incurred), 10)\n"+
         "cr = ratios(lrPaid, lrIncurred) {\n"+
         "   lrExtrapolation(lrPaid, lrIncurred, 7, 8)\n"+
         "   lrExtrapolation(lrPaid, lrIncurred, 2..4)\n"+

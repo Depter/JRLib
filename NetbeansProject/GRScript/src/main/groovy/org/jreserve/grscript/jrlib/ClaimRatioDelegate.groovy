@@ -28,18 +28,12 @@ class ClaimRatioDelegate extends AbstractDelegate {
         emc.ratios << this.&ratios
     }
     
-    ClaimRatio ratios(RatioTriangle ratios) {
-        return new SimpleClaimRatio(ratios)
-    }
-    
     ClaimRatio ratios(ClaimTriangle numerator, ClaimTriangle denominator) {
         return ratios(new DefaultRatioTriangle(numerator, denominator))
     }
     
-    ClaimRatio ratios(Map map) {
-        ClaimTriangle numerator = mapUtil.getValue(map, "numerator", "num", "n")
-        ClaimTriangle denominator = mapUtil.getValue(map, "denominator", "denom", "d")
-        return ratios(numerator, denominator)
+    ClaimRatio ratios(RatioTriangle ratios) {
+        return new SimpleClaimRatio(ratios)
     }
     
     ClaimRatio ratios(LinkRatio numerator, LinkRatio denominator) {
@@ -47,6 +41,12 @@ class ClaimRatioDelegate extends AbstractDelegate {
         ClaimTriangle d = denominator.getSourceTriangle()
         RatioTriangle ratios = new DefaultRatioTriangle(n, d)
         return this.ratios(ratios, numerator, denominator)
+    }
+    
+    ClaimRatio ratios(Map map) {
+        def numerator = mapUtil.getValue(map, "numerator", "num", "n")
+        def denominator = mapUtil.getValue(map, "denominator", "denom", "d")
+        return ratios(numerator, denominator)
     }
     
     ClaimRatio ratios(RatioTriangle ratios, LinkRatio numerator, LinkRatio denominator) {
@@ -78,7 +78,7 @@ class ClaimRatioDelegate extends AbstractDelegate {
     }
     
     ClaimRatio ratios(RatioTriangle ratios, int length, Closure cl) {
-        Builder builder = new Builder(ratios, length)
+        Builder builder = new Builder(this, ratios, length)
         cl.delegate = builder
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
@@ -88,10 +88,18 @@ class ClaimRatioDelegate extends AbstractDelegate {
     class Builder extends AbstractMethodSelectionBuilder<ClaimRatioMethod> {
         
         DefaultClaimRatioSelection crs;
+        ClaimRatioDelegate ratioDelegate;
         
-        private Builder(RatioTriangle ratios, int length) {
+        private Builder(ClaimRatioDelegate ratioDelegate, RatioTriangle ratios, int length) {
+            this.ratioDelegate = ratioDelegate
             crs = new DefaultClaimRatioSelection(ratios)
             crs.setDevelopmentCount(length)
+        }
+        
+        def getProperty(String name) {
+            return getProperties().containsKey(name)?
+                super.getProperty(name) :
+                this.ratioDelegate.getProperty(name)
         }
         
         void lrExtrapolation(LinkRatio numerator, LinkRatio denominator, Collection indices) {

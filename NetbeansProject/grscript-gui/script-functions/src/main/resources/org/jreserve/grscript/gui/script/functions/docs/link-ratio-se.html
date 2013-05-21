@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <title>Link-Ratio Standard Errors</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Link-Ratio Stadnard Errors</h2>
+        <p>
+            This page describes the possible ways to calculate the standard 
+            errors of the link-ratios, based on Thomas Mack's article <i>&quot;
+            Measuring the Variability of Chian Ladder Reserve Estimates&quot;
+            </i>.
+        </p>
+        
+        <ul>
+            <li>
+                <b>standardError(LinkRatioScale scale):</b> Calculates the 
+                standard errors from the given scale parameters, using the 
+                Log-Linear estimation where needed (see <i>Estimator Methods
+                </i>).
+            </li>
+            <li>
+                <b>standardError(LinkRatioScale scale, Stirng estimator):</b>
+                Calculates the standard errors from the given scale parameters, 
+                using the the given estimation type where needed (see <i>
+                Estimator Methods</i>).
+            </li>
+        </ul>
+        
+        <h2>Estimator Methods</h2>
+        <p>
+            There are several methods provided, to estimate the standard errors
+            for development periods, where it can not be estimated from the
+            input data (basically for the last development period of the 
+            factor triangle and for the tail-factors).
+        </p>
+        
+        <h3>Log-Linear</h3>
+        Estimates the standard error, based on a log-linear regression and
+        the link-ratio in the previous development period (if needed
+        the recursively estimated). To use the log-linear method use <i>[
+        LogLin | Log Lin | Log-Lin | LogLinear | Log Linear | Log-Linear]</i> 
+        as the type parameter.
+        <pre>
+    &sigma;(d) ~ lr(d-1) * exp(a + b * t)
+   where:
+   t = d + 1
+        </pre>
+        
+        <h3>Fixed-Ratio</h3>
+        Estimates the standard error, by assuming that the ratio of
+        the link-ratio and standard errors is fixed for evry development
+        period. 
+        To use the log-linear method use <i>[FixedRate | Fixed Rate | Fixed-Rate
+        ]</i> as the type parameter.
+        
+        <h3>Builder Syntax</h3>
+        <p>
+            It is possible to use different estimator methods for different
+            development periods. To achive this the builder syntax must be 
+            used. It is important, that one estimate type can only be used once.
+        </p>
+        
+        <p>
+            To use log-linear <b>logLinear{int}</b> or 
+            <b>logLinear{Colelction}</b>, for fixed-rate method use 
+            <b>fixedRate{int}</b> or <b>fixedRate{Collection}</b>. It is also 
+            possible to assign constant values via the <b>fixed(int, double)
+            </b> or <b>fixed(Map)</b> methods.
+        </p>
+
+        <h2>Examples</h2>
+        <pre>
+paid = triangle(cummulate(apcPaid()))   //Load data
+lrs = linkRatio(paid)                   //link-ratios
+scale = scale(lrs)                      //Calculate the scale parameters
+
+//Uee Log-Linear method if can not estimate form the data.
+se = standardError(scale)
+//Uee Fixed-Rate method if can not estimate form the data.
+se = standardError(scale, "Fixed-Rate")
+
+//Use Fixed-Rate method for the first 3 development period, 
+//then use log-linear regression for the 4th period, and
+//use constant values of 0.1 and 0.05 for the 6th and 7th period.
+se = standardError(scale) {
+    fixedRate(0..2)
+    logLinear(3)
+    fixed(5:0.1, 6:0.05)
+}
+
+        </pre>
+    </body>
+</html>

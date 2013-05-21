@@ -62,7 +62,7 @@ class MapUtil {
         return str
     }
 	
-    int getDouble(Map map, String... names) {
+    double getDouble(Map map, String... names) {
         def value = getValue(map, names)
         switch(value) {
             case Number: return ((Number)value).doubleValue()

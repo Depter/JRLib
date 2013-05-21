@@ -6,11 +6,11 @@
   <kind type="view" />
   <state type="joined"  />
   <constraints>
-    <path orientation="horizontal" number="20" weight="0.1996685998342999"/>
+    <path orientation="horizontal" number="20" weight="0.2015748031496063"/>
     <path orientation="vertical" number="20" weight="0.5"/>
   </constraints>
   <bounds x="136" y="162" width="437" height="369" />
   <frame state="0"/>
-    <active-tc  id="FunctionExplorerTopComponent" />
+    <active-tc  id="ScriptExplorerTopComponent" />
     <empty-behavior permanent="true"/>
 </mode>

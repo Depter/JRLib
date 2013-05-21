@@ -10,12 +10,12 @@ import org.jreserve.jrlib.triangle.factor.FactorTriangle;
  * LRResidualTriangle are triangles, containing scaled residuals of
  * link ratios.
  * 
- * @see org.jreserve.jrlib.scale.ScaleResidualTriangle
+ * @see org.jreserve.jrlib.scale.residuals.ScaleResidualTriangle
  * @author Peter Decsi
  * @version 1.0
  */
 public interface LRResidualTriangle extends Triangle {
-    
+
     /**
      * Returns the {@link LinkRatioScale LinkRatioScale} used to
      * scale the residuals.

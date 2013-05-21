@@ -18,16 +18,24 @@ class CsvReaderDelegate implements FunctionProvider {
         return new CsvReader().read(path)
     }
     
-    double[][] readCsv(String path, Map settings) {
-        return new CsvReader(settings).read(path)
-    }
-    
     double[][] readCsv(File file) {
         return new CsvReader().read(file)
     }
     
+    double[][] readCsv(Reader reader) {
+        return new CsvReader().read(reader)
+    }
+    
+    double[][] readCsv(String path, Map settings) {
+        return new CsvReader(settings).read(path)
+    }
+    
     double[][] readCsv(File file, Map settings) {
         return new CsvReader(settings).read(file)
+    }
+    
+    double[][] readCsv(Reader reader, Map settings) {
+        return new CsvReader(settings).read(reader)
     }
     
     double[][] readCsv(String path, Closure cl) {
@@ -44,6 +52,10 @@ class CsvReaderDelegate implements FunctionProvider {
     
     double[][] readCsv(File file, Closure cl) {
         return createReader(cl).read(file)
+    }
+    
+    double[][] readCsv(Reader reader, Closure cl) {
+        return createReader(cl).read(reader)
     }
 }
 

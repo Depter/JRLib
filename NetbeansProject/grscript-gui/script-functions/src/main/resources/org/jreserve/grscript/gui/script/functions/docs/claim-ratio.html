@@ -1,0 +1,102 @@
+<html>
+    <head>
+        <title>Claim-Ratios</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Claim-Ratios</h2>
+        <p>
+            GRScripts provides several methods to create claim-ratios based on
+            RatioTriangles.
+        </p>
+        
+        <ul>
+            <li>
+                <b>ratios(ClaimTriangle numerator, ClaimTriangle denominator):</b>
+                creates a ClaimRatio from the given triangles, using the 
+                weighted-average method for all development periopds. Calling
+                this method is identical to 
+                <i>ratios(ratioTriangle(numerator, denominator))</i>.
+            </li>
+            <li>
+                <b>ratios(RatioTriangle ratios):</b> creates a ClaimRatio from 
+                the given triangle, using the weighted-average method for all 
+                development periopds.
+            </li>
+            <li>
+                <b>ratios(LinkRatio numerator, LinkRatio denominator):</b>
+                creates a ClaimRatio from the given link-ratios, using the 
+                weighted-average method for all development periopds. The
+                length of the claim-ratios will be identical to the
+                link-ratios. If needed the claim-ratios will be extrapolated
+                useing the link-ratios.
+            </li>
+            <li>
+                <b>ratios(Map):</b> creates a ClaimRatio from the
+                parameters form the map. The map must contain a parameter
+                for the numerator (LinkRatio or ClaimRatio) <i>[
+                numerator | num | n]</i> and for the denominator 
+                (LinkRatio or ClaimRatio) <i>[denominator | denom | d]</i>. 
+                Based on the type of the input parameters, the appropriate
+                ratio method will be called.
+            </li>
+            <li>
+                <b>ratios(RatioTriangle ratios, int length, LinkRatio numerator, LinkRatio denominator):</b>
+                creates a ClaimRatio from the given ratio triangle, with the 
+                given length, using the weighted-average method.  If needed the 
+                claim-ratios will be extrapolated useing the  link-ratios.
+            </li>
+        </ul>
+        
+        <h2>Builder Syntax</h2>
+        <p>
+            The builder syntax allows the use of different methods for
+            different development periods.
+        </p>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data, length=8
+paid = triangle(cummulate(apcPaid()))
+incurred = triangle(cummulate(apcIncurred()))
+
+//Ratio triangle, length=8
+rt = ratioTriangle(paid, incurred)
+
+//Create Link-Ratios, wiht Exponential tail, length=10
+paidLr = smooth(linkRatio(paid), 10)
+incurredLr = smooth(linkRatio(incurred), 10)
+
+//Simple Claim-Ratios, with length=8
+ratios = ratios(paid, incurred)
+ratios = ratios(numerator:paid, denominator:incurred)
+
+//Simple Claim-Ratios, with length=8
+ratios = ratios(rt)
+
+//Claim-Ratios, length=10, tail calculated from link-ratios
+ratios = ratios(paidLr, incurredLr)
+ratios = ratios(n:paidLr, d:incurredLr)
+
+//Claim-Ratios, length=9, tail calculated from link-ratios
+ratios = ratios(rt, 9, paidLr, incurredLr)
+
+//Builders
+//Claim-Ratios, length=10, 8th and 9th calculated using
+//the link ratios, 10th is fixed to 1
+ratios = ratios(paidLr, incurredLr) {
+    lrExtrapolation(paidLr, incurredLr, 7..8)
+    fixed(9:1)
+}
+
+//Claim-Ratios, length=10, 8th and 9th calculated using
+//the link ratios, 10th is fixed to 1
+ratios = ratios(rt, 10) {
+    lrExtrapolation(paidLr, incurredLr, 7..8)
+    fixed(9:1)
+}
+
+        </pre>
+    </body>
+</html>

@@ -17,7 +17,7 @@ abstract class AbstractTriangleDelegate<T extends Triangle> extends AbstractDele
     T corrigate(T triangle, Map map) {
         int accident = mapUtil.getAccident(map) 
         int development = mapUtil.getDevelopment(map) 
-        int correction = mapUtil.getDouble(map, "correction", "value") 
+        double correction = mapUtil.getDouble(map, "correction", "value") 
         return corrigate(triangle, accident, development, correction)
     }
     

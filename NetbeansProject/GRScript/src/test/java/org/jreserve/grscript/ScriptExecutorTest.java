@@ -36,7 +36,7 @@ public class ScriptExecutorTest {
         engine.runScript(script);
         
         String sep = System.getProperty("line.separator");
-        String expected = "Title"+sep+"\t0,\t0"+sep;
+        String expected = "Title"+sep+"\t0;\t0"+sep;
         String found = output.toString();
         assertEquals(expected, found);
         

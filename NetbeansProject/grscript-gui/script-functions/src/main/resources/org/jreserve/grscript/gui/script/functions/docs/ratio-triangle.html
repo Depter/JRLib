@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <title>Ratio Triangles</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Ratio Triangles</h2>
+        <p>
+            Ratio triangles are triangles containing the individual ratios from 
+            two different claim triangles. Several methods are provided to 
+            create and modify ratio triangle objects. The possible modifications 
+            are correcting, excluding and smoothing.
+        </p>
+        <ul>
+            <li>
+                <b>ratioTriangle(ClaimTriangle numerator, ClaimTriangle denominator):</b>
+                creates a RatioTriangle from the given numerator and denominator.
+            </li>
+            <li>
+                <b>ratioTriangle(Map):</b> creates a RatioTriangle from the 
+                given numerator (must be contained int the map as <i>
+                [numerator | num | n]</i>) and denominator (must be contained
+                int the map as <i>[denominator | denom | d]</i>).
+            </li>
+            <li>
+                <b>exclude(RatioTriangle, int, int):</b> excludes the given 
+                cell from the triangle. The method returns a new triangle, 
+                which is linked to the input.
+            </li>
+            <li>
+                <b>exclude(RatioTriangle, Map):</b> excludes the given 
+                cell from the triangle. The method returns a new triangle, 
+                which is linked to the input. The map must contain an
+                accident <i>[accident | a]</i> and development 
+                <i>[development | d]</i> parameter.
+            </li>
+            <li>
+                <b>corrigate(RatioTriangle, int, int, double):</b> corrigates 
+                the given cell from the triangle. The method returns a new 
+                triangle, which is linked to the input.
+            </li>
+            <li>
+                <b>corrigate(RatioTriangle, Map):</b> excludes the given cell 
+                from the triangle. The method returns a new triangle, which is 
+                linked to the input. The map must contain an accident 
+                <i>[accident | a]</i>, development <i>[development | d]</i> and 
+                value <i>[value | correction]</i> parameter.
+            </li>
+            <li>
+                <b>smooth(RatioTriangle, Closure):</b> smoothes the given 
+                triangle. The method returns a new triangle, which is linked 
+                to the input.
+                
+                <p>
+                    To smooth a triangle one can use a so called 
+                    <i>builder-syntax</i>. The following example creates an 
+                    exponential smoothing for the third cell in the first 
+                    development period with an alpha parameter of 0.5.
+                </p>
+                <pre>
+    paid = triangle(cummulate(apcPaid()))
+    incurred = triangle(cummulate(apcIncurred()))
+    ratios = ratioTriangle(paid, incurred)
+    factors = smooth(ratios) {
+        type(type:"exponential", alpha:0.5)
+        cell(0, 1, false)
+        cell(a:0, d:1, applied:false)
+        cell(accident:0, development:1, applied:true)
+    }
+                </pre>
+                The avaiable smoothing types are:
+                <ul>
+                    <li>
+                        <b>Arithmetic Moving-Average:</b> One can use the following
+                        names: [Arithmetic Moving Average | Arithmetic-Moving-Average |
+                        Moving Average | Moving-Average | AMA | MA]. Required
+                        parameters are: <b>length</b> ([length | size | l]).
+                    </li>
+                    <li>
+                        <b>Geometric Moving-Average:</b> One can use the following
+                        names: [Geometric Moving Average | Geometric-Moving-Average |
+                        GMA]. Required parameters are: <b>length</b> ([length | size | l]).
+                    </li>
+                    <li>
+                        <b>Harmonic Moving-Average:</b> One can use the following
+                        names: [Harmonic Moving Average | Harmonic-Moving-Average |
+                        HMA]. Required parameters are: <b>length</b> ([length | size | l]).
+                    </li>
+                    <li>
+                        <b>Exponential-Smoothing:</b> One can use the following
+                        names: [Exponential Smoothing | Exponential-Smoothing | Exponential | 
+                        ES | E]. Required parameters are: <b>alpha</b> ([alpha]).
+                    </li>
+                    <li>
+                        <b>Double-Exponential-Smoothing:</b> One can use the following
+                        names: [Double Exponential Smoothing | Double-Exponential-Smoothing | 
+                        Double Exponential | Double-Exponential | DES | DE]. 
+                        Required parameters are: <b>alpha</b> ([alpha]), 
+                        <b>beta ([beta])</b>.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>Builder Syntax</h2>
+        <p>
+            In the builder syntax the same methods can be used as described 
+            above to define a ratio triangle in a more compact way.
+        </p>
+        <pre>
+//Get paid example dates
+paid = triangle(cummulate(apcPaid()))
+incurred = triangle(cummulate(apcIncurred()))
+
+ratios = ratios(data) {
+    corrigate(a:0, d:3, value:3000)
+    smooth {
+        type(type:"exponential", alpha:0.8)
+        cell(a:0, d:1, applied:false)
+        cell(a:1, d:1, applied:false)
+        cell(a:2, d:1, applied:true)
+    }
+}
+        </pre>
+    </body>
+</html>

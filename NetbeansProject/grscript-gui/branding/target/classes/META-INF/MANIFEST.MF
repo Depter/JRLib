@@ -3,8 +3,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/grscript/gui/branding/B
  undle.properties
 AutoUpdate-Essential-Module: true
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130520
-OpenIDE-Module-Build-Version: 201305201242
+OpenIDE-Module-Implementation-Version: 1.0-20130521
+OpenIDE-Module-Build-Version: 201305210729
 OpenIDE-Module: org.jreserve.grscript.gui.branding
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

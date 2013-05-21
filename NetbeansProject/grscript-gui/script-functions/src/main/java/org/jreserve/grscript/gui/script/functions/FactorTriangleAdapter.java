@@ -34,6 +34,7 @@ public class FactorTriangleAdapter extends AbstractFunctionProviderAdapter {
         functions.add("exclude(FactorTriangle, Map)");
         functions.add("corrigate(FactorTriangle, int, int, double)");
         functions.add("corrigate(FactorTriangle, Map)");
+        functions.add("smooth(FactorTriangle, Closure)");
         functions.add("factors(double[][], Closure)");
         functions.add("factors(ClaimTriangle, Closure)");
     }
@@ -44,7 +45,7 @@ public class FactorTriangleAdapter extends AbstractFunctionProviderAdapter {
 
     @Override
     public String getName() {
-        return Bundle.LBL_TestDataAdapter_Name();
+        return Bundle.LBL_FactorTriangleAdapter_Name();
     }
 
     @Override

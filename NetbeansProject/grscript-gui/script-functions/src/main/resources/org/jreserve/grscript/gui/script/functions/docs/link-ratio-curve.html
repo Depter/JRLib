@@ -1,0 +1,176 @@
+<html>
+    <head>
+        <title>Link-Ratio Smoothing</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Link-Ratio Smoothing</h2>
+        <p>
+            GRScripts provides several methods to smooth and extrapolate
+            link-ratios. The three main approaches are to define only a tail 
+            factor(s) based on a specific curve (see <i>smooth()</i>), replace 
+            all link-ratios with the values from a specific curve (see 
+            <i>smoothAll()</i>) or define a specific curve for evry differrent
+            development period (see the builder syntax).
+        </p>
+        
+        <ul>
+            <li>
+                <b>smooth(LinkRatio lrs, int length):</b> creates new link-ratios, 
+                based on the given link-ratios, and with the given length. The
+                tail will be estimated with the Exponential Curve.
+            </li>
+            <li>
+                <b>smooth(LinkRatio lrs, int length, String type):</b> creates 
+                new link-ratios, based on the given link-ratios, and with the 
+                given length. The tail will be estimated with the supplied 
+                curve (see <b>Curve Types</b>).
+            </li>
+            <li>
+                <b>smooth(LinkRatio lrs, int length, String type, int exclude):</b>
+                creates new link-ratios, based on the given link-ratios, and 
+                with the given length. The tail will be estimated with the 
+                supplied curve (see <b>Curve Types</b>), but the link-ratio at
+                <i>exclude</i> will be excluded from the curve-fitting.
+            </li>
+            <li>
+                <b>smooth(LinkRatio lrs, int length, String type, Collection exclude):</b>
+                creates new link-ratios, based on the given link-ratios, and 
+                with the given length. The tail will be estimated with the 
+                supplied curve (see <b>Curve Types</b>), but the link-ratios at
+                <i>exclude</i> will be excluded from the curve-fitting.
+            </li>
+            
+            <li>
+                <b>smoothAll(LinkRatio lrs, int length):</b> same as 
+                <i>smooth(lrs, length)</i>, but all link-ratios will
+                be replaced with the values from the fitted curve.
+            </li>
+            <li>
+                <b>smoothAll(LinkRatio lrs, int length, Stirng type):</b> 
+                same as <i>smooth(lrs, length, type)</i>, but all link-ratios 
+                will be replaced with the values from the fitted curve.
+            </li>
+            <li>
+                <b>smoothAll(LinkRatio lrs, int length, Stirng type, int exclude):</b> 
+                same as <i>smooth(lrs, length, type, exclude)</i>, but all 
+                link-ratios will be replaced with the values from the fitted 
+                curve.
+            </li>
+            <li>
+                <b>smoothAll(LinkRatio lrs, int length, Stirng type, Collection exclude):</b> 
+                same as <i>smooth(lrs, length, type, exclude)</i>, but all 
+                link-ratios will be replaced with the values from the fitted 
+                curve.
+            </li>
+            <li>
+                <b>rSquare(LinkRatioSmoothing):</b> calculates the r-square
+                for the smoothed link-ratios.
+            </li>
+        </ul>
+        
+        <h2>Curve types</h2>
+        <p>
+            The following curves all use two parameters <i>a</i>, and
+            <i>b</i> to fit curves, based on the development period <i>t</i>.
+        </p>
+        
+        <h3>Exponential Curve</h3>
+        Exponential curve can be fitted, by using the type parameters
+        <i>[exp | exponential]</i>.
+        <pre>
+    lr(d) = 1 + a * exp(-b * t)
+        </pre>
+        
+        <h3>Power Curve</h3>
+        Power curve can be fitted, by using the type parameters
+        <i>[Power | pow]</i>.
+        <pre>
+    lr(d) = a ^ (b ^ t)
+        </pre>
+        
+        <h3>Inverse-Power Curve</h3>
+        Inverse-Power curve can be fitted, by using the type parameters
+        <i>[InversePower | Inverse-Power | inv.pow]</i>.
+        <pre>
+    lr(d) = 1 + a * t ^ (-b)
+        </pre>
+        
+        <h3>Weibul Curve</h3>
+        Inverse-Power curve can be fitted, by using the type parameters
+        <i>[Weibul | wei]</i>.
+        <pre>
+                    1
+    lr(d) = -------------------
+            1-exp(-a * (b ^ t))
+        </pre>
+        
+        <h3>Builder Syntax</h3>
+        <p>
+            It is possible to use a different curve (fitted, with different 
+            parameters) for different development periods. To achive this
+            the builder syntax must be used. It is important, that 
+            one curve type can only be used once.
+        </p>
+        
+        <p>
+            Within the builder, evry different curve can be applied to one
+            or more development periods with the <b>apply(int)</b> or
+            <b>apply(Collection)</b> methods, and input cells can be 
+            excluded from the via the <b>exclude(int)</b> or <b>
+            exclude(Collection)</b> methods.
+        </p>
+        
+        <p>
+            To define an exponential curve use <b>exponential {}</b>, for
+            the power curve use <b>power {}</b>, for inverse-power user
+            <b>inversePower {}</b> and for a Weibul curve use <b>weibul {}</b>.
+        </p>
+        
+        <p>
+            To use constant values use <b>fixed(int development, double value)</b>
+            or <b>fixed(Map values)</b> to define multiple cells.
+        </p>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data
+paid = triangle(cummulate(apcPaid()))
+//Simple link-ratios, length=7
+lrs = linkRatio(paid)
+
+//Use Exponential curve, to add 3 more link-ratios
+curve = smooth(lrs, 10)
+
+//Use Weibul curve, to add 3 more link-ratios
+curve = smooth(lrs, 10, "Weibul")
+
+//Use Power curve, to add 3 more link-ratios do not fit for the first
+//link-ratio
+curve = smooth(lrs, 10, "Power", 0)
+
+//Use Inverse-Power curve, to add 3 more link-ratios do not fit for the first
+//3 link-ratios
+curve = smooth(lrs, 10, "inv.pow", 0..2)
+
+//Use the Exponential curve, for all 10 link-ratios
+curve = smoothAll(lrs, 10)
+
+//Use the builder syntax to create link-ratios for 10 development periods, 
+//where the 6th and 7th period are set as constant to 1.05 and 1.03, and
+//the tail is estimated with an Exponential curve, excluding the first three
+//development periods from the fitting-process
+curve = smooth(lrs, 10) {
+    exponential {
+      exclude(0..2)
+      apply(7..9)
+    }
+    fixed(5:1.05, 6:1.03)
+}
+
+//Calculate the R-Square for the weibul curve.
+rSquare(smoothAll(lrs, 7, "Weibul"))
+        </pre>
+    </body>
+</html>

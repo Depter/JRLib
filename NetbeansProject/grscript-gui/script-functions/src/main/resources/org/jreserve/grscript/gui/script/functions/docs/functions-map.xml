@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
+    <mapID target="org.jreserve.grscript.gui.script.functions.csvReader" url="csv-reader.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.printData" url="printdata-about.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.testData" url="test-data.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.triangleUtil" url="triangle-util.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.claimTriangle" url="claim-triangle.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.factorTriangle" url="factor-triangle.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.linkRatio" url="link-ratio.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.linkRatioCurve" url="link-ratio-curve.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.linkRatioScale" url="link-ratio-scale.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.linkRatioSE" url="link-ratio-se.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.linkRatioResiduals" url="link-ratio-residuals.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.ratioTriangle" url="ratio-triangle.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.claimRatio" url="claim-ratio.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.claimRatioScale" url="claim-ratio-scale.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.claimRatioResiduals" url="claim-ratio-residuals.html"/>
 </map>

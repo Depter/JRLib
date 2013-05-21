@@ -2,8 +2,8 @@ package org.jreserve.grscript.gui.script.functions;
 
 import java.util.List;
 import org.jreserve.grscript.FunctionProvider;
-import org.openide.util.NbBundle.Messages;
 import org.jreserve.grscript.jrlib.LinkRatioDelegate;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -42,7 +42,7 @@ public class LinkRatioAdapter extends AbstractFunctionProviderAdapter {
 
     @Override
     public String getName() {
-        return Bundle.LBL_TestDataAdapter_Name();
+        return Bundle.LBL_LinkRatioAdapter_Name();
     }
 
     @Override

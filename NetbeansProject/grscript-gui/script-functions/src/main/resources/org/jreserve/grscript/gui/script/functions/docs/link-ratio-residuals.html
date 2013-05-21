@@ -1,0 +1,82 @@
+<html>
+    <head>
+        <title>Link-Ratio Residuals</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Link-Ratio Residuals</h2>
+        <p>
+            This page describes the possible ways to calculate the triangle 
+            of link-ratio residuals.
+        </p>
+        
+        <ul>
+            <li>
+                <b>residuals(LinkRatioScale scale):</b> Calculates the residuals
+                based on the given scale parameters.
+            </li>
+            <li>
+                <b>exclude(LRResidualTriangle residuals, int accident, int development):</b> 
+                excludes the given cell from the residual triangle (useful for bootstrap). 
+            </li>
+            <li>
+                <b>exclude(LRResidualTriangle residuals, Map map):</b>  excludes 
+                the given cell from the residual triangle (useful for bootstrap).
+                The map should contain an accident <i>[a | accident]</i> and a
+                development <i>[d | development]</i> parameter.
+            </li>
+            <li>
+                <b>adjust(LRResidualTriangle residuals):</b>  adjusts the residual
+                triangle to correct bootstrap-bias. each column is adjusted
+                with the factor:
+                <pre>
+    sqrt(n / (n-1))
+                </pre>
+                where <i>n</i> is the number of non NaN values in the given
+                development period.
+            </li>
+            <li>
+                <b>center(LRResidualTriangle residuals):</b> centers the
+                residual triangle in such a way, that the mean of the
+                residuals will be 0 (the mean of the residual is subtracted
+                from all residuals).
+            </li>
+        </ul>
+        
+        <h3>Builder Syntax</h3>
+        <p>
+            The builder syntax allows to define link-ratio residual triangles
+            in a more compact way. Within the builder call any above mentinoed
+            methods, but omit the first parameter.
+        </p>
+        
+        <h2>Examples</h2>
+        <pre>
+paid = triangle(cummulate(apcPaid()))   //Claim Triangle
+lrs = linkRatio(paid)                   //Link-Ratios, length=7
+scale = scale(lrs) {                    //Scale parameters
+    fixed(6:0.1)
+}
+
+//Create the residual triangle
+residuals = residuals(scale)
+
+//Exclude the top-right corner, because it is null
+residuals = exclude(residuals, 0, 6)
+
+//Exclude the top-right corner, because it is null, with map syntax
+residuals = exclude(residuals, [a:0, d:6])
+
+//Adjust and center
+residuals = center(adjust(residuals))
+
+//Builder syntax, to do the same as above
+residuals = residuals(scale) {
+    exclude(a:0, d:6)
+    adjust()
+    center()
+}
+        </pre>
+    </body>
+</html>

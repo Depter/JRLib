@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <title>Claim-Ratio Residuals</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Claim-Ratio Residuals</h2>
+        <p>
+            This page describes the possible ways to calculate the triangle 
+            of claim-ratio residuals.
+        </p>
+        
+        <ul>
+            <li>
+                <b>residuals(ClaimRatioScale scale):</b> Calculates the 
+                residuals based on the given scale parameters.
+            </li>
+            <li>
+                <b>exclude(CRResidualTriangle residuals, int accident, int development):</b> 
+                excludes the given cell from the residual triangle (useful for bootstrap). 
+            </li>
+            <li>
+                <b>exclude(CRResidualTriangle residuals, Map map):</b>  excludes 
+                the given cell from the residual triangle (useful for bootstrap).
+                The map should contain an accident <i>[a | accident]</i> and a
+                development <i>[d | development]</i> parameter.
+            </li>
+            <li>
+                <b>adjust(CRResidualTriangle residuals):</b> adjusts the 
+                residual triangle to correct bootstrap-bias. each column is 
+                adjusted with the factor:
+                <pre>
+    sqrt(n / (n-1))
+                </pre>
+                where <i>n</i> is the number of non NaN values in the given
+                development period.
+            </li>
+            <li>
+                <b>center(CRResidualTriangle residuals):</b> centers the
+                residual triangle in such a way, that the mean of the
+                residuals will be 0 (the mean of the residual is subtracted
+                from all residuals).
+            </li>
+        </ul>
+        
+        <h3>Builder Syntax</h3>
+        <p>
+            The builder syntax allows to define claim-ratio residual triangles
+            in a more compact way. Within the builder call any above mentinoed
+            methods, but omit the first parameter.
+        </p>
+        
+        <h2>Examples</h2>
+        <pre>
+paid = triangle(cummulate(apcPaid()))           //Claim Triangle
+incurred = triangle(cummulate(apcIncurred()))   //Claim Triangle
+ratios = ratios(paid, incurred)
+scales = scale(ratios) {
+    fixed(7:0.1)
+}
+
+//Create the residual triangle
+residuals = residuals(scales)
+
+//Exclude the top-right corner, because it is null
+residuals = exclude(residuals, 0, 7)
+
+//Exclude the top-right corner, because it is null, with map syntax
+residuals = exclude(residuals, [a:0, d:7])
+
+//Adjust and center
+residuals = center(adjust(residuals))
+
+//Builder syntax, to do the same as above
+residuals = residuals(scales) {
+    exclude(a:0, d:7)
+    adjust()
+    center()
+}
+        </pre>
+    </body>
+</html>

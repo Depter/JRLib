@@ -180,7 +180,7 @@ class CsvReader {
         
         if(value.isDouble())
             return value.toDouble()
-        throw new IllegalArgumentException("Value '${str}' at line '${row+1}', column '${cell+1}' can not be parsed to double!")
+        throw new IllegalArgumentException("Value '${str}' at line '${row}', column '${cell+1}' can not be parsed to double!")
     }
     
     private String escapeQuotes(String str) {
@@ -194,9 +194,7 @@ class CsvReader {
     }
     
     private String escapeDecimal(String str) {
-        if(DECIMAL_SEPARATOR != decimalSeparator) 
-            str = str.replace(DECIMAL_SEPARATOR, decimalSeparator)
-        return str
+        str.tr(decimalSeparator, DECIMAL_SEPARATOR)
     }
     
     private double[] cellsToDouble(cells) {

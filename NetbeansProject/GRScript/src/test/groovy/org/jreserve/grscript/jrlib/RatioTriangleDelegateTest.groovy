@@ -120,12 +120,12 @@ class RatioTriangleDelegateTest {
     public void testCorrigate_Map() {
         String script = 
         "pPerI = ratioTriangle(paid, incurred)\n"+
-        "pPerI = corrigate(pPerI, [aCCidenT:0, d:1, value:5])";
+        "pPerI = corrigate(pPerI, [aCCidenT:0, d:1, value:0.5])";
         Triangle t = runScript(script)
         
         assertEquals(8, t.getAccidentCount())
         assertEquals(8, t.getDevelopmentCount())
-        assertEquals(5d, t.getValue(0, 1), TestConfig.EPSILON)
+        assertEquals(0.5, t.getValue(0, 1), TestConfig.EPSILON)
     }
     
     
