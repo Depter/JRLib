@@ -76,10 +76,12 @@ public class GRScriptExecutor {
         public void run() {
             InputOutput io = null;
             try {
+                long begin = System.currentTimeMillis();
                 io = createIO();
                 ScriptExecutor executor = createExecutor();
                 executor.setOutput(io.getOut());
                 executor.runScript(file);
+                printFinnished(io, begin);
             } catch (Exception ex) {
                 printStackTrace(ex, io!=null? io.getErr() : new PrintWriter(System.err));
             }
@@ -107,6 +109,14 @@ public class GRScriptExecutor {
         private void addFunctionProviders(ScriptExecutor executor) {
             for(FunctionProviderAdapter adapter : getAdapters())
                 executor.addFunctionProvider(adapter.getFunctionProvider());
+        }
+        
+        private void printFinnished(InputOutput io, long begin) {
+            if(io != null) {
+                double duration = System.currentTimeMillis() - begin;
+                duration /= 1000d;
+                io.getOut().printf("Finnished in %.3f seconds.", duration);
+            }
         }
         
         private void printStackTrace(Exception ex, PrintWriter writer) {

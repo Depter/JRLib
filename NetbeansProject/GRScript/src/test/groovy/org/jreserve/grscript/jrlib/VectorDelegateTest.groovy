@@ -36,6 +36,14 @@ class VectorDelegateTest {
             assertFalse(Double.isNaN(v.getValue(i)))
     }
     
+    @Test
+    public void testConstructor_List() {
+        JRVector v = executor.runScript "vector([1, 2, 3])"
+        assertEquals(3, v.getLength())
+        for(i in 0..2)
+            assertEquals((double)i+1, v.getValue(i), TestConfig.EPSILON)
+    }
+    
     private JRVector runScript(String script) {
         script = BASE_SCRIPT + script
         return (JRVector) executor.runScript(script)

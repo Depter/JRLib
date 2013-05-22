@@ -7,6 +7,7 @@ import org.jreserve.jrlib.estimate.AbstractEstimate;
 import org.jreserve.jrlib.estimate.Estimate;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
+import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
@@ -18,6 +19,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     
     private EstimateProxy paidProxy;
     private EstimateProxy incurredProxy;
+    private PaidIncurredEstimateProxy paidIncurredProxy;
     
     protected int accidents;
     protected int developments;
@@ -37,6 +39,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         super(source, isAttached);
         paidProxy = new EstimateProxy(true);
         incurredProxy = new EstimateProxy(false);
+        paidIncurredProxy = new PaidIncurredEstimateProxy();
         doRecalculate();
     }
     
@@ -62,6 +65,10 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
         return incurredProxy;
     }
     
+    public Estimate getIncurredPaidEstimate() {
+        return paidIncurredProxy;
+    }
+    
     @Override
     protected void recalculateLayer() {
         doRecalculate();
@@ -81,6 +88,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     private void doRecalculate() {
         initCalculationState();
         fillTriangles();
+        setProxyState();
         clearCalculationState();
     }
     
@@ -138,7 +146,6 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     private void initValues() {
         paidValues = new double[accidents][developments];
         incurredValues = new double[accidents][developments];
-        setProxyState();
     }
     
     protected double calculateIncurred(int a, int d) {
@@ -179,6 +186,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     private void setProxyState() {
         paidProxy.recalculateLayer();
         incurredProxy.recalculateLayer();
+        paidIncurredProxy.recalculateLayer();
     }
     
     private class EstimateProxy extends AbstractEstimate<MclEstimateBundle> {
@@ -203,5 +211,35 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
                     devIndices[accident] : 
                     0;
         }
+    }
+    
+    private class PaidIncurredEstimateProxy extends AbstractEstimate<MclEstimateBundle> {
+        
+        @Override
+        protected void recalculateLayer() {
+            super.accidents = MclEstimateBundle.this.accidents;
+            super.developments = MclEstimateBundle.this.developments;
+            super.values = TriangleUtil.copy(incurredValues);
+            
+            for(int a=0; a<accidents; a++)
+                copyIncurred(a);
+        }
+        
+        private void copyIncurred(int accident) {
+            int from = devIndices[accident];
+            if(from < developments) {
+                double[] input = paidValues[accident];
+                double[] target = super.values[accident];
+                int length = developments - from;
+                System.arraycopy(input, from, target, from, length);
+            }
+        }
+
+        public int getObservedDevelopmentCount(int accident) {
+            return (0 <= accident && accident < accidents)?
+                    devIndices[accident] : 
+                    0;
+        }
+    
     }
 }

@@ -2,9 +2,11 @@
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
     <mapID target="org.jreserve.grscript.gui.script.functions.csvReader" url="csv-reader.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.csvWriter" url="csv-writer.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.printData" url="printdata-about.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.testData" url="test-data.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.triangleUtil" url="triangle-util.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.vector" url="vector.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.claimTriangle" url="claim-triangle.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.factorTriangle" url="factor-triangle.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.linkRatio" url="link-ratio.html"/>
@@ -16,4 +18,6 @@
     <mapID target="org.jreserve.grscript.gui.script.functions.claimRatio" url="claim-ratio.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.claimRatioScale" url="claim-ratio-scale.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.claimRatioResiduals" url="claim-ratio-residuals.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.estimates" url="estimates.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.odpBootstrap" url="odp-bootstrap.html"/>
 </map>

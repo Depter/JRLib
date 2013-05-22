@@ -33,7 +33,6 @@ public class AdjustedOdpResidualTriangleTest {
     };
     
     private OdpScaledResidualTriangle residuals;
-
     
     @Before
     public void setUp() {

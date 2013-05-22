@@ -18,6 +18,7 @@ import org.jreserve.jrlib.vector.Vector as RVector
 import org.jreserve.grscript.util.MapUtil
 import org.jreserve.grscript.util.PrintDelegate
 import org.jreserve.grscript.AbstractDelegate
+import org.jreserve.jrlib.triangle.Cell
 
 /**
  *
@@ -39,13 +40,18 @@ class EstimateDelegate extends AbstractDelegate {
         super.initFunctions(script, emc)
         
         emc.averageCostEstimate         << this.&averageCostEstimate
+        emc.ACEstimate                  << this.&ACEstimate
         emc.bornhuetterFergusonEstimate << this.&bornhuetterFergusonEstimate
         emc.BFEstimate                  << this.&BFEstimate
         emc.expectedLossRatioEstimate   << this.&expectedLossRatioEstimate
+        emc.ELREstimate                 << this.&ELREstimate
         emc.capeCodEstimate             << this.&capeCodEstimate
+        emc.CCEstimate                  << this.&CCEstimate
         emc.chainLadderEstimate         << this.&chainLadderEstimate
+        emc.CLEstimate                  << this.&CLEstimate
         emc.mackEstimate                << this.&mackEstimate
         emc.munichChainLadderEstimate   << this.&munichChainLadderEstimate
+        emc.MCLEstimate                 << this.&MCLEstimate
         emc.estimate                    << this.&estimate
         emc.printData                   << this.&printData
     }
@@ -54,24 +60,40 @@ class EstimateDelegate extends AbstractDelegate {
         return new AverageCostEstimate(numberLrs, costLrs)
     }
 
+    Estimate ACEstimate(LinkRatio numberLrs, LinkRatio costLrs) {
+        return this.averageCostEstimate(numberLrs, costLrs)
+    }
+
     Estimate bornhuetterFergusonEstimate(LinkRatio lrs, RVector exposure, RVector lossRatio) {
         return new BornhuetterFergusonEstimate(lrs, exposure, lossRatio)
     }
 
-    Estimate BFEstimate(LinkRatio lrs, RVector exposure, RVector) {
+    Estimate BFEstimate(LinkRatio lrs, RVector exposure, RVector lossRatio) {
         return this.bornhuetterFergusonEstimate(lrs, exposure, lossRatio)
     }
 
     Estimate expectedLossRatioEstimate(LinkRatio lrs, RVector exposure, RVector lossRatio) {
         return new ExpectedLossRatioEstimate(lrs, exposure, lossRatio)
     }
+
+    Estimate ELREstimate(LinkRatio lrs, RVector exposure, RVector lossRatio) {
+        return this.expectedLossRatioEstimate(lrs, exposure, lossRatio)
+    }
                 
     Estimate capeCodEstimate(LinkRatio lrs, RVector exposure) {
         return new CapeCodEstimate(lrs, exposure)
     }
+                
+    Estimate CCEstimate(LinkRatio lrs, RVector exposure) {
+        return this.capeCodEstimate(lrs, exposure)
+    }
 
     Estimate chainLadderEstimate(LinkRatio lrs) {
         return new ChainLadderEstimate(lrs)
+    }
+    
+    Estimate CLEstimate(LinkRatio lrs) {
+        return this.chainLadderEstimate(lrs)
     }
 
     Estimate mackEstimate(LinkRatioSE lrSE) {
@@ -79,15 +101,19 @@ class EstimateDelegate extends AbstractDelegate {
     }
     
     MclEstimateBundle munichChainLadderEstimate(Closure cl) {
-        MclBuilder builder = new MclBuilder()
+        MclBuilder builder = new MclBuilder(this)
         cl.delegate = builder
         cl.resolveStrategy = Closure.DELEGATE_FIRST
         cl()
         return builder.createBundle()
     }
+    
+    MclEstimateBundle MCLEstimate(Closure cl) {
+        return this.munichChainLadderEstimate(cl)
+    }
 
     Estimate estimate(Map map) {
-        String type = mapUtil.getString(map, "method", "m")
+        String type = mapUtil.getString(map, "method", "m", "type")
         switch(type?.toLowerCase()) {
         case "average-cost":
         case "average cost":
@@ -96,23 +122,28 @@ class EstimateDelegate extends AbstractDelegate {
             return averageCostEstimate(nLrs, cLrs);
         case "bornhuetter ferguson":
         case "bornhuetter-ferguson":
+        case "bf":
+        case "b-f":
             LinkRatio lrs = mapUtil.getValue(map, LINK_RATIO)
             org.jreserve.jrlib.vector.Vector exposure = mapUtil.getValue(map, EXPOSURE)
             org.jreserve.jrlib.vector.Vector lossRatio = mapUtil.getValue(map, LOSS_RATIO)
             return bornhuetterFergusonEstimate(lrs, exposure, lossRatio);
         case "expected-loss-ratio":
         case "expected loss ratio":
+        case "elr":
             LinkRatio lrs = mapUtil.getValue(map, LINK_RATIO)
             org.jreserve.jrlib.vector.Vector exposure = mapUtil.getValue(map, EXPOSURE)
             org.jreserve.jrlib.vector.Vector lossRatio = mapUtil.getValue(map, LOSS_RATIO)
             return expectedLossRatioEstimate(lrs, exposure, lossRatio);
         case "cape-cod":
         case "cape cod":
+        case "cc":
             LinkRatio lrs = mapUtil.getValue(map, LINK_RATIO)
             org.jreserve.jrlib.vector.Vector exposure = mapUtil.getValue(map, EXPOSURE)
             return capeCodEstimate(lrs, exposure);
         case "chain-ladder":
         case "chain ladder":
+        case "cl":
             LinkRatio lrs = mapUtil.getValue(map, LINK_RATIO)
             return chainLadderEstimate(lrs);
         case "mack":
@@ -137,6 +168,11 @@ class EstimateDelegate extends AbstractDelegate {
         }
     }
     
+    void printData(String title, MclEstimateBundle bundle) {
+        super.script.println(title)
+        printData bundle
+    }
+    
     void printData(MclEstimateBundle bundle) {
         EstimatePrinter printer = new EstimatePrinter(super.script)
         super.script.println("Paid estimate:")
@@ -145,6 +181,10 @@ class EstimateDelegate extends AbstractDelegate {
         super.script.println()
         super.script.println("Incurred estimate:")
         printer.printEstimate(bundle.getIncurredEstimate())
+        
+        super.script.println()
+        super.script.println("Incurred-Paid estimate:")
+        printer.printEstimate(bundle.getIncurredPaidEstimate())
     }
     
     private class EstimatePrinter {
@@ -265,10 +305,21 @@ class EstimateDelegate extends AbstractDelegate {
     
     private class MclBuilder {
         
+        private EstimateDelegate eDelegate;
         private LRResidualTriangle paidLrResiduals;
         private LRResidualTriangle incurredLrResiduals;
         private CRResidualTriangle pPerIResiduals;
         private CRResidualTriangle iPerPResiduals;
+        
+        MclBuilder(EstimateDelegate eDelegate) {
+            this.eDelegate = eDelegate
+        }
+        
+        def getProperty(String name) {
+            return getProperties().containsKey(name)?
+                super.getProperty(name) :
+                this.eDelegate.getProperty(name)
+        }
         
         void lrPaid(LRResidualTriangle residuals) {
             this.paidLrResiduals = residuals;

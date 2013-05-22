@@ -5,8 +5,16 @@
         <tocitem text="Functions">
             <tocitem text="Printing Data" target="org.jreserve.grscript.gui.script.functions.printData"/>
             <tocitem text="Test Data" target="org.jreserve.grscript.gui.script.functions.testData"/>
-            <tocitem text="Import Data" target="org.jreserve.grscript.gui.script.functions.csvReader"/>
+            
+            <tocitem text="Input-Output">
+                <tocitem text="Import Data" target="org.jreserve.grscript.gui.script.functions.csvReader"/>
+                <tocitem text="Export Data" target="org.jreserve.grscript.gui.script.functions.csvWriter"/>
+            </tocitem>
 
+            <tocitem text="Vectors">
+                <tocitem text="Vectors" target="org.jreserve.grscript.gui.script.functions.vector"/>
+            </tocitem>
+            
             <tocitem text="Triangles">
                 <tocitem text="Triangle Utilities" target="org.jreserve.grscript.gui.script.functions.triangleUtil"/>
                 <tocitem text="Claim Triangle" target="org.jreserve.grscript.gui.script.functions.claimTriangle"/>
@@ -26,6 +34,14 @@
                 <tocitem text="Claim-Ratios" target="org.jreserve.grscript.gui.script.functions.claimRatio"/>
                 <tocitem text="Scales" target="org.jreserve.grscript.gui.script.functions.claimRatioScale"/>
                 <tocitem text="Residuals" target="org.jreserve.grscript.gui.script.functions.claimRatioResiduals"/>
+            </tocitem>
+
+            <tocitem text="Estimates">
+                <tocitem text="Estimates" target="org.jreserve.grscript.gui.script.functions.estimates"/>
+            </tocitem>
+
+            <tocitem text="Bootstrap">
+                <tocitem text="ODP-Bootstrap" target="org.jreserve.grscript.gui.script.functions.odpBootstrap"/>
             </tocitem>
         </tocitem>
     </tocitem>

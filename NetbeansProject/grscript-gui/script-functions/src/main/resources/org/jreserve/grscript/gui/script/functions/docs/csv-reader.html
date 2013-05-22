@@ -1,11 +1,11 @@
 <html>
     <head>
-        <title>Import Data</title>
+        <title>Import Csv-Data</title>
         <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <h2>Import Data</h2>
+        <h2>Import Csv-Data</h2>
         <p>
             GRscript provides some convenience methods to read and import
             csv files as matrices.
@@ -102,7 +102,7 @@
 String path = "D:/Temp/test.csv"
 data = readCsv(path)
 
-data = readCsv(path [decimal:'.', column:';'])
+data = readCsv(path, [decimal:'.', column:';'])
 
 data = readCsv(path) {
     decimalSeparator '.'

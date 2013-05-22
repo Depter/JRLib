@@ -1,0 +1,129 @@
+<html>
+    <head>
+        <title>Export Csv-Data</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Export Csv-Data</h2>
+        <p>
+            GRscript provides some convenience methods to export data to
+            csv files. In the following methods the <i>data</i> parameter
+            is a one or two dimensional double array.
+        </p>
+        
+        <ul>
+            <li>
+                <b>writeCsv(String, data):</b> writes the data to a csv file, 
+                denoted by the supplied path, using the default settings (see 
+                <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(File, data):</b> writes the data to the file, using 
+                the default settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(Writer, data):</b> writes the data to the given
+                writer, using the default settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(String, data, Map):</b> writes the data to a csv 
+                file, denoted by the supplied path, using the give settings 
+                (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(File, data, Map):</b> writes the data to the file, 
+                using the given settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(Writer, data, Map):</b> writes the data to the given
+                writer, using the given settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(String, data, Closure):</b> writes the data to a 
+                csv file, denoted by the supplied path, using the given
+                settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(File, data, Map):</b> writes the data to the file, 
+                using the given settings (see <i>Default Settings</i>).
+            </li>
+            <li>
+                <b>writeCsv(Writer, data, Map):</b> writes the data to the given
+                writer, using the given settings (see <i>Default Settings</i>).
+            </li>
+        </ul>
+        
+        <h2>Default Settings</h2>
+        <ul>
+            <li>
+                <b>Decimal Separator:</b> the property denotes the
+                character used as decimal separator. The default value
+                is choosen according to the System Locale. Use
+                <i>[decimal | decimals | decimalseparator]</i> in the
+                map settings, or <i>decimalSeparator()</i> in the builder
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Column Separator:</b> the property denotes the
+                character used as column separator. The default value
+                is the tab character (&quot;\t&quot;). Use
+                <i>[column | columns | columnseparator]</i> in the
+                map settings, or <i>columnSeparator()</i> in the builder
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Row Names:</b> a list, containint the row titles. Use
+                <i>[rownames | row names | row-names]</i> in the map 
+                settings, or <i>rowNames(List)</i> in the builder syntax to 
+                change this property.
+            </li>
+            <li>
+                <b>Column Names:</b> a list, containint the column titles. 
+                Use <i>[columnnames | column names | column-names]</i> in 
+                the map settings, or <i>columnNames(List)</i> in the builder 
+                syntax to change this property.
+            </li>
+            <li>
+                <b>Header Quots:</b> the property denotes whether the 
+                row and column names should be surrounded with quots (&quot;).
+                The default value is <i>false</i>. Use
+                <i>[quotheader | quot header | quot-header]</i> in the map 
+                settings, or <i>quotHeader()</i> in the builder syntax to 
+                change this property.
+            </li>
+            <li>
+                <b>Value Quots:</b> the property denotes whether the 
+                values should be surrounded with quots (&quot;).
+                The default value is <i>false</i>. Use
+                <i>[quotvalue | quot value | quot-value]</i> in the map 
+                settings, or <i>quotValues()</i> in the builder syntax to 
+                change this property.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+String path = "D:/Temp/test.csv"
+
+//write APC-PAID data, using the default values
+writeCsv(path, apcPaid())
+
+//write APC burning cost data, using the default values
+writeCsv(path, apcExposure())
+
+//Use map syntax to modify some default values
+writeCsv(path, apcPaid(), [decimal:'.', column:','])
+
+//Builder syntax
+writeCsv(path, apcPaid()) {
+    decimalSeparator '.'
+    columnSeparator ';'
+    rowNames 1997..2004
+    columnNames 1..8
+    quotHeader true
+    quotValues false
+}
+        </pre>
+    </body>
+</html>

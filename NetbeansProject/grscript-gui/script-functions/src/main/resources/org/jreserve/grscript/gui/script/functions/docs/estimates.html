@@ -1,0 +1,242 @@
+<html>
+    <head>
+        <title>Estimates</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Estimates</h2>
+        <p>
+            GRScript provides several methods for estimating claim-reserves. In
+            general the estimate results can be printed with the
+            <i>printData(estimate)</i> and <i>printData(title, estimate)</i>
+            methods.
+        </p>
+        
+        <h3>Average-Cost Method</h3>
+        <p>
+            Calculates the reserves based on the average cost method. The
+            input for the estimate is the link-ratios for the claim numbers
+            and for the cost.
+        </p>
+        
+        <ul>
+            <li>
+                <b>averageCostEstimate(LinkRatio number, LinkRatio cost):</b>
+                creates an average-cost estimate, based on the given 
+                link-ratios.
+            </li>
+            <li>
+                <b>ACEstimate(LinkRatio number, LinkRatio cost):</b>
+                creates an average-cost estimate, based on the given 
+                link-ratios.
+            </li>
+            <li>
+                <b>estimate(type:"Average Cost" number:numberLrs, cost:costLrs):</b>
+                creates an average-cost estimate, based on the given 
+                link-ratios.
+            </li>
+        </ul>
+        
+        <h3>Expected Loss-Ratio Method</h3>
+        <p>
+            Calculates the reserves based on the Expected Loss-Ratio method. 
+            The input for the estimate is the link-ratios for the claims, the
+            used exposure (Vector) and expected claim ratios (Vector).
+        </p>
+        
+        <ul>
+            <li>
+                <b>expectedLossRatioEstimate(LinkRatio lrs, Vector exposure, Vector lossRatio):</b>
+                creates an Expected Loss-Ratio estimate, based on the given 
+                link-ratio, exposure and expected loss ratios.
+            </li>
+            <li>
+                <b>ELREstimate(LinkRatio lrs, Vector exposure, Vector lossRatio):</b>
+                creates an Expected Loss-Ratio estimate, based on the given 
+                link-ratio, exposure and expected loss ratios.
+            </li>
+            <li>
+                <b>estimate(type:"ELR", link-ratio:lrs, exposure:exposure, loss-ratio:lossRatio):</b>
+                creates an Expected Loss-Ratio estimate, based on the given 
+                link-ratio, exposure and expected loss ratios.
+            </li>
+        </ul>
+        
+        <h3>Bornhuetter-Ferguson Method</h3>
+        <p>
+            Calculates the reserves based on the Bornhuetter-Ferguson method. 
+            The input for the estimate is the link-ratios for the claims, the
+            used exposure (Vector) and expected claim ratios (Vector).
+        </p>
+        
+        <ul>
+            <li>
+                <b>bornhuetterFergusonEstimate(LinkRatio lrs, Vector exposure, Vector lossRatio):</b>
+                creates a Bornhuetter-Ferguson estimate, based on the given 
+                link-ratio, exposure and expected loss ratios.
+            </li>
+            <li>
+                <b>BFEstimate(LinkRatio lrs, Vector exposure, Vector lossRatio):</b>
+                creates a Bornhuetter-Ferguson estimate, based on the given 
+                link-ratio, exposure and expected loss ratios.
+            </li>
+            <li>
+                <b>estimate(type:"BF", link-ratio:lrs, exposure:exposure, loss-ratio:lossRatio):</b>
+                creates a Bornhuetter-Ferguson estimate, based on the given 
+                link-ratio, exposure and expected loss ratios.
+            </li>
+        </ul>
+        
+        <h3>Cape-Cod Method</h3>
+        <p>
+            Calculates the reserves based on the Cape-Cod method. 
+            The input for the estimate is the link-ratios for the claims, and
+            the exposure (Vector).
+        </p>
+        
+        <ul>
+            <li>
+                <b>capeCodEstimate(LinkRatio lrs, Vector exposure):</b>
+                creates a Cape-Cod estimate, based on the given link-ratios 
+                and exposure.
+            </li>
+            <li>
+                <b>CCEstimate(LinkRatio lrs, Vector exposure):</b>
+                creates a Cape-Cod estimate, based on the given link-ratio
+                and exposure.
+            </li>
+            <li>
+                <b>estimate(type:"Cape-Cod", link-ratio:lrs, exposure:exposure):</b>
+                creates a Cape-Cod estimate, based on the given link-ratio
+                and exposure.
+            </li>
+        </ul>
+        
+        <h3>Chain-Ladder Method</h3>
+        <p>
+            Calculates the reserves based on the Chain-Ladder method. 
+            The input for the estimate is the link-ratios for the claims.
+        </p>
+        
+        <ul>
+            <li>
+                <b>chainLadderEstimate(LinkRatio lrs):</b>
+                creates a Chain-Ladder estimate, based on the given 
+                link-ratios.
+            </li>
+            <li>
+                <b>CLEstimate(LinkRatio lrs):</b>
+                creates a Chain-Ladder estimate, based on the given 
+                link-ratios.
+            </li>
+            <li>
+                <b>estimate(type:"Chain-Ladder", link-ratio:lrs):</b>
+                creates a Chain-Ladder estimate, based on the given 
+                link-ratios.
+            </li>
+        </ul>
+        
+        <h3>Mack&DiacriticalAcute;s Method</h3>
+        <p>
+            Calculates the reserves and standard error of the reserves based 
+            on Mack&DiacriticalAcute;s method. The input for the estimate is 
+            the standard error of the link-ratios.
+        </p>
+        
+        <ul>
+            <li>
+                <b>mackEstimate(LinkRatioSE lrSE):</b>
+                creates a Mack estimate, based on the given standard errors.
+            </li>
+            <li>
+                <b>estimate(type:"Mack", se:lrSe):</b>
+                creates a Mack estimate, based on the given standard errors.
+            </li>
+        </ul>
+        
+        <h2>Munich Chain-Ladder Method</h2>
+        <p>
+            Calculates the paid and incurred reserves based on the 
+            Munich-Chain-Ladder method. The input for the calculations:
+        </p>
+        
+        <ul>
+            <li>Paid link-ratio residuals</li>
+            <li>Incurred link-ratio residuals</li>
+            <li>Incurred/Paid claim-ratio residuals</li>
+            <li>Paid/Incurred claim-ratio residuals</li>
+        </ul>
+        
+        <p>
+            An MCL reserve bundle can be constructed with a builder syntax,
+            see Examples section.
+        </p>
+        
+        <h2>Exmaples</h2>
+        <pre>
+//Load APC data
+paidData = cummulate(apcPaid())
+incurredData = cummulate(apcIncurred())
+nocData = cummulate(apcNoC())
+costData = paidData / nocData
+
+//Create Input
+paid = triangle(paidData)
+incurred = triangle(incurredData)
+noc = triangle(nocData)
+cost = triangle(costData)
+exposure = vector(apcExposure())
+expectedLR = vector(exposure.getLength(), 16.5)
+
+//LinkRatios
+paidLR = linkRatio(paid)
+incurredLr = linkRatio(incurred)
+nocLr = linkRatio(noc)
+costLr = linkRatio(cost)
+
+//Average-Cost
+printData "Average-Cost", ACEstimate(nocLr, costLr)
+
+//Expected Loss-Ratio
+estimate = estimate(method:"ELR", linkratio:paidLr, exposure:exposure, lossratio:expectedLR)
+printData "Expected Loss-Ratio", estimate
+
+//Bornhuetter-Ferguson
+printData "Bornhuetter-Ferguson", BFEstimate(paidLr, exposure, expectedLR)
+
+//Cape-Cod
+printData "Cape-Cod", estimate(type:"Cape-Cod", lrs:paidLr, exp:expectedLR)
+
+//Simple Chain-Ladder
+printData "Chain-Ladder", chainLadderEstimate(paidLr)
+
+//Mack's method, set the last scale parameter to 0.1
+paidLrScale = scale(paidLr) {
+    fixed(6:0.1)
+}
+paidLrSe = standardError(paidLrScale)
+printData "Mack's Method", mackEstimate(paidLrSe)
+
+//Munich Chain-Ladder
+paidLrScale = scale(paidLr) {fixed(6:0.1)}
+incurredLrScale = scale(incurredLr) {fixed(6:0.1)}
+paidRes = residuals(paidLrScale)
+incurredRes = residuals(incurredLrScale)
+
+pPerIScale = scale(ratios(paid, incurred)) {fixed(7:0.1)}
+iPerPScale = scale(ratios(incurred, paid)) {fixed(7:0.1)}
+pPerIRes = residuals(pPerIScale)
+iPerPRes = residuals(iPerPScale)
+
+mclBundle = MCLEstimate {
+    lrPaid paidRes
+    crPaid iPerPRes
+    lrIncurred incurredRes
+    crIncurred pPerIRes
+}
+printData "Munich Chain-Ladder", mclBundle
+
+        </pre>
+    </body>
+</html>

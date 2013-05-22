@@ -1,0 +1,121 @@
+<html>
+    <head>
+        <title>Vectors</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Vectors</h2>
+        <p>
+            GRScripts provides several methods to create and modify vector 
+            objects. The possible modifications are correcting, excluding
+            and smoothing.
+        </p>
+        
+        <ul>
+            <li>
+                <b>vector(double[] data):</b> creates a vector from the
+                given values.
+            </li>
+            <li>
+                <b>vector(Collection data):</b> creates a vector from the
+                given values.
+            </li>
+            <li>
+                <b>vector(int length, double value):</b> creates a vector 
+                with the given length, containing the same value for all cell.
+            </li>
+            <li>
+                <b>exclude(Vector, int...):</b> excludes the given 
+                cells from the vector (multiple indices can be specified). 
+                The method returns a new vector, which is linked to the input.
+            </li>
+            <li>
+                <b>exclude(Vector, Collection indices):</b> excludes the given 
+                cells from the vector. The method returns a new vector, which 
+                is linked to the input.
+            </li>
+            <li>
+                <b>corrigate(Vector, int, double):</b> sets the value
+                of the given cell of the vector to the given value. The method 
+                returns a new vector, which is linked to the input.
+            </li>
+            <li>
+                <b>corrigate(Vector, Map):</b> Sets the indices from the map
+                to the given values sets the values. The method 
+                returns a new vector, which is linked to the input.
+            </li>
+            <li>
+                <b>smooth(Vector, Closure):</b> smoothes the given vector. 
+                The method returns a new vector, which is linked to the input.
+                
+                <p>
+                    To smooth a vector one can use a so called <i>builder-syntax</i>.
+                    The following example creates an exponential smoothing for the
+                    third cell with an alpha parameter of 0.5.
+                </p>
+                <pre>
+    vector = smooth(vector) {
+        type(type:"exponential", alpha:0.5)
+        cell(0, false)
+        cells(1:false, 2:true)
+    }
+                </pre>
+                The avaiable smoothing types are:
+                <ul>
+                    <li>
+                        <b>Arithmetic Moving-Average:</b> One can use the following
+                        names: [Arithmetic Moving Average | Arithmetic-Moving-Average |
+                        Moving Average | Moving-Average | AMA | MA]. Required
+                        parameters are: <b>length</b> ([length | size | l]).
+                    </li>
+                    <li>
+                        <b>Geometric Moving-Average:</b> One can use the following
+                        names: [Geometric Moving Average | Geometric-Moving-Average |
+                        GMA]. Required parameters are: <b>length</b> ([length | size | l]).
+                    </li>
+                    <li>
+                        <b>Harmonic Moving-Average:</b> One can use the following
+                        names: [Harmonic Moving Average | Harmonic-Moving-Average |
+                        HMA]. Required parameters are: <b>length</b> ([length | size | l]).
+                    </li>
+                    <li>
+                        <b>Exponential-Smoothing:</b> One can use the following
+                        names: [Exponential Smoothing | Exponential-Smoothing | Exponential | 
+                        ES | E]. Required parameters are: <b>alpha</b> ([alpha]).
+                    </li>
+                    <li>
+                        <b>Double-Exponential-Smoothing:</b> One can use the following
+                        names: [Double Exponential Smoothing | Double-Exponential-Smoothing | 
+                        Double Exponential | Double-Exponential | DES | DE]. 
+                        Required parameters are: <b>alpha</b> ([alpha]), 
+                        <b>beta ([beta])</b>.
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+//Create a vector
+data = vector(1, 2, 3, 4)
+
+//Exclude the last value
+data = exclude(data, 3)
+//Exclude the last two value
+data = exclude(data, 2..3)
+
+//Corrigate the last value
+data = corrigate(data, 3, 10)
+//Corrigate the last tow value
+data = corrigate(data, [2:8, 3:10])
+
+//Smooth the third value, using Double-Exponential smoothing,
+//based on the first two cells.
+data = smooth(data) {
+    type(type:"Double Exponential", alpha:0.5, beta:0.1)
+    cells(0:false, 1:false, 2:true)
+}
+        </pre>
+    </body>
+</html>

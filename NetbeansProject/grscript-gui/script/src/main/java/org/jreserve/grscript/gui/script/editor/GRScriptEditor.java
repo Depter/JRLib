@@ -12,6 +12,7 @@ import javax.swing.Action;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
+import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.SwingWorker;
@@ -76,7 +77,8 @@ public class GRScriptEditor extends TopComponent implements MultiViewElement {
     private void initComponents() {
         setLayout(new BorderLayout());
         createEditor();
-        add(editor, BorderLayout.CENTER);
+        JScrollPane scroll = new JScrollPane(editor);
+        add(scroll, BorderLayout.CENTER);
 
         undoRedo = new GRSEditorUndoRedo();
         documentListener = new EditorDocListener();

@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.bootstrap.odp.residuals;
 
-import org.jreserve.jrlib.bootstrap.odp.residuals.InputOdpResidualTriangle;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.linkratio.LinkRatio;

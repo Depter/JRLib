@@ -49,6 +49,13 @@ class VectorDelegate extends AbstractDelegate {
         return this.vector(data)
     }
     
+    JRVector vector(Collection values) {
+        int size = values.size()
+        double[] data = new double[size]
+        values.eachWithIndex {value, index -> data[index] = value}
+        return this.vector(data)
+    }
+    
     JRVector corrigate(JRVector vector, int index, double value) {
         return new VectorCorrection(vector, index, value)
     }
@@ -150,6 +157,8 @@ class VectorDelegate extends AbstractDelegate {
                 type = HARMONIC_MA
                 break
             case "exponentialsmoothing":
+            case "exponential smoothing":
+            case "exponential-smoothing":
             case "exponential":
             case "es":
             case "e":
@@ -157,6 +166,10 @@ class VectorDelegate extends AbstractDelegate {
                 break
             case "doubleexponentialsmoothing":
             case "doubleexponential":
+            case "double exponential smoothing":
+            case "double exponential":
+            case "double-exponential-smoothing":
+            case "double-exponential":
             case "des":
             case "de":
                 type = DOUBLE_EXPONENTIAL
@@ -168,7 +181,11 @@ class VectorDelegate extends AbstractDelegate {
         }
         
         void cells(Map map) {
-            map.each {index, applied -> cells << new SmoothingIndex(index, applied)}
+            map.each {index, applied -> cell(index, applied)}
+        }
+        
+        void cell(int index, boolean applied) {
+            cells << new SmoothingIndex(index, applied)
         }
     
         VectorSmoothing getVectorSmoothing() {

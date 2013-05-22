@@ -27,7 +27,8 @@ import org.openide.util.NbBundle.Messages;
 @ActionReferences({
     @ActionReference(path = "Menu/File", position = 1380),
     @ActionReference(path = GRScriptDataNode.ACTION_PATH, position = 100),
-    @ActionReference(path = "Toolbars/Script", position = 100)
+    @ActionReference(path = "Toolbars/Script", position = 100),
+    @ActionReference(path = "Shortcuts", name = "F5")
 })
 @Messages({
     "CTL_ExecuteGRScriptAction=Run script",

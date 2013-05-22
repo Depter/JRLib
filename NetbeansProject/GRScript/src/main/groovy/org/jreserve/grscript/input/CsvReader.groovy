@@ -187,14 +187,16 @@ class CsvReader {
         if(!hasQuotes)
             return str;
         if(str.startsWith("\""))
-            str = str.substring(0)
+            str = str.substring(1)
         if(str.endsWith("\""))
-            str = str.subString(0, str.length()-1)
+            str = str.substring(0, str.length()-1)
         return str
     }
     
     private String escapeDecimal(String str) {
-        str.tr(decimalSeparator, DECIMAL_SEPARATOR)
+        (DECIMAL_SEPARATOR == decimalSeparator)?
+            str :
+            str.replace(decimalSeparator, DECIMAL_SEPARATOR)
     }
     
     private double[] cellsToDouble(cells) {

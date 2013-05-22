@@ -3,6 +3,7 @@ package org.jreserve.grscript.jrlib
 import org.jreserve.jrlib.util.random.Random
 import org.jreserve.jrlib.util.random.JavaRandom
 import org.jreserve.grscript.AbstractDelegate
+import org.jreserve.grscript.util.MapUtil
 
 /**
  *

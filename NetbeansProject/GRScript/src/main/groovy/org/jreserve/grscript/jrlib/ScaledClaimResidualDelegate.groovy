@@ -5,6 +5,7 @@ import org.jreserve.grscript.util.MapUtil
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.OdpScaledResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.AdjustedOdpScaledResidualTriangle
+import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.CenteredOdpScaledResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.DefaultOdpScaledResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.OdpScaledResidualTriangleCorrection
 import org.jreserve.grscript.AbstractDelegate
@@ -22,6 +23,7 @@ class ScaledClaimResidualDelegate extends AbstractDelegate {
         super.initFunctions(script, emc)
         emc.residuals    << this.&residuals
         emc.adjust       << this.&adjust
+        emc.center       << this.&center
         emc.exclude      << this.&exclude
     }
     
@@ -37,6 +39,10 @@ class ScaledClaimResidualDelegate extends AbstractDelegate {
     
     OdpScaledResidualTriangle adjust(OdpScaledResidualTriangle residuals) {
         return new AdjustedOdpScaledResidualTriangle(residuals)
+    }
+    
+    OdpScaledResidualTriangle center(OdpScaledResidualTriangle residuals) {
+        return new CenteredOdpScaledResidualTriangle(residuals)
     }
     
     OdpScaledResidualTriangle exclude(OdpScaledResidualTriangle residuals, Map map) {
@@ -68,6 +74,10 @@ class ScaledClaimResidualDelegate extends AbstractDelegate {
 
         void adjust() {
             residuals = delegate.adjust(residuals)
+        }
+        
+        void center() {
+            residuals = delegate.center(residuals)
         }
         
         void exclude(int accident, int development) {

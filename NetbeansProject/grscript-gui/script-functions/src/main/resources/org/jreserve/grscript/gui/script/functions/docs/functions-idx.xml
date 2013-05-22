@@ -3,8 +3,10 @@
 <index version="2.0">
     <indexitem text="Printing Data" target="org.jreserve.grscript.gui.script.functions.printData"/>
     <indexitem text="Test Data" target="org.jreserve.grscript.gui.script.functions.testData"/>
-    <indexitem text="Import Data" target="org.jreserve.grscript.gui.script.functions.csvReader"/>
+    <indexitem text="Import Csv-Data" target="org.jreserve.grscript.gui.script.functions.csvReader"/>
+    <indexitem text="Export Csv-Data" target="org.jreserve.grscript.gui.script.functions.csvWriter"/>
     <indexitem text="Triangle Utilities" target="org.jreserve.grscript.gui.script.functions.triangleUtil"/>
+    <indexitem text="Vector" target="org.jreserve.grscript.gui.script.functions.vector"/>
     <indexitem text="Claim Triangle" target="org.jreserve.grscript.gui.script.functions.claimTriangle"/>
     <indexitem text="Factor Triangle" target="org.jreserve.grscript.gui.script.functions.factorTriangle"/>
     <indexitem text="Link-Ratio" target="org.jreserve.grscript.gui.script.functions.linkRatio"/>
@@ -16,4 +18,6 @@
     <indexitem text="Claim-Ratio" target="org.jreserve.grscript.gui.script.functions.claimRatio"/>
     <indexitem text="Claim-Ratio Scale" target="org.jreserve.grscript.gui.script.functions.claimRatioScale"/>
     <indexitem text="Claim-Ratio Residuals" target="org.jreserve.grscript.gui.script.functions.claimRatioResiduals"/>
+    <indexitem text="Estimates" target="org.jreserve.grscript.gui.script.functions.estimates"/>
+    <indexitem text="ODP-Bootstrap" target="org.jreserve.grscript.gui.script.functions.odpBootstrap"/>
 </index>

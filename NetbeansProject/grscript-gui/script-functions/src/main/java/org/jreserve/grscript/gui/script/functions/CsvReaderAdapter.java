@@ -11,7 +11,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @FunctionProviderAdapter.Registration(
-    path = "Input",
+    path = "Input-Output",
     position = 100
 )
 @Messages({

@@ -129,7 +129,7 @@ class CsvReaderTest {
     }
     
     @Test
-    public void testRead() {
+    void testRead() {
         String path = "src/main/resources/org/jreserve/grscript/input/apc_paid.csv"
         reader.setColumnSeparator(",")
         double[][] values = reader.read(path)
