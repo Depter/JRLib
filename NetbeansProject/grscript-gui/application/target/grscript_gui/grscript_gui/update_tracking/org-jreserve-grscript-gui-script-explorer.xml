@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.script.explorer">
-    <module_version install_time="1369121626767" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1369250188085" last="true" origin="installer" specification_version="1.0">
         <file crc="1668789005" name="config/Modules/org-jreserve-grscript-gui-script-explorer.xml"/>
-        <file crc="4117127030" name="modules/org-jreserve-grscript-gui-script-explorer.jar"/>
-        <file crc="589620057" name="update_tracking/org-jreserve-grscript-gui-script-explorer.xml"/>
+        <file crc="1121873151" name="modules/org-jreserve-grscript-gui-script-explorer.jar"/>
+        <file crc="899678788" name="update_tracking/org-jreserve-grscript-gui-script-explorer.xml"/>
     </module_version>
 </module>

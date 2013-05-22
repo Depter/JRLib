@@ -3,6 +3,7 @@ package org.jreserve.grscript.jrlib
 
 import org.jreserve.grscript.FunctionProvider
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle
+import org.jreserve.jrlib.bootstrap.odp.residuals.InputOdpResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.scale.ConstantOdpResidualScale
 import org.jreserve.jrlib.bootstrap.odp.scale.DefaultOdpResidualScaleSelection
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale
@@ -33,6 +34,10 @@ class ClaimResidualScaleDelegate extends AbstractDelegate {
     
     OdpResidualScale constantScale(OdpResidualTriangle residuals) {
         return new ConstantOdpResidualScale(residuals)
+    }
+    
+    OdpResidualScale constantScale(LinkRatio lrs, double scale) {
+        this.constantScale(new InputOdpResidualTriangle(lrs), scale)
     }
     
     OdpResidualScale constantScale(OdpResidualTriangle residuals, double scale) {

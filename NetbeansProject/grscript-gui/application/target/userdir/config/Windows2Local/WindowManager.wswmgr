@@ -3,9 +3,9 @@
 <windowmanager version="2.1">
     <main-window>
   <joined-properties
-   x="29"
-   y="39"
-   width="1163"
+   x="68"
+   y="52"
+   width="1229"
    height="664"
    relative-x="0.0"
    relative-y="0.0"
@@ -33,20 +33,18 @@
   </main-window>
     <editor-area state="joined" frame-state="0">
   <constraints>
-  <path orientation="horizontal" number="60" weight="0.7952755905511811" />
-  <path orientation="vertical" number="40" weight="0.7" />
-  <path orientation="horizontal" number="40" weight="0.6083560184637236" />
+  <path orientation="horizontal" number="60" weight="0.7" />
+  <path orientation="vertical" number="40" weight="0.692063492063492" />
+  <path orientation="horizontal" number="40" weight="0.7" />
   </constraints>
   <bounds x="450" y="177" width="573" height="324" />
     </editor-area>
-    <screen width="1600" height="900"/>
-    <active-mode name="editor"/>
+    <screen width="1366" height="768"/>
     <toolbar configuration="Standard" preferred-icon-size="24"/>
     <tc-list>
-  <tc-id id="MultiView-GRScript#007C"/>
   <tc-id id="ScriptExplorerTopComponent"/>
-  <tc-id id="output"/>
   <tc-id id="FunctionExplorerTopComponent"/>
+  <tc-id id="output"/>
   <tc-id id="HelpTopComponent"/>
   <tc-id id="ClassPathExplorerTopComponent"/>
     </tc-list>

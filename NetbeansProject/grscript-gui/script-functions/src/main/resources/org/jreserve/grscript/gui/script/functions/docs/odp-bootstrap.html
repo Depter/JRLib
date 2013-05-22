@@ -1,0 +1,267 @@
+<html>
+    <head>
+        <title>ODP-Bootstrap</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>ODP-Bootstrap</h1>
+        <p>
+            The ODP bootstrap allows to bootstrap chain-ladder reserves,
+            asssuming an overdispersed poisson model. The bootstrap
+            requires 3 input
+        </p>
+        <ul>
+            <li>Residuals</li>
+            <li>Random Generator</li>
+            <li>Process simulator</li>
+        </ul>
+        
+        <h2>Residuals</h2>
+        <p>
+            The ODP bootstrap method generates pseudo claim triangles from
+            a residual claim triangle. There are several methods provided to
+            calculate, scale and modify the variables.
+        </p>
+        
+        <h3>Scale Parameter</h3>
+        <p>
+            First step is to scale the residuals. Two separate methods can
+            be used to calculate a scale factor for each development period.
+            Constant scales and variable scales.
+        </p>
+        <ul>
+            <li>
+                <b>constantScale(LinkRatio lrs):</b> calculates a constant scale
+                parameter for all development periods. Returns an
+                <i>OdpResidualScale</i> object.
+            </li>
+            <li>
+                <b>constantScale(LinkRatio lrs, double scale):</b> creates a
+                constant scale parameter for all development periods from the
+                supplied scale.. Returns an <i>OdpResidualScale</i> object.
+            </li>
+            <li>
+                <b>variableScale(LinkRatio lrs):</b> calculates a separate 
+                scale parameter for all development periods. Returns an
+                <i>OdpResidualScale</i> object.
+            </li>
+            <li>
+                <b>Builder syntax:</b> the builder syntax allows to used
+                fixed values for some of the development periods.
+                <pre>
+    variableScale(lrs) {
+        fixed(5:100, 6:80)
+    }
+                </pre>
+            </li>
+        </ul>
+        
+        <h3>Scaled residuals</h3>
+        <p>
+            GRScript provides some basic functions to adjust, center and modify
+            claim triangle residuals.
+        </p>
+        <ul>
+            <li>
+                <b>residuals(OdpResidualScale scale):</b> Calculates the 
+                residuals based on the given scale parameters. Returns a
+                <i>OdpScaledResidualTriangle</i> object.
+            </li>
+            <li>
+                <b>exclude(OdpScaledResidualTriangle residuals, int accident, int development):</b> 
+                excludes the given cell from the residual triangle. 
+            </li>
+            <li>
+                <b>exclude(OdpScaledResidualTriangle residuals, Map map):</b>  
+                excludes the given cell from the residual triangle.
+                The map should contain an accident <i>[a | accident]</i> and a
+                development <i>[d | development]</i> parameter.
+            </li>
+            <li>
+                <b>adjust(OdpScaledResidualTriangle residuals):</b> adjusts the 
+                residual triangle to correct bootstrap-bias. 
+            </li>
+            <li>
+                <b>center(OdpScaledResidualTriangle residuals):</b> centers the
+                residual triangle in such a way, that the mean of the
+                residuals will be 0 (the mean of the residual is subtracted
+                from all residuals).
+            </li>
+            <li>
+                <b>Builder Syntax:</b> The builder syntax allows to define 
+                residual triangles in a more compact way. Within the builder 
+                call any above mentinoed methods, but omit the first parameter.
+                <pre>
+    residuals = residuals(scales) {
+        exclude(a:0, d:7)
+        adjust()
+        center()
+    }
+                </pre>
+            </li>
+        </ul>
+        
+        <h3>Segments</h3>
+        <p>
+            It is possible to define segments for the bootstrap process. If
+            a segment is defined the residuals will be reshuffled only within
+            the cells, belonging to the given segment. To fix a residual
+            to a given place, simply define a segment which contains only
+            the given cell.
+        </p>
+        
+        <p>
+            Segments can be defined within the bootstrap definition as from-to 
+            ranges, or by cells.
+        </p>
+        <pre>
+    //Split a triangle with 10 accident periods to two
+    //segments.
+    segment {
+        from(accident:0, development:0)
+        to(a:10, d:4
+    }
+
+    //Lock the top-left cell to the same position
+    segment {
+        cell(0, 0)
+    }
+        </pre>
+        
+        <h2>Random Generator</h2>
+        <p>
+            A random generator is needed to reshuffle the residuals from 
+            the residual triangle, and to symulate the process variance.
+            In the current version only the default Java random generator
+            is supported, but if it is desired, additional random 
+            generators can be plugged in, by implementing the
+            <i>org.jreserve.jrlib.util.random.Random</i> interface.
+        </p>
+        
+        <p>
+            Per default the bootstrap uses an instance of the Java random
+            generator. To plug-in other implementations or to set
+            the seed, use:
+        </p>
+        
+        <ul>
+            <li>
+                <b>random(Random rnd):</b> where <i>rnd</i> is a custom
+                implementation for the 
+                <i>org.jreserve.jrlib.util.random.Random</i> interface.
+            </li>
+            <li>
+                <b>random(String type, long seed):</b> where <i>type</i>
+                must be <i>&quot;Java&quot;</i>.
+            </li>
+            <li>Use builder syntax:
+                <pre>
+    random {
+        type "Java"
+        seed 1000
+    }
+                </pre>
+            </li>
+        </ul>
+        
+        <h2>Process Simulator</h2>
+        <p>
+            For each projected claim the bootstrap method applies a process
+            variance (see the examples). In the current version the follwing 
+            process simulators supported:
+        </p>
+        <ul>
+            <li>
+                <b>Constant:</b> mean no process variance is applied.
+            </li>
+            <li>
+                <b>Gamma:</b> gamma process variance is applied
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data
+paid = triangle(cummulate(apcPaid()))
+lrs = linkRatio(paid)
+
+//Apply the constant scale method
+scales = constantScale(lrs)
+
+//Use constant scale of 100
+scales = constantScale(lrs, 100)
+
+//Use a variable scale, but the 6th development period fixed to 100 and the
+//7th to 80
+scales = variableScale(lrs) {
+    fixed(5:100, 6:80)
+}
+
+//Use simplevariable scale
+scales = variableScale(lrs)
+
+//Create the residuals
+res = residuals(scales)
+
+//Exclude the top-right and bottem-left cell
+res = exclude(res, 0, 7)
+res = exclude(res, [a:7, d:0])
+
+//Adjust and center the residuals
+res = adjust(res)
+res = center(res)
+
+//Do as the same above, with builder syntax
+res = residuals(scales) {
+    exclude(0, 7)
+    exclude(7, 0)
+    center()
+    adjust()
+}
+
+//Create an ODP-Bootstrap with default Java random generator, and 
+//Gamma process simmulator. 
+bs = odpBootstrap {
+    count 100
+    residuals res
+}
+//It is only created, not run yet
+bs.run()
+printData "Reserves", bs.getReserves()
+
+//Create a bootstra with Java random generator (seed set to 1000), Constant
+//process varaince, and te residuals splitted after the 4th development period. 
+bs = odpBootstrap {
+    count 100
+    random "Java", 1000
+    process "Constant"
+    residuals res
+    segment {
+        from(a:0, d:0)
+        to(a:8, d:3)
+    }
+}
+bs.run()
+printData "Reserves", bs.getReserves()
+
+//Bootstrap 100.000 times and export the reserves for all development period
+//Use Gamma process variance, no segmentation
+//
+//The whole process takes less then 2 seconds on the authors 
+//computer (8GB RAM, Intel Core i7, Windos 7, 64 bit)
+bs = odpBootstrap {
+    count 100000
+    random "Java", 1000
+    residuals res
+}
+bs.run()
+println "Finnished bootstrap, exporting data"
+writeCsv("C:/Munka/Triangle/test.csv", bs.getReserves()) {
+    decimalSeparator '.'
+    columnSeparator ';'
+    columnNames 1..8
+}
+        </pre>
+    </body>
+</html>
