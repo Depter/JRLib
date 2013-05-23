@@ -19,6 +19,7 @@ import org.jreserve.grscript.util.MapUtil
 import org.jreserve.grscript.util.PrintDelegate
 import org.jreserve.grscript.AbstractDelegate
 import org.jreserve.jrlib.triangle.Cell
+import org.jreserve.jrlib.estimate.CompositeEstimate
 
 /**
  *
@@ -53,6 +54,7 @@ class EstimateDelegate extends AbstractDelegate {
         emc.munichChainLadderEstimate   << this.&munichChainLadderEstimate
         emc.MCLEstimate                 << this.&MCLEstimate
         emc.estimate                    << this.&estimate
+        emc.compositeEstimate           << this.&compositeEstimate
         emc.printData                   << this.&printData
     }
     
@@ -153,6 +155,14 @@ class EstimateDelegate extends AbstractDelegate {
             String msg = "Unknown method type: ${type}";
             throw new IllegalArgumentException(msg)
         }
+    }
+    
+    Estimate compositeEstimate(Estimate... estimates) {
+        new CompositeEstimate(estimates)
+    }
+    
+    Estimate compositeEstimate(Collection estimates) {
+        new CompositeEstimate(estimates)
     }
     
     void printData(String title, Estimate estimate) {

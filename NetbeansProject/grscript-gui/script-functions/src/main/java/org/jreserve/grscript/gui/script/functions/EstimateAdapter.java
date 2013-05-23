@@ -42,6 +42,8 @@ public class EstimateAdapter extends AbstractFunctionProviderAdapter {
         functions.add("munichChainLadderEstimate(Closure)");
         functions.add("MCLEstimate(Closure)");
         functions.add("estimate(Map)");
+        functions.add("compositeEstimate(Estimate...)");
+        functions.add("compositeEstimate(Collection)");
     }
 
     @Override

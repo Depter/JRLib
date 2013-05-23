@@ -173,6 +173,25 @@
             see Examples section.
         </p>
         
+        <h2>Composite Estimate</h2>
+        <p>
+            Composite estimates can combine the results of multiple estimates
+            to one estimate. This makes possible to use a different estimation
+            method for every accident period.
+        </p>
+        <ul>
+            <li>
+                <b>compositeEstimate(Estimate... estimates):</b> the resulting
+                estimate will have the same accident count as the estimates
+                specified.
+            </li>
+            <li>
+                <b>compositeEstimate(Collection estimates):</b> the resulting
+                estimate will have the same accident count as the estimates
+                specified.
+            </li>
+        </ul>
+        
         <h2>Exmaples</h2>
         <pre>
 //Load APC data
@@ -203,13 +222,23 @@ estimate = estimate(method:"ELR", linkratio:paidLr, exposure:exposure, lossratio
 printData "Expected Loss-Ratio", estimate
 
 //Bornhuetter-Ferguson
-printData "Bornhuetter-Ferguson", BFEstimate(paidLr, exposure, expectedLR)
+bfEstimate = BFEstimate(paidLr, exposure, expectedLR)
+printData "Bornhuetter-Ferguson", bfEstimate
 
 //Cape-Cod
-printData "Cape-Cod", estimate(type:"Cape-Cod", lrs:paidLr, exp:expectedLR)
+ccEstimate = estimate(type:"Cape-Cod", lrs:paidLr, exp:expectedLR)
+printData "Cape-Cod", ccEstimate
 
 //Simple Chain-Ladder
-printData "Chain-Ladder", chainLadderEstimate(paidLr)
+clEstimate = chainLadderEstimate(paidLr)
+printData "Chain-Ladder", clEstimate
+
+//Composite estimate, first 4 accident period calculated with Chain-Ladder,
+//the 5th and 6th wiht Cape-Code and the last two with Bormhuetter-Ferguson
+composite = compositeEstimate(
+    clEstimate, clEstimate, clEstimate, clEstimate,
+    ccEstimate, ccEstimate, bfEstimate, bfEstimate)
+printData "Composite", composite
 
 //Mack's method, set the last scale parameter to 0.1
 paidLrScale = scale(paidLr) {
@@ -236,7 +265,6 @@ mclBundle = MCLEstimate {
     crIncurred pPerIRes
 }
 printData "Munich Chain-Ladder", mclBundle
-
         </pre>
     </body>
 </html>

@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.estimate;
 
-import org.jreserve.jrlib.estimate.CapeCodEstimate;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.linkratio.LinkRatio;

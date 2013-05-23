@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.script.executor">
-    <module_version install_time="1369291322599" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1369331156432" last="true" origin="installer" specification_version="1.0">
         <file crc="3617739067" name="config/Modules/org-jreserve-grscript-gui-script-executor.xml"/>
-        <file crc="1338169393" name="modules/org-jreserve-grscript-gui-script-executor.jar"/>
+        <file crc="3947261620" name="modules/org-jreserve-grscript-gui-script-executor.jar"/>
     </module_version>
 </module>

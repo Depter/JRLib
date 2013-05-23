@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.script.function.explorer">
-    <module_version install_time="1369291322567" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1369331156416" last="true" origin="installer" specification_version="1.0">
         <file crc="3274766529" name="config/Modules/org-jreserve-grscript-gui-script-function-explorer.xml"/>
-        <file crc="3184948601" name="modules/org-jreserve-grscript-gui-script-function-explorer.jar"/>
+        <file crc="4118102118" name="modules/org-jreserve-grscript-gui-script-function-explorer.jar"/>
     </module_version>
 </module>

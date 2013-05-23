@@ -26,7 +26,9 @@ import org.jreserve.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class BornhuetterFergusonEstimate extends AbstractEstimate<LossRatioEstimateInput> {
+public class BornhuetterFergusonEstimate 
+    extends AbstractEstimate<LossRatioEstimateInput> 
+{
 
     private ClaimTriangle ciks;
     
