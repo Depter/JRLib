@@ -19,8 +19,8 @@
         
         <h2>Residuals</h2>
         <p>
-            The ODP bootstrap method generates pseudo claim triangles from
-            a residual claim triangle. There are several methods provided to
+            The ODP bootstrap method generates pseudo factor triangles from
+            a residual factor triangle. There are several methods provided to
             calculate, scale and modify the variables.
         </p>
         
@@ -132,7 +132,7 @@
         <h2>Random Generator</h2>
         <p>
             A random generator is needed to reshuffle the residuals from 
-            the residual triangle, and to symulate the process variance.
+            the residual triangle, and to simulate the process variance.
             In the current version only the default Java random generator
             is supported, but if it is desired, additional random 
             generators can be plugged in, by implementing the
@@ -148,7 +148,7 @@
         <ul>
             <li>
                 <b>random(Random rnd):</b> where <i>rnd</i> is a custom
-                implementation for the 
+                implementation of the 
                 <i>org.jreserve.jrlib.util.random.Random</i> interface.
             </li>
             <li>
@@ -169,11 +169,11 @@
         <p>
             For each projected claim the bootstrap method applies a process
             variance (see the examples). In the current version the follwing 
-            process simulators supported:
+            process simulators supported for the ODP-Bootstrap:
         </p>
         <ul>
             <li>
-                <b>Constant:</b> mean no process variance is applied.
+                <b>Constant:</b> no process variance is applied.
             </li>
             <li>
                 <b>Gamma:</b> gamma process variance is applied
@@ -216,8 +216,8 @@ res = center(res)
 res = residuals(scales) {
     exclude(0, 7)
     exclude(7, 0)
-    center()
     adjust()
+    center()
 }
 
 //Create an ODP-Bootstrap with default Java random generator, and 

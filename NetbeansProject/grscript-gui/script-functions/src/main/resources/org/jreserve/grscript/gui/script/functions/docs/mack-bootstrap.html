@@ -1,0 +1,190 @@
+<html>
+    <head>
+        <title>Mack-Bootstrap</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>Mack-Bootstrap</h1>
+        <p>
+            The Mack bootstrap allows to bootstrap chain-ladder reserves,
+            based on the theory described in <i>&quot;Measuring the 
+            Variability of Chain Ladder Reserve Estimates&quot;</i>.
+            The bootstrap requires 3 input:
+        </p>
+        <ul>
+            <li>Residuals</li>
+            <li>Random Generator</li>
+            <li>Process simulator</li>
+        </ul>
+        
+        <h2>Residuals</h2>
+        <p>
+            The Mack-Bootstrapping uses the scaled residuals of the development 
+            factors. The calculation of these residuals is described in the
+            <a href="link-ratio-residuals.html">Link-Ratio Residuals</a> section.
+        </p>
+        
+        <h3>Segments</h3>
+        <p>
+            It is possible to define segments for the bootstrap process. If
+            a segment is defined the residuals will be reshuffled only within
+            the cells, belonging to the given segment. To fix a residual
+            to a given place, simply define a segment which contains only
+            the given cell.
+        </p>
+        
+        <p>
+            Segments can be defined within the bootstrap definition as from-to 
+            ranges, or by cells.
+        </p>
+        <pre>
+    //Split a triangle with 10 accident periods to two
+    //segments.
+    segment {
+        from(accident:0, development:0)
+        to(a:10, d:4
+    }
+
+    //Lock the top-left cell to the same position
+    segment {
+        cell(0, 0)
+    }
+        </pre>
+        
+        <h2>Random Generator</h2>
+        <p>
+            A random generator is needed to reshuffle the residuals from 
+            the residual triangle, and to simulate the process variance.
+            In the current version only the default Java random generator
+            is supported, but if it is desired, additional random 
+            generators can be plugged in, by implementing the
+            <i>org.jreserve.jrlib.util.random.Random</i> interface.
+        </p>
+        
+        <p>
+            Per default the bootstrap uses an instance of the Java random
+            generator. To plug-in other implementations or to set
+            the seed, use:
+        </p>
+        
+        <ul>
+            <li>
+                <b>random(Random rnd):</b> where <i>rnd</i> is a custom
+                implementation of the 
+                <i>org.jreserve.jrlib.util.random.Random</i> interface.
+            </li>
+            <li>
+                <b>random(String type, long seed):</b> where <i>type</i>
+                must be <i>&quot;Java&quot;</i>.
+            </li>
+            <li>Use builder syntax:
+                <pre>
+    random {
+        type "Java"
+        seed 1000
+    }
+                </pre>
+            </li>
+        </ul>
+        
+        <h2>Process Simulator</h2>
+        <p>
+            For each projected claim the bootstrap method applies a process
+            variance (see the examples). In the current version the follwing 
+            process simulators supported for Mack-Bootstrap:
+        </p>
+        <ul>
+            <li>
+                <b>Constant:</b> no process variance is applied.
+            </li>
+            <li>
+                <b>Gamma:</b> gamma distributin is used to add process variance 
+                to the projections, using only  the given claim (incurred or 
+                paid) for mean and variance.
+            </li>
+            <li>
+                <b>Normal:</b> normal distributin is used to add process 
+                variance to the projections, using only the given claim 
+                (incurred or paid) for mean and variance.
+            </li>
+            <li>
+                <b>Weighted-Gamma:</b> gamma distributin is used to add process 
+                variance to the projections, using both claims (incurred and 
+                paid) for mean and variance.
+            </li>
+            <li>
+                <b>Weighted-Normal:</b> normal distributin is used to add 
+                process variance to the projections, using both claims 
+                (incurred and paid) for mean and variance.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data
+paid = triangle(cummulate(mclPaid()))
+incurred = triangle(cummulate(mclIncurred()))
+lrs = linkRatio(paid)
+
+//Calculate the scale parameters. For the
+//last development period it is estimated by the
+//Min formula suggested by Thomas Mack.
+scales = scale(lrs)
+
+//Create the residual triangle. Exclude the 0 value
+//at the top-right corner, then adjust for bootstrap bias
+//and make sure, that the mean of the residuals is 0
+res = residuals(scales) {
+    exclude(a:0, d:6)
+    adjust()
+    center()
+}
+
+//Create a Mack-Bootstrap, with default Java random generator, and 
+//Gamma process simmulator.
+bs = mackBootstrap {
+    count 100
+    residuals res
+}
+//It is only created, not run yet
+bs.run()
+printData "Reserves", bs.getReserves()
+
+//Create a bootstra with Java random generator (seed set to 1000), Constant
+//process varaince, and te residuals splitted after the 3rd development period. 
+bs = mackBootstrap {
+    count 100
+    random "Java", 1000
+    process "Constant"
+    residuals res
+    segment {
+        from(a:0, d:0)
+        to(a:7, d:2)
+    }
+}
+bs.run()
+printData "Reserves", bs.getReserves()
+
+//Bootstrap 100.000 times and export the reserves for all development period
+//Use Normal process variance, no segmentation
+//
+//The whole process takes less then 2 seconds on the authors 
+//computer (8GB RAM, Intel Core i7, Windos 7, 64 bit)
+bs = mackBootstrap {
+    count 100000
+    random "Java", 1000
+    process "Normal"
+    residuals res
+}
+bs.run()
+println "Finnished bootstrap, exporting data"
+writeCsv("C:/Munka/Triangle/test.csv", bs.getReserves()) {
+    decimalSeparator '.'
+    columnSeparator ';'
+    columnNames 1..8
+}
+        </pre>
+    </body>
+    
+</html>

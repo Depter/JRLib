@@ -64,7 +64,7 @@ public class OdpBootstrapAdapter extends AbstractFunctionProviderAdapter {
 
     @Override
     public String getName() {
-        return Bundle.LBL_ClaimTriangleAdapter_Name();
+        return Bundle.LBL_OdpBootstrapAdapter_Name();
     }
 
     @Override

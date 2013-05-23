@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Map Version 2.0//EN" "http://java.sun.com/products/javahelp/map_2_0.dtd">
 <map version="2.0">
+    <mapID target="org.jreserve.grscript.gui.script.functions.timer" url="timer.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.csvReader" url="csv-reader.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.csvWriter" url="csv-writer.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.printData" url="printdata-about.html"/>
@@ -20,4 +21,7 @@
     <mapID target="org.jreserve.grscript.gui.script.functions.claimRatioResiduals" url="claim-ratio-residuals.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.estimates" url="estimates.html"/>
     <mapID target="org.jreserve.grscript.gui.script.functions.odpBootstrap" url="odp-bootstrap.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.mackBootstrap" url="mack-bootstrap.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.mclBootstrap" url="mcl-bootstrap.html"/>
+    <mapID target="org.jreserve.grscript.gui.script.functions.bootstrapUtil" url="bootstrap-util.html"/>
 </map>

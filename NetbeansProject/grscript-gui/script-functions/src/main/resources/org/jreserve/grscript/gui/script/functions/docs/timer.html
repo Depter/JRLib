@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Timer</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Timer</h2>
+        <p>
+            The timer functionality provides a convenient way
+            to measure the duration of some task within a script
+        </p>
+        
+        <ul>
+            <li>
+                <b>startTimer(String task):</b> Starts a timer for
+                the given task.
+            </li>
+            <li>
+                <b>stopTimer(String task):</b> Stops the timer associated
+                with the given task, retuns the duration of the rask in
+                miliseconds and clears the timer.
+            </li>
+            <li>
+                <b>finnishTimer(String task):</b> Stops the timer associated
+                with the given task, prints the duration of the task to
+                the output and clears the timer.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+startTimer("Task_1")
+startTimer("Task_2")
+
+//Stop for about 1 second
+Thread.sleep(1000)
+duration = stopTimer("Task_1")
+
+println "Task_1: ${duration} miliseconds"
+
+//Stop for about 1 second
+Thread.sleep(2000)
+
+finnishTimer("Task_2")
+        </pre>
+    </body>
+</html>

@@ -4,6 +4,7 @@ import org.jreserve.grscript.AbstractDelegate
 import org.jreserve.jrlib.bootstrap.util.HistogramData
 import org.jreserve.jrlib.bootstrap.util.HistogramDataFactory
 import org.jreserve.jrlib.bootstrap.util.BootstrapUtil
+import org.jreserve.jrlib.util.MathUtil
 
 /**
  *
@@ -23,6 +24,7 @@ class BootstrapUtilDelegate extends AbstractDelegate {
         emc.scale            << this.&scale 
         emc.percentile       << this.&percentile 
         emc.histogram        << this.&histogram 
+        emc.printData        << this.&printData
     }
     
     double[] totalReserves(double[][] reserves) {
@@ -35,6 +37,18 @@ class BootstrapUtilDelegate extends AbstractDelegate {
     
     double meanReserve(double[][] reserves) {
         BootstrapUtil.getMeanTotalReserve(reserves)
+    }
+    
+    double meanReserve(double[] reserves) {
+        MathUtil.mean(reserves)
+    }
+    
+    double minReserve(double[] reserves) {
+        MathUtil.max(reserves)
+    }
+    
+    double maxReserve(double[] reserves) {
+        MathUtil.max(reserves)
     }
     
     double meanReserve(double[][] reserves, int accident) {
@@ -77,4 +91,18 @@ class BootstrapUtilDelegate extends AbstractDelegate {
         new HistogramDataFactory(data).setIntervals(firstUpper, step).buildData()
     }
     
+    void printData(String title, HistogramData data) {
+        super.script.println title
+        this.printData data
+    }
+    
+    void printData(HistogramData data) {
+        int count = data.getIntervalCount();
+        super.script.println "Interval\tLower\tUpper\tCount"
+        for(int i=0; i<count; i++) {
+            super.script.print(i+1)
+            double[] row = [data.getLowerBound(i), data.getUpperBound(i), data.getCount(i)]
+            super.script.printData row
+        }
+    }
 }

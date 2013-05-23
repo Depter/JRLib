@@ -1,6 +1,5 @@
 package org.jreserve.jrlib.bootstrap.util;
 
-import org.jreserve.jrlib.bootstrap.util.HistogramData;
 import org.jreserve.jrlib.TestConfig;
 import static org.junit.Assert.*;
 import org.junit.Before;
@@ -122,5 +121,25 @@ public class HistogramDataTest {
     public void testGetCounts() {
         int[] expected = {2, 6, 16, 23, 24, 14, 12, 8, 4, 1};
         assertArrayEquals(expected, hist.getCounts());
+    }
+    
+    @Test
+    public void testToArray() {
+        double[][] expected = {
+            {Double.NEGATIVE_INFINITY, -2.15443405, 2d},
+            {-2.15443405, -1.56414808, 6d},
+            {-1.56414808, -0.97386211, 16d},
+            {-0.97386211, -0.38357614, 23d},
+            {-0.38357614,  0.20670983, 24d},
+            { 0.20670983,  0.79699580, 14d},
+            { 0.79699580,  1.38728177, 12d},
+            { 1.38728177,  1.97756774, 8d},
+            { 1.97756774,  2.56785371, 4d},
+            { 2.56785371,  Double.POSITIVE_INFINITY, 1d}
+        };
+        double[][] found = hist.toArray();
+        assertEquals(expected.length, found.length);
+        for(int i=0; i<found.length; i++)
+            assertArrayEquals(expected[i], found[i], TestConfig.EPSILON);
     }
 }

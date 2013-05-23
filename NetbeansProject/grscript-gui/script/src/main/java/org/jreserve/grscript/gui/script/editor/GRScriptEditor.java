@@ -96,21 +96,16 @@ public class GRScriptEditor extends TopComponent implements MultiViewElement {
     }
     
     private void registerEditorActions() {
+        registerAction(SystemAction.get(UndoAction.class), "control Z");
+        registerAction(SystemAction.get(RedoAction.class), "control R");
+        registerAction(SystemAction.get(org.openide.actions.SaveAction.class), "control S");
+        registerAction(new TogleCommentAction(editor), "control /");
+    }
+    
+    private void registerAction(Action action, String stroke) {
+        KeyStroke ks = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
         InputMap keys = getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-        KeyStroke stroke;
-        SystemAction action;
-        
-        action = SystemAction.get(UndoAction.class);
-        stroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-        keys.put(stroke!=null? stroke : KeyStroke.getKeyStroke("control Z"), action);
-        
-        action = SystemAction.get(RedoAction.class);
-        stroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-        keys.put(stroke!=null? stroke : KeyStroke.getKeyStroke("control R"), action);
-        
-        action = SystemAction.get(org.openide.actions.SaveAction.class);
-        stroke = (KeyStroke) action.getValue(Action.ACCELERATOR_KEY);
-        keys.put(stroke!=null? stroke : KeyStroke.getKeyStroke("control S"), action);
+        keys.put(ks==null? KeyStroke.getKeyStroke(stroke) : ks, action);
     }
     
     private void loadFile() {

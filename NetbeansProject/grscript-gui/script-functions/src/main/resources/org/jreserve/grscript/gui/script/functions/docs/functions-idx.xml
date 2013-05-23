@@ -2,6 +2,7 @@
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
     <indexitem text="Printing Data" target="org.jreserve.grscript.gui.script.functions.printData"/>
+    <indexitem text="Timer" target="org.jreserve.grscript.gui.script.functions.timer"/>
     <indexitem text="Test Data" target="org.jreserve.grscript.gui.script.functions.testData"/>
     <indexitem text="Import Csv-Data" target="org.jreserve.grscript.gui.script.functions.csvReader"/>
     <indexitem text="Export Csv-Data" target="org.jreserve.grscript.gui.script.functions.csvWriter"/>
@@ -20,4 +21,7 @@
     <indexitem text="Claim-Ratio Residuals" target="org.jreserve.grscript.gui.script.functions.claimRatioResiduals"/>
     <indexitem text="Estimates" target="org.jreserve.grscript.gui.script.functions.estimates"/>
     <indexitem text="ODP-Bootstrap" target="org.jreserve.grscript.gui.script.functions.odpBootstrap"/>
+    <indexitem text="Mack-Bootstrap" target="org.jreserve.grscript.gui.script.functions.mackBootstrap"/>
+    <indexitem text="MCL-Bootstrap" target="org.jreserve.grscript.gui.script.functions.mclBootstrap"/>
+    <indexitem text="Bootstrap Utilities" target="org.jreserve.grscript.gui.script.functions.bootstrapUtil"/>
 </index>

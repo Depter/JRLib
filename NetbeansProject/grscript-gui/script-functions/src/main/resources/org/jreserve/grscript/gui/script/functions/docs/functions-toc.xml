@@ -4,6 +4,7 @@
     <tocitem text="GRScript">
         <tocitem text="Functions">
             <tocitem text="Printing Data" target="org.jreserve.grscript.gui.script.functions.printData"/>
+            <tocitem text="Timer" target="org.jreserve.grscript.gui.script.functions.timer"/>
             <tocitem text="Test Data" target="org.jreserve.grscript.gui.script.functions.testData"/>
             
             <tocitem text="Input-Output">
@@ -42,6 +43,9 @@
 
             <tocitem text="Bootstrap">
                 <tocitem text="ODP-Bootstrap" target="org.jreserve.grscript.gui.script.functions.odpBootstrap"/>
+                <tocitem text="Mack-Bootstrap" target="org.jreserve.grscript.gui.script.functions.mackBootstrap"/>
+                <tocitem text="MCL-Bootstrap" target="org.jreserve.grscript.gui.script.functions.mclBootstrap"/>
+                <tocitem text="Utilities" target="org.jreserve.grscript.gui.script.functions.bootstrapUtil"/>
             </tocitem>
         </tocitem>
     </tocitem>

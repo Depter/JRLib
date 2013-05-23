@@ -129,4 +129,18 @@ public class HistogramData {
         System.arraycopy(counts, 0, result, 0, intervalCount);
         return result;
     }
+    
+    /**
+     * Returns the histogram data as a matrix. The first coordinate
+     * is the row, the second coordinate points to the lower bound,
+     * upper bound and to the count.
+     */
+    public double[][] toArray() {
+        double[][] result = new double[intervalCount][3];
+        for(int i=0; i<intervalCount; i++) {
+            System.arraycopy(bounds[i], 0, result[i], 0, 2);
+            result[i][2] = counts[i];
+        }
+        return result;    
+    }
 }

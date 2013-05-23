@@ -1,0 +1,229 @@
+<html>
+    <head>
+        <title>MCL-Bootstrap</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h1>MCL-Bootstrap</h1>
+        <p>
+            The MCL bootstrap allows to bootstrap the Munich Chain-Ladder
+            estimates. The method is described in the article <i>&quote;
+            Bootstrap Estimation of the Predictive Distributions of Reserves
+            Using Paid and Incurred Claims&quot;</i> by <i>Huijuan Liu</i> and 
+            <i>Richard Verrall</i>. The bootstrap requires 3 input
+        </p>
+        
+        <ul>
+            <li>
+                Set of residuals, containing the scaled residuals for the
+                paid and incurred development factors and for the
+                Incurred/Paid and Paid/Incurred claim ratios.
+            </li>
+            <li>Random Generator</li>
+            <li>Process simulator</li>
+        </ul>
+        
+        <h2>Residuals</h2>
+        <p>
+            The ODP bootstrap method generates 4 pseudo factor and claim-ratio
+            triangles from the supplied residuals. The calculation of these 
+            residuals is described in the <a href="link-ratio-residuals.html">
+            Link-Ratio Residuals</a> and <a href="claim-ratio-residuals.html">
+            Claim-Ratio Residuals</a> sections.
+        </p>
+        
+        <h3>Segments</h3>
+        <p>
+            It is possible to define segments for the bootstrap process. If
+            a segment is defined the residuals will be reshuffled only within
+            the cells, belonging to the given segment. To fix a residual
+            to a given place, simply define a segment which contains only
+            the given cell.
+        </p>
+        
+        <p>
+            Segments can be defined within the bootstrap definition as from-to 
+            ranges, or by cells.
+        </p>
+        <pre>
+    //Split a triangle with 10 accident periods to two
+    //segments.
+    segment {
+        from(accident:0, development:0)
+        to(a:10, d:4
+    }
+
+    //Lock the top-left cell to the same position
+    segment {
+        cell(0, 0)
+    }
+        </pre>
+        
+        <h2>Random Generator</h2>
+        <p>
+            A random generator is needed to reshuffle the residuals from 
+            the residual triangle, and to simulate the process variance.
+            In the current version only the default Java random generator
+            is supported, but if it is desired, additional random 
+            generators can be plugged in, by implementing the
+            <i>org.jreserve.jrlib.util.random.Random</i> interface.
+        </p>
+        
+        <p>
+            Per default the bootstrap uses an instance of the Java random
+            generator. To plug-in other implementations or to set
+            the seed, use:
+        </p>
+        
+        <ul>
+            <li>
+                <b>random(Random rnd):</b> where <i>rnd</i> is a custom
+                implementation of the 
+                <i>org.jreserve.jrlib.util.random.Random</i> interface.
+            </li>
+            <li>
+                <b>random(String type, long seed):</b> where <i>type</i>
+                must be <i>&quot;Java&quot;</i>.
+            </li>
+            <li>Use builder syntax:
+                <pre>
+    random {
+        type "Java"
+        seed 1000
+    }
+                </pre>
+            </li>
+        </ul>
+        
+        <h2>Process Simulator</h2>
+        <p>
+            For each projected claim the bootstrap method applies a process
+            variance (see the examples). In the current version the follwing 
+            process simulators supported for MCL-Bootstrap:
+        </p>
+        <ul>
+            <li>
+                <b>Constant:</b> no process variance is applied.
+            </li>
+            <li>
+                <b>Gamma:</b> gamma distributin is used to add
+                process variance to the projections.
+            </li>
+            <li>
+                <b>Normal:</b> normal distributin is used to add
+                process variance to the projections.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data
+paid = triangle(cummulate(mclPaid()))
+incurred = triangle(cummulate(mclIncurred()))
+
+//Ratios
+paidLr = linkRatio(paid)
+incurredLr = linkRatio(incurred)
+paidCr = ratios(incurred, paid)
+incurredCr = ratios(paid, incurred)
+
+//Scales
+paidLrScale = scale(paidLr) {fixed(5:0.1)}
+incurredLrScale = scale(incurredLr) {fixed(5:0.1)}
+paidCrScale = scale(paidCr)
+incurredCrScale = scale(incurredCr)
+
+//Residuals
+paidLrRes = residuals(paidLrScale) {
+    adjust()
+    center()
+}
+incurredLrRes = residuals(incurredLrScale) {
+    adjust()
+    center()
+}
+paidCrRes = residuals(paidCrScale) {
+    adjust()
+    center()
+}
+incurredCrRes = residuals(incurredCrScale) {
+    adjust()
+    center()
+}
+
+//Or the same can be achieved in a shorter way, with a closure, See Groovy closures
+def calcRes = {scale -> residuals(scale) {adjust();center()}}
+paidLrRes = calcRes(paidLrScale)
+incurredLrRes = calcRes(incurredLrScale)
+paidCrRes = calcRes(paidCrScale)
+incurredCrRes = calcRes(incurredCrScale)
+
+
+//Create a MCL-Bootstrap, with default Java random generator, and 
+//Gamma process simmulator.
+bs = mclBootstrap {
+    count 100
+    residuals {
+        paidLr paidLrRes
+        paidCr paidCrRes
+        incurredLr incurredLrRes
+        incurredCr incurredCrRes
+    }
+}
+//It is only created, not run yet
+bs.run()
+printData "Paid-Reserves", bs.getPaidReserves()
+printData "Incurred-Reserves", bs.getIncurredReserves()
+printData "Paid-Incurred-Reserves", bs.getPaidIncurredReserves()
+
+//Create a MCL-Bootstrap, with default Java random generator, 1000 as seed
+//and Weighted-Gamma process simmulator.
+bs = mclBootstrap {
+    count 100
+    random "Java", 1000
+    process "Weighted-Gamma"
+    residuals {
+        paidLr paidLrRes
+        paidCr paidCrRes
+        incurredLr incurredLrRes
+        incurredCr incurredCrRes
+    }
+}
+bs.run()
+printData "Paid-Reserves", bs.getPaidReserves()
+printData "Incurred-Reserves", bs.getIncurredReserves()
+printData "Paid-Incurred-Reserves", bs.getPaidIncurredReserves()
+
+//Create a MCL-Bootstrap, with default Java random generator, 1000 as seed
+//and Weighted-Normal process simmulator, and export the results
+//
+//The bootstrap-process takes about 4 seconds on the authors 
+//computer (8GB RAM, Intel Core i7, Windos 7, 64 bit)
+bs = mclBootstrap {
+    count 100000
+    random "Java", 1000
+    process "Weighted-Normal"
+    residuals {
+        paidLr paidLrRes
+        paidCr paidCrRes
+        incurredLr incurredLrRes
+        incurredCr incurredCrRes
+    }
+}
+bs.run()
+println "Bootstrap finnished, exporting data..."
+
+def export = {name, reserves -> 
+    writeCsv("D:/Temp/test_${name}.csv", reserves) {
+        decimalSeparator '.'
+        columnSeparator ';'
+        columnNames 1..7
+    }
+}
+export("paid", bs.getPaidReserves())
+export("incurred", bs.getIncurredReserves())
+export("paid_incurred", bs.getPaidIncurredReserves())
+        </pre>
+    </body>
+</html>

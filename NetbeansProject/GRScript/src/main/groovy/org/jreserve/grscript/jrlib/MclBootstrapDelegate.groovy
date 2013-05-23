@@ -60,8 +60,8 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate {
     }
     
     void process(Map map) {
-        String paid = mapUtil.getString(map, "paid", "p")
-        String incurred = mapUtil.getString(map, "incurred", "i")
+        String paid = this.mapUtil.getString(map, "paid", "p")
+        String incurred = this.mapUtil.getString(map, "incurred", "i")
         this.process(paid, incurred)
     }
     
@@ -86,10 +86,10 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate {
         
 
         JRandom rnd = super.getRandom()
-        MclProcessSimulator ps = createProcessSimulator(rnd, paidProcessType, paidLrRes, true)
-        MclProcessSimulator is = createProcessSimulator(rnd, incurredProcessType, incurredLrRes, false)
+        MclProcessSimulator ps = createProcessSimulator(rnd, this.paidProcessType, this.paidLrRes, true)
+        MclProcessSimulator is = createProcessSimulator(rnd, this.incurredProcessType, this.incurredLrRes, false)
         
-        MclResidualBundle resBundle = new MclResidualBundle(paidLrRes, paidCrRes, incurredLrRes, incurredCrRes)
+        MclResidualBundle resBundle = new MclResidualBundle(this.paidLrRes, this.paidCrRes, this.incurredLrRes, this.incurredCrRes)
         MclPseudoData pseudoData = new MclPseudoData(rnd, resBundle, super.getSegments());
         
         MclBootstrapEstimateBundle estimate = new MclBootstrapEstimateBundle(pseudoData, ps, is);
@@ -97,13 +97,13 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate {
     }
     
     private void checkResiduals() {
-        if(!paidLrRes)
+        if(!this.paidLrRes)
             throw new IllegalStateException("Paid link-ratio residuals are not set!")
-        if(!paidCrRes)
+        if(!this.paidCrRes)
             throw new IllegalStateException("Incurred/Paid residuals are not set!")
-        if(!incurredLrRes)
+        if(!this.incurredLrRes)
             throw new IllegalStateException("Incurred link-ratio residuals are not set!")
-        if(!incurredCrRes)
+        if(!this.incurredCrRes)
             throw new IllegalStateException("Paid/Incurred residuals are not set!")
     }
     
@@ -127,7 +127,7 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate {
             case "constant":
                 return new MclConstantProcessSimulator();
             default:
-                throw new IllegalStateException("Unknown process type: ${processType}!")
+                throw new IllegalStateException("Unknown process type: ${type}!")
         }
     }    
     
@@ -153,31 +153,31 @@ class MclBootstrapDelegate extends AbstractBootstrapDelegate {
         }
         
         def getProperty(String name) {
-            mbd.getProperty(name)
+            this.mbd.getProperty(name)
         }
         
         void paidLr(LRResidualTriangle res) {
-            mbd.paidLrRes = res
+            this.mbd.paidLrRes = res
         }
         
         void iPerP(CRResidualTriangle res) {
-            mbd.paidCrRes = res
+            this.mbd.paidCrRes = res
         }
         
         void paidCr(CRResidualTriangle res) {
-            mbd.paidCrRes = res
+            this.mbd.paidCrRes = res
         }
         
         void incurredLr(LRResidualTriangle res) {
-            mbd.incurredLrRes = res
+            this.mbd.incurredLrRes = res
         }
         
         void pPerI(CRResidualTriangle res) {
-            mbd.incurredCrRes = res
+            this.mbd.incurredCrRes = res
         }
         
         void incurredCr(CRResidualTriangle res) {
-            mbd.incurredCrRes = res
+            this.mbd.incurredCrRes = res
         }
     }
 }

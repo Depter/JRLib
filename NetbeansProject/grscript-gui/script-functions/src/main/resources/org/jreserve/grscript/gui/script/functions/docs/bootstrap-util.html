@@ -1,0 +1,142 @@
+<html>
+    <head>
+        <title>Bootstrap Utilities</title>
+        <link rel="stylesheet" href="nbdocs://org.jreserve.grscript.gui.script/org/jreserve/grscript/gui/script/docs/help.css" type="text/css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    </head>
+    <body>
+        <h2>Factor Triangles</h2>
+        <p>
+            GRScript provides utility methods for working with output of
+            bootstrapping methods.
+        </p>
+        
+        <ul>
+            <li>
+                <b>totalReserves(double[][] reserves):</b> calculates the
+                total bootstrap reserves, from the given accident year 
+                reserves.
+            </li>
+            <li>
+                <b>accidentReserves(double[][] reserves, int accident):</b> 
+                extracts the reserves for the given accident period from the
+                bootstrap reserves.
+            </li>
+            <li>
+                <b>meanReserve(double[][] reserves):</b> calculates the
+                mean of the total bootstrap reserves.
+            </li>
+            <li>
+                <b>meanReserve(double[] reserves):</b> calculates the
+                mean of the bootstrap reserves.
+            </li>
+            <li>
+                <b>minReserve(double[] reserves):</b> calculates the
+                minimum of the bootstrap reserves.
+            </li>
+            <li>
+                <b>maxReserve(double[] reserves):</b> calculates the
+                maximum of the bootstrap reserves.
+            </li>
+            <li>
+                <b>meanReserve(double[][] reserves, int accident):</b>
+                calculates the mean of the reserves for the given
+                accident period from the bootstrap reserves.
+            </li>
+            <li>
+                <b>accidentMeans(double[][] reserves):</b> calculates
+                the mean of the reserve for all accident periods.
+            </li>
+            <li>
+                <b>shift(double[] reserves, double mean):</b> shifts
+                the reserves in such a way, that their mean will be equal
+                to the supplied mean.
+            </li>
+            <li>
+                <b>shift(double[][] reserves, double[] means):</b> shifts
+                the reserves for all accident period in such a way, that 
+                their means will be equal to the supplied means.
+            </li>
+            <li>
+                <b>scales(double[] reserves, double mean):</b> scales
+                the reserves in such a way, that their mean will be equal
+                to the supplied mean.
+            </li>
+            <li>
+                <b>scale(double[][] reserves, double[] means):</b> scales
+                the reserves for all accident period in such a way, that 
+                their means will be equal to the supplied means.
+            </li>
+            <li>
+                <b>percentile(double[] reserves, double percentile):</b>
+                calculates the given percentile of the reserves (use
+                0.95 for the 95% percentile).
+            </li>
+            <li>
+                <b>histogram(double[] data):</b> creates a histogram data
+                from the given input.
+            </li>
+            <li>
+                <b>histogram(double[] data, int intervals):</b> creates a 
+                histogram data from the given input, which will have the
+                predefined number of intervals.
+            </li>
+            <li>
+                <b>histogram(double[] data, double firstUpper, double step):</b>
+                creates a histogram data from the given input, for which
+                the first interval will and at <i>firstUpper</i> and
+                each interval will be <i>step</i> width.
+            </li>
+        </ul>
+        
+        <h2>Examples</h2>
+        <pre>
+//Load data
+paid = triangle(cummulate(mclPaid()))
+incurred = triangle(cummulate(mclIncurred()))
+lrs = linkRatio(paid)
+
+mean = CLEstimate(lrs).getReserve()
+printData "Mean:\t\t", mean
+
+scales = scale(lrs)
+res = residuals(scales) {
+    exclude(a:0, d:6)
+    adjust()
+    center()
+}
+
+//Create Mack-Bootsrap
+bs = mackBootstrap {
+    count 10000
+    residuals res
+}
+bs.run()
+
+//Calculate the total bootstrap reserves
+bsReserves = totalReserves(bs.getReserves())
+
+//Calculate the mean of the total bootstrap reserves
+printData "Bootstrap mean:\t", meanReserve(bsReserves)
+
+//Scale the reserves, to have the same mean as the estimate
+scale(bsReserves, mean)
+
+//95% percentile
+printData "95% percentile:\t", percentile(bsReserves, 0.95)
+
+//Create histogram-data, with 50 intervals
+histData = histogram(bsReserves, 50)
+//Print the histogram data to the output window
+printData "Reserves", histData
+
+//Export the historgram to a csv file
+writeCsv("D:/Temp/histogram.csv", histData.toArray()) {
+    decimalSeparator '.'
+    columnSeparator ';'
+    columnNames(["Lower", "Upper", "Count"])
+    rowNames 1..50
+}
+        </pre>
+    </body>
+</html>

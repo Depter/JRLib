@@ -71,6 +71,15 @@ class PrintDelegate implements FunctionProvider {
         script.println()
     }
     
+    void printData(String title, Number number) {
+        script.print title
+        printData number
+    }
+    
+    void printData(Number number) {
+        script.println(formatNumber(number))
+    }
+    
     String formatNumber(double value) {
         return Double.isNaN(value)? "NaN" : df.format(value)
     }
