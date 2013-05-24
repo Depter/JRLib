@@ -6,6 +6,23 @@
     <artifactId>grscript-gui-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
+    
+    <licenses>
+        <license>
+            <name>GNU GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+        <license>
+            <name>GNU LESSER GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+  
+    <developers>
+        <developer>
+            <name>Peter Decsi</name>
+        </developer>
+    </developers>
 
     <name>grscript-gui-parent</name>
 
@@ -64,10 +81,12 @@
     <module>script-functions</module>
     <module>script-function-explorer</module>
     <module>script-executor</module>
+    <module>grscript-gui-plot</module>
   </modules>
 
     <properties>
         <netbeans.version>RELEASE72</netbeans.version>
         <brandingToken>grscript_gui</brandingToken>
+        <netbeans.hint.license>gpl3</netbeans.hint.license>
     </properties>
 </project>

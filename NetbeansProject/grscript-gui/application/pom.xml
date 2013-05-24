@@ -64,6 +64,11 @@
             <artifactId>grscript-gui-script-executor</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>grscript-gui-plot</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.netbeans.api</groupId>
