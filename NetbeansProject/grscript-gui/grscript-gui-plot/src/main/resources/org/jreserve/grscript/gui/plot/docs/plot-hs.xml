@@ -19,7 +19,7 @@
 <helpset version="2.0">
     <title>Plot Help</title>
     <maps>
-        <homeID>org.jreserve.grscript.gui.plot.claimTriangle</homeID>
+        <homeID>org.jreserve.grscript.gui.plot.plotAdapter</homeID>
         <mapref location="plot-map.xml"/>
     </maps>
     <view mergetype="javax.help.AppendMerge">
@@ -34,12 +34,10 @@
         <type>javax.help.IndexView</type>
         <data>plot-idx.xml</data>
     </view>
-<!--    CAUSES JavaHelp to crush
     <view>
         <name>Search</name>
         <label>Search</label>
         <type>javax.help.SearchView</type>
         <data engine="com.sun.java.help.search.DefaultSearchEngine">JavaHelpSearch</data>
     </view>
--->
 </helpset>

@@ -100,6 +100,12 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>grscript-gui-groovy</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>grscript-gui-classpath</artifactId>
             <version>${project.version}</version>
             <type>jar</type>

@@ -20,6 +20,7 @@ import org.jreserve.grscript.FunctionProvider
 import org.jreserve.jrlib.triangle.TriangleUtil
 import org.jreserve.jrlib.triangle.Triangle
 import org.jreserve.grscript.util.PrintDelegate
+import org.jreserve.jrlib.util.MathUtil
 
 /**
  *
@@ -56,12 +57,16 @@ class TriangleUtilDelegate implements FunctionProvider {
         meta.minus    << {double[] b -> TriangleUtil.subtract(delegate, b)}
         meta.multiply << {double[] b -> TriangleUtil.multiply(delegate, b)}
         meta.div      << {double[] b -> TriangleUtil.divide(delegate, b)}
+        meta.max      << {MathUtil.max(delegate)}
+        meta.min      << {MathUtil.min(delegate)}
         
         meta = new double[0][0].getClass().metaClass
         meta.plus     << {double[][] b -> TriangleUtil.add(delegate, b)}
         meta.minus    << {double[][] b -> TriangleUtil.subtract(delegate, b)}
         meta.multiply << {double[][] b -> TriangleUtil.multiply(delegate, b)}
         meta.div      << {double[][] b -> TriangleUtil.divide(delegate, b)}
+        meta.max      << {MathUtil.max(delegate.collect {it.max()} as double[])}
+        meta.min      << {MathUtil.min(delegate.collect {it.min()} as double[])}
     }
 }
 

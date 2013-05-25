@@ -29,6 +29,7 @@ import org.jreserve.grscript.gui.script.GRScriptDataObject;
 import org.jreserve.grscript.gui.script.functions.FunctionFolder;
 import org.netbeans.api.actions.Savable;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 import org.openide.util.RequestProcessor;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;

@@ -224,5 +224,29 @@ class TriangleUtilDelegateTest {
         for(i in 0..1)
             assertArrayEquals(expected[i], m[i], TestConfig.EPSILON)
     }
+    
+    @Test
+    public void testMax_Vector() {
+        double m = runScript("vA.max()\n")
+        assertEquals(4, m, TestConfig.EPSILON)
+    }
+    
+    @Test
+    public void testMin_Vector() {
+        double m = runScript("vB.min()\n")
+        assertEquals(5, m, TestConfig.EPSILON)
+    }
+    
+    @Test
+    public void testMax_Matrix() {
+        double m = runScript("mA.max()\n")
+        assertEquals(4, m, TestConfig.EPSILON)
+    }
+    
+    @Test
+    public void testMin_Matrix() {
+        double m = runScript("mB.min()\n")
+        assertEquals(5, m, TestConfig.EPSILON)
+    }
 }
 

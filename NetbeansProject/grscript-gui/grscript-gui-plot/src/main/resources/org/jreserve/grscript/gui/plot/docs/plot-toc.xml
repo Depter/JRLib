@@ -20,7 +20,7 @@
     <tocitem text="GRScript">
         <tocitem text="Functions">
             <tocitem text="Plot">
-                <tocitem text="Claim Triangle Plots" target="org.jreserve.grscript.gui.plot.claimTriangle"/>
+                <tocitem text="Plots" target="org.jreserve.grscript.gui.plot.plotAdapter"/>
             </tocitem>
         </tocitem>
     </tocitem>
