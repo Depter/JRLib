@@ -33,6 +33,7 @@ abstract class AbstractPlot {
     final static int CT_LINE = 0
     final static int CT_BAR = 1
     final static int CT_XY_LINE = 2
+    final static int CT_XY_BAR = 3
     
     final static PlotOrientation ORIENTATION = PlotOrientation.VERTICAL
     final static boolean SHOW_URLS = false
@@ -66,6 +67,9 @@ abstract class AbstractPlot {
             case CT_XY_LINE:
                 initChart(ChartFactory.&createXYLineChart)
                 break
+            case CT_XY_BAR:
+                initXYBarChart()
+                break
             default:
                 throw new IllegalStateException("Unknown chart type: ${type}!")
         }
@@ -75,6 +79,14 @@ abstract class AbstractPlot {
         chart = cl(
             getChartTitle(), format.xTitle, format.yTitle,
             dataSet, ORIENTATION,
+            format.showLegend, format.showTooltips, SHOW_URLS
+        )
+    }
+    
+    protected void initXYBarChart() {
+        chart = ChartFactory.createXYBarChart(
+            getChartTitle(), format.xTitle, false, format.yTitle,
+            dataSet, ORIENTATION, 
             format.showLegend, format.showTooltips, SHOW_URLS
         )
     }

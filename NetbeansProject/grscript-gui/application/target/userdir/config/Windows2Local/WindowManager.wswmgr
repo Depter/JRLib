@@ -35,18 +35,18 @@
   <constraints>
   <path orientation="horizontal" number="60" weight="0.7" />
   <path orientation="vertical" number="40" weight="0.7" />
-  <path orientation="horizontal" number="40" weight="0.7" />
+  <path orientation="horizontal" number="40" weight="0.5763097949886105" />
   </constraints>
   <bounds x="450" y="177" width="573" height="324" />
     </editor-area>
     <screen width="1366" height="768"/>
-    <active-mode name="properties"/>
+    <active-mode name="explorer"/>
     <toolbar configuration="Standard" preferred-icon-size="24"/>
     <tc-list>
-  <tc-id id="HelpTopComponent"/>
-  <tc-id id="MultiView-GRScript#007C_1"/>
   <tc-id id="ScriptExplorerTopComponent"/>
+  <tc-id id="MultiView-GRScript#007C"/>
   <tc-id id="FunctionExplorerTopComponent"/>
+  <tc-id id="HelpTopComponent"/>
   <tc-id id="output"/>
   <tc-id id="ClassPathExplorerTopComponent"/>
     </tc-list>

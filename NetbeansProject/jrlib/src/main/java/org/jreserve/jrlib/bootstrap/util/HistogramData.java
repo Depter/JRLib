@@ -89,6 +89,13 @@ public class HistogramData {
     }
     
     /**
+     * Returns the width of the intervals.
+     */
+    public double getIntervalSize() {
+        return intervalSize;
+    }
+    
+    /**
      * Returns the number of elements in a given interval. If `interval`
      * falls outside of the bounds 
      * `[0; {@link #getIntervalCount() getIntervalCount()}]`, 0 is returned.

@@ -21,14 +21,20 @@ import org.jfree.data.category.DefaultCategoryDataset
 import org.jfree.chart.renderer.category.LineAndShapeRenderer
 import java.awt.BasicStroke
 import java.awt.Color
+import org.jfree.chart.ChartFactory
+import java.awt.Shape
+import org.jfree.util.ShapeUtilities
+import java.awt.Rectangle
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
 abstract class AbstractResidualPlot extends AbstractLinePlot {
-    final int RESIDUAL = 0;
-    final int ZERO = 1;
+    final int ZERO = 0;
+    final int RESIDUAL = 1;
+    
+    private final static int RESIDUAL_SIZE = 4
     
     private double minY = Double.NaN
     private double maxY = Double.NaN
@@ -36,33 +42,34 @@ abstract class AbstractResidualPlot extends AbstractLinePlot {
     AbstractResidualPlot(PlotFormat format) {
         super(format)
     }
-    
+
     protected DefaultCategoryDataset createDataSet() {
         DefaultCategoryDataset ds = new DefaultCategoryDataset()
-        String residualKey = getResidualKey()
-        String zeroKey = getZeroKey()
+        PlotLabel zeroKey = getZeroKey()
         
         int length = getDomainLength()
         for(int d=0; d<length; d++) {
             PlotLabel dName = getDomainName(d)
+            ds.addValue(0d, zeroKey, dName)
+            
             double[] residuals = getResiduals(d)
             for(int r=0; r<residuals.length; r++) {
                 double v = residuals[r]
-                calculateBounds(v)
-                ds.addValue(v, residualKey, dName)
+                if(!Double.isNaN(v)) {
+                    calculateBounds(v)
+                    ds.addValue(v, getResidualKey(r), dName)
+                }
             }
-
-            ds.addValue(0d, zeroKey, dName)
         }
-        
+
         return ds;
     } 
     
-    protected PlotLabel getResidualKey() {
-        return new PlotLabel(RESIDUAL, "Residuals")
+    protected PlotLabel getResidualKey(int domain) {
+        return new PlotLabel(domain+1, "Residuals")
     }
     
-    protected String getZeroKey() {
+    protected PlotLabel getZeroKey() {
         return new PlotLabel(ZERO, "Zero")
     }
     
@@ -85,18 +92,26 @@ abstract class AbstractResidualPlot extends AbstractLinePlot {
         renderer.setUseFillPaint(true)
         renderer.setStroke(new BasicStroke(2));
         
-        
-        renderer.setSeriesLinesVisible(RESIDUAL, false)
-        renderer.setSeriesShapesVisible(RESIDUAL, true)
-        Color color = Color.BLACK;//super.format.nextColor()
-        renderer.setSeriesPaint(RESIDUAL, color);
-        renderer.setSeriesFillPaint(RESIDUAL, color)
-        
         renderer.setSeriesLinesVisible(ZERO, true)
         renderer.setSeriesShapesVisible(ZERO, false)
-        color = Color.RED;//super.format.nextColor()
+        Color color = Color.RED;//super.format.nextColor()
         renderer.setSeriesPaint(ZERO, color);
         renderer.setSeriesFillPaint(ZERO, color)
+        
+        int residualCount = dataSet.getRowCount()
+        color = Color.BLACK;//super.format.nextColor()
+        Shape shape = new Rectangle(RESIDUAL_SIZE, RESIDUAL_SIZE);
+            
+        for(int r=1; r<residualCount; r++) {
+            renderer.setSeriesShape(r, shape)
+            renderer.setSeriesLinesVisible(r, false)
+            renderer.setSeriesShapesVisible(r, true)
+            renderer.setSeriesPaint(r, color);
+            renderer.setSeriesFillPaint(r, color)
+            
+            if(r > 1)
+                renderer.setSeriesVisibleInLegend(r, false)
+        }
     }	
 
     
