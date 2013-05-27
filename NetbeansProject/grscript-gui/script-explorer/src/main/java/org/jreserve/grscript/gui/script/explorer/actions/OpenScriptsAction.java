@@ -16,6 +16,7 @@
  */
 package org.jreserve.grscript.gui.script.explorer.actions;
 
+import org.jreserve.grscript.gui.script.GRScriptFileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;

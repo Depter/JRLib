@@ -76,6 +76,14 @@ class PlotFormatBuilder {
         this.gridColor(ColorUtil.getColor(color))
     }
     
+    void foreColor(Color color) {
+        this.format.foreColor = color
+    }
+    
+    void foreColor(def color) {
+        this.foreColor(ColorUtil.getColor(color))
+    }
+    
     void series(String... names) {
         this.series(Arrays.asList(names))
     }
@@ -84,7 +92,11 @@ class PlotFormatBuilder {
         this.format.seriesNames = names
     }
     
-    void colors(List colors) {
+    void colors(Object... colors) {
+        this.colors(Arrays.asList(colors))
+    }
+    
+    void colors(Collection colors) {
         colors = colors.collect{ColorUtil.getColor(it)}
         if(colors.isEmpty())
             colors.add(Color.RED)

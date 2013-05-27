@@ -1,0 +1,47 @@
+//Load data
+data = apcPaid()
+
+//Methods for Claim-Triangles
+paid = triangle(data)    //Create triangle from a matrix
+
+//Modifications applied in the order, in wich
+//they are declared. Thus corrigate -> cummulate gives a different
+//result the cummulate -> corrigate
+//Corrigate a cell
+paid = corrigate(paid, 1, 1, 100000)  
+paid = corrigate(paid, [a:1, d:1, value:100000])
+
+//Exclude a cell
+paid = exclude(paid, 1, 6)
+paid = exclude(paid, [a:1, d:6])
+
+//Cummulate a triangle
+paid = cummulate(paid)
+
+//Smoothing
+paid = smooth(paid) {
+    type(type:"exponential", alpha:0.5)
+    cell(a:0, d:1, applied:false)
+    cell(a:1, d:1, applied:false)
+    cell(a:2, d:1, applied:true)
+}
+
+//Use a builder syntax
+paid = triangle(data) {
+    corrigate(1, 1, 100000)  
+    corrigate(a:1, d:1, value:100000)
+    exclude(1, 6)
+    exclude(a:1, d:6)
+    cummulate()
+    smooth {
+        type(type:"exponential", alpha:0.5)
+        cell(a:0, d:1, applied:false)
+        cell(a:1, d:1, applied:false)
+        cell(a:2, d:1, applied:true)
+    }
+}
+
+printData paid
+plot paid
+
+

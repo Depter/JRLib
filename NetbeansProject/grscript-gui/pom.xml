@@ -82,6 +82,7 @@
     <module>script-function-explorer</module>
     <module>script-executor</module>
     <module>grscript-gui-plot</module>
+    <module>grscript-gui-script-examples</module>
   </modules>
 
     <properties>

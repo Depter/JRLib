@@ -1,0 +1,45 @@
+//Load data
+paid = triangle(cummulate(apcPaid()))
+incurred = triangle(cummulate(apcIncurred()))
+
+//Methods for Ratio-Triangles
+ratio = ratioTriangle(paid, incurred)    //Create paid/incurred triangle
+ratio = ratioTriangle(n:paid, d:incurred)
+
+//Modifications applied in the order, in wich
+//they are declared. Thus corrigate -> smooth gives a different
+//result the smooth -> corrigate
+//Corrigate a cell
+ratio = corrigate(ratio, 0, 1, 0.9)  
+ratio = corrigate(ratio, [a:0, d:1, value:0.9])
+
+//Exclude a cell
+ratio = exclude(ratio, 1, 6)
+ratio = exclude(ratio, [a:1, d:6])
+
+//Smoothing
+ratio = smooth(ratio) {
+    type(type:"exponential", alpha:0.5)
+    cell(a:0, d:1, applied:false)
+    cell(a:1, d:1, applied:false)
+    cell(a:2, d:1, applied:true)
+}
+
+//Use a builder syntax
+ratio = ratioTriangle(paid, incurred) {
+    corrigate(0, 1, 0.9)  
+    corrigate(a:0, d:1, value:0.9)
+    exclude(1, 6)
+    exclude(a:1, d:6)
+    smooth(ratio) {
+        type(type:"exponential", alpha:0.5)
+        cell(a:0, d:1, applied:false)
+        cell(a:1, d:1, applied:false)
+        cell(a:2, d:1, applied:true)
+    }
+}
+
+printData ratio
+plot ratio
+
+

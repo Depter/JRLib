@@ -1,0 +1,86 @@
+//create 2 vector
+double[] v1 = [2, 2, 2, 2] 
+double[] v2 = [3, 3, 3]
+
+printData "V1", v1
+printData "V2", v2
+
+//Some arithmetics
+printData "V1 + V2", v1 + v2
+printData "V1 - V2", v1 - v2
+printData "V1 / V2", v1 / v2
+printData "V1 * V2", v1 * v2
+
+//Methods for vectors
+x = cummulate(v1)
+x = decummulate(x)
+y = copy(x)
+
+//predefined vector(s)
+printData "APC-Exposure", apcExposure()
+
+//Plot vectors
+plot(apcExposure()) {
+    title "APC-Exposure"
+    series "Burning Cost"
+}
+
+//Use some Groovy to get the natural logarithm of each item
+double[] logExposure = apcExposure().collect{Math.log(it)}
+plot(logExposure) {
+    title "Log-Exposure"
+    series "Burning Cost"
+}
+
+//Create 2 matrices
+double[][] m1 = [
+    [1, 1, 1],
+    [2, 2],
+    [3]
+]
+double[][] m2 = [
+    [4, 4],
+    [5]
+]
+printData "M1", m1
+printData "M2", m2
+
+//Some arithmetics
+printData "M1 + M2", m1 + m2
+printData "M1 - M2", m1 - m2
+printData "M1 / M2", m1 / m2
+printData "M1 * M2", m1 * m2
+
+//Predefiend matrices
+apcPaid = apcPaid()
+apcIncurred = apcIncurred()
+apcNoC = apcNoC()    //Nomber of claims
+mclPaid = mclPaid()
+mclIncurred = mclIncurred()
+
+//Plot the predefined matrices
+apcNames = (1997..2004).collect{"$it"}
+plot(apcPaid) {
+    title "APC-Paid"
+    series apcNames
+}
+plot(apcIncurred){
+    title "APC-Incurred"
+    series apcNames
+}
+plot(apcNoC){
+    title "APC-Number of Claims"
+    series apcNames
+}
+plot(mclPaid) {
+    title "MCL-Paid"
+}
+plot(mclIncurred){
+    title "MCL-Incurred"
+}
+
+//Methods for matrices
+x = cummulate(apcPaid)
+x = decummulate(x)
+y = copy(x)
+

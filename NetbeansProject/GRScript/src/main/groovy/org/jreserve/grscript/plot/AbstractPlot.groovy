@@ -22,6 +22,8 @@ import org.jfree.chart.JFreeChart
 import org.jfree.chart.ChartFactory
 import org.jfree.data.general.Dataset
 import org.jfree.chart.axis.ValueAxis
+import java.awt.Color
+import org.jfree.chart.title.LegendTitle
 
 /**
  *
@@ -101,6 +103,13 @@ abstract class AbstractPlot {
         format.resetColors()
         chart.setBackgroundPaint(format.backgroundColor)
         formatPlot(chart.getPlot())
+        
+        formatAxisColors(chart.getPlot().getDomainAxis())
+        formatAxisColors(chart.getPlot().getRangeAxis())
+        
+        LegendTitle legend = chart.getLegend()
+        if(legend)
+            formatLegend(legend)
     }
     
     protected abstract void formatPlot(def plot);
@@ -124,9 +133,22 @@ abstract class AbstractPlot {
         formatAxis(chart.getPlot().getDomainAxis(), min, max)
     }
     
+    protected void formatAxisColors(def axis) {
+        Color color = format.foreColor
+        axis.setAxisLinePaint(color)
+        axis.setTickMarkPaint(color)
+        axis.setTickLabelPaint(color)
+        axis.setLabelPaint(color)
+    }
+    
     protected void formatZeroRangeAxis(double max) {
         max += MARGIN * max
         chart.getPlot().getRangeAxis().setRange(0, max)
+    }
+    
+    protected void formatLegend(LegendTitle legend) {
+        legend.setBackgroundPaint(format.backgroundColor)
+        legend.setItemPaint(format.foreColor)
     }
 }
 

@@ -29,9 +29,10 @@ class ListColorGenerator implements ColorGenerator {
     private int size;
     private int index = 0;
     
-    public ListColorGenerator(List colors) {
-        size = colors.size()
-        this.colors = colors.toArray(new Color[size])
+    public ListColorGenerator(Collection colorList) {
+        size = colorList.size()
+        this.colors = new Color[size]
+        colorList.eachWithIndex{Color c, int i -> colors[i] = c}
     }
     
     public ListColorGenerator(Color... colors) {

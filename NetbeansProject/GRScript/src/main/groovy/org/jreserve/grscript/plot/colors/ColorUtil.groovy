@@ -92,6 +92,8 @@ class ColorUtil {
                 return Color.CYAN
             case "dark gray":
             case "dark-gray":
+            case "dark grey":
+            case "dark-grey":
                 return Color.DARK_GRAY
             case "gray":
             case "grey":

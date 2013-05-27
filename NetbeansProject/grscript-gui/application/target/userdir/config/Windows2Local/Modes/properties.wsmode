@@ -7,11 +7,11 @@
   <constraints>
     <path orientation="horizontal" number="60" weight="0.7"/>
     <path orientation="vertical" number="40" weight="0.7"/>
-    <path orientation="horizontal" number="80" weight="0.4191343963553531"/>
+    <path orientation="horizontal" number="80" weight="0.3"/>
     <path orientation="vertical" number="80" weight="0.5"/>
   </constraints>
-  <bounds x="1024" y="413" width="204" height="236" />
+  <bounds x="1200" y="487" width="240" height="278" />
   <frame state="0"/>
-    <active-tc  id="HelpTopComponent" />
+    <active-tc  id="HelpTopComponent"  prev-id="HelpTopComponent" />
     <empty-behavior permanent="true"/>
 </mode>

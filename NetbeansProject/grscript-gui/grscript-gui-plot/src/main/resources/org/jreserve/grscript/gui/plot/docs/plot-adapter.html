@@ -22,17 +22,167 @@
     </head>
     <body>
         <h2>Plots</h2>
+        <p>
+            Most of the objects (triangles, vectors, link-ratios, etc.), are
+            plottable in a context sensitive way. To plot an object use
+            one of the following methods:
+        </p>
+        
+        <ul>
+            <li>
+                <b>plot(object):</b> plots the given object. The generated
+                chart(s) are different depending on the object (i.e. different
+                charts are generated for a claim triangle, then for link-ratios).
+            </li>
+            <li>
+                <b>plot(Object) {plotformat}:</b> allows to customise the
+                plot.
+            </li>
+        </ul>
+        
+        <h2>Plot Format</h2>
+        <p>
+            Some properties can be defined for each plot, such as axis-titles, 
+            series names, colors etc. It is important, that these properties 
+            are not always respected. A list of all properties:
+        </p>
+                <pre>
+    triangle = triangle(apcPaid())  //Load the APC-Paid claim triangle
+    plot(triangle) {
+        title "APC-Paid"
+        xTitle "Developments"
+        yTitle "Value"
+        legend true    //Hide, Show legend, default is show
+        background "black"   //See colors section
+        gridColor "blue"     //See colors section
+        foreColor "white"    //See colors section
+        series (1997..2004).collect {"${it}"}   //sereis names from 1997 to 2004
+        colors "#AA0000", "magenta", "orange"   //use only red, magenta and orange
+    }
+                </pre>
+        
+        <h3>Colors</h3>
+        <p>
+            Currently colors can be defined by name or by a hexadecimal RGB code.
+        </p>
+        <p>
+            The supported color names are <b>black</b>, <b>blue</b>, <b>cyan</b>, 
+            <b>dark-gray</b>, <b>gray</b>, <b>green</b>, <b>light-gray</b>, 
+            <b>magenta</b>, <b>orange</b>, <b>pink</b>, <b>red</b>, 
+            <b>white</b>, <b>yellow</b>
+        </p>
+        <p>
+            The second, more flexible, way to define colors is via hexadecimal
+            numbers on the RGB scale. A hexadecimal number is a 7 character text,
+            where the first character must be &quot;&sharp;&quot;, followd by six
+            hexadecimal digits (0-9, A-F). The first two digits set the red
+            component, the second two digits set the green component and the
+            last two digits set the blue component.
+        </p>
+        
+        <h2>Plots</h2>
+        <p>
+            The following objects can be plotted with the standard plot methods:
+        </p>
+        <ul>
+            <!--Curve-->
+            <!--Histogram-->
+            <li>ClaimTriangle</li>
+            <li>FactorTriangle</li>
+            <li>RatioTriangle</li>
+            <li>LinkRatio</li>
+            <li>ClaimRatio</li>
+            <li>LinkRatio residual triangle</li>
+            <li>ClaimRatio residual triangle</li>
+            <li>ODP Residual triangle</li>
+            <li>Estimate</li>
+            <li>Mcl-Estimate bundle</li>
+            <li>Histogram Data</li>
+        </ul>
+        
+        <p>
+            Some other data types require additional parameters to plot:
+        </p>
+        <ul>
+            <li>
+                <b>Link-Ratio curves</b>
+                <p>
+                    Link-ratio curves can be plotted against the original
+                    link-ratios. The general way to do this is
+                    <b>plot(linkRatio, curves)</b> or 
+                    <b>plot(linkRatio, curves) {plotFormat}</b>
+                </p>
+                <pre>
+    //Create the link-ratios
+    paid = triangle(cummulate(apcPaid()))
+    lrs = linkRatio(paid)
+    
+    //Create the curves
+    exp = smoothAll(lrs, 10, "exp")
+    power = smoothAll(lrs, 10, "power")
+    invPow = smoothAll(lrs, 10, "inv.pow")
+    weibul = smoothAll(lrs, 10, "Weibul")
+    
+    //plot the curves
+    plot lrs, [exp, power, invPow, weibul]
+    
+    //plot the curves with assigned names
+    names = [Exponential:exp, Power:power, "Inverse-Power":invPow, Weibul:weibul]
+    plot lrs, names
+    
+    //Customize the plot
+    plot(lrs, names) {
+        title "Customized Curves"
+        xTitle "Developments"
+    }
+                </pre>
+            </li>
+            <li>
+                <b>Bootstrap results</b>
+                <p>
+                    Instead of plotting only the histogram, additional values
+                    (such as mean, percentiles) can be added to a histogram
+                    plot.
+                </p>
+                <pre>
+//Load data
+paid = triangle(cummulate(apcPaid()))
+lrs = linkRatio(paid)
+
+mean = CLEstimate(lrs).getReserve()
+
+//Apply the constant scale method
+scales = constantScale(lrs)
+
+//Residuals
+res = residuals(scales) {
+    exclude(0, 7)
+    exclude(7, 0)
+    adjust()
+    center()
+}
+plot res
+
+//Bootstrap 100.000 times
+bs = odpBootstrap {
+    count 100000
+    random "Java", 1000
+    residuals res
+}
+bs.run()
+totals = totalReserves(bs.getReserves())
+perc = percentile(totals, 0.95)
+hist = histogram(totals, 50)
+
+//Simple plot, without legend
+plot(hist) {
+    legend false
+}
+
+//Plot also mean, and 95% percentile
+plot hist, [Mean:mean, "95%-Percentile":perc]
+                </pre>
+            </li>
+        </ul>
     </body>
 </html>
-<!--
-Tip: to create a link which will open in an external web browser, try:
-<object classid="java:org.netbeans.modules.javahelp.BrowserDisplayer">
-    <param name="content" value="http://www.netbeans.org/">
-    <param name="text" value="<html><u>http://www.netbeans.org/</u></html>">
-    <param name="textFontSize" value="medium">
-    <param name="textColor" value="blue">
-</object>
-To create a link to a help set from another module, you need to know the code name base and path, e.g.:
-<a href="nbdocs://org.netbeans.modules.usersguide/org/netbeans/modules/usersguide/configure/configure_options.html">Using the Options Window</a>
-(This link will behave sanely if that module is disabled or missing.)
--->

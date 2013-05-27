@@ -27,6 +27,7 @@ import org.jreserve.grscript.plot.colors.DefaultColorGenerator
  */
 class PlotFormat {
 
+    private final static Color FORE_COLOR = Color.BLACK;
     private final static Color BACKGROUND = Color.WHITE;
     private final static Color GRID_COLOR = Color.LIGHT_GRAY;
     
@@ -35,6 +36,7 @@ class PlotFormat {
     String yTitle = null;
     Color backgroundColor = BACKGROUND;
     Color gridColor = GRID_COLOR;
+    Color foreColor = FORE_COLOR;
     boolean showLegend = true;
     boolean showTooltips = true;
     private ColorGenerator colors = new DefaultColorGenerator();
@@ -42,6 +44,14 @@ class PlotFormat {
     
     void setColorGenerator(ColorGenerator generator) {
         this.colors = generator ?: new DefaultColorGenerator()
+    }
+    
+    void setForeColor(Color color) {
+        this.foreColor = color ?: FORE_COLOR
+    }
+    
+    Color getForeColor() {
+        foreColor
     }
     
     Color nextColor() {

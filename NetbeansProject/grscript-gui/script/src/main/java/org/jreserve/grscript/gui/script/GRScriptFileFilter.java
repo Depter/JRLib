@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.grscript.gui.script.explorer.actions;
+package org.jreserve.grscript.gui.script;
 
 import java.io.File;
 import javax.swing.filechooser.FileFilter;
@@ -28,11 +28,11 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.GRScriptFileChooser.Description=Groovy Reserve Script (*.grs)"
 })
-class GRScriptFileFilter extends FileFilter {
+public class GRScriptFileFilter extends FileFilter {
     
     private static GRScriptFileFilter INSTANCE = null;
     
-    static GRScriptFileFilter getDefault() {
+    public static GRScriptFileFilter getDefault() {
         if(INSTANCE == null)
             INSTANCE = new GRScriptFileFilter();
         return INSTANCE;

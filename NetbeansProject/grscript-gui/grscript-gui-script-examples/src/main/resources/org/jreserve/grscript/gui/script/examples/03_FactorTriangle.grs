@@ -1,0 +1,46 @@
+//Load data
+data = cummulate(apcPaid())
+paid = triangle(data)
+
+//Methods for Factor-Triangles
+ft = factors(data)    
+ft = factors(triangle(data))
+
+//Modifications applied in the order, in wich
+//they are declared. Thus corrigate -> smooth gives a different
+//result the smooth -> corrigate
+//Corrigate a cell
+ft = corrigate(ft , 0, 2, 1.01)  
+ft = corrigate(ft, [a:0, d:2, value:1.01])
+
+//Exclude a cell
+ft = exclude(ft, 1, 5)
+ft = exclude(ft, [a:1, d:5])
+
+//Smoothing
+ft = smooth(ft) {
+    type(type:"exponential", alpha:0.5)
+    cell(a:2, d:0, applied:false)
+    cell(a:3, d:0, applied:false)
+    cell(a:4, d:0, applied:true)
+}
+
+//Use a builder syntax
+ft = factors(paid) {
+    corrigate(0, 2, 1.01)  
+    corrigate(a:0, d:2, value:1.01)
+    exclude(1, 5)
+    exclude(a:1, d:5)
+    smooth {
+        type(type:"exponential", alpha:0.5)
+        cell(a:2, d:0, applied:false)
+        cell(a:3, d:0, applied:false)
+        cell(a:4, d:0, applied:true)
+    }
+}
+
+printData ft
+plot ft
+
+
+

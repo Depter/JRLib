@@ -24,6 +24,7 @@ import org.jreserve.jrlib.triangle.factor.FactorTriangle
 import org.jreserve.jrlib.linkratio.LinkRatio
 import org.jreserve.jrlib.claimratio.ClaimRatio
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle
+import org.jreserve.jrlib.vector.Vector as RVector
 import org.jreserve.grscript.plot.claimtriangle.ClaimTrianglePlot
 import org.jreserve.grscript.plot.factortriangle.FactorTrianglePlot
 import org.jreserve.grscript.plot.ratio.RatioPlot
@@ -32,6 +33,7 @@ import org.jreserve.grscript.plot.lrcurve.CurvePlot
 import org.jreserve.grscript.plot.residual.ResidualPlots
 import org.jreserve.grscript.plot.estimate.EstimatePlots
 import org.jreserve.grscript.plot.histogram.HistogramPlots
+import org.jreserve.grscript.plot.data.DataPlots
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle
 import org.jreserve.jrlib.bootstrap.odp.residuals.OdpResidualTriangle
@@ -39,6 +41,7 @@ import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.OdpScaledResidualTriangl
 import org.jreserve.jrlib.estimate.Estimate
 import org.jreserve.jrlib.estimate.mcl.MclEstimateBundle
 import org.jreserve.jrlib.bootstrap.util.HistogramData
+import com.sun.j3d.utils.geometry.Triangle
 
 /**
  *
@@ -284,5 +287,57 @@ class PlotterDelegate extends AbstractDelegate {
     void plot(HistogramData data, Closure cl) {
         plot(data, [:], cl)
     }
+    
+    void plot(double[] data) {
+        plot(data, new PlotFormat())
+    }
+    
+    void plot(double[] data, PlotFormat format) {
+        Map charts = DataPlots.createPlot(data, format)
+        String title = format.getTitle()
+        showPlot(title ?: "Data", charts)
+    }
+    
+    void plot(double[] data, Closure cl) {
+        plot(data, buildFormat(cl))
+    }
+    
+    void plot(double[][] data) {
+        plot(data, new PlotFormat())
+    }
+    
+    void plot(double[][] data, PlotFormat format) {
+        Map charts = DataPlots.createPlot(data, format)
+        String title = format.getTitle()
+        showPlot(title ?: "Data", charts)
+    }
+    
+    void plot(double[][] data, Closure cl) {
+        plot(data, buildFormat(cl))
+    }
+    
+    void plot(Triangle data) {
+        plot(data.toArray())
+    }
+    
+    void plot(Triangle data, PlotFormat format) {
+        plot(data.toArray(), format)
+    }
+    
+    void plot(Triangle data, Closure cl) {
+        plot(data.toArray(), cl)
+    }
+    
+    void plot(RVector data) {
+        plot(data.toArray())
+    }
+    
+    void plot(RVector data, PlotFormat format) {
+        plot(data.toArray(), format)
+    }
+    
+    void plot(RVector data, Closure cl) {
+        plot(data.toArray(), cl)
+    }    
 }
 

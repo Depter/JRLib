@@ -93,9 +93,13 @@ import org.jfree.chart.renderer.xy.StandardXYBarPainter
         
         int index = 1
         double correction = range / 2d - margin
+        double vMax = maxY * 1.05
+        if(!values.empty)
+            calculateYBounds(vMax)
+
         values.each {key, value -> 
             XYIntervalSeries valueSeries = new XYIntervalSeries(new PlotLabel(index++, key), false, true)
-            valueSeries.add(value, value-correction, value+correction, maxY, maxY, maxY)
+            valueSeries.add(value, value-correction, value+correction, vMax, vMax, vMax)
             ds.addSeries(valueSeries)
         }
         

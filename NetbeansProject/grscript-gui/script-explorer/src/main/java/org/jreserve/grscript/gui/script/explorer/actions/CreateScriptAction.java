@@ -16,6 +16,7 @@
  */
 package org.jreserve.grscript.gui.script.explorer.actions;
 
+import org.jreserve.grscript.gui.script.GRScriptFileFilter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -37,13 +38,15 @@ import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.NbBundle.Messages;
 
 @ActionID(
-        category = "File",
-        id = "org.jreserve.grscript.gui.script.explorer.actions.CreateScriptAction")
+    category = "File",
+    id = "org.jreserve.grscript.gui.script.explorer.actions.CreateScriptAction"
+)
 @ActionRegistration(
-        displayName = "#CTL_CreateScriptAction")
+    displayName = "#CTL_CreateScriptAction"
+)
 @ActionReferences({
     @ActionReference(path = "Menu/File", position = 1375),
-    @ActionReference(path = ScriptFolderNode.ACTION_PATH, position = 300)
+    @ActionReference(path = ScriptFolderNode.ACTION_PATH, position = 300, separatorAfter = 350)
 })
 @Messages({
     "CTL_CreateScriptAction=Create GRScript",
