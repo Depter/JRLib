@@ -4,7 +4,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/grscript/gui/classpath/
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20130529
-OpenIDE-Module-Build-Version: 201305290924
+OpenIDE-Module-Build-Version: 201305292255
 OpenIDE-Module: org.jreserve.grscript.gui.classpath.explorer
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Display-Category: org.jreserve
