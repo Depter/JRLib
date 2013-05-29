@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.classpath">
-    <module_version install_time="1369778818461" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1369819456345" last="true" origin="installer" specification_version="1.0">
         <file crc="553286067" name="config/Modules/org-jreserve-grscript-gui-classpath.xml"/>
-        <file crc="3909624307" name="modules/org-jreserve-grscript-gui-classpath.jar"/>
+        <file crc="3482181787" name="modules/org-jreserve-grscript-gui-classpath.jar"/>
     </module_version>
 </module>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.grscript.gui.util.notification">
-    <module_version install_time="1369778809736" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1369819436395" last="true" origin="installer" specification_version="1.0">
         <file crc="1701039333" name="config/Modules/org-jreserve-grscript-gui-util-notification.xml"/>
-        <file crc="1929444680" name="modules/org-jreserve-grscript-gui-util-notification.jar"/>
+        <file crc="3282137666" name="modules/org-jreserve-grscript-gui-util-notification.jar"/>
     </module_version>
 </module>
