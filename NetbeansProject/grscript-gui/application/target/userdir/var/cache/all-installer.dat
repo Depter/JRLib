@@ -1,4 +1,4 @@
-#Thu May 30 00:57:02 CEST 2013
+#Thu May 30 09:46:34 CEST 2013
 org.netbeans.core.startup.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.modules.settings.AutoUpdate-Show-In-Client=false
 org.netbeans.core.startup.OpenIDE-Module-Layer=org/netbeans/core/startup/layer.xml
@@ -274,8 +274,8 @@ org.openide.awt.OpenIDE-Module-Install=\u0000
 org.netbeans.modules.javahelp.OpenIDE-Module-Description=\u0000
 org.openide.awt.AutoUpdate-Show-In-Client=false
 org.netbeans.modules.autoupdate.ui.OpenIDE-Module-Install=org/netbeans/modules/autoupdate/ui/actions/Installer.class
-org.jreserve.grscript.gui.groovy.AutoUpdate-Show-In-Client=\u0000
 org.jreserve.grscript.gui.classpath.explorer.AutoUpdate-Show-In-Client=\u0000
+org.jreserve.grscript.gui.groovy.AutoUpdate-Show-In-Client=\u0000
 org.netbeans.core.output2.OpenIDE-Module-Deprecated=\u0000
 org.jreserve.grscript.gui.script.examples.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.core.AutoUpdate-Show-In-Client=false
@@ -351,8 +351,8 @@ org.netbeans.swing.tabcontrol.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.modules.options.keymap.OpenIDE-Module-Install=\u0000
 org.netbeans.modules.print.OpenIDE-Module-Description=\u0000
 org.netbeans.libs.felix.AutoUpdate-Show-In-Client=false
-org.netbeans.modules.masterfs.macosx.AutoUpdate-Show-In-Client=false
 org.jreserve.grscript.gui.script.functions.AutoUpdate-Show-In-Client=\u0000
+org.netbeans.modules.masterfs.macosx.AutoUpdate-Show-In-Client=false
 org.netbeans.swing.plaf.OpenIDE-Module-Install=\u0000
 org.jreserve.grscript.gui.branding.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 org.openide.util.lookup.AutoUpdate-Show-In-Client=false
@@ -388,8 +388,8 @@ org.jreserve.grscript.gui.classpath.AutoUpdate-Show-In-Client=\u0000
 org.netbeans.libs.osgi.AutoUpdate-Show-In-Client=false
 org.netbeans.core.netigso.AutoUpdate-Show-In-Client=false
 org.netbeans.libs.felix.OpenIDE-Module-Hide-Classpath-Packages=\u0000
-org.openide.execution.AutoUpdate-Show-In-Client=false
 org.netbeans.core.execution.AutoUpdate-Show-In-Client=false
+org.openide.execution.AutoUpdate-Show-In-Client=false
 org.jreserve.grscript.gui.script.functions.OpenIDE-Module-Layer=\u0000
 org.netbeans.core.io.ui.OpenIDE-Module-Layer=org/netbeans/core/io/ui/layer.xml
 org.openide.util.OpenIDE-Module-Deprecated=\u0000
