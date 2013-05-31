@@ -13,7 +13,7 @@
                 </folder>
  
                 <folder name="Triangles">
-                    <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                    <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/folderTriangle.png"/>
                     <attr name="position" intvalue="20"/>
  
                     <folder name="APC_Paid">
@@ -41,7 +41,7 @@
                 </folder>
  
                 <folder name="Vectors">
-                    <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                    <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/folderVector.png"/>
                     <attr name="position" intvalue="30"/>
  
                     <file name="APC- Burning Cost">
@@ -50,18 +50,18 @@
                 </folder>
  
                 <folder name="Link-Ratios">
-                    <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                    <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/folderLinkRatio.png"/>
                     <attr name="position" intvalue="40"/>
  
                     <folder name="Lr Paid">
-                        <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                        <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link_ratio.png"/>
                         <file name="Source: PAC_Paid">
                             <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
                             <attr name="position" intvalue="10"/>
                         </file>
  
                         <folder name="Development Factors">
-                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/factor_triangle.png"/>
                             <attr name="position" intvalue="20"/>
                             <file name="Correction">
                                 <!--<attr name="icon" stringvalue="path/to/icon"/>-->
@@ -115,7 +115,7 @@
                         </folder>
 
                         <folder name="Smoothing">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/smoothing.png"/>
                             <attr name="position" intvalue="40"/>
                             <file name="Length: 10">
                                 <!--<attr name="icon" stringvalue="path/to/icon"/>-->
@@ -144,18 +144,22 @@
                 </folder>
  
                 <folder name="Estimates">
-                    <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                    <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/folderEstimate.png"/>
                     <attr name="position" intvalue="50"/>
                     
                     <folder name="CL">
-                        
+                        <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/estimate.png"/>
                     </folder>
                     
                 </folder>
  
                 <folder name="Bootstraps">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                    <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/folderBootstrap.png"/>
                     <attr name="position" intvalue="60"/>
+                    
+                    <folder name="ODP-Bootstrap">
+                        <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/bootstrap.png"/>
+                    </folder>
                 </folder>
 
             </folder>            

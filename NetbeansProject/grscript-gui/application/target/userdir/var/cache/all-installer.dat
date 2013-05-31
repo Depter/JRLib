@@ -1,4 +1,4 @@
-#Thu May 30 09:46:34 CEST 2013
+#Fri May 31 00:33:29 CEST 2013
 org.netbeans.core.startup.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.modules.settings.AutoUpdate-Show-In-Client=false
 org.netbeans.core.startup.OpenIDE-Module-Layer=org/netbeans/core/startup/layer.xml
@@ -388,8 +388,8 @@ org.jreserve.grscript.gui.classpath.AutoUpdate-Show-In-Client=\u0000
 org.netbeans.libs.osgi.AutoUpdate-Show-In-Client=false
 org.netbeans.core.netigso.AutoUpdate-Show-In-Client=false
 org.netbeans.libs.felix.OpenIDE-Module-Hide-Classpath-Packages=\u0000
-org.netbeans.core.execution.AutoUpdate-Show-In-Client=false
 org.openide.execution.AutoUpdate-Show-In-Client=false
+org.netbeans.core.execution.AutoUpdate-Show-In-Client=false
 org.jreserve.grscript.gui.script.functions.OpenIDE-Module-Layer=\u0000
 org.netbeans.core.io.ui.OpenIDE-Module-Layer=org/netbeans/core/io/ui/layer.xml
 org.openide.util.OpenIDE-Module-Deprecated=\u0000
