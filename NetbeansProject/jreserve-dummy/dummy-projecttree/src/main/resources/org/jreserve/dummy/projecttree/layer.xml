@@ -19,17 +19,17 @@
                     <folder name="APC_Paid">
                         <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
                         <file name="Correction">
-                            <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/correction.png"/>
                             <attr name="position" intvalue="10"/>
                             <attr name="tooltip" stringvalue="Tooltip to show"/>
                         </file>
                         <file name="Exclusion">
-                            <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/exclude.png"/>
                             <attr name="position" intvalue="20"/>
                             <attr name="tooltip" stringvalue="Tooltip to show"/>
                         </file>
                         <file name="Smooth">
-                            <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/cell_smoothing.png"/>
                             <attr name="position" intvalue="30"/>
                             <attr name="tooltip" stringvalue="Tooltip to show"/>
                         </file>
@@ -64,17 +64,17 @@
                             <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/factor_triangle.png"/>
                             <attr name="position" intvalue="20"/>
                             <file name="Correction">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/correction.png"/>
                                 <attr name="position" intvalue="10"/>
                                 <attr name="tooltip" stringvalue="Tooltip to show"/>
                             </file>
                             <file name="Exclusion">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/exclude.png"/>
                                 <attr name="position" intvalue="20"/>
                                 <attr name="tooltip" stringvalue="Tooltip to show"/>
                             </file>
                             <file name="Smooth">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/cell_smoothing.png"/>
                                 <attr name="position" intvalue="30"/>
                                 <attr name="tooltip" stringvalue="Tooltip to show"/>
                             </file>
@@ -82,34 +82,34 @@
 
 
                         <folder name="Methods">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/methods.png"/>
                             <attr name="position" intvalue="30"/>
                             <file name="1: Weighted-Average">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                             <file name="2: Weighted-Average">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                             <file name="3: Weighted-Average">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                             <file name="4: Maximum">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                             <file name="5: Weighted-Average">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                             <file name="6: Weighted-Average">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                             <file name="7: Weighted-Average">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="10"/>
                             </file>
                         </folder>
@@ -117,24 +117,20 @@
                         <folder name="Smoothing">
                             <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/smoothing.png"/>
                             <attr name="position" intvalue="40"/>
-                            <file name="Length: 10">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
-                                <attr name="position" intvalue="10"/>
-                            </file>
                             <file name="7: Exponential">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="20"/>
                             </file>
                             <file name="8: Weibul">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="30"/>
                             </file>
                             <file name="9: Weibul">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="40"/>
                             </file>
                             <file name="10: Constant">
-                                <!--<attr name="icon" stringvalue="path/to/icon"/>-->
+                                <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/link.png"/>
                                 <attr name="position" intvalue="50"/>
                             </file>
                         </folder>
