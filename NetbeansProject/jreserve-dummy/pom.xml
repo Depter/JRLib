@@ -72,6 +72,7 @@
         <module>branding</module>
         <module>application</module>
     <module>dummy-projecttree</module>
+    <module>dummy-claimtriangle-edtior</module>
   </modules>
 
     <properties>
