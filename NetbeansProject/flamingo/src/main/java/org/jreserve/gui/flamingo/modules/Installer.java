@@ -29,9 +29,13 @@
  */
 package org.jreserve.gui.flamingo.modules;
 
+import java.awt.Frame;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
+import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import org.jreserve.gui.flamingo.spi.RibbonComponentProvider;
@@ -40,6 +44,9 @@ import org.openide.windows.WindowManager;
 
 public class Installer extends ModuleInstall {
 
+    private final static Logger logger = Logger.getLogger(Installer.class.getName());
+    private final static String NIMBUS = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
+
     @Override
     public void restored() {
         System.setProperty("netbeans.winsys.no_toolbars", "true");
@@ -47,7 +54,6 @@ public class Installer extends ModuleInstall {
         //WindowManager.getDefault().invokeWhenUIReady(new Runnable() {});
         //Therefore use this:
         SwingUtilities.invokeLater(new Runnable() {
-
             @Override
             public void run() {
                 initLAF();
@@ -66,6 +72,30 @@ public class Installer extends ModuleInstall {
     }
 
     private static void initLAF() {
+        LookAndFeel laf = getNimbus();
+        if (laf != null)
+            setLookAndFeel(laf);
         UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
+    }
+
+    private static LookAndFeel getNimbus() {
+        try {
+            Class clazz = Class.forName("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            return (LookAndFeel) clazz.newInstance();
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, String.format("Unable to load L&F instnce: %s", NIMBUS), ex);
+            return null;
+        }
+    }
+    
+    private static void setLookAndFeel(LookAndFeel laf) {
+        try {
+            UIManager.setLookAndFeel(laf);
+            Frame[] frames = Frame.getFrames();
+            for (Frame frame : frames)
+                SwingUtilities.updateComponentTreeUI(frame);
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, String.format("Unble to apply L&F: ", laf), ex);
+        }
     }
 }

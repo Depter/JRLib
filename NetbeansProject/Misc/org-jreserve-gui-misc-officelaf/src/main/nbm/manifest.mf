@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/officelaf/Bundle.properties
+OpenIDE-Module-Install: org/jreserve/gui/misc/officelaf/Installer.class
+OpenIDE-Module-Layer: org/jreserve/gui/misc/officelaf/layer.xml
