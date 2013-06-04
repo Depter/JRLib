@@ -22,8 +22,8 @@ import java.awt.GradientPaint;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.LayoutManager;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
-import java.awt.geom.RoundRectangle2D;
 import javax.swing.JPanel;
 
 /**
@@ -33,10 +33,8 @@ import javax.swing.JPanel;
  */
 class TitlePanel extends JPanel {
     
-    private final static int OUTTER_ARCH = 8;
-    private final static int INNER_ARCH = 5;
-    private final static int VERTICAL_MARGIN = 2;
-    private final static int HORIZONTAL_MARGIN = 2;
+    private final static int VERTICAL_MARGIN = 4;
+    private final static int HORIZONTAL_MARGIN = 4;
     private final static float HIGHT_PART = 0.4f;
     
     final static Color INNER_BORDER = new Color(255, 255, 255, 100);
@@ -60,6 +58,7 @@ class TitlePanel extends JPanel {
     }
 
     public TitlePanel() {
+        
     }
 
     @Override
@@ -80,14 +79,14 @@ class TitlePanel extends JPanel {
         g = (Graphics2D) g.create();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         
-        RoundRectangle2D.Float r2d = new RoundRectangle2D.Float(0, 0, w, h, OUTTER_ARCH, OUTTER_ARCH);
+        Rectangle r2d = new Rectangle(0, 0, w, h);
         g.clip(r2d);
         g.setPaint(topPaint);
-        g.fillRoundRect(0, 0, w, h, OUTTER_ARCH, OUTTER_ARCH);
+        g.fillRect(0, 0, w, h);
         
-        g.setColor(ExpandableBorder.INNER_BORDER);
+        g.setColor(ExpandablePanelBorder.INNER_BORDER);
         g.drawLine(0, h-2, w, h-2);
-        g.setColor(ExpandableBorder.OUTTER_BORDER);
+        g.setColor(ExpandablePanelBorder.OUTTER_BORDER);
         g.drawLine(0, h-1, w, h-1);
     }
     

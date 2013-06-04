@@ -14,32 +14,46 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.jreserve.gui.misc.expandable.view;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Insets;
+import javax.swing.BorderFactory;
+import javax.swing.border.Border;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class ExpandableBorder implements javax.swing.border.Border {
+public class ExpandablePanelBorder implements Border {
 
-    private final static Insets INSETS = new Insets(3, 3, 3, 3);
     final static Color INNER_BORDER = new Color(255, 255, 255, 100);
     final static Color OUTTER_BORDER = new Color(50, 50, 50, 200);
-    private final static int ARCH = 8;
+    private final static Insets INSETS = new Insets(2, 2, 2, 2);
+    
+    private static Border INSTANCE = null;
+    
+    static Border getInstance() {
+        if(INSTANCE == null)
+            INSTANCE = BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(OUTTER_BORDER, 1), 
+                    BorderFactory.createLineBorder(INNER_BORDER, 1));
+        return INSTANCE;
+    }
+    
+    private ExpandablePanelBorder() {}
     
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-        g.setColor(OUTTER_BORDER);
-        g.drawRoundRect(0, 0, width - 1, height - 1, ARCH, ARCH);
-        
         g.setColor(INNER_BORDER);
-        g.drawRoundRect(1, 1, width - 3, height - 3, ARCH, ARCH);
+        g.drawRect(x+1, y+1, width-2, height-2);
+        
+        g.setColor(OUTTER_BORDER);
+        g.drawRect(x, y, width, height);
     }
 
     @Override
@@ -49,6 +63,7 @@ public class ExpandableBorder implements javax.swing.border.Border {
 
     @Override
     public boolean isBorderOpaque() {
-        return false;
+        return true;
     }
+
 }

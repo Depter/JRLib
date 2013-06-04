@@ -42,7 +42,10 @@ public class GeometryEditor implements ExpandableElement {
 
     @Override
     public JComponent getVisualComponent() {
-        return new JLabel("Geometry editor");
+        JLabel label = new JLabel("Geometry editor");
+        label.setBackground(Color.RED);
+        label.setOpaque(true);
+        return label;
     }
 
     @Override
@@ -59,4 +62,5 @@ public class GeometryEditor implements ExpandableElement {
     public Color getForeground() {
         return FOREGROUND;
     }
+    
 }

@@ -23,12 +23,12 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 import org.openide.util.ImageUtilities;
@@ -44,6 +44,7 @@ public class ExpandablePanel extends JPanel {
     
     private ExpandableElementDescription description;
     private ExpandableElement element;
+    private JLabel titleLabel;
     private JPanel contentPanel;
     private boolean docked = true;
     
@@ -59,17 +60,11 @@ public class ExpandablePanel extends JPanel {
         setLayout(new BorderLayout());
         setBackground(element.getBackground());
         setOpaque(true);
+        setBorder(ExpandablePanelBorder.getInstance());
         
         add(createTitlePanel(), BorderLayout.NORTH);
+        add(createContentPanel(), BorderLayout.CENTER);
         
-        contentPanel = new JPanel(new BorderLayout());
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 2));
-        this.docked = true;
-        contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
-        contentPanel.revalidate();
-        
-        add(contentPanel, BorderLayout.CENTER);
-        setBorder(new ExpandableBorder());
     }
     
     private JPanel createTitlePanel() {
@@ -81,7 +76,7 @@ public class ExpandablePanel extends JPanel {
         gc.weightx=0d; gc.weighty=0d;
         gc.anchor=GridBagConstraints.BASELINE_LEADING;
         gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.insets = new Insets(0, 0, 0, 5);
+        gc.insets = new Insets(0, 5, 0, 5);
         panel.add(createTitleLabel(), gc);
         
         gc.gridx=1; gc.weightx=1d;
@@ -92,18 +87,16 @@ public class ExpandablePanel extends JPanel {
         gc.gridx=2; gc.weightx=0d;
         panel.add(createButtons(), gc);
         
-        panel.setBorder(BorderFactory.createEmptyBorder(1, 1, 2, 1));
-//        titlePanel.addMouseListener(new DblClickHandler());
         return panel;
     }
     
     private JLabel createTitleLabel() {
-        JLabel label = new JLabel(getName());
-        label.setIcon(new ImageIcon(getImage()));
-        label.setForeground(element.getForeground());
-        Font font = label.getFont();
-        label.setFont(font.deriveFont(Font.BOLD));
-        return label;
+        titleLabel = new JLabel(getName());
+        titleLabel.setIcon(new ImageIcon(getImage()));
+        titleLabel.setForeground(element.getForeground());
+        Font font = titleLabel.getFont();
+        titleLabel.setFont(font.deriveFont(Font.BOLD));
+        return titleLabel;
     }
     
     private Image getImage() {
@@ -121,5 +114,48 @@ public class ExpandablePanel extends JPanel {
             panel.add(button);
         }
         return panel;
+    }
+    
+    private JPanel createContentPanel() {
+        contentPanel = new JPanel(new BorderLayout());
+        this.docked = true;
+        contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
+        return contentPanel;
+    }
+    
+    private class Handler implements ExpandableComponentHandler {
+
+        @Override
+        public void setTitle(String title) {
+            titleLabel.setText(title);
+            revalidate();
+        }
+
+        @Override
+        public void setIcon(Image icon) {
+            titleLabel.setIcon(new ImageIcon(icon));
+            revalidate();
+        }
+
+        @Override
+        public void minimize() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void maximize() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void undock() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        @Override
+        public void dock() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    
     }
 }
