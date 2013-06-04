@@ -29,7 +29,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.LineBorder;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 import org.openide.util.ImageUtilities;
@@ -42,7 +41,6 @@ import org.openide.util.ImageUtilities;
 public class ExpandablePanel extends JPanel {
     
     private final static String DEFAULT_IMG = "org/openide/nodes/defaultNode.png";
-    private final static int BORDER_WIDTH = 2;
     
     private ExpandableElementDescription description;
     private ExpandableElement element;
@@ -59,20 +57,24 @@ public class ExpandablePanel extends JPanel {
     
     private void initPanel() {
         setLayout(new BorderLayout());
+        setBackground(element.getBackground());
+        setOpaque(true);
+        
         add(createTitlePanel(), BorderLayout.NORTH);
         
         contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(0, 2, 2, 2));
         this.docked = true;
         contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
         contentPanel.revalidate();
         
         add(contentPanel, BorderLayout.CENTER);
-        setBorder(new LineBorder(element.getBackground(), BORDER_WIDTH, true));
+        setBorder(new ExpandableBorder());
     }
     
     private JPanel createTitlePanel() {
-        JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(element.getBackground());
+        JPanel panel = new TitlePanel(new GridBagLayout());
+        panel.setBackground(getBackground());
         
         GridBagConstraints gc = new GridBagConstraints();
         gc.gridx=0; gc.gridy=0;

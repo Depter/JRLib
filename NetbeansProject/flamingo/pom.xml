@@ -51,13 +51,6 @@
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
-        
-        <dependency>
-            <groupId>org.pushingpixels</groupId>
-            <artifactId>flamengo</artifactId>
-            <version>5.0</version>
-            <type>jar</type>
-        </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
@@ -94,6 +87,19 @@
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-javahelp</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.pushingpixels</groupId>
+            <artifactId>flamengo</artifactId>
+            <version>5.0</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -104,6 +110,7 @@
                 <version>3.8</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <cluster>jreserve-misc</cluster>
                     <publicPackages>
                         <publicPackage>com.jgoodies.*</publicPackage>
                         <publicPackage>org.pushingpixels.flamingo.*</publicPackage>

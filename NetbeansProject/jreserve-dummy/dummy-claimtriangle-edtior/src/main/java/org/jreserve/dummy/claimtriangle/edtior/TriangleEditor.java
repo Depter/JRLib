@@ -37,6 +37,8 @@ import org.openide.util.NbBundle.Messages;
 })
 public class TriangleEditor implements ExpandableElement {
 
+    public final static Color BACKGROUND = new Color(255, 125, 48);
+    
     @Override
     public JComponent getVisualComponent() {
         return new JLabel("Triangle editor");
@@ -49,7 +51,7 @@ public class TriangleEditor implements ExpandableElement {
 
     @Override
     public Color getBackground() {
-        return GeometryEditor.BACKGROUND;
+        return BACKGROUND;
     }
 
     @Override

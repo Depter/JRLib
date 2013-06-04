@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jreserve</groupId>
-    <artifactId>org-jreserve-gui-misc-annotations</artifactId>
+    <artifactId>org-jreserve-gui-misc-layerexplorer</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>org-jreserve-gui-misc-annotations</name>
+    <name>org-jreserve-gui-misc-layerexplorer</name>
     
     <licenses>
         <license>
@@ -53,13 +53,13 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-filesystems</artifactId>
+            <artifactId>org-openide-windows</artifactId>
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-loaders</artifactId>
+            <artifactId>org-openide-util</artifactId>
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
@@ -71,7 +71,31 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-awt</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-settings</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-explorer</artifactId>
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
@@ -86,9 +110,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <cluster>jreserve-misc</cluster>
-                    <publicPackages>
-                        <publicPackage>org.jreserve.gui.misc.annotations</publicPackage>
-                    </publicPackages>
                 </configuration>
             </plugin>
 

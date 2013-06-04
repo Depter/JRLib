@@ -46,7 +46,7 @@ import org.openide.windows.TopComponent;
 )
 @ActionReferences({
     @ActionReference(path = "Menu/Window" /*, position = 333 */),
-    @ActionReference(path = "Ribbon/TaskPanes/Main/Windows", position = 100)
+    @ActionReference(path = "Ribbon/TaskPanes/Windows/JReserve", position = 100)
 })
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL.ClaimTriangleEditorAction",
@@ -62,9 +62,10 @@ public class ClaimTriangleEditor extends TopComponent {
     
     public ClaimTriangleEditor() {
         setLayout(new BorderLayout());
-        
         JComponent content = ExpandableFactory.createPanel(MIME_TYPE, false);
         JScrollPane scroll = ExpandableFactory.createScrollPanel(content);
         add(scroll, BorderLayout.CENTER);
+        
+        setDisplayName("APC Paid");
     }
 }

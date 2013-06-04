@@ -26,7 +26,6 @@ public class Installer extends ModuleInstall {
 
     enum Laf {
         WINDOWS("windows", "org.jreserve.gui.misc.officelaf.OfficeWindowsLookAndFeel"),
-        //WINDOWS("windows", "org.jreserve.gui.misc.officelaf.OfficeNimbusLookAndFeel"),
         //LINUX("linux",     "org.jreserve.gui.misc.officelaf.OfficeNimbusLookAndFeel"),
         LINUX("linux",     "org.jreserve.gui.misc.officelaf.OfficeMetalLookAndFeel"),
         //LINUX("linux",     "org.jreserve.gui.misc.officelaf.OfficeGTKLookAndFeel"),
@@ -102,58 +101,58 @@ public class Installer extends ModuleInstall {
                 UIManager.getDefaults().putDefaults(helper.getComponentDefaults());
             }
 
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    JFrame main = (JFrame) WindowManager.getDefault().getMainWindow();
-
-                    JPanel orange = new JPanel(new BorderLayout()) {
-                        @Override
-                        public void add(Component comp, Object constraints) {
-                            super.add(comp, constraints);
-                            if (constraints == BorderLayout.CENTER) {
-                                comp.setBackground(GRAY_76);
-                                if(comp instanceof JPanel) {
-                                    JPanel panel = (JPanel)comp;
-                                    panel.setBorder(BorderFactory.createEmptyBorder());
-                                }
-                            }
-                        }
-                    };
-                    main.setContentPane(orange);
-                    final OfficeRootPaneUI rootPaneUI = (OfficeRootPaneUI) main.getRootPane().getUI();
-
-                    final Lookup.Result<? extends RibbonProvider> r = Lookup.getDefault().lookupResult(RibbonProvider.class);
-                    if (r.allInstances().size() > 0) {
-                        updateRibbon(rootPaneUI, r.allInstances().iterator().next());
-                    } else {
-                        r.addLookupListener(new LookupListener() {
-                            @Override
-                            public void resultChanged(LookupEvent ev) {
-                                updateRibbon(rootPaneUI, r.allInstances().iterator().next());
-                            }
-                        });
-                    }
-                }
-            });
+//            SwingUtilities.invokeLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    JFrame main = (JFrame) WindowManager.getDefault().getMainWindow();
+//
+//                    JPanel orange = new JPanel(new BorderLayout()) {
+//                        @Override
+//                        public void add(Component comp, Object constraints) {
+//                            super.add(comp, constraints);
+//                            if (constraints == BorderLayout.CENTER) {
+//                                comp.setBackground(GRAY_76);
+//                                if(comp instanceof JPanel) {
+//                                    JPanel panel = (JPanel)comp;
+//                                    panel.setBorder(BorderFactory.createEmptyBorder());
+//                                }
+//                            }
+//                        }
+//                    };
+//                    main.setContentPane(orange);
+//                    final OfficeRootPaneUI rootPaneUI = (OfficeRootPaneUI) main.getRootPane().getUI();
+//
+//                    final Lookup.Result<? extends RibbonProvider> r = Lookup.getDefault().lookupResult(RibbonProvider.class);
+//                    if (r.allInstances().size() > 0) {
+//                        updateRibbon(rootPaneUI, r.allInstances().iterator().next());
+//                    } else {
+//                        r.addLookupListener(new LookupListener() {
+//                            @Override
+//                            public void resultChanged(LookupEvent ev) {
+//                                updateRibbon(rootPaneUI, r.allInstances().iterator().next());
+//                            }
+//                        });
+//                    }
+//                }
+//            });
         } catch (Exception e) {
             ErrorManager.getDefault().notify(e);
             throw new RuntimeException(e);
         }
     }
 
-    private void updateRibbon(final OfficeRootPaneUI rootPaneUI, final RibbonProvider provider) {
-        Runnable r = new Runnable() {
-            @Override
-            public void run() {
-                rootPaneUI.setRibbon(provider.createRibbon());
-            }
-        };
-
-        if (SwingUtilities.isEventDispatchThread()) {
-            r.run();
-        } else {
-            SwingUtilities.invokeLater(r);
-        }
-    }
+//    private void updateRibbon(final OfficeRootPaneUI rootPaneUI, final RibbonProvider provider) {
+//        Runnable r = new Runnable() {
+//            @Override
+//            public void run() {
+//                rootPaneUI.setRibbon(provider.createRibbon());
+//            }
+//        };
+//
+//        if (SwingUtilities.isEventDispatchThread()) {
+//            r.run();
+//        } else {
+//            SwingUtilities.invokeLater(r);
+//        }
+//    }
 }
