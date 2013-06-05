@@ -16,16 +16,10 @@
  */
 package org.jreserve.gui.misc.expandable;
 
-import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.List;
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import org.jreserve.gui.misc.expandable.registration.ExpandableElementLayerRegistrationLoader;
-import org.jreserve.gui.misc.expandable.view.ExpandableView;
+import org.jreserve.gui.misc.expandable.view.ExpandablePanelHandler;
+import org.jreserve.gui.misc.expandable.view.ExpandableScrollHandler;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 
@@ -36,53 +30,37 @@ import org.openide.util.Utilities;
  */
 public class ExpandableFactory {
 
-    private final static int SCROLL_INCREMENT = 20;
+    public static ExpandableContainerHandler createPanel(String mimeType) {
+        Lookup context = Utilities.actionsGlobalContext();
+        return createPanel(mimeType, context);
+    }
 
-    public static JComponent createPanel(String mimeType, boolean withContext) {
-        Lookup context = withContext ? Utilities.actionsGlobalContext() : null;
+    public static ExpandableContainerHandler createPanel(String mimeType, Lookup context) {
+        ExpandableElementDescription[] elements = getDescriptions(mimeType, context);
+        return createPanel(elements);
+    }
+    
+    private static ExpandableElementDescription[] getDescriptions(String mimeType, Lookup context) {
         List<ExpandableElementDescription> elements = new ExpandableElementLayerRegistrationLoader(mimeType, context).getValues();
-        return createPanel(elements.toArray(new ExpandableElementDescription[elements.size()]));
+        ExpandableElementDescription[] result = new ExpandableElementDescription[elements.size()];
+        return elements.toArray(result);
     }
 
-    public static JComponent createPanel(ExpandableElementDescription[] elements) {
-        return new ExpandableView(elements);
+    public static ExpandableContainerHandler createPanel(ExpandableElementDescription[] elements) {
+        return new ExpandablePanelHandler(elements);
     }
 
-    public static JScrollPane createScrollPanel(JComponent component) {
-        JScrollPane scroll = new JScrollPane(component);
-        scroll.getVerticalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
-        scroll.getVerticalScrollBar().setBlockIncrement(SCROLL_INCREMENT);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll.addComponentListener(new ResizeListener(scroll, component));
-        return scroll;
+    public static ExpandableContainerHandler createScrollPanel(String mimeType) {
+        Lookup context = Utilities.actionsGlobalContext();
+        return createScrollPanel(mimeType, context);
     }
 
-    private static class ResizeListener extends ComponentAdapter {
+    public static ExpandableContainerHandler createScrollPanel(String mimeType, Lookup context) {
+        ExpandableElementDescription[] elements = getDescriptions(mimeType, context);
+        return createScrollPanel(elements);
+    }
 
-        private boolean firstCall = true;
-        private JScrollPane scroll;
-        private JComponent component;
-        
-        private ResizeListener(JScrollPane scroll, JComponent component) {
-            this.scroll = scroll;
-            this.component = component;
-        }
-        
-        @Override
-        public void componentResized(ComponentEvent e) {
-            if (firstCall) {
-                firstCall = false;
-            } else {
-                setContentSize();
-            }
-        }
-
-        private void setContentSize() {
-            int barWidth = scroll.getHorizontalScrollBar().getWidth();
-            int width = scroll.getWidth() - barWidth;
-            int height = component.getPreferredSize().height;
-            component.setPreferredSize(new Dimension(width, height));
-            scroll.revalidate();
-        }
+    public static ExpandableContainerHandler createScrollPanel(ExpandableElementDescription[] elements) {
+        return new ExpandableScrollHandler(elements);
     }
 }

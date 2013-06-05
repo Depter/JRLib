@@ -16,26 +16,34 @@
  */
 package org.jreserve.gui.misc.expandable;
 
-import java.awt.Color;
+import javax.swing.JComponent;
+import org.netbeans.core.spi.multiview.CloseOperationState;
+import org.openide.awt.UndoRedo;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
- * @version 1.0
  */
-public interface ExpandableElementDescription {
+public interface ExpandableContainerHandler extends Lookup.Provider {
     
-    public String getDisplayName();
+    public JComponent getComponent();
     
-    public String getIconBase();
+    public ExpandableElementDescription[] getElements();
     
-    public String getPrefferedID();
+    public void componentOpened();
+
+    public void componentClosed();
+
+    public void componentShowing();
+
+    public void componentHidden();
+
+    public void componentActivated();
+
+    public void componentDeactivated();
     
-    public Color getBackground();
+    public CloseOperationState canCloseElement();
     
-    public Color getForeground();
-    
-    public int getPosition();
-    
-    public ExpandableElement getElement();
+    public UndoRedo.Manager getUndoRedo();
 }

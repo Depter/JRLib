@@ -14,28 +14,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.misc.expandable;
+package org.jreserve.gui.misc.lookupexplorer;
 
-import java.awt.Color;
+import java.util.Collection;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExpandableElementDescription {
+public class LookupChildFactory extends Children.Keys<Object>{
     
-    public String getDisplayName();
+    public LookupChildFactory(Collection<? extends Object> content) {
+        setKeys(content);
+    }
     
-    public String getIconBase();
-    
-    public String getPrefferedID();
-    
-    public Color getBackground();
-    
-    public Color getForeground();
-    
-    public int getPosition();
-    
-    public ExpandableElement getElement();
+    @Override
+    protected Node[] createNodes(Object t) {
+        AbstractNode node = new AbstractNode(Children.LEAF);
+        node.setDisplayName(t.toString());
+        return new Node[]{node};
+    }
 }

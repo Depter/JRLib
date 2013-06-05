@@ -16,27 +16,42 @@
  */
 package org.jreserve.gui.misc.expandable;
 
-import java.awt.Color;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import javax.swing.JComponent;
+import org.netbeans.core.spi.multiview.CloseOperationState;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExpandableElement {
+public interface ExpandableElement extends Lookup.Provider {
     
     public JComponent getVisualComponent();
     
     public JComponent[] getFrameComponents();
     
-    public Color getBackground();
+    public void setHandler(ExpandableComponentHandler handler);
     
-    public Color getForeground();
+    public ExpandableComponentHandler getHandler();
+    
+    public void componentOpened();
+
+    public void componentClosed();
+
+    public void componentShowing();
+
+    public void componentHidden();
+
+    public void componentActivated();
+
+    public void componentDeactivated();
+    
+    public CloseOperationState canCloseElement();
     
     @Retention(value = RetentionPolicy.SOURCE)
     @Target(value = ElementType.TYPE)
@@ -49,6 +64,10 @@ public interface ExpandableElement {
         public String prefferedID() default "";
         
         public String iconBase() default "";
+        
+        public String background() default "43C443";//{67, 196, 67};
+        
+        public String foreground() default "FFFFFF";
         
         public int position() default Integer.MAX_VALUE;
     }

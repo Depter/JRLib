@@ -50,8 +50,8 @@ public class FlotableComponentDockButton extends FlotableComponentButton {
     
     @Override 
     public void mouseClicked(MouseEvent e) {
-        docked = !docked;
-        setToolTip();
+        //docked = !docked;
+        //setToolTip();
         super.mouseClicked(e);
     }
     

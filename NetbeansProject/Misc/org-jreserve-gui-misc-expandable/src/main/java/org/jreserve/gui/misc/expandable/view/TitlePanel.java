@@ -35,13 +35,12 @@ class TitlePanel extends JPanel {
     
     private final static int VERTICAL_MARGIN = 4;
     private final static int HORIZONTAL_MARGIN = 4;
-    private final static float HIGHT_PART = 0.4f;
+    private final static float HIGHT_PART = 0.33f;
     
     final static Color INNER_BORDER = new Color(255, 255, 255, 100);
     final static Color OUTTER_BORDER = new Color(50, 50, 50, 200);
     
-    private Color color1;
-    private Color color2;
+    private Color color;
     
     private GradientPaint topPaint;
     
@@ -61,11 +60,34 @@ class TitlePanel extends JPanel {
         
     }
 
+//    @Override
+//    protected void paintComponent(Graphics g) {
+//        int w = getHeight();
+//        int h = getWidth();
+//        initPaints(h);
+//        
+//        super.paintComponent(g);
+//        
+//        //Graphics2D g2d = (Graphics2D) g.create();
+//        Graphics2D g2d = (Graphics2D) g;
+//        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        
+//        Rectangle r2d = new Rectangle(0, 0, w, h);
+//        g2d.clip(r2d);
+//        g2d.setPaint(topPaint);
+//        g.fillRect(0, 0, w, h);
+//        
+//        g2d.setColor(ExpandablePanelBorder.INNER_BORDER);
+//        g2d.drawLine(0, h-2, w, h-2);
+//        g2d.setColor(ExpandablePanelBorder.OUTTER_BORDER);
+//        g2d.drawLine(0, h-1, w, h-1);
+//    }
+    
     @Override
     public void paint(Graphics g) {
         if (g instanceof Graphics2D) {
             paintBackground((Graphics2D) g);
-            super.paintComponents(g);
+            super.paintChildren(g);
         } else {
             super.paint(g);
         }
@@ -91,37 +113,21 @@ class TitlePanel extends JPanel {
     }
     
     private void initPaints(float height) {
-        initColors();
+        initColor();
         float yTop = height * HIGHT_PART;
-	topPaint = new GradientPaint(0f, 0f, color1, 0f, yTop, color2);
+	topPaint = new GradientPaint(0f, 0f, Color.WHITE, 0f, yTop, color);
     }
     
-    private void initColors() {
-        if(color1 == null) {
-            color2 = getBackground();
-            color1 = shiftColor(color2, 2);
-        }
-    }
-    
-    private Color shiftColor(Color input, double factor) {
-        int r = getComponent(input.getRed(), factor);
-        int g = getComponent(input.getGreen(), factor);
-        int b = getComponent(input.getBlue(), factor);
-        int a = input.getAlpha(); //getComponent(input.getAlpha(), 1d/factor);
-        return new Color(r, g, b, a);
-    }
-    
-    private int getComponent(int input, double factor) {
-        return (int) Math.min(255, Math.max(0, input * factor));
+    private void initColor() {
+        if(color == null)
+            color = getBackground();
     }
     
     @Override
     public void setBackground(Color color) {
-        color1 = null;
-        color2 = null;
+        color = null;
         super.setBackground(color);
     }
-    
         
     @Override
     public Dimension getPreferredSize() {

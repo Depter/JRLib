@@ -19,8 +19,12 @@ package org.jreserve.dummy.claimtriangle.edtior;
 import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
+import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -29,38 +33,28 @@ import org.openide.util.NbBundle.Messages;
  */
 @ExpandableElement.Registration(
     displayName = "#LBL.GeometryEditor.Title",
-    mimeType = "jreserve/editor-claimtriangle",
+    mimeType = "jreserve/triangle-claim",
     position = 1000,
-    prefferedID = "org.jreserve.dummy.claimtriangle.edtior.GeometryEditor"
+    prefferedID = "org.jreserve.dummy.claimtriangle.edtior.GeometryEditor",
+    background = "43C443"
 )
 @Messages({
     "LBL.GeometryEditor.Title=Geometry"
 })
-public class GeometryEditor implements ExpandableElement {
-    final static Color BACKGROUND = new Color(67, 196, 67);
-    final static Color FOREGROUND = Color.WHITE;
+public class GeometryEditor extends AbstractExpandableElement {
 
+    private Lookup lookup = Lookups.singleton("Geometry editor");
+    
     @Override
-    public JComponent getVisualComponent() {
-        JLabel label = new JLabel("Geometry editor");
+    protected JComponent createVisualComponent() {
+        JTextField label = new JTextField("Geometry editor");
         label.setBackground(Color.RED);
         label.setOpaque(true);
         return label;
     }
-
-    @Override
-    public JComponent[] getFrameComponents() {
-        return new JComponent[0];
-    }
-
-    @Override
-    public Color getBackground() {
-        return BACKGROUND;
-    }
-
-    @Override
-    public Color getForeground() {
-        return FOREGROUND;
-    }
     
+    @Override
+    public Lookup getLookup() {
+        return lookup;
+    }
 }

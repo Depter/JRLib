@@ -16,6 +16,9 @@
  */
 package org.jreserve.gui.misc.expandable.registration;
 
+import java.awt.Color;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.gui.misc.annotations.AnnotationUtils;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
@@ -28,11 +31,17 @@ import org.openide.util.Lookup;
  * @version 1.0
  */
 class FileAdapter implements ExpandableElementDescription {
-
+    
+    private final static Logger logger = Logger.getLogger(FileAdapter.class.getName());
+    private final static Color DEFAULT_BG = Color.BLACK;
+    private final static Color DEFAULT_FG = Color.WHITE;
+    
     private ExpandableElement element;
     private String name;
     private String iconBase;
     private String prefferedId;
+    private Color background;
+    private Color foreground;
     private int position;
     
     FileAdapter(FileObject file, Lookup context) {
@@ -40,6 +49,8 @@ class FileAdapter implements ExpandableElementDescription {
         prefferedId = AnnotationUtils.stringAttribute(ExpandableElementRegistrationProcessor.PREFFERED_ID, file);
         position = AnnotationUtils.intAttribute(ExpandableElementRegistrationProcessor.POSITION, file, Integer.MAX_VALUE);
         initIconBase(file);
+        initBackground(file);
+        initForeground(file);
         initElement(file, context);
     }
     
@@ -47,6 +58,36 @@ class FileAdapter implements ExpandableElementDescription {
         iconBase = AnnotationUtils.stringAttribute(ExpandableElementRegistrationProcessor.ICON, file);
         if(iconBase!=null && iconBase.trim().length()==0)
             iconBase = null;
+    }
+    
+    private void initBackground(FileObject file) {
+        background = getColor(file, ExpandableElementRegistrationProcessor.BACKGROUND);
+        if(background == null) {
+            background = DEFAULT_BG;
+            logger.log(Level.WARNING, "Unable to read background color for ExpandableElementDescription! Color.BLACK will be used instead.");
+        }
+    }
+    
+    private Color getColor(FileObject file, String name) {
+        String hex = (String) file.getAttribute(name);
+        if(hex != null && hex.length()==6 && hex.matches("[0-9A-Fa-f]+"))
+            return parseColor(hex);
+        return null;
+    }
+    
+    private Color parseColor(String hex) {
+        int r = Integer.parseInt(hex.substring(0, 2), 16);
+        int g = Integer.parseInt(hex.substring(2, 4), 16);
+        int b = Integer.parseInt(hex.substring(4, 6), 16);
+        return new Color(r, g, b);
+    }
+    
+    private void initForeground(FileObject file) {
+        foreground = getColor(file, ExpandableElementRegistrationProcessor.FOREGROUND);
+        if(foreground == null) {
+            foreground = DEFAULT_FG;
+            logger.log(Level.WARNING, "Unable to read background color for ExpandableElementDescription! Color.WHITE will be used instead.");
+        }
     }
     
     private void initElement(FileObject file, Lookup context) {
@@ -78,5 +119,15 @@ class FileAdapter implements ExpandableElementDescription {
     @Override
     public ExpandableElement getElement() {
         return element;
+    }
+
+    @Override
+    public Color getBackground() {
+        return background;
+    }
+
+    @Override
+    public Color getForeground() {
+        return foreground;
     }
 }

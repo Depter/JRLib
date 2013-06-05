@@ -18,6 +18,7 @@
 package org.jreserve.gui.misc.expandable;
 
 import java.awt.Image;
+import java.beans.PropertyChangeListener;
 
 /**
  *
@@ -26,15 +27,29 @@ import java.awt.Image;
  */
 public interface ExpandableComponentHandler {
     
+    public final static String TITLE = "title";
+    public final static String OPENED = "opened";
+    public final static String DOCKED = "docked";
+    
+    public ExpandableContainerHandler getContainer();
+    
     public void setTitle(String title);
     
     public void setIcon(Image icon);
+    
+    public boolean isMaximized();
     
     public void minimize();
     
     public void maximize();
     
+    public boolean isDocked();
+    
     public void undock();
     
     public void dock();
+    
+    public void addPropertyChangeListener(PropertyChangeListener listener);
+    
+    public void removePropertyChangeListener(PropertyChangeListener listener);
 }

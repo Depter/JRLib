@@ -17,12 +17,12 @@
 package org.jreserve.dummy.claimtriangle.edtior;
 
 import java.awt.BorderLayout;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
+import org.jreserve.gui.misc.expandable.ExpandableContainerHandler;
 import org.jreserve.gui.misc.expandable.ExpandableFactory;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
 
@@ -58,14 +58,18 @@ import org.openide.windows.TopComponent;
 })
 public class ClaimTriangleEditor extends TopComponent {
     
-    final static String MIME_TYPE = "jreserve/editor-claimtriangle";
+    final static String MIME_TYPE = "jreserve/triangle-claim";
+    private final ExpandableContainerHandler handler;
     
     public ClaimTriangleEditor() {
         setLayout(new BorderLayout());
-        JComponent content = ExpandableFactory.createPanel(MIME_TYPE, false);
-        JScrollPane scroll = ExpandableFactory.createScrollPanel(content);
-        add(scroll, BorderLayout.CENTER);
-        
+        handler = ExpandableFactory.createScrollPanel(MIME_TYPE, null);
+        add(handler.getComponent(), BorderLayout.CENTER);
         setDisplayName("APC Paid");
+    }
+    
+    @Override
+    public Lookup getLookup() {
+        return handler.getLookup();
     }
 }

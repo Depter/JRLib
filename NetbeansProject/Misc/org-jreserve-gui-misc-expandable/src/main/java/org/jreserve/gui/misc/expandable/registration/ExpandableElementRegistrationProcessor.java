@@ -50,12 +50,20 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
         "Class '%s' annotated with '%s', but it does not define a mime type!";
     private final static String ERR_NO_NAME = 
         "Class '%s' annotated with '%s', but it does not define a display name!";
+    private final static String ERR_NO_BACKGROUND = 
+        "Class '%s' annotated with '%s', but it does not define a background color!";
+    private final static String ERR_NO_FOREGROUND = 
+        "Class '%s' annotated with '%s', but it does not define a foreground color!";
+    private final static String ERR_INVALID_COLOR = 
+        "Class '%s' annotated with '%s', but it defines an invalid color '%s' as %s color!";
     
     final static String PATH = "Editors/%s/ExpandableView/";
     public final static String NAME = "name";
     public final static String ICON = "iconBase";
     public final static String PREFFERED_ID = "prefferedID";
     public final static String CLASS = "class";
+    public final static String BACKGROUND = "background";
+    public final static String FOREGROUND = "foreground";
     
     @Override
     protected Class<ExpandableElement.Registration> getAnnotationClass() {
@@ -108,6 +116,8 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
         file.stringvalue(CLASS, getClassName(element));
         initName(file, element);
         initIcon(file, element);
+        initForeground(file, element);
+        initBackground(file, element);
         initPrefferedID(file, element);
     }
     
@@ -141,4 +151,53 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
         file.stringvalue(PREFFERED_ID, id);
     }
     
+    private void initBackground(LayerBuilder.File file, TypeElement element) throws LayerGenerationException {
+        String bg = getBackground(element);
+        if(bg.startsWith("#")) {
+            file.bundlevalue(BACKGROUND, bg);
+        } else {
+            if(validHex(bg)) {
+                file.stringvalue(BACKGROUND, bg);
+            } else {
+                String msg = String.format(ERR_INVALID_COLOR, getClassName(element), annotationName(), bg, "background");
+                throw new LayerGenerationException(msg);
+            }
+        }
+    }
+    
+    private String getBackground(TypeElement element) throws LayerGenerationException {
+        String bg = getAnnotation(element).background();
+        if(bg!=null && bg.trim().length()>0)
+            return bg;
+        String msg = String.format(ERR_NO_BACKGROUND, getClassName(element), annotationName());
+        throw new LayerGenerationException(msg);
+    }
+    
+    private boolean validHex(String color) {
+        return color != null && 
+               color.length() == 6 && 
+               color.matches("[0-9A-Fa-f]+");
+    }
+    
+    private void initForeground(LayerBuilder.File file, TypeElement element) throws LayerGenerationException {
+        String fg = getForeground(element);
+        if(fg.startsWith("#")) {
+            file.bundlevalue(FOREGROUND, fg);
+        } else {
+            if(validHex(fg)) {
+                file.stringvalue(FOREGROUND, fg);
+            } else {
+                String msg = String.format(ERR_INVALID_COLOR, getClassName(element), annotationName(), fg, "foreground");
+                throw new LayerGenerationException(msg);
+            }
+        }
+    }
+    
+    private String getForeground(TypeElement element) throws LayerGenerationException {
+        String bg = getAnnotation(element).foreground();
+        if(bg!=null && bg.trim().length()>0)
+            return bg;
+        String msg = String.format(ERR_NO_FOREGROUND, getClassName(element), annotationName());
+        throw new LayerGenerationException(msg);
+    }
 }

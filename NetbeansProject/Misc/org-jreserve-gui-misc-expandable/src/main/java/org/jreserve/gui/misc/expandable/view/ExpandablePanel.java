@@ -23,12 +23,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
+import org.jreserve.gui.misc.expandable.ExpandableContainerHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 import org.openide.util.ImageUtilities;
@@ -41,30 +45,48 @@ import org.openide.util.ImageUtilities;
 public class ExpandablePanel extends JPanel {
     
     private final static String DEFAULT_IMG = "org/openide/nodes/defaultNode.png";
+    private final static int TITLE_MARGIN = 5;
     
+    private ExpandableComponentHandler handler = new Handler();
+    private TcCallback tcCallback = new TcCallback();
+            
     private ExpandableElementDescription description;
     private ExpandableElement element;
+    
     private JLabel titleLabel;
     private JPanel contentPanel;
-    private boolean docked = true;
     
-    public ExpandablePanel(ExpandableElementDescription description) {
+    private UndockedTopComponent tc;
+    private ExpandableContainerHandler container;
+    private boolean docked = true;
+    private boolean opened = true;
+    private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    
+    public ExpandablePanel(ExpandableContainerHandler container, ExpandableElementDescription description) {
+        this.container = container;
+        initElement(description);
+        initSuperProperties();
+        initPanel();
+        this.element.setHandler(handler);
+    }
+    
+    private void initElement(ExpandableElementDescription description) {
         this.description = description;
         this.element = description.getElement();
-        
-        super.setName(description.getDisplayName());
-        initPanel();
+    }
+    
+    private void initSuperProperties() {
+        setBackground(description.getBackground());
+        setForeground(description.getForeground());
+        setName(description.getDisplayName());
     }
     
     private void initPanel() {
-        setLayout(new BorderLayout());
-        setBackground(element.getBackground());
         setOpaque(true);
+        setLayout(new BorderLayout());
         setBorder(ExpandablePanelBorder.getInstance());
-        
         add(createTitlePanel(), BorderLayout.NORTH);
         add(createContentPanel(), BorderLayout.CENTER);
-        
     }
     
     private JPanel createTitlePanel() {
@@ -76,7 +98,7 @@ public class ExpandablePanel extends JPanel {
         gc.weightx=0d; gc.weighty=0d;
         gc.anchor=GridBagConstraints.BASELINE_LEADING;
         gc.fill = GridBagConstraints.HORIZONTAL;
-        gc.insets = new Insets(0, 5, 0, 5);
+        gc.insets = new Insets(0, TITLE_MARGIN, 0, TITLE_MARGIN);
         panel.add(createTitleLabel(), gc);
         
         gc.gridx=1; gc.weightx=1d;
@@ -85,6 +107,7 @@ public class ExpandablePanel extends JPanel {
         panel.add(Box.createHorizontalGlue(), gc);
         
         gc.gridx=2; gc.weightx=0d;
+        gc.insets = new Insets(0, 0, 0, TITLE_MARGIN);
         panel.add(createButtons(), gc);
         
         return panel;
@@ -93,9 +116,10 @@ public class ExpandablePanel extends JPanel {
     private JLabel createTitleLabel() {
         titleLabel = new JLabel(getName());
         titleLabel.setIcon(new ImageIcon(getImage()));
-        titleLabel.setForeground(element.getForeground());
+        titleLabel.setForeground(getForeground());
         Font font = titleLabel.getFont();
         titleLabel.setFont(font.deriveFont(Font.BOLD));
+        titleLabel.setOpaque(false);
         return titleLabel;
     }
     
@@ -110,7 +134,7 @@ public class ExpandablePanel extends JPanel {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         panel.setOpaque(false);
         for(JComponent button : element.getFrameComponents()) {
-            button.setForeground(element.getForeground());
+            button.setForeground(getForeground());
             panel.add(button);
         }
         return panel;
@@ -120,11 +144,31 @@ public class ExpandablePanel extends JPanel {
         contentPanel = new JPanel(new BorderLayout());
         this.docked = true;
         contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
+        contentPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 2, 2, getBackground()));
+        
         return contentPanel;
     }
     
+    private void setOpened(boolean opened) {
+        if(this.opened != opened) {
+            this.opened = opened;
+            contentPanel.setVisible(opened);
+            pcs.firePropertyChange(ExpandableComponentHandler.OPENED, !opened, opened);
+        }
+    }
+    
+    private void setDocked(boolean docked) {
+        this.docked = docked;
+        pcs.firePropertyChange(ExpandableComponentHandler.DOCKED, !docked, docked);
+    }
+    
     private class Handler implements ExpandableComponentHandler {
-
+        
+        @Override
+        public ExpandableContainerHandler getContainer() {
+            return container;
+        }
+        
         @Override
         public void setTitle(String title) {
             titleLabel.setText(title);
@@ -138,24 +182,59 @@ public class ExpandablePanel extends JPanel {
         }
 
         @Override
+        public boolean isMaximized() {
+            return opened;
+        }
+        
+        @Override
         public void minimize() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            setOpened(false);
         }
 
         @Override
         public void maximize() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            setOpened(true);
         }
 
         @Override
+        public boolean isDocked() {
+            return docked;
+        }
+        
+        @Override
         public void undock() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            if(docked) {
+                String title = description.getDisplayName();
+                contentPanel.remove(element.getVisualComponent());
+                tc = UndockedTopComponent.create(title, element, tcCallback);
+                setDocked(false);
+            }
         }
 
         @Override
         public void dock() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            if(tc != null)
+                tc.close();
+        }
+        
+        @Override
+        public void addPropertyChangeListener(PropertyChangeListener listener) {
+            pcs.addPropertyChangeListener(listener);
         }
     
+        @Override
+        public void removePropertyChangeListener(PropertyChangeListener listener) {
+            pcs.removePropertyChangeListener(listener);
+        }
+    }
+    
+    private class TcCallback implements UndockedTopComponent.Callback {
+
+        @Override
+        public void tcClosed() {
+            tc = null;
+            contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
+            setDocked(true);
+        }
     }
 }

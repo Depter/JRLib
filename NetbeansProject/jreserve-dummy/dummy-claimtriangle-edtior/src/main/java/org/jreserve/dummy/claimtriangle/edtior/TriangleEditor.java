@@ -16,11 +16,14 @@
  */
 package org.jreserve.dummy.claimtriangle.edtior;
 
-import java.awt.Color;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.JTextField;
+import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -28,34 +31,31 @@ import org.openide.util.NbBundle.Messages;
  */
 @ExpandableElement.Registration(
     displayName = "#LBL.TriangleEditor.Title",
-    mimeType = "jreserve/editor-claimtriangle",
+    mimeType = "jreserve/triangle-claim",
     position = 2000,
-    prefferedID = "org.jreserve.dummy.claimtriangle.edtior.TriangleEditor"
+    prefferedID = "org.jreserve.dummy.claimtriangle.edtior.TriangleEditor",
+    background = "#COLOR.TriangleEditor.Background"
 )
 @Messages({
-    "LBL.TriangleEditor.Title=Triangle"
+    "LBL.TriangleEditor.Title=Triangle",
+    "COLOR.TriangleEditor.Background=FF7D30"
 })
-public class TriangleEditor implements ExpandableElement {
-
-    public final static Color BACKGROUND = new Color(255, 125, 48);
+public class TriangleEditor extends AbstractExpandableElement {
+    
+    private Lookup lookup = Lookups.singleton("Triangle editor");
     
     @Override
-    public JComponent getVisualComponent() {
-        return new JLabel("Triangle editor");
+    protected JComponent createVisualComponent() {
+        return new JTextField("Triangle editor");
+    }
+    
+    @Override
+    protected boolean openMaximized() {
+        return false;
     }
 
     @Override
-    public JComponent[] getFrameComponents() {
-        return new JComponent[0];
-    }
-
-    @Override
-    public Color getBackground() {
-        return BACKGROUND;
-    }
-
-    @Override
-    public Color getForeground() {
-        return GeometryEditor.FOREGROUND;
+    public Lookup getLookup() {
+        return lookup;
     }
 }

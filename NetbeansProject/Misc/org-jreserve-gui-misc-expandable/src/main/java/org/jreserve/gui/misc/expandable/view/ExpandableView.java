@@ -16,10 +16,13 @@
  */
 package org.jreserve.gui.misc.expandable.view;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import org.jreserve.gui.misc.expandable.ExpandableContainerHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 
 /**
@@ -27,15 +30,17 @@ import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ExpandableView extends JPanel {
+class ExpandableView extends JPanel {
     private final static int BORDER_WIDHT = 15;
     private final static int COMPONENT_SPACING = 5;
-    private final static int SCROLL_INCREMENT = 20;
     
+    private ExpandableContainerHandler handler;
     private ExpandableElementDescription[] descriptions;
+    private List<ExpandablePanel> panels;
     
-    public ExpandableView(ExpandableElementDescription[] descriptions) {
+    ExpandableView(ExpandableContainerHandler handler, ExpandableElementDescription[] descriptions) {
         super(new ExpandableLayout(COMPONENT_SPACING));
+        this.handler = handler;
         this.descriptions = descriptions;
         initComponents();
     }
@@ -48,9 +53,24 @@ public class ExpandableView extends JPanel {
     }
     
     private void addPanels() {
+        panels = new ArrayList<ExpandablePanel>(descriptions.length);
         for(ExpandableElementDescription desc : descriptions) {
-            ExpandablePanel panel = new ExpandablePanel(desc);
+            ExpandablePanel panel = new ExpandablePanel(handler, desc);
+            panels.add(panel);
             add(panel);
         }
+    }
+    
+    JComponent getPanelForDescription(ExpandableElementDescription description) {
+        int index = getIndexOfDescription(description);
+        return index < 0? null : panels.get(index);
+    }
+    
+    private int getIndexOfDescription(ExpandableElementDescription description) {
+        int size = descriptions.length;
+        for(int i=0; i<size; i++)
+            if(descriptions[i] == description)
+                return i;
+        return -1;
     }
 }

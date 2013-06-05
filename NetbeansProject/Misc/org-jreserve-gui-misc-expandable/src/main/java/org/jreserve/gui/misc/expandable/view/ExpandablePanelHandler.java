@@ -14,28 +14,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.misc.expandable;
+package org.jreserve.gui.misc.expandable.view;
 
-import java.awt.Color;
+import javax.swing.JComponent;
+import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExpandableElementDescription {
+public class ExpandablePanelHandler extends AbstractExpandableContainerHandler {
     
-    public String getDisplayName();
-    
-    public String getIconBase();
-    
-    public String getPrefferedID();
-    
-    public Color getBackground();
-    
-    public Color getForeground();
-    
-    public int getPosition();
-    
-    public ExpandableElement getElement();
+    private ExpandableView component;
+
+    public ExpandablePanelHandler(ExpandableElementDescription[] elements) {
+        super(elements);
+    }
+
+    @Override
+    protected JComponent createComponent() {
+        component = new ExpandableView(this, getElements());
+        return component;
+    }
+
+    @Override
+    protected JComponent getComponentFor(ExpandableElementDescription description) {
+        return component != null?
+                component.getPanelForDescription(description) :
+                null;
+    }
 }
