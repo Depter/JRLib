@@ -70,6 +70,7 @@ public class ClaimTriangleEditor extends TopComponent {
     
     @Override
     public Lookup getLookup() {
+        Lookup lkp = handler.getLookup();
         return handler.getLookup();
     }
 }

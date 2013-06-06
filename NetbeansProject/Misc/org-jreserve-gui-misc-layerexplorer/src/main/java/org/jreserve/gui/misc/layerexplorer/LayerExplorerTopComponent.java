@@ -54,7 +54,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionReferences({
     @ActionReference(path = "Menu/Window" /*, position = 333 */),
-    @ActionReference(path = "Ribbon/TaskPanes/Windows/Utilities", position = 100)
+    @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 100)
 })
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_LayerExplorerAction",

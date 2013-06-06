@@ -33,6 +33,7 @@ import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 import org.openide.util.lookup.ProxyLookup;
 
 /**
@@ -48,11 +49,13 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
     private JComponent component;
     private FocusListenr focusListener;
     private ExpandableElementDescription selected;
-    private ExtendableLookup lookup = new ExtendableLookup();
+    private ExtendableLookup lookup;
     private UndoRedo.Manager undoRedo;
     
     protected AbstractExpandableContainerHandler(ExpandableElementDescription[] elements) {
         this.elements = elements;
+        this.lookup = new ExtendableLookup();
+        this.lookup.updateLookups();
     }
     
     @Override
@@ -197,14 +200,15 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
     }
     
     private class ExtendableLookup extends ProxyLookup {
-
+        private Lookup fixed;
+        
         public ExtendableLookup() {
-            super(Lookup.EMPTY);
+            fixed = Lookups.fixed(AbstractExpandableContainerHandler.this, ExpandableNavigatorPanel.LOOKUP_HINT);
         }
         
         void updateLookups() {
             Lookup lkp = selected==null? Lookup.EMPTY : selected.getElement().getLookup();
-            setLookups(lkp);
+            setLookups(fixed, lkp);
         }
     }    
     

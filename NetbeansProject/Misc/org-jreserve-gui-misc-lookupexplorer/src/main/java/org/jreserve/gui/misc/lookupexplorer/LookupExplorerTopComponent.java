@@ -51,7 +51,7 @@ import org.openide.util.Utilities;
 )
 @ActionReferences({
     @ActionReference(path = "Menu/Window" /*, position = 333 */),
-    @ActionReference(path = "Ribbon/TaskPanes/Windows/Utilities", position = 200)
+    @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 200)
 })
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_LookupExplorerAction",

@@ -42,5 +42,21 @@
                 <attr name="iconBase" stringvalue="org/jreserve/gui/flamingo/modules/info.png"/>
             </file>
         </folder>
+        
+        <folder name="TaskPanes">
+            <folder name="Windows">
+                <folder name="JReserve">
+                    <attr name="position" intvalue="1000"/>
+                </folder>
+                
+                <folder name="Miscellaneous">
+                    <attr name="position" intvalue="2000"/>
+                </folder>
+                
+                <folder name="Development">
+                    <attr name="position" intvalue="3000"/>
+                </folder>
+            </folder>
+        </folder>
     </folder>
 </filesystem>

@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.jreserve</groupId>
-    <artifactId>org-jreserve-gui-misc-expandable</artifactId>
+    <artifactId>org-jreserve-gui-misc-systemproperties</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>org-jreserve-gui-misc-expandable</name>
+    <name>org-jreserve-gui-misc-systemproperties</name>
     
     <licenses>
         <license>
@@ -53,64 +53,43 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-windows</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
             <version>${netbeans.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util-lookup</artifactId>
             <version>${netbeans.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-windows</artifactId>
-            <version>${netbeans.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-filesystems</artifactId>
-            <version>${netbeans.version}</version>
-            <type>jar</type>
-        </dependency>
-        <dependency>
-            <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-core-multiview</artifactId>
-            <version>${netbeans.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-awt</artifactId>
             <version>${netbeans.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-netbeans-spi-navigator</artifactId>
+            <artifactId>org-netbeans-modules-settings</artifactId>
             <version>${netbeans.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-nodes</artifactId>
             <version>${netbeans.version}</version>
-            <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-explorer</artifactId>
             <version>${netbeans.version}</version>
-            <type>jar</type>
         </dependency>
-        
         <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-annotations</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <type>jar</type>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-swing-outline</artifactId>
+            <version>${netbeans.version}</version>
         </dependency>
     </dependencies>
 
@@ -123,10 +102,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <cluster>jreserve-misc</cluster>
-                    <publicPackages>
-                        <publicPackage>org.jreserve.gui.misc.expandable</publicPackage>
-                        <publicPackage>org.jreserve.gui.misc.expandable.buttons</publicPackage>
-                    </publicPackages>
                 </configuration>
             </plugin>
 
