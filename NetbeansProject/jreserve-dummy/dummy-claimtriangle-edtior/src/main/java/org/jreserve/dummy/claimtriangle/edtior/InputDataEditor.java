@@ -14,11 +14,10 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.jreserve.dummy.claimtriangle.edtior;
 
-import java.awt.Color;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
@@ -32,23 +31,23 @@ import org.openide.util.lookup.Lookups;
  * @version 1.0
  */
 @ExpandableElement.Registration(
-    displayName = "#LBL.GeometryEditor.Title",
+    displayName = "#LBL.InputDataEditor.Title",
     mimeType = "jreserve/triangle-claim",
-    position = 1000,
-    prefferedID = "org.jreserve.dummy.claimtriangle.edtior.GeometryEditor",
-    background = "43C443"
+    position = 500,
+    prefferedID = "org.jreserve.dummy.claimtriangle.edtior.InputDataEditor",
+    background = "646464"
 )
 @Messages({
-    "LBL.GeometryEditor.Title=Geometry"
+    "LBL.InputDataEditor.Title=Input Data"
 })
-public class GeometryEditor extends AbstractExpandableElement {
-
-    private Lookup lookup = Lookups.singleton("Geometry editor");
-    private GeometryEditorPanel editorPanel;
+public class InputDataEditor extends AbstractExpandableElement {
+    
+    private Lookup lookup = Lookups.singleton("Input Data");
+    private InputDataEditorPanel editorPanel;
     
     @Override
     protected JComponent createVisualComponent() {
-        editorPanel = new GeometryEditorPanel();
+        editorPanel = new InputDataEditorPanel();
         return editorPanel;
     }
     
