@@ -15,9 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.dummy.claimtriangle.edtior.trianglemodel;
-
-import org.jreserve.jrlib.triangle.Triangle;
+package org.jreserve.gui.triangletable.trianglemodel;
 
 /**
  *
@@ -26,43 +24,37 @@ import org.jreserve.jrlib.triangle.Triangle;
  */
 public class CalendarTriangleModel extends AbstractTriangleModel {
 
-    public CalendarTriangleModel() {
-    }
-
-    public CalendarTriangleModel(Triangle triangle) {
-        super(triangle);
-    }
-
-    @Override
-    protected int getAccidentIndex(int row, int column) {
-        return row;
-    }
-
-    @Override
-    protected int getDevelopmentIndex(int row, int column) {
-        int maxDev = triangle.getDevelopmentCount();
-        int rowMax = triangle.getDevelopmentCount(row);
-        return column - maxDev + rowMax;
-    }
-
     @Override
     public int getRowCount() {
-        return triangle.getAccidentCount();
+        return triangle==null? 0 : triangle.getAccidentCount();
     }
 
     @Override
     public int getColumnCount() {
-        return triangle.getDevelopmentCount();
+        return triangle==null? 0 : triangle.getDevelopmentCount();
     }
 
     @Override
-    public String getRowTitle(int row) {
-        return ""+(1997+row)+"-01";
+    public int getRowIndex(int accident, int development) {
+        return accident;
     }
 
     @Override
-    public String getColumnTitle(int column) {
-        return ""+(1997+column)+"-01";
+    public int getColumnIndex(int accident, int development) {
+        int max = triangle.getDevelopmentCount();
+        int accidentMax = triangle.getDevelopmentCount(accident);
+        return development + (max - accidentMax);
     }
 
+    @Override
+    public int getAccidentIndex(int row, int column) {
+        return row;
+    }
+
+    @Override
+    public int getDevelopmentIndex(int row, int column) {
+        int max = triangle.getDevelopmentCount();
+        int accidentMax = triangle.getDevelopmentCount(row);
+        return column - (max - accidentMax);
+    }
 }

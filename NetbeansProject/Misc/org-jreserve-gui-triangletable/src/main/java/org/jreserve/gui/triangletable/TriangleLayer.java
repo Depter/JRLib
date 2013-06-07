@@ -15,9 +15,9 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.dummy.claimtriangle.edtior.trianglemodel;
+package org.jreserve.gui.triangletable;
 
-import javax.swing.event.ChangeListener;
+import javax.swing.table.TableCellRenderer;
 import org.jreserve.jrlib.triangle.Triangle;
 
 /**
@@ -25,27 +25,13 @@ import org.jreserve.jrlib.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface TriangleModel {
-    
-    public void setTriangle(Triangle triangle);
+public interface TriangleLayer {
+
+    public String getDisplayName();
     
     public Triangle getTriangle();
     
-    public void releaseTriangle(Triangle triangle);
+    public boolean rendersCell(int accident, int development);
     
-    public int getRowCount();
-    
-    public int getColumnCount();
-    
-    public String getRowTitle(int row);
-    
-    public String getColumnTitle(int column);
-    
-    public boolean hasCellAt(int row, int column);
-    
-    public double getValueAt(int row, int column);
-
-    public void addChangeListener(ChangeListener listener);
-    
-    public void removeChangeListener(ChangeListener listener);
+    public TableCellRenderer getCellRenderer();
 }

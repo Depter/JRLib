@@ -14,37 +14,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.dummy.claimtriangle.edtior.trianglerenderer;
+
+package org.jreserve.gui.triangletable;
 
 import java.awt.Component;
-import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import org.jreserve.dummy.claimtriangle.edtior.triangletable.TriangleTable;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultTriangleRenderer extends DefaultTableCellRenderer {
-    
-    private JLabel emptyLabel = new JLabel();
-    
-    private Map<Class, Object> renderers;
-    private TriangleLayerUtil<ClaimTriangle> layerUtil;
+public class DefaultTriangleTableRenderer extends JLabel implements TableCellRenderer {
 
-    public DefaultTriangleRenderer() {
-    }
-    
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        if(value == null)
-            return emptyLabel;
-        return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        this.setText(value==null? null : value.toString());
+        return this;
     }
     
+    private void renderNullCell() {
+        setText(null);
+        
+    }
+
 }

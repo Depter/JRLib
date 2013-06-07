@@ -15,15 +15,30 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.dummy.claimtriangle.edtior.triangletable;
+package org.jreserve.gui.triangletable;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class LayerUtil {
+public class IndexTitleModel implements TitleModel {
+
+    private boolean zeroBased;
     
-    private LayerUtil() {
+    public IndexTitleModel() {
+        this(false);
     }
+    
+    public IndexTitleModel(boolean zeroBased) {
+        this.zeroBased = zeroBased;
+    }
+    
+    @Override
+    public String getName(int index) {
+        if(!zeroBased)
+            index++;
+        return ""+index;
+    }
+
 }

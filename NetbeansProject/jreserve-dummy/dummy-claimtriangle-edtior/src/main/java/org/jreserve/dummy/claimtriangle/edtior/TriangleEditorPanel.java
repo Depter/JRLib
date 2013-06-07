@@ -17,11 +17,14 @@
 package org.jreserve.dummy.claimtriangle.edtior;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import org.jreserve.dummy.claimtriangle.edtior.triangletable.TriangleTable;
+import javax.swing.table.TableCellRenderer;
+import org.jreserve.gui.triangletable.TriangleLayer;
+import org.jreserve.gui.triangletable.TriangleTable;
+import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
 import org.jreserve.jrlib.triangle.claim.CummulatedClaimTriangle;
@@ -49,27 +52,24 @@ class TriangleEditorPanel extends JPanel {
         {7194587}
     };
     
-    private static ClaimTriangle createTriangle() {
-        ClaimTriangle triangle = new InputClaimTriangle(APC_PAID);
-        triangle = new CummulatedClaimTriangle(triangle);
-        triangle = new ClaimTriangleCorrection(triangle, 0, 3, 20000);
+    private static List<TriangleLayer> createTriangle() {
         
-        TriangleSmoothing smoothing = new ExponentialSmoothing(
-                new SmoothingCell[] {
-                    new SmoothingCell(3, 0, false),
-                    new SmoothingCell(4, 0, false),
-                    new SmoothingCell(5, 0, true)
-                }
-                , 0.5);
+        DataLayer data = new DataLayer();
+        CorrectionLayer correction = new CorrectionLayer(data.triangle);
+        SmoothingLayer smoothing = new SmoothingLayer(correction.triangle);
+        ExcludeLayer exclude = new ExcludeLayer(smoothing.triangle);
         
-        triangle = new SmoothedClaimTriangle(triangle, smoothing);
+        List<TriangleLayer> layers = new ArrayList<TriangleLayer>(4);
+        layers.add(data);
+        layers.add(correction);
+        layers.add(smoothing);
+        layers.add(exclude);
         
-        triangle = new ClaimTriangleCorrection(triangle, 2, 2, Double.NaN);
-        return triangle;
+        return layers;
     }
     
-    private final ClaimTriangle triangle = createTriangle();
-
+    private List<TriangleLayer> layers = createTriangle();
+    
     public TriangleEditorPanel() {
         initComponents();
     }
@@ -78,16 +78,133 @@ class TriangleEditorPanel extends JPanel {
         setLayout(new BorderLayout(5, 5));
         add(createToolBar(), BorderLayout.NORTH);
         
-        TriangleTable table = new TriangleTable(triangle);
-        JScrollPane scroll = new JScrollPane(table);
-        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        add(scroll, BorderLayout.CENTER);
+        TriangleTable table = new TriangleTable(layers);
+        add(table, BorderLayout.CENTER);
         
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
     }
     
     private JPanel createToolBar() {
         return new JPanel();
+    }
+    
+    private static class DataLayer implements TriangleLayer {
+
+        private ClaimTriangle triangle = new CummulatedClaimTriangle(new InputClaimTriangle(APC_PAID));
+        
+        @Override
+        public String getDisplayName() {
+            return "Source";
+        }
+
+        @Override
+        public Triangle getTriangle() {
+            return triangle;
+        }
+
+        @Override
+        public boolean rendersCell(int accident, int development) {
+            return false;
+        }
+
+        @Override
+        public TableCellRenderer getCellRenderer() {
+            return null;
+        }    
+    }
+    
+    private static class CorrectionLayer implements TriangleLayer {
+
+        private ClaimTriangle triangle;
+        
+        private CorrectionLayer(ClaimTriangle triangle) {
+            this.triangle = new ClaimTriangleCorrection(triangle, 0, 3, 5600000);
+        }
+        
+        @Override
+        public String getDisplayName() {
+            return "Correction [1, 4]";
+        }
+
+        @Override
+        public Triangle getTriangle() {
+            return triangle;
+        }
+
+        @Override
+        public boolean rendersCell(int accident, int development) {
+            return false;
+        }
+
+        @Override
+        public TableCellRenderer getCellRenderer() {
+            return null;
+        }    
+    }
+    
+    private static class SmoothingLayer implements TriangleLayer {
+
+        private ClaimTriangle triangle;
+        
+        private SmoothingLayer(ClaimTriangle triangle) {
+            TriangleSmoothing smoothing = new ExponentialSmoothing(
+                    new SmoothingCell[] {
+                        new SmoothingCell(3, 0, false),
+                        new SmoothingCell(4, 0, false),
+                        new SmoothingCell(5, 0, true)
+                    }
+                    , 0.5);
+
+            this.triangle = new SmoothedClaimTriangle(triangle, smoothing);
+        }
+        
+        @Override
+        public String getDisplayName() {
+            return "Smoothing_1";
+        }
+
+        @Override
+        public Triangle getTriangle() {
+            return triangle;
+        }
+
+        @Override
+        public boolean rendersCell(int accident, int development) {
+            return false;
+        }
+
+        @Override
+        public TableCellRenderer getCellRenderer() {
+            return null;
+        }    
+    }
+    
+    private static class ExcludeLayer implements TriangleLayer {
+
+        private ClaimTriangle triangle;
+        
+        private ExcludeLayer(ClaimTriangle triangle) {
+            this.triangle = new ClaimTriangleCorrection(triangle, 2, 2, Double.NaN);
+        }
+        
+        @Override
+        public String getDisplayName() {
+            return "Exclusion [2, 2]";
+        }
+
+        @Override
+        public Triangle getTriangle() {
+            return triangle;
+        }
+
+        @Override
+        public boolean rendersCell(int accident, int development) {
+            return false;
+        }
+
+        @Override
+        public TableCellRenderer getCellRenderer() {
+            return null;
+        }    
     }
 }

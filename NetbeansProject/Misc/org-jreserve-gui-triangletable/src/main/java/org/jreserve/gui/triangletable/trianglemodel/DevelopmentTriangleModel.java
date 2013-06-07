@@ -15,7 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.dummy.claimtriangle.edtior.trianglemodel;
+package org.jreserve.gui.triangletable.trianglemodel;
 
 import org.jreserve.jrlib.triangle.Triangle;
 
@@ -24,23 +24,13 @@ import org.jreserve.jrlib.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultTriangleModel extends AbstractTriangleModel {
+public class DevelopmentTriangleModel extends AbstractTriangleModel {
 
-    public DefaultTriangleModel() {
+    public DevelopmentTriangleModel() {
     }
 
-    public DefaultTriangleModel(Triangle triangle) {
+    public DevelopmentTriangleModel(Triangle triangle) {
         super(triangle);
-    }
-
-    @Override
-    protected int getAccidentIndex(int row, int column) {
-        return row;
-    }
-
-    @Override
-    protected int getDevelopmentIndex(int row, int column) {
-        return column;
     }
 
     @Override
@@ -54,13 +44,22 @@ public class DefaultTriangleModel extends AbstractTriangleModel {
     }
 
     @Override
-    public String getRowTitle(int row) {
-        return ""+(1997+row)+"-01";
+    public int getRowIndex(int accident, int development) {
+        return accident;
     }
 
     @Override
-    public String getColumnTitle(int column) {
-        return ""+(column+1);
+    public int getColumnIndex(int accident, int development) {
+        return development;
+    }
+    
+    @Override
+    public int getAccidentIndex(int row, int column) {
+        return row;
     }
 
+    @Override
+    public int getDevelopmentIndex(int row, int column) {
+        return column;
+    }
 }

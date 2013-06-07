@@ -14,19 +14,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.dummy.claimtriangle.edtior.trianglerenderer;
 
-import java.util.Map;
-import javax.swing.JComponent;
-import org.jreserve.dummy.claimtriangle.edtior.triangletable.TriangleTable;
+package org.jreserve.gui.triangletable;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface TriangleRenderer {
+public interface TitleModel {
     
-    public JComponent getRendererComponent(TriangleTable table);
+    public String getName(int index);
     
 }

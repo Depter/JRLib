@@ -15,52 +15,42 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.dummy.claimtriangle.edtior.trianglemodel;
-
-import org.jreserve.jrlib.triangle.Triangle;
+package org.jreserve.gui.triangletable.trianglemodel;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class VerticalCalendarModel extends AbstractTriangleModel {
-
-    public VerticalCalendarModel() {
-    }
-
-    public VerticalCalendarModel(Triangle triangle) {
-        super(triangle);
-    }
-
-    @Override
-    protected int getAccidentIndex(int row, int column) {
-        return column;
-    }
-
-    @Override
-    protected int getDevelopmentIndex(int row, int column) {
-        return row;
-    }
+public class AccidentTriangleModel extends AbstractTriangleModel {
 
     @Override
     public int getRowCount() {
-        return triangle.getDevelopmentCount();
+        return triangle==null? 0 : triangle.getDevelopmentCount();
     }
 
     @Override
     public int getColumnCount() {
-        return triangle.getAccidentCount();
+        return triangle==null? 0 : triangle.getAccidentCount();
     }
 
     @Override
-    public String getRowTitle(int row) {
-        return ""+(row+1);
+    public int getRowIndex(int accident, int development) {
+        return development;
     }
 
     @Override
-    public String getColumnTitle(int column) {
-        return ""+(1997+column)+"-01";
+    public int getColumnIndex(int accident, int development) {
+        return accident;
     }
 
+    @Override
+    public int getDevelopmentIndex(int row, int column) {
+        return row;
+    }
+
+    @Override
+    public int getAccidentIndex(int row, int column) {
+        return column;
+    }
 }
