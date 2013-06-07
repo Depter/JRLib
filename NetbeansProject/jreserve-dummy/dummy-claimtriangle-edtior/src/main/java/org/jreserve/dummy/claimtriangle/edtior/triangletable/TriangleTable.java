@@ -21,6 +21,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 import org.jreserve.dummy.claimtriangle.edtior.trianglemodel.DefaultTriangleModel;
 import org.jreserve.dummy.claimtriangle.edtior.trianglemodel.TriangleModel;
+import org.jreserve.dummy.claimtriangle.edtior.trianglerenderer.DefaultTriangleRenderer;
 import org.jreserve.jrlib.triangle.Triangle;
 
 /**
@@ -31,7 +32,9 @@ import org.jreserve.jrlib.triangle.Triangle;
 public class TriangleTable extends JTable {
 
     private TriangleTableModel tableModel;
-
+    private DefaultTriangleRenderer renderer;
+    private boolean initialized;
+    
     public TriangleTable() {
         this(new DefaultTriangleModel());
     }
@@ -42,16 +45,19 @@ public class TriangleTable extends JTable {
     
     public TriangleTable(TriangleModel triangleModel) {
         tableModel = new TriangleTableModel(triangleModel);
+        super.setModel(tableModel);
+        renderer = new DefaultTriangleRenderer();
+        super.setDefaultRenderer(Double.class, renderer);
+        initialized = true;
     } 
     
     @Override
     public void setModel(TableModel model) {
-        throw new UnsupportedOperationException("Do not set TableModel for TriangleTable! Use TriangleModel!");
-    }
-    
-    @Override
-    public TableModel getModel() {
-        return null;
+        if(initialized) {
+            throw new UnsupportedOperationException("");
+        } else {
+            super.setModel(model);
+        }
     }
     
     public void setTriangleModel(TriangleModel model) {

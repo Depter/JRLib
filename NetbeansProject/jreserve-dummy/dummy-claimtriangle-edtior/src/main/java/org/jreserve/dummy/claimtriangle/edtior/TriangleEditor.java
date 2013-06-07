@@ -17,8 +17,6 @@
 package org.jreserve.dummy.claimtriangle.edtior;
 
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.openide.util.Lookup;
@@ -43,10 +41,12 @@ import org.openide.util.lookup.Lookups;
 public class TriangleEditor extends AbstractExpandableElement {
     
     private Lookup lookup = Lookups.singleton("Triangle editor");
+    private TriangleEditorPanel editorPanel;
     
     @Override
     protected JComponent createVisualComponent() {
-        return new JTextField("Triangle editor");
+        editorPanel = new TriangleEditorPanel();
+        return editorPanel;
     }
     
     @Override
