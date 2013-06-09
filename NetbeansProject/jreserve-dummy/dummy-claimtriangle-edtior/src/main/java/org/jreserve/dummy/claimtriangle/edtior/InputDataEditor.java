@@ -18,7 +18,6 @@
 package org.jreserve.dummy.claimtriangle.edtior;
 
 import javax.swing.JComponent;
-import javax.swing.JTextField;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.openide.util.Lookup;
@@ -32,7 +31,7 @@ import org.openide.util.lookup.Lookups;
  */
 @ExpandableElement.Registration(
     displayName = "#LBL.InputDataEditor.Title",
-    mimeType = "jreserve/triangle-claim",
+    mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 500,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.InputDataEditor",
     background = "646464"
@@ -49,6 +48,11 @@ public class InputDataEditor extends AbstractExpandableElement {
     protected JComponent createVisualComponent() {
         editorPanel = new InputDataEditorPanel();
         return editorPanel;
+    }
+    
+    @Override
+    protected boolean openMaximized() {
+        return false;
     }
     
     @Override

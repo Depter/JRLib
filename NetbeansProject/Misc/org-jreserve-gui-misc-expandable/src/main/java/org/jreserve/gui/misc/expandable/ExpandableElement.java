@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.misc.expandable;
 
+import java.awt.Component;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -31,7 +32,7 @@ import org.openide.util.Lookup;
  */
 public interface ExpandableElement extends Lookup.Provider {
     
-    public JComponent getVisualComponent();
+    public Component getVisualComponent();
     
     public JComponent[] getFrameComponents();
     

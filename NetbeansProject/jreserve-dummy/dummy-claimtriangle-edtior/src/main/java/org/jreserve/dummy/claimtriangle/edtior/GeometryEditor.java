@@ -16,10 +16,7 @@
  */
 package org.jreserve.dummy.claimtriangle.edtior;
 
-import java.awt.Color;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTextField;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.openide.util.Lookup;
@@ -33,7 +30,7 @@ import org.openide.util.lookup.Lookups;
  */
 @ExpandableElement.Registration(
     displayName = "#LBL.GeometryEditor.Title",
-    mimeType = "jreserve/triangle-claim",
+    mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 1000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.GeometryEditor",
     background = "43C443"
@@ -50,6 +47,11 @@ public class GeometryEditor extends AbstractExpandableElement {
     protected JComponent createVisualComponent() {
         editorPanel = new GeometryEditorPanel();
         return editorPanel;
+    }
+    
+    @Override
+    protected boolean openMaximized() {
+        return false;
     }
     
     @Override

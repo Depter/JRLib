@@ -88,6 +88,12 @@
         
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>dummy-plot</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-misc-expandable</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
@@ -103,6 +109,26 @@
             <artifactId>org-jreserve-gui-triangletable</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-loaders</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-nodes</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-dialogs</artifactId>
+            <version>${netbeans.version}</version>
         </dependency>
     </dependencies>
 

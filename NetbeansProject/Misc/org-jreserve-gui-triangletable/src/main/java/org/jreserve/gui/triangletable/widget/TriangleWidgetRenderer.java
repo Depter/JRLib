@@ -15,15 +15,16 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.triangletable;
+package org.jreserve.gui.triangletable.widget;
+
+import java.awt.Component;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface TitleModel {
+public interface TriangleWidgetRenderer {
     
-    public String getName(int index);
-    
+    public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected);
 }

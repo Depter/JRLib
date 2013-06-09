@@ -24,6 +24,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 import org.openide.windows.TopComponent;
 
 /**
@@ -31,39 +32,39 @@ import org.openide.windows.TopComponent;
  * @author Peter Decsi
  * @version 1.0
  */
-@TopComponent.Description(
-    preferredID = "ClaimTriangleEditorTc",
-    persistenceType = TopComponent.PERSISTENCE_NEVER, 
-    iconBase = "org/jreserve/dummy/projecttree/resources/triangle.png"
-)
-@TopComponent.Registration(
-    mode="editor", 
-    openAtStartup = false
-)
-@ActionID(
-    category = "Window", 
-    id = "org.jreserve.dummy.claimtriangle.edtior.ClaimTriangleEditor"
-)
-@ActionReferences({
-    @ActionReference(path = "Menu/Window" /*, position = 333 */),
-    @ActionReference(path = "Ribbon/TaskPanes/Windows/JReserve", position = 100)
-})
-@TopComponent.OpenActionRegistration(
-    displayName = "#CTL.ClaimTriangleEditorAction",
-    preferredID = "ClaimTriangleEditor"
-)
+//@TopComponent.Description(
+//    preferredID = "ClaimTriangleEditorTc",
+//    persistenceType = TopComponent.PERSISTENCE_NEVER, 
+//    iconBase = "org/jreserve/dummy/projecttree/resources/triangle.png"
+//)
+//@TopComponent.Registration(
+//    mode="editor", 
+//    openAtStartup = false
+//)
+//@ActionID(
+//    category = "Window", 
+//    id = "org.jreserve.dummy.claimtriangle.edtior.ClaimTriangleEditor"
+//)
+//@ActionReferences({
+//    @ActionReference(path = "Menu/Window" /*, position = 333 */),
+//    @ActionReference(path = "Ribbon/TaskPanes/Windows/JReserve", position = 100)
+//})
+//@TopComponent.OpenActionRegistration(
+//    displayName = "#CTL.ClaimTriangleEditorAction",
+//    preferredID = "ClaimTriangleEditor"
+//)
 @Messages({
     "CTL.ClaimTriangleEditorAction=Claim Triangle",
     "CTL.ClaimTriangleEditor.Title=Edit Triangle"
 })
 public class ClaimTriangleEditor extends TopComponent {
     
-    final static String MIME_TYPE = "jreserve/triangle-claim";
     private final ExpandableContainerHandler handler;
     
     public ClaimTriangleEditor() {
         setLayout(new BorderLayout());
-        handler = ExpandableFactory.createScrollPanel(MIME_TYPE, null);
+        Lookup lkp = Lookups.singleton(TriangleFactory.createTriangle());
+        handler = ExpandableFactory.createScrollPanel(TriangleEditorMultiview.MIME_TYPE, lkp);
         add(handler.getComponent(), BorderLayout.CENTER);
         setDisplayName("APC Paid");
     }

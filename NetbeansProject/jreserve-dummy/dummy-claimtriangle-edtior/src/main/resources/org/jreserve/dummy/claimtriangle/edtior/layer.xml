@@ -1,3 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
-<filesystem/>
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="org-jreserve-dummy-claimtriangle-edtior-OpenClaimTriangleEditorAction.instance">
+                <!--org.jreserve.dummy.claimtriangle.edtior.OpenClaimTriangleEditorAction-->
+                <attr bundlevalue="org.jreserve.dummy.claimtriangle.edtior.Bundle#CTL_OpenClaimTriangleEditorAction" name="displayName"/>
+                <attr methodvalue="org.openide.awt.Actions.alwaysEnabled" name="instanceCreate"/>
+                <attr name="delegate" newvalue="org.jreserve.dummy.claimtriangle.edtior.OpenClaimTriangleEditorAction"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+                <attr name="iconBase" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="org-jreserve-dummy-claimtriangle-edtior-OpenClaimTriangleEditorAction.shadow">
+                <!--org.jreserve.dummy.claimtriangle.edtior.OpenClaimTriangleEditorAction-->
+                <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-dummy-claimtriangle-edtior-OpenClaimTriangleEditorAction.instance"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Ribbon">
+        <folder name="TaskPanes">
+            <folder name="Windows">
+                <folder name="JReserve">
+                    <file name="org-jreserve-dummy-claimtriangle-edtior-OpenClaimTriangleEditorAction.shadow">
+                        <!--org.jreserve.dummy.claimtriangle.edtior.OpenClaimTriangleEditorAction-->
+                        <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-dummy-claimtriangle-edtior-OpenClaimTriangleEditorAction.instance"/>
+                        <attr intvalue="100" name="position"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+    <folder name="Editors">
+        <folder name="application">
+            <folder name="jreserve-triangle-claim">
+                <folder name="MultiView">
+                    <file name="org-jreserve-dummy-claimtriangle-edtior-TriangleEditorMultiview.instance">
+                        <!--org.jreserve.dummy.claimtriangle.edtior.TriangleEditorMultiview-->
+                        <attr methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
+                        <attr name="class" stringvalue="org.jreserve.dummy.claimtriangle.edtior.TriangleEditorMultiview"/>
+                        <attr bundlevalue="org.jreserve.dummy.claimtriangle.edtior.Bundle#LBL.TriangleEditorMultiview.Title" name="displayName"/>
+                        <attr name="preferredID" stringvalue="org.jreserve.dummy.claimtriangle.edtior.TriangleEditorMultiview"/>
+                        <attr intvalue="2" name="persistenceType"/>
+                        <attr intvalue="100" name="position"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+
+</filesystem>

@@ -29,6 +29,14 @@ public interface TriangleModel {
     
     public Triangle getTriangle();
     
+    public TitleModel getHorizontalTitleModel();
+    
+    public void setHorizontalTitleModel(TitleModel model);
+    
+    public TitleModel getVerticalTitleModel();
+    
+    public void setVerticalTitleModel(TitleModel model);
+    
     public void setTriangle(Triangle triangle);
     
     public int getRowCount();

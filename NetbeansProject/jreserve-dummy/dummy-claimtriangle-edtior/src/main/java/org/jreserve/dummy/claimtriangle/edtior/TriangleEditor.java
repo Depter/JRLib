@@ -29,23 +29,28 @@ import org.openide.util.lookup.Lookups;
  */
 @ExpandableElement.Registration(
     displayName = "#LBL.TriangleEditor.Title",
-    mimeType = "jreserve/triangle-claim",
+    mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 2000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.TriangleEditor",
     background = "#COLOR.TriangleEditor.Background"
 )
 @Messages({
     "LBL.TriangleEditor.Title=Triangle",
-    "COLOR.TriangleEditor.Background=FF7D30"
+    "COLOR.TriangleEditor.Background=43C443"
 })
 public class TriangleEditor extends AbstractExpandableElement {
     
     private Lookup lookup = Lookups.singleton("Triangle editor");
+    private Lookup context;
     private TriangleEditorPanel editorPanel;
+    
+    public TriangleEditor(Lookup context) {
+        this.context = context;
+    }
     
     @Override
     protected JComponent createVisualComponent() {
-        editorPanel = new TriangleEditorPanel();
+        editorPanel = new TriangleEditorPanel(context);
         return editorPanel;
     }
     

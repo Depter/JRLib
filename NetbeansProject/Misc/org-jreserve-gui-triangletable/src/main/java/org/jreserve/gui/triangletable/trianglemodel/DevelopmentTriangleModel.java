@@ -27,10 +27,19 @@ import org.jreserve.jrlib.triangle.Triangle;
 public class DevelopmentTriangleModel extends AbstractTriangleModel {
 
     public DevelopmentTriangleModel() {
+        super();
+    }
+
+    public DevelopmentTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {
+        super(horizontalTitles, verticalTitles);
     }
 
     public DevelopmentTriangleModel(Triangle triangle) {
         super(triangle);
+    }
+
+    public DevelopmentTriangleModel(Triangle triangle, TitleModel horizontalTitles, TitleModel verticalTitles) {
+        super(triangle, horizontalTitles, verticalTitles);
     }
 
     @Override

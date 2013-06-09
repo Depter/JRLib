@@ -128,4 +128,12 @@ public class AbstractVectorSmoothing implements TriangleSmoothing {
             cells[i][1] = other.cells[i][1];
         }
     }
+    
+    @Override
+    public SmoothingCell[] getSmoothingCells() {
+        SmoothingCell[] scs = new SmoothingCell[cellCount];
+        for(int i=0; i<cellCount; i++)
+            scs[i] = new SmoothingCell(cells[i][0], cells[i][1], applied[i]);
+        return scs;
+    }
 }

@@ -31,16 +31,31 @@ import org.jreserve.jrlib.triangle.Triangle;
 public abstract class AbstractTriangleModel implements TriangleModel {
     
     protected Triangle triangle;
+    private TitleModel xTitles;
+    private TitleModel yTitles;
+    
     private List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     private TriangleListener triangleListener = new TriangleListener();
     
     protected AbstractTriangleModel() {
+        this(null);
+    }
+    
+    protected AbstractTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {
+        this(null, horizontalTitles, verticalTitles);
     }
     
     protected AbstractTriangleModel(Triangle triangle) {
+        this(triangle, null, null);
+    }
+    
+    protected AbstractTriangleModel(Triangle triangle, TitleModel horizontalTitles, TitleModel verticalTitles) {
         this.triangle = triangle;
         if(triangle != null)
             triangle.addChangeListener(triangleListener);
+        
+        this.xTitles = horizontalTitles==null? new IndexTitleModel() : horizontalTitles;
+        this.yTitles = verticalTitles==null? new IndexTitleModel() : verticalTitles;
     }
 
     @Override
@@ -64,6 +79,28 @@ public abstract class AbstractTriangleModel implements TriangleModel {
         this.triangle = triangle;
         if(this.triangle != null)
             this.triangle.addChangeListener(triangleListener);
+    }
+    
+    @Override
+    public TitleModel getHorizontalTitleModel() {
+        return xTitles;
+    }
+ 
+    @Override
+    public void setHorizontalTitleModel(TitleModel model) {
+        this.xTitles = model==null? new IndexTitleModel() : model;
+        fireChange();
+    }
+    
+    @Override
+    public TitleModel getVerticalTitleModel() {
+        return yTitles;
+    }
+    
+    @Override
+    public void setVerticalTitleModel(TitleModel model) {
+        this.yTitles = model==null? new IndexTitleModel() : model;
+        fireChange();
     }
 
     @Override

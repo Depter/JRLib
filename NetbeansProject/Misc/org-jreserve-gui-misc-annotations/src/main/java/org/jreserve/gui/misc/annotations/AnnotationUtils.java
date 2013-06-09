@@ -161,7 +161,7 @@ public class AnnotationUtils {
             Class<?> clazz = Class.forName(className, true, cl);
             if(method == null) {
                 try {
-                    Constructor<?> constructor = clazz.getConstructor(paramTypes);
+                    Constructor<?> constructor = getConstructor(clazz, paramTypes);
                     return constructor.newInstance(parameters);
                 } catch (Exception ex) {
                     initial = ex;
@@ -170,7 +170,7 @@ public class AnnotationUtils {
                 }
             } else {
                 try {
-                    Method m = clazz.getMethod(method, paramTypes);
+                    Method m = getMethod(clazz, method, paramTypes);
                     return m.invoke(null, parameters);
                 } catch (Exception ex) {
                     initial = ex;
@@ -181,6 +181,32 @@ public class AnnotationUtils {
         } catch (Exception ex) {
             throw instantiateException(ex, initial, className);
         }
+    }
+    
+    private static Constructor getConstructor(Class clazz, Class[] paramTypes) throws NoSuchMethodException {
+        for(Constructor c : clazz.getConstructors()) {
+            if(isAssignable(c.getParameterTypes(), paramTypes))
+                return c;
+        }
+        return clazz.getConstructor(paramTypes);
+    }
+    
+    private static boolean isAssignable(Class[] constructor, Class[] parameters) {
+        int size = parameters.length;
+        if(size != constructor.length)
+            return false;
+        for(int i=0; i<size; i++)
+            if(!constructor[i].isAssignableFrom(parameters[i]))
+                return false;
+        return true;
+    }
+    
+    private static Method getMethod(Class clazz, String name, Class[] parameters) throws NoSuchMethodException {
+        for(Method method : clazz.getMethods()) {
+            if(name.equals(method.getName()) && isAssignable(method.getParameterTypes(), parameters))
+                return method;
+        }
+        return clazz.getMethod(name, parameters);
     }
 
     private static ClassLoader getClassLoader() {

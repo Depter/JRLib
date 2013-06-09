@@ -17,12 +17,30 @@
 
 package org.jreserve.gui.triangletable.trianglemodel;
 
+import org.jreserve.jrlib.triangle.Triangle;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
 public class CalendarTriangleModel extends AbstractTriangleModel {
+
+    public CalendarTriangleModel() {
+        super();
+    }
+
+    public CalendarTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {
+        super(horizontalTitles, verticalTitles);
+    }
+
+    public CalendarTriangleModel(Triangle triangle) {
+        super(triangle);
+    }
+
+    public CalendarTriangleModel(Triangle triangle, TitleModel horizontalTitles, TitleModel verticalTitles) {
+        super(triangle, horizontalTitles, verticalTitles);
+    }
 
     @Override
     public int getRowCount() {

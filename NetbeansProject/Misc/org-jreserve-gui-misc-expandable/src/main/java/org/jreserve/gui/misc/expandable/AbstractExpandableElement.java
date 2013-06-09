@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.misc.expandable;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -35,7 +36,7 @@ public abstract class AbstractExpandableElement implements ExpandableElement {
 
     public final static String MINIMIZE_ACTION = "minimize_panel";
     public final static String DOCK_ACTION = "dock_panel";
-    private JComponent visualComponent;
+    private Component visualComponent;
     private JComponent[] frameComponents;
     private ExpandableComponentHandler handler;
     private ActionListener listener = new ButtonListener();
@@ -77,14 +78,14 @@ public abstract class AbstractExpandableElement implements ExpandableElement {
     }
 
     @Override
-    public JComponent getVisualComponent() {
+    public Component getVisualComponent() {
         if (visualComponent == null) {
             visualComponent = createVisualComponent();
         }
         return visualComponent;
     }
 
-    protected abstract JComponent createVisualComponent();
+    protected abstract Component createVisualComponent();
 
     @Override
     public JComponent[] getFrameComponents() {

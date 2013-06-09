@@ -18,6 +18,7 @@
 package org.jreserve.gui.triangletable;
 
 import javax.swing.table.TableCellRenderer;
+import org.jreserve.gui.triangletable.widget.TriangleWidgetRenderer;
 import org.jreserve.jrlib.triangle.Triangle;
 
 /**
@@ -33,5 +34,5 @@ public interface TriangleLayer {
     
     public boolean rendersCell(int accident, int development);
     
-    public TableCellRenderer getCellRenderer();
+    public TriangleWidgetRenderer getCellRenderer();
 }

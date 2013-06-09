@@ -15,23 +15,39 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.triangletable;
+package org.jreserve.gui.triangletable.widget;
 
+import java.awt.Color;
 import java.awt.Component;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.SwingConstants;
+import javax.swing.border.Border;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class HeaderRenderer extends JLabel implements TableCellRenderer {
+public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWidgetRenderer {
 
+    
+    public DefaultTriangleWidgetRenderer() {
+        setBorder(createBorder());
+        setOpaque(true);
+        setBackground(Color.WHITE);
+        setHorizontalAlignment(SwingConstants.RIGHT);
+    }
+    
+    private Border createBorder() {
+        return BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK), 
+                BorderFactory.createEmptyBorder(0, 2, 0, 2));
+    }
+    
     @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        setText(value==null? null : value.toString());
+    public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
+        setText(""+value);
         return this;
     }
 

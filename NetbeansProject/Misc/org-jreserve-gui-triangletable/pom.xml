@@ -73,6 +73,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.triangletable</publicPackage>
                         <publicPackage>org.jreserve.gui.triangletable.trianglemodel</publicPackage>
+                        <publicPackage>org.jreserve.gui.triangletable.widget</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

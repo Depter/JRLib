@@ -14,8 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 package org.jreserve.gui.triangletable.trianglemodel;
+
+import org.jreserve.jrlib.triangle.Triangle;
 
 /**
  *
@@ -24,14 +25,30 @@ package org.jreserve.gui.triangletable.trianglemodel;
  */
 public class AccidentTriangleModel extends AbstractTriangleModel {
 
+    public AccidentTriangleModel() {
+        super();
+    }
+
+    public AccidentTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {
+        super(horizontalTitles, verticalTitles);
+    }
+
+    public AccidentTriangleModel(Triangle triangle) {
+        super(triangle);
+    }
+
+    public AccidentTriangleModel(Triangle triangle, TitleModel horizontalTitles, TitleModel verticalTitles) {
+        super(triangle, horizontalTitles, verticalTitles);
+    }
+
     @Override
     public int getRowCount() {
-        return triangle==null? 0 : triangle.getDevelopmentCount();
+        return triangle == null ? 0 : triangle.getDevelopmentCount();
     }
 
     @Override
     public int getColumnCount() {
-        return triangle==null? 0 : triangle.getAccidentCount();
+        return triangle == null ? 0 : triangle.getAccidentCount();
     }
 
     @Override

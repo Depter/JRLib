@@ -15,30 +15,16 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.triangletable;
+package org.jreserve.dummy.plot;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class IndexTitleModel implements TitleModel {
-
-    private boolean zeroBased;
-    
-    public IndexTitleModel() {
-        this(false);
-    }
-    
-    public IndexTitleModel(boolean zeroBased) {
-        this.zeroBased = zeroBased;
-    }
-    
-    @Override
-    public String getName(int index) {
-        if(!zeroBased)
-            index++;
-        return ""+index;
-    }
-
+public enum ChartType {
+    LINE,
+    BAR,
+    XY_LINE,
+    XY_BAR;
 }

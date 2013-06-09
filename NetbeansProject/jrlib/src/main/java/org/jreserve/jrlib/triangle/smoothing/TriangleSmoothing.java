@@ -35,4 +35,9 @@ public interface TriangleSmoothing {
      * @return the smoothed triangle.
      */
     public double[][] smooth(Triangle input);
+    
+    /**
+     * Returns the cells, which are smoothed, or input for the smoothing.
+     */
+    public SmoothingCell[] getSmoothingCells();
 }

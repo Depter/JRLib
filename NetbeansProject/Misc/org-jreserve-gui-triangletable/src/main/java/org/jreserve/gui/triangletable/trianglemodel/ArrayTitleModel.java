@@ -15,29 +15,30 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.triangletable;
-
-import java.awt.Component;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.table.TableCellRenderer;
+package org.jreserve.gui.triangletable.trianglemodel;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultTriangleTableRenderer extends JLabel implements TableCellRenderer {
+public class ArrayTitleModel implements TitleModel {
 
-    @Override
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        this.setText(value==null? null : value.toString());
-        return this;
+    private String[] names;
+    private int size;
+    
+    public ArrayTitleModel(String... names) {
+        if(names == null) {
+            size = 0;
+        } else {
+            size = names.length;
+            this.names = new String[size];
+            System.arraycopy(names, 0, this.names, 0, size);
+        }
     }
     
-    private void renderNullCell() {
-        setText(null);
-        
+    @Override
+    public String getName(int index) {
+        return index<0 || index >= size? null : names[index];
     }
-
 }

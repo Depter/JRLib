@@ -27,14 +27,27 @@ import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+//@MultiViewElement.Registration(
+//    displayName = "#LBL.TriangleEditorMultiview.Title",
+//    //iconBase = "org/jreserve/dummy/projecttree/resources/triangle.png",
+//    mimeType = TriangleEditorMultiview.MIME_TYPE,
+//    persistenceType = TopComponent.PERSISTENCE_NEVER,
+//    preferredID = "org.jreserve.dummy.claimtriangle.edtior.TriangleEditorMultiview",
+//    position = 100
+//)
+@Messages({
+    "LBL.TriangleEditorMultiview.Title=Editor"
+})
 public class TriangleEditorMultiview extends JPanel implements MultiViewElement {
-    final static String MIME_TYPE = "jreserve/triangle-claim";
+    final static String MIME_TYPE = "application/jreserve-triangle-claim";
 
     private JToolBar toolBar;
     private ExpandableContainerHandler handler;
@@ -42,8 +55,10 @@ public class TriangleEditorMultiview extends JPanel implements MultiViewElement 
     
     @Override
     public JComponent getVisualRepresentation() {
-        if(handler == null) 
-            handler = ExpandableFactory.createScrollPanel(MIME_TYPE, null);
+        if(handler == null) { 
+            Lookup lkp = Lookups.singleton(TriangleFactory.createTriangle());
+            handler = ExpandableFactory.createScrollPanel(MIME_TYPE, lkp);
+        }
         return handler.getComponent();
     }
 
@@ -66,32 +81,38 @@ public class TriangleEditorMultiview extends JPanel implements MultiViewElement 
 
     @Override
     public void componentOpened() {
-        handler.componentOpened();
+        if(handler != null)
+            handler.componentOpened();
     }
 
     @Override
     public void componentClosed() {
-        handler.componentClosed();
+        if(handler != null)
+            handler.componentClosed();
     }
 
     @Override
     public void componentShowing() {
-        handler.componentShowing();
+        if(handler != null)
+            handler.componentShowing();
     }
 
     @Override
     public void componentHidden() {
-        handler.componentHidden();
+        if(handler != null)
+            handler.componentHidden();
     }
 
     @Override
     public void componentActivated() {
-        handler.componentActivated();
+        if(handler != null)
+            handler.componentActivated();
     }
 
     @Override
     public void componentDeactivated() {
-        handler.componentDeactivated();
+        if(handler != null)
+            handler.componentDeactivated();
     }
 
     @Override
@@ -104,6 +125,7 @@ public class TriangleEditorMultiview extends JPanel implements MultiViewElement 
     @Override
     public void setMultiViewCallback(MultiViewElementCallback callback) {
         this.callback = callback;
+        this.callback.getTopComponent().setDisplayName("APC Paid");
     }
 
     @Override

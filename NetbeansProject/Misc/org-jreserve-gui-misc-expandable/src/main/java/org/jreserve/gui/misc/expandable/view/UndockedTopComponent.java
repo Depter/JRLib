@@ -17,6 +17,7 @@
 package org.jreserve.gui.misc.expandable.view;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.ActionMap;
@@ -94,7 +95,7 @@ class UndockedTopComponent extends TopComponent {
 
     @Override
     public void componentClosed() {
-        JComponent c = element.getVisualComponent();
+        Component c = element.getVisualComponent();
         if(!opening && c!=null)
             contentPane.remove(c);
         

@@ -17,22 +17,35 @@
 package org.jreserve.dummy.claimtriangle.edtior;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFormattedTextField;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jreserve.gui.triangletable.TriangleLayer;
-import org.jreserve.gui.triangletable.TriangleTable;
-import org.jreserve.jrlib.triangle.Triangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
-import org.jreserve.jrlib.triangle.claim.CummulatedClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
-import org.jreserve.jrlib.triangle.smoothing.ExponentialSmoothing;
-import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
-import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing;
+import org.jreserve.gui.triangletable.trianglemodel.AccidentTriangleModel;
+import org.jreserve.gui.triangletable.trianglemodel.CalendarTriangleModel;
+import org.jreserve.gui.triangletable.trianglemodel.DevelopmentTriangleModel;
+import org.jreserve.gui.triangletable.trianglemodel.IndexTitleModel;
+import org.jreserve.gui.triangletable.trianglemodel.TitleModel;
+import org.jreserve.gui.triangletable.widget.TriangleWidget;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -41,36 +54,35 @@ import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing;
  */
 class TriangleEditorPanel extends JPanel {
     
-    private final static double[][] APC_PAID = {
-        {4426765, 992330 , 88952 , 13240 , 38622 , 26720, 36818, 10750},
-        {4388958, 984169 , 60162 , 35004 , 75768 , 23890, 572},
-        {5280130, 1239396, 76122 , 110189, 112895, 11751},
-        {5445384, 1164234, 171583, 16427 , 6451},
-        {5612138, 1837950, 155863, 127146},
-        {6593299, 1592418, 74189},
-        {6603091, 1659748},
-        {7194587}
-    };
+    private List<TriangleLayer> layers;
+    private TitleModel accidentTitle;
+    private TitleModel developmentTitle;
+    private TriangleWidget widget;
     
-    private static List<TriangleLayer> createTriangle() {
-        
-        DataLayer data = new DataLayer();
-        CorrectionLayer correction = new CorrectionLayer(data.triangle);
-        SmoothingLayer smoothing = new SmoothingLayer(correction.triangle);
-        ExcludeLayer exclude = new ExcludeLayer(smoothing.triangle);
-        
-        List<TriangleLayer> layers = new ArrayList<TriangleLayer>(4);
-        layers.add(data);
-        layers.add(correction);
-        layers.add(smoothing);
-        layers.add(exclude);
-        
-        return layers;
+    public TriangleEditorPanel(Lookup lkp) {
+        LayerBundle bundle = lkp.lookup(LayerBundle.class);
+        if(bundle == null) {
+            initLayer();
+        } else {
+            initLayer(bundle);
+        }
+        initComponents();
     }
     
-    private List<TriangleLayer> layers = createTriangle();
+    private void initLayer(LayerBundle bundle) {
+        this.layers = bundle.getLayers();
+        this.accidentTitle = bundle.getAccidentTitles();
+        this.developmentTitle = bundle.getDevelopmentTitle();
+    }
+    
+    private void initLayer() {
+        this.layers = Collections.EMPTY_LIST;
+        this.accidentTitle = new IndexTitleModel();
+        this.developmentTitle = new IndexTitleModel();
+    }
     
     public TriangleEditorPanel() {
+        this.layers = Collections.EMPTY_LIST;
         initComponents();
     }
     
@@ -78,133 +90,123 @@ class TriangleEditorPanel extends JPanel {
         setLayout(new BorderLayout(5, 5));
         add(createToolBar(), BorderLayout.NORTH);
         
-        TriangleTable table = new TriangleTable(layers);
-        add(table, BorderLayout.CENTER);
+        widget = new TriangleWidget(layers, new DevelopmentTriangleModel(developmentTitle, accidentTitle));
+        add(widget, BorderLayout.CENTER);
         
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
     }
     
     private JPanel createToolBar() {
-        return new JPanel();
+        JPanel panel = new JPanel(new GridBagLayout());
+        
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.gridx=0; gc.gridy=0;
+        gc.weightx = 1d; gc.weighty=0d;
+        panel.add(Box.createHorizontalGlue(), gc);
+        
+        gc.gridx=1;
+        gc.weightx=0d;
+        gc.anchor = GridBagConstraints.BASELINE_LEADING;
+        gc.insets = new Insets(0, 0, 0, 5);
+        panel.add(new JLabel("Cummulated:"), gc);
+        
+        gc.gridx=2;
+        gc.anchor = GridBagConstraints.BASELINE_TRAILING;
+        panel.add(createCummulateCheckBox(), gc);
+        
+        gc.gridx=3;
+        gc.weightx=0d;
+        gc.insets = new Insets(0, 0, 0, 5);
+        panel.add(new JLabel("Scale:"), gc);
+        
+        gc.gridx=4;
+        panel.add(createDecimalSpinner(), gc);
+        
+        gc.gridx=5;
+        panel.add(new JLabel("Layout:"), gc);
+        
+        gc.gridx=6;
+        panel.add(createModelCombo(), gc);
+        
+        gc.gridx=7;
+        panel.add(new JLabel("Layer:"), gc);
+        
+        gc.gridx=8;
+        panel.add(createLayerCombo(), gc);
+        
+        return panel;
     }
     
-    private static class DataLayer implements TriangleLayer {
-
-        private ClaimTriangle triangle = new CummulatedClaimTriangle(new InputClaimTriangle(APC_PAID));
-        
-        @Override
-        public String getDisplayName() {
-            return "Source";
-        }
-
-        @Override
-        public Triangle getTriangle() {
-            return triangle;
-        }
-
-        @Override
-        public boolean rendersCell(int accident, int development) {
-            return false;
-        }
-
-        @Override
-        public TableCellRenderer getCellRenderer() {
-            return null;
-        }    
+    private JComboBox createLayerCombo() {
+        final JComboBox combo = new JComboBox(getLayerNames());
+        combo.setSelectedIndex(layers.size()-1);
+        combo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = combo.getSelectedIndex();
+                List<TriangleLayer> tl = new ArrayList<TriangleLayer>(index+1);
+                for(int i=0; i<=index; i++)
+                    tl.add(layers.get(i));
+                widget.setLayers(tl);
+            }
+        });
+        return combo;
     }
     
-    private static class CorrectionLayer implements TriangleLayer {
-
-        private ClaimTriangle triangle;
-        
-        private CorrectionLayer(ClaimTriangle triangle) {
-            this.triangle = new ClaimTriangleCorrection(triangle, 0, 3, 5600000);
-        }
-        
-        @Override
-        public String getDisplayName() {
-            return "Correction [1, 4]";
-        }
-
-        @Override
-        public Triangle getTriangle() {
-            return triangle;
-        }
-
-        @Override
-        public boolean rendersCell(int accident, int development) {
-            return false;
-        }
-
-        @Override
-        public TableCellRenderer getCellRenderer() {
-            return null;
-        }    
+    private String[] getLayerNames() {
+        int size = layers.size();
+        String[] names = new String[size];
+        for(int i=0; i<size; i++)
+            names[i] = layers.get(i).getDisplayName();
+        return names;
     }
     
-    private static class SmoothingLayer implements TriangleLayer {
-
-        private ClaimTriangle triangle;
-        
-        private SmoothingLayer(ClaimTriangle triangle) {
-            TriangleSmoothing smoothing = new ExponentialSmoothing(
-                    new SmoothingCell[] {
-                        new SmoothingCell(3, 0, false),
-                        new SmoothingCell(4, 0, false),
-                        new SmoothingCell(5, 0, true)
-                    }
-                    , 0.5);
-
-            this.triangle = new SmoothedClaimTriangle(triangle, smoothing);
-        }
-        
-        @Override
-        public String getDisplayName() {
-            return "Smoothing_1";
-        }
-
-        @Override
-        public Triangle getTriangle() {
-            return triangle;
-        }
-
-        @Override
-        public boolean rendersCell(int accident, int development) {
-            return false;
-        }
-
-        @Override
-        public TableCellRenderer getCellRenderer() {
-            return null;
-        }    
+    private JCheckBox createCummulateCheckBox() {
+        final JCheckBox cb = new JCheckBox();
+        cb.setSelected(true);
+        cb.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                widget.setCummulated(cb.isSelected());
+            }
+        });
+        return cb;
     }
     
-    private static class ExcludeLayer implements TriangleLayer {
-
-        private ClaimTriangle triangle;
-        
-        private ExcludeLayer(ClaimTriangle triangle) {
-            this.triangle = new ClaimTriangleCorrection(triangle, 2, 2, Double.NaN);
-        }
-        
-        @Override
-        public String getDisplayName() {
-            return "Exclusion [2, 2]";
-        }
-
-        @Override
-        public Triangle getTriangle() {
-            return triangle;
-        }
-
-        @Override
-        public boolean rendersCell(int accident, int development) {
-            return false;
-        }
-
-        @Override
-        public TableCellRenderer getCellRenderer() {
-            return null;
-        }    
+    private JSpinner createDecimalSpinner() {
+        final JSpinner spinner  = new JSpinner(new SpinnerNumberModel(0, Integer.MIN_VALUE, Integer.MAX_VALUE, 1));
+        spinner.setPreferredSize(new Dimension(50, 22));
+        JFormattedTextField field = ((JSpinner.DefaultEditor) spinner.getEditor()).getTextField();
+        field.setEditable(false);
+        field.setBackground(Color.WHITE);
+        spinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                widget.setScale((Integer) spinner.getValue());
+            }
+        });
+        return spinner;
+    }
+    
+    private JComboBox createModelCombo() {
+        final JComboBox combo = new JComboBox(new String[]{"Development", "Accident", "Calendar"});
+        combo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int index = combo.getSelectedIndex();
+                switch(index) {
+                    case 0:
+                        widget.setModel(new DevelopmentTriangleModel(developmentTitle, accidentTitle));
+                        break;
+                    case 1:
+                        widget.setModel(new AccidentTriangleModel(accidentTitle, developmentTitle));
+                        break;
+                    default:
+                        widget.setModel(new CalendarTriangleModel(accidentTitle, developmentTitle));
+                        break;
+                }
+            }
+        });
+        return combo;
     }
 }

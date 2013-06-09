@@ -73,6 +73,7 @@
         <module>application</module>
     <module>dummy-projecttree</module>
     <module>dummy-claimtriangle-edtior</module>
+    <module>dummy-plot</module>
   </modules>
 
     <properties>
