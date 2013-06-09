@@ -43,7 +43,8 @@ import org.openide.util.lookup.Lookups;
     mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 5000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.CalendarPeriodPlot",
-    background = "#COLOR.CalendarPeriodPlot.Background"
+    background = "#COLOR.CalendarPeriodPlot.Background",
+    iconBase = "org/jreserve/dummy/claimtriangle/edtior/chart_bar.png"
 )
 @Messages({
     "LBL.CalendarPeriodPlot.Title=Calendar Periods",

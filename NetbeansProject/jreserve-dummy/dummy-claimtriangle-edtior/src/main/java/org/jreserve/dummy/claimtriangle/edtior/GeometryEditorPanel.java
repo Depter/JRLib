@@ -108,6 +108,7 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         accidentCountText.setEditable(false);
         accidentCountText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         accidentCountText.setText(org.openide.util.NbBundle.getMessage(GeometryEditorPanel.class, "GeometryEditorPanel.accidentCountText.text")); // NOI18N
+        accidentCountText.setOpaque(false);
         accidentCountText.setPreferredSize(new java.awt.Dimension(50, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -139,6 +140,7 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         developmentCountText.setEditable(false);
         developmentCountText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         developmentCountText.setText(org.openide.util.NbBundle.getMessage(GeometryEditorPanel.class, "GeometryEditorPanel.developmentCountText.text")); // NOI18N
+        developmentCountText.setOpaque(false);
         developmentCountText.setPreferredSize(new java.awt.Dimension(50, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -160,6 +162,7 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         accDevText.setEditable(false);
         accDevText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         accDevText.setText(org.openide.util.NbBundle.getMessage(GeometryEditorPanel.class, "GeometryEditorPanel.accDevText.text")); // NOI18N
+        accDevText.setOpaque(false);
         accDevText.setPreferredSize(new java.awt.Dimension(50, 22));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;

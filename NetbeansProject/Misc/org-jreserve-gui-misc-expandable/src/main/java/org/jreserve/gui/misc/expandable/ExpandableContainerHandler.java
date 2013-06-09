@@ -31,6 +31,8 @@ public interface ExpandableContainerHandler extends Lookup.Provider {
     
     public ExpandableElementDescription[] getElements();
     
+    public void navigateTo(ExpandableElementDescription description);
+    
     public void componentOpened();
 
     public void componentClosed();

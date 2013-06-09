@@ -17,8 +17,11 @@
 package org.jreserve.gui.misc.expandable.view;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import java.util.Arrays;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.ActionMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -146,27 +149,65 @@ public class ExpandableNavigatorPanel implements NavigatorPanel {
     }
     
     private class NavigatorChildFactory extends ChildFactory<ExpandableElementDescription> {
-
+        
+        private ExpandableContainerHandler handler;
+        
         @Override
         protected boolean createKeys(List<ExpandableElementDescription> list) {
-            ExpandableContainerHandler container = tcLookup.lookup(ExpandableContainerHandler.class);
-            if(container != null)
-                list.addAll(Arrays.asList(container.getElements()));
+            handler = tcLookup.lookup(ExpandableContainerHandler.class);
+            if(handler != null)
+                list.addAll(Arrays.asList(handler.getElements()));
             return true;
         }
 
         @Override
         protected Node createNodeForKey(ExpandableElementDescription key) {
-            AbstractNode node = new AbstractNode(Children.LEAF, key.getElement().getLookup());
-            node.setDisplayName(key.getDisplayName());
-            String iconBase = key.getIconBase();
-            if(iconBase != null)
-                node.setIconBaseWithExtension(iconBase);
-            return node;
+            return new NavigatorNode(handler, key);
         }
         
         void refresh() {
             super.refresh(true);
+        }
+    }
+    
+    private static class NavigatorNode extends AbstractNode {
+        
+        private ExpandableElementDescription description;
+        private ExpandableContainerHandler handler;
+        
+        private NavigatorNode(ExpandableContainerHandler handler, ExpandableElementDescription description) {
+            super(Children.LEAF, description.getElement().getLookup());
+            this.description = description;
+            this.handler = handler;
+            setDisplayName(description.getDisplayName());
+            initIcon();
+        }
+        
+        private void initIcon() {
+            String iconBase = description.getIconBase();
+            if(iconBase != null)
+                setIconBaseWithExtension(iconBase);
+        }
+
+        @Override
+        public Action getPreferredAction() {
+            return new NavigateAction(handler, description);
+        }
+    }
+    
+    private static class NavigateAction extends AbstractAction {
+        
+        private ExpandableContainerHandler handler;
+        private ExpandableElementDescription description;
+        
+        NavigateAction(ExpandableContainerHandler handler, ExpandableElementDescription description) {
+            this.handler = handler;
+            this.description = description;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            handler.navigateTo(description);
         }
     }
     

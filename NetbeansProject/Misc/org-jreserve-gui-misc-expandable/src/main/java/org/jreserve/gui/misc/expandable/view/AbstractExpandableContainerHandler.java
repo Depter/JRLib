@@ -93,6 +93,10 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
     public ExpandableElementDescription[] getElements() {
         return elements;
     }
+    
+    @Override
+    public void navigateTo(ExpandableElementDescription description) {
+    }
 
     @Override
     public void componentOpened() {

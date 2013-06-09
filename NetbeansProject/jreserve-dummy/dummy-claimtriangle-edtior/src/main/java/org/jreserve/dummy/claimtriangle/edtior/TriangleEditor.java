@@ -32,7 +32,8 @@ import org.openide.util.lookup.Lookups;
     mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 2000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.TriangleEditor",
-    background = "#COLOR.TriangleEditor.Background"
+    background = "#COLOR.TriangleEditor.Background",
+    iconBase = "org/jreserve/dummy/projecttree/resources/triangle.png"
 )
 @Messages({
     "LBL.TriangleEditor.Title=Triangle",

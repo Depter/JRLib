@@ -33,7 +33,8 @@ import org.openide.util.lookup.Lookups;
     mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 1000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.GeometryEditor",
-    background = "43C443"
+    background = "43C443",
+    iconBase = "org/jreserve/dummy/claimtriangle/edtior/ruler_triangle.png"
 )
 @Messages({
     "LBL.GeometryEditor.Title=Geometry"

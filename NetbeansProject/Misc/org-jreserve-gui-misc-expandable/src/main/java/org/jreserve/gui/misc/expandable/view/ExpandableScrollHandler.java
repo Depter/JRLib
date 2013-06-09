@@ -16,10 +16,12 @@
  */
 package org.jreserve.gui.misc.expandable.view;
 
-import java.awt.Dimension;
+import java.awt.Component;
+import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import javax.swing.JComponent;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
@@ -31,49 +33,59 @@ import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
  */
 public class ExpandableScrollHandler extends ExpandablePanelHandler {
     private final static int SCROLL_INCREMENT = 20;
-
+    
+    private JComponent viewComponent;
+    private JScrollPane scroll;
+    
     public ExpandableScrollHandler(ExpandableElementDescription[] elements) {
         super(elements);
     }
 
     @Override
+    public void navigateTo(ExpandableElementDescription description) {
+        JComponent component = getComponentFor(description);
+        Rectangle bounds = component.getBounds(null);
+//        bounds.height = scroll.getViewport().getViewSize().height;
+        viewComponent.scrollRectToVisible(bounds);
+    }
+    
+    @Override
     protected JComponent createComponent() {
-        JComponent component = super.createComponent();
-        JScrollPane scroll = new JScrollPane(component);
+        viewComponent = super.createComponent();
+        
+        scroll = new JScrollPane(viewComponent);
         scroll.getVerticalScrollBar().setUnitIncrement(SCROLL_INCREMENT);
         scroll.getVerticalScrollBar().setBlockIncrement(SCROLL_INCREMENT);
         scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll.addComponentListener(new ResizeListener(scroll, component));
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        
+        scroll.addComponentListener(new ScrollAdapter(scroll, viewComponent));
         return scroll;
     }
-    
-    private static class ResizeListener extends ComponentAdapter {
 
-        private boolean firstCall = true;
-        private JScrollPane scroll;
-        private JComponent component;
+    private static class ScrollAdapter extends ComponentAdapter {
         
-        private ResizeListener(JScrollPane scroll, JComponent component) {
+        private JScrollPane scroll;
+        private Component component;
+        private boolean firsCall = true;
+        
+        ScrollAdapter(JScrollPane scroll, Component component) {
             this.scroll = scroll;
             this.component = component;
         }
         
         @Override
         public void componentResized(ComponentEvent e) {
-            if (firstCall) {
-                firstCall = false;
-            } else {
-                setContentSize();
-            }
+            if(firsCall)
+                firsCall = false;
+            else
+                resizeContent();
         }
-
-        private void setContentSize() {
-            int barWidth = scroll.getHorizontalScrollBar().getWidth();
-            int width = scroll.getWidth() - barWidth;
-            int height = component.getPreferredSize().height;
-            component.setPreferredSize(new Dimension(width, height));
-            scroll.revalidate();
+        
+        private void resizeContent() {
+            JScrollBar scrollBar = scroll.getVerticalScrollBar();
+            int width = scroll.getWidth() - (scrollBar.isShowing()? scrollBar.getWidth() : 0);
+            component.setSize(width, component.getHeight());
         }
     }
-    
 }

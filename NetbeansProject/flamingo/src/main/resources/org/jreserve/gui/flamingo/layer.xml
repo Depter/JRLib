@@ -44,7 +44,9 @@
         </folder>
         
         <folder name="TaskPanes">
+            
             <folder name="Windows">
+                <attr name="position" intvalue="2000"/>
                 <folder name="JReserve">
                     <attr name="position" intvalue="1000"/>
                 </folder>

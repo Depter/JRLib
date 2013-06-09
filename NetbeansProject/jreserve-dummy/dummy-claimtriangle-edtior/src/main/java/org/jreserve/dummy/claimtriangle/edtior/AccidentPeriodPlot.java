@@ -42,7 +42,8 @@ import org.openide.util.lookup.Lookups;
     mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 3000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.AccidentPeriodPlot",
-    background = "#COLOR.AccidentPeriodPlot.Background"
+    background = "#COLOR.AccidentPeriodPlot.Background",
+    iconBase = "org/jreserve/dummy/claimtriangle/edtior/chart_xy.png"
 )
 @Messages({
     "LBL.AccidentPeriodPlot.Title=Accident Periods",

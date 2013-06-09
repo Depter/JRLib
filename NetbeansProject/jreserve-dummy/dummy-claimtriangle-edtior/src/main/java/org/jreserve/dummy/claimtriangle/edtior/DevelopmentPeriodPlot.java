@@ -42,7 +42,8 @@ import org.openide.util.lookup.Lookups;
     mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 4000,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.DevelopmentPeriodPlot",
-    background = "#COLOR.DevelopmentPeriodPlot.Background"
+    background = "#COLOR.DevelopmentPeriodPlot.Background",
+    iconBase = "org/jreserve/dummy/claimtriangle/edtior/chart_bar.png"
 )
 @Messages({
     "LBL.DevelopmentPeriodPlot.Title=Development Periods",

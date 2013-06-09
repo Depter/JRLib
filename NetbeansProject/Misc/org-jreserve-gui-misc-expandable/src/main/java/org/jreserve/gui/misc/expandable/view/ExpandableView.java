@@ -16,10 +16,6 @@
  */
 package org.jreserve.gui.misc.expandable.view;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -76,10 +72,5 @@ class ExpandableView extends JPanel {
             if(descriptions[i] == description)
                 return i;
         return -1;
-    }
-    
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(10, 10);
     }
 }

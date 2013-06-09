@@ -50,9 +50,31 @@
                         <attr intvalue="100" name="position"/>
                         <attr name="iconBase" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
                     </file>
+                    <file name="org-jreserve-dummy-claimtriangle-edtior-scene-TriangleNodeView.instance">
+                        <!--org.jreserve.dummy.claimtriangle.edtior.scene.TriangleNodeView-->
+                        <attr methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
+                        <attr name="class" stringvalue="org.jreserve.dummy.claimtriangle.edtior.scene.TriangleNodeView"/>
+                        <attr bundlevalue="org.jreserve.dummy.claimtriangle.edtior.scene.Bundle#LBL.TriangleNodeView.Title" name="displayName"/>
+                        <attr name="preferredID" stringvalue="org.jreserve.dummy.claimtriangle.edtior.scene.TriangleNodeView"/>
+                        <attr intvalue="2" name="persistenceType"/>
+                        <attr intvalue="200" name="position"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
+                    </file>
                 </folder>
             </folder>
         </folder>
     </folder>
-
+    
+    <folder name="Ribbon">
+        <folder name="TaskPanes">
+            <folder name="Triangle">
+                <attr name="position" intvalue="1000"/>
+                <file name="org-jreserve-dummy-claimtriangle-edtior-ribbon-ClaimTrianglePane.instance">
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
 </filesystem>

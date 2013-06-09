@@ -34,7 +34,8 @@ import org.openide.util.lookup.Lookups;
     mimeType = TriangleEditorMultiview.MIME_TYPE,
     position = 500,
     prefferedID = "org.jreserve.dummy.claimtriangle.edtior.InputDataEditor",
-    background = "646464"
+    background = "646464",
+    iconBase = "org/jreserve/dummy/projecttree/resources/database.png"
 )
 @Messages({
     "LBL.InputDataEditor.Title=Input Data"
