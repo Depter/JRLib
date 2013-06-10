@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.scale;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.util.method.AbstractSimpleMethodSelection;
 
 /**
@@ -27,8 +28,6 @@ import org.jreserve.jrlib.util.method.AbstractSimpleMethodSelection;
  * @version 1.0
  */
 public class SimpleScale<T extends ScaleInput> extends AbstractSimpleMethodSelection<Scale<T>, ScaleEstimator<T>> implements Scale<T> {
-
-    private int developments;
     
     /**
      * Creates an instance where the origina scales are calculated with
@@ -81,17 +80,7 @@ public class SimpleScale<T extends ScaleInput> extends AbstractSimpleMethodSelec
      */
     @Override
     protected void initCalculation() {
-        developments = source.getLength();
-    }
-    
-    /**
-     * Retunrs the length of the source.
-     * 
-     * @see Scale#getLength() 
-     */
-    @Override
-    public int getLength() {
-        return developments;
+        length = source.getLength();
     }
     
     /**
@@ -99,9 +88,10 @@ public class SimpleScale<T extends ScaleInput> extends AbstractSimpleMethodSelec
      * then 0, it is escaped to 0.
      */
     protected void setLength(int length) {
-        this.developments = (length<0)? 0 : length;
+        setState(CalculationState.INVALID);
+        this.length = (length<0)? 0 : length;
         super.recalculateLayer();
-        fireChange();
+        setState(CalculationState.VALID);
     }
     
     /**

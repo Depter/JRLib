@@ -45,7 +45,7 @@ public class DefaultLinkRatioSmoothingTest {
         lr = TestData.getLinkRatio(TestData.PAID);
         dlrs = new DefaultLinkRatioSmoothing(lr);
         listener = new ChangeCounter();
-        dlrs.addChangeListener(listener);
+        dlrs.addCalculationListener(listener);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class DefaultLinkRatioSmoothingTest {
         expected += 5;
         dlrs.setDevelopmentCount(expected);
         assertEquals(expected, dlrs.getLength());
-        assertEquals(1, listener.getChangeCount());
+        assertEquals(2, listener.getChangeCount());
     }
 
     @Test

@@ -82,11 +82,6 @@ class MclPseudoClaimRatioScale extends AbstractVector<ClaimRatioScale> implement
     public ClaimRatioScaleInput getSourceInput() {
         return source.getSourceInput();
     }
-    
-    @Override
-    public int getLength() {
-        return source.getLength();
-    }
 
     @Override
     public double getValue(int index) {
@@ -98,5 +93,6 @@ class MclPseudoClaimRatioScale extends AbstractVector<ClaimRatioScale> implement
 
     @Override
     protected void recalculateLayer() {
+        length = source.getLength();
     }
 }

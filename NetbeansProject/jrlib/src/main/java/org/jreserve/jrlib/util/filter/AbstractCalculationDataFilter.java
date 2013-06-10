@@ -18,6 +18,7 @@ package org.jreserve.jrlib.util.filter;
 
 import org.jreserve.jrlib.AbstractCalculationData;
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 
 /**
  * A calculation data filter enables to filter the output 
@@ -73,8 +74,9 @@ public abstract class AbstractCalculationDataFilter<T extends CalculationData> e
      * @throws NullPointerException when `filter` is null.
      */
     public void setFilter(Filter filter) {
+        setState(CalculationState.INVALID);
         initFilter(filter);
         recalculateLayer();
-        fireChange();
+        setState(CalculationState.VALID);
     }
 }

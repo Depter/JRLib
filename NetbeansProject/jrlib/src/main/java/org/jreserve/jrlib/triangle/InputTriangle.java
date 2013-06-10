@@ -17,6 +17,7 @@
 package org.jreserve.jrlib.triangle;
 
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 
 /**
  * Input triangles are the first links in all
@@ -80,6 +81,11 @@ public class InputTriangle extends AbstractTriangle<CalculationData> implements 
         return devs;
     }
     
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0 <= accident && accident < accidents;
+    }
+    
     /**
      * Sets the given values. Later modifying 
      * the values of the inut array does not affect the state
@@ -92,8 +98,9 @@ public class InputTriangle extends AbstractTriangle<CalculationData> implements 
      * {@link Triangle Triangle} interface.
      */
     protected void setData(double[][] values) {
+        setState(CalculationState.INVALID);
         initData(values);
-        fireChange();
+        setState(CalculationState.INVALID);
     }
     
     @Override

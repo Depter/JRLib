@@ -44,6 +44,7 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 public class AdjustedOdpResidualTriangle extends AbstractTriangleModification<OdpResidualTriangle> implements ModifiedOdpResidualTriangle {
 
     private double adjustment;
+    private int accidents;
     
     /**
      * Creates an instance for the given link-ratios.
@@ -101,12 +102,17 @@ public class AdjustedOdpResidualTriangle extends AbstractTriangleModification<Od
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     protected void recalculateLayer() {
         doRecalculate();
     }
 
     private void doRecalculate() {
-        int accidents = source.getAccidentCount();
+        accidents = source.getAccidentCount();
         int devs = source.getDevelopmentCount();
         
         int[] pA = new int[accidents];

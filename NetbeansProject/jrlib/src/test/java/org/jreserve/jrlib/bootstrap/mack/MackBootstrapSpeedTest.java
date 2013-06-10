@@ -36,6 +36,7 @@ import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangleCorrection;
 import org.jreserve.jrlib.linkratio.scale.residuals.LinkRatioResiduals;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.util.random.JavaRandom;
 import org.jreserve.jrlib.util.random.Random;
 import static org.junit.Assert.assertTrue;
@@ -52,10 +53,10 @@ public class MackBootstrapSpeedTest {
     
     private final static long SEED = 100;
     private final static int N = 100000;
-    private final static double LIMIT = 5d;
+    private final static double LIMIT = 6d;
     private final static long TIMEOUT = 2L * ((long)(LIMIT * 1000));
     
-    private EstimateBootstrapper<MackBootstrapEstimate> bootstrap;
+    private EstimateBootstrapper<FactorTriangle> bootstrap;
     private double mean;
     
     @BeforeClass
@@ -81,13 +82,12 @@ public class MackBootstrapSpeedTest {
         MackGammaProcessSimulator procSim = new MackGammaProcessSimulator(rnd, scales);
         MackBootstrapEstimate mackEstimate = new MackBootstrapEstimate(lrs, procSim);
         lrs.setSource(pseudoFik);
-        bootstrap = new EstimateBootstrapper<MackBootstrapEstimate>(mackEstimate, N);
+        bootstrap = new EstimateBootstrapper<FactorTriangle>(pseudoFik, N, mackEstimate);
     }
 
     private double calculateReserve(LinkRatio lrs) {
         ChainLadderEstimate e = new ChainLadderEstimate(lrs);
         double reserve = e.getReserve();
-        e.setCallsForwarded(false);
         e.detach();
         return reserve;
     }

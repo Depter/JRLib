@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.claimratio;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.ratio.DefaultRatioTriangle;
@@ -192,9 +193,10 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     
     @Override
     public void setDevelopmentCount(int developments) {
+        setState(CalculationState.INVALID);
         this.developments = (developments<0)? 0 : developments;
         doRecalculate();
-        fireChange();
+        setState(CalculationState.VALID);
     }    
 
     @Override

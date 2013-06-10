@@ -37,7 +37,8 @@ public class AdjustedResidualTriangle<T extends Triangle>
     extends AbstractTriangleModification<T> {
     
     private double[] adjustments;
-
+    private int accidents;
+    
     /**
      * Creates an instance with the given source.
      * 
@@ -60,6 +61,11 @@ public class AdjustedResidualTriangle<T extends Triangle>
                 source.getValue(accident, development) * adjustments[development] :
                 Double.NaN;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     @Override
     protected void recalculateLayer() {
@@ -68,7 +74,7 @@ public class AdjustedResidualTriangle<T extends Triangle>
     
     private void doRecalculate() {
         int developments = source.getDevelopmentCount();
-        int accidents = source.getAccidentCount();
+        accidents = source.getAccidentCount();
         adjustments = new double[developments];
         for(int d=0; d<developments; d++)
             recalculateAdjustment(accidents, d);

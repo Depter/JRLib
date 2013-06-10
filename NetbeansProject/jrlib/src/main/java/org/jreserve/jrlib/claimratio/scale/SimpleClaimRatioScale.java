@@ -107,11 +107,7 @@ public class SimpleClaimRatioScale extends SimpleScale<ClaimRatioScaleInput> imp
      */
     @Override
     protected void initCalculation() {
-    }
-    
-    @Override
-    public int getLength() {
-        return source.getLength();
+        length = source.getLength();
     }
     
     @Override

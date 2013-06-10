@@ -45,7 +45,6 @@ import org.jreserve.jrlib.vector.AbstractVector;
  */
 public class ClaimRatioCalculator extends AbstractVector<RatioTriangle> implements ClaimRatio {
 
-    private int developments;
     private double[] values;
     
     /**
@@ -97,11 +96,6 @@ public class ClaimRatioCalculator extends AbstractVector<RatioTriangle> implemen
     public ClaimTriangle getSourceDenominatorTriangle() {
         return source.getSourceDenominatorTriangle();
     }
-    
-    @Override
-    public int getLength() {
-        return developments;
-    }
 
     public double getValue(int development) {
         return withinBonds(development)? values[development] : Double.NaN;
@@ -114,11 +108,11 @@ public class ClaimRatioCalculator extends AbstractVector<RatioTriangle> implemen
     
     private void doRecalculate() {
         ClaimTriangle dik = source.getSourceDenominatorTriangle();
-        developments = source.getDevelopmentCount();
-        values = new double[developments];
+        length = source.getDevelopmentCount();
+        values = new double[length];
         
         int accidents = source.getAccidentCount();
-        for(int d=0; d<developments; d++) {
+        for(int d=0; d<length; d++) {
             double sr = 0d;
             double sw = 0d;
             for(int a=0; a<accidents; a++) {

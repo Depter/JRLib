@@ -67,11 +67,7 @@ public class SimpleLinkRatioSE
     }
     
     @Override
-    public int getLength() {
-        return source.getLength();
-    }
-    
-    @Override
     protected void initCalculation() {
+        length = source.getLength();
     }
 }

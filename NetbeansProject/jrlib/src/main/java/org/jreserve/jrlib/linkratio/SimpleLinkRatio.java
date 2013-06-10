@@ -73,20 +73,11 @@ public class SimpleLinkRatio extends AbstractSimpleMethodSelection<FactorTriangl
     }
     
     /**
-     * Returns the number of development periods from the source.
-     * 
-     * @see FactorTriangle#getAccidentCount().
-     */
-    @Override
-    public int getLength() {
-        return source.getDevelopmentCount();
-    }
-    
-    /**
      * Does nothing.
      */
     @Override
     protected void initCalculation() {
+        length = source.getDevelopmentCount();
     }
     
     /**

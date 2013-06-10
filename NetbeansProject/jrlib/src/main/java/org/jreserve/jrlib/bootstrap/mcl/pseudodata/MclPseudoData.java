@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import org.jreserve.jrlib.AbstractCalculationData;
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
@@ -83,7 +84,6 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     private void initialise() {
         initBounds();
         initPseudoData();
-        detachData();
         linkData();
     }
     
@@ -112,13 +112,6 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     
     public int getAccidentCount() {
         return accidents;
-    }
-    
-    private void detachData() {
-        paidCrScale.detach();
-        incurredCrScale.detach();
-        paidLrScale.detach();
-        incurredCrScale.detach();
     }
     
     private void linkData() {
@@ -173,9 +166,18 @@ public class MclPseudoData extends AbstractCalculationData<CalculationData> {
     @Override
     protected void recalculateLayer() {
         lambdas.clearValues();
+        setStates(CalculationState.INVALID);
         recalculateCells();
         recalculateScales();
+        setStates(CalculationState.VALID);
         lambdas.finnishCalculation();
+    }
+    
+    private void setStates(CalculationState state) {
+        paidFactors.setState(state);
+        incurredFactors.setState(state);
+        paidRatios.setState(state);
+        incurredRatios.setState(state);
     }
     
     private void recalculateCells() {

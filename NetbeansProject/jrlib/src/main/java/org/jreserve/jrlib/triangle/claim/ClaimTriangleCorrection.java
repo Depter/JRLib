@@ -26,7 +26,7 @@ import org.jreserve.jrlib.triangle.TriangleCorrection;
  */
 public class ClaimTriangleCorrection extends TriangleCorrection<ClaimTriangle> 
     implements ModifiedClaimTriangle {
-
+    
     public ClaimTriangleCorrection(ClaimTriangle source, Cell cell, double corrigatedValue) {
         super(source, cell, corrigatedValue);
     }

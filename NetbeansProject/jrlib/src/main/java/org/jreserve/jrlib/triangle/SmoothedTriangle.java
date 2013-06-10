@@ -28,6 +28,7 @@ import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing;
 public class SmoothedTriangle<T extends Triangle> extends AbstractTriangleModification<T> {
 
     protected final TriangleSmoothing smoothing;
+    private int accidents;
     private double[][] values;
     
     /**
@@ -57,6 +58,12 @@ public class SmoothedTriangle<T extends Triangle> extends AbstractTriangleModifi
     
     private void doRecalculate() {
         this.values = smoothing.smooth(source);
+        this.accidents = this.values.length;
+    }
+    
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0 <= accident && accident < accidents;
     }
 
     @Override

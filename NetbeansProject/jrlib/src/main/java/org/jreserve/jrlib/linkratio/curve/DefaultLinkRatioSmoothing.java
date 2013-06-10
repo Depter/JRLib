@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.linkratio.curve;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.triangle.TriangleUtil;
@@ -167,9 +168,10 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
      */
     @Override
     public void setDevelopmentCount(int developments) {
+        setState(CalculationState.INVALID);
         this.developments = (developments<0)? 0 : developments;
         doRecalculate();
-        fireChange();
+        setState(CalculationState.VALID);
     }
 
     @Override

@@ -71,7 +71,6 @@ public class MclBootstrapEstimateBundle extends AbstractCalculationData<MclPseud
         super(pseudoData);
         paidSimulator = paidProcessSimulator;
         incurredSimulator = incurredProcessSimulator;
-        this.detach();
         initDatas();
     }
     
@@ -138,9 +137,7 @@ public class MclBootstrapEstimateBundle extends AbstractCalculationData<MclPseud
         return paidIncurredReserves;
     }
     
-    @Override
-    public void recalculate() {
-        source.recalculate();
+    protected void recalculateLayer() {
         recalculateValues();
         fillTriangles();
         fillReserves();
@@ -228,9 +225,5 @@ public class MclBootstrapEstimateBundle extends AbstractCalculationData<MclPseud
             last = incurred.getValue(a, lastIndex);
             incurredReserves[a] = incurredValues[a][lastDev] - last;
         }
-    }
-
-    @Override
-    protected void recalculateLayer() {
     }
 }

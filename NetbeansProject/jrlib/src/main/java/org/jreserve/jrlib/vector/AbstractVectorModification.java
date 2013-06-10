@@ -41,10 +41,6 @@ public abstract class AbstractVectorModification extends AbstractVector<Vector> 
     }
     
     @Override
-    public int getLength() {
-        return source.getLength();
-    }
-
     public double getValue(int index) {
         return source.getValue(index);
     }

@@ -30,7 +30,6 @@ public class MackBootstrapEstimate extends ChainLadderEstimate {
     
     public MackBootstrapEstimate(LinkRatio lrs, MackProcessSimulator processSimulator) {
         super(lrs);
-        this.detach();
         this.processSimulator = processSimulator;
         processSimulator.setEstimate(this);
         simulateProcess();

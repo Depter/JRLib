@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.claimratio.ClaimRatio;
 import org.jreserve.jrlib.claimratio.scale.ClaimRatioScale;
 import org.jreserve.jrlib.claimratio.scale.residuals.CRResidualTriangle;
@@ -29,7 +30,9 @@ import org.jreserve.jrlib.triangle.ratio.RatioTriangleInput;
  * @author Peter Decsi
  * @version 1.0
  */
-class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implements RatioTriangle {
+class MclPseudoRatioTriangle 
+    extends AbstractTriangle<RatioTriangleInput> 
+    implements RatioTriangle {
     
     static MclPseudoRatioTriangle createPaid(MclResidualBundle bundle) {
         return new MclPseudoRatioTriangle(bundle, true);
@@ -50,8 +53,7 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
     private MclPseudoRatioTriangle(MclResidualBundle bundle, boolean isPaid) {
         this.isPaid = isPaid;
         initState(bundle);
-        detach();
-        setCallsForwarded(false);
+        super.setState(CalculationState.INVALID);
     }
     
     private void initState(MclResidualBundle bundle) {
@@ -73,7 +75,6 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
         ClaimTriangle n = res.getSourceNumeratorTriangle();
         ClaimTriangle d = res.getSourceDenominatorTriangle();
         this.source = new RatioTriangleInput(n, d);
-        this.source.detach();
     }
     
     private void initRatios(RatioTriangle ratios) {
@@ -154,6 +155,11 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
                 pseudoValues[accident][development] : 
                 Double.NaN;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     void setValueAt(int accident, int development, MclResidualCell cell) {
         double r = getResidualFromCell(cell);
@@ -161,6 +167,11 @@ class MclPseudoRatioTriangle extends AbstractTriangle<RatioTriangleInput> implem
         double s = scales[development];
         double w = wik[accident][development];
         pseudoValues[accident][development] = cr + r * s / w;
+    }
+    
+    @Override
+    protected void setState(CalculationState state) {
+        super.setState(state);
     }
     
     private double getResidualFromCell(MclResidualCell cell) {

@@ -117,6 +117,11 @@ public class DefaultRatioTriangle extends AbstractTriangle<RatioTriangleInput> i
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     protected void recalculateLayer() {
         doRecalculate();
     }

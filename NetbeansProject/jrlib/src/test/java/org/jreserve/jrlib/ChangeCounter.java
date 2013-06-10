@@ -16,32 +16,40 @@
  */
 package org.jreserve.jrlib;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Utility class that simply counts the calls for the
- * {@link #stateChanged(javax.swing.event.ChangeEvent) stateChanged} 
+ * {@link #stateChanged(CalculationData) stateChanged}
  * method.
  * 
  * @author Peter Decsi
  * @version 1.0
  */
-public class ChangeCounter implements ChangeListener {
+public class ChangeCounter implements CalculationListener {
     
     private int changeCount;
+    private List<CalculationState> states = new ArrayList<CalculationState>();
     
     @Override
-    public void stateChanged(ChangeEvent e) {
+    public void stateChanged(CalculationData data) {
         changeCount++;
+        states.add(data==null? null : data.getState());
     }
     
     /**
-     * Returns how many times the
-     * {@link #stateChanged(javax.swing.event.ChangeEvent) stateChanged}
-     * has been called.
+     * Returns how many times the has been called.
      */
     public int getChangeCount() {
         return changeCount;
+    }
+    
+    /**
+     * Retunrs the statie of the object at the given 
+     * event idnex.
+     */
+    public CalculationState getStateAt(int index) {
+        return states.get(index);
     }
 }

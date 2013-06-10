@@ -38,7 +38,6 @@ import org.jreserve.jrlib.vector.AbstractVector;
  */
 public class VariableOdpResidualScale extends AbstractVector<OdpResidualTriangle> implements OdpResidualScale {
 
-    private int developments;
     private double[] values;
     
     /**
@@ -86,11 +85,6 @@ public class VariableOdpResidualScale extends AbstractVector<OdpResidualTriangle
     public double[][] toArrayFittedValues() {
         return source.toArrayFittedValues();
     }
-    
-    @Override
-    public int getLength() {
-        return developments;
-    }
 
     @Override
     public double getValue(int development) {
@@ -103,9 +97,9 @@ public class VariableOdpResidualScale extends AbstractVector<OdpResidualTriangle
     }
 
     private void doRecalculate() {
-        developments = source.getDevelopmentCount();
-        values = new double[developments];
-        for(int d=0; d<developments; d++)
+        length = source.getDevelopmentCount();
+        values = new double[length];
+        for(int d=0; d<length; d++)
             values[d] = calculateScale(d);
     }
 

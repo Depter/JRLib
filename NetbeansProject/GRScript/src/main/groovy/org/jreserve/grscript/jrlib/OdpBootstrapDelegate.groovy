@@ -73,7 +73,7 @@ class OdpBootstrapDelegate extends AbstractBootstrapDelegate implements Function
         lrs.getSourceFactors().setSource(pseudoCik);
         OdpEstimate odpEstimate = new OdpEstimate(lrs, procSim);
         int count = super.getCount()
-        return new EstimateBootstrapper<OdpEstimate>(odpEstimate, count);
+        return new EstimateBootstrapper(pseudoCik, count, odpEstimate);
     }
     
     private ProcessSimulator createProcessSimulator(JRandom rnd) {

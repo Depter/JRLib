@@ -36,6 +36,7 @@ public class CenteredOdpScaledResidualTriangle
     implements ModifiedOdpScaledResidualTriangle {
 
     private double mean;
+    private int accidents;
     
     /**
      * Creates a new instance for the given source.
@@ -104,12 +105,17 @@ public class CenteredOdpScaledResidualTriangle
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     protected void recalculateLayer() {
         doRecalculate();
     }
 
     private void doRecalculate() {
-        int accidents = source.getAccidentCount();
+        accidents = source.getAccidentCount();
         int n = 0;
         double sum = 0d;
         

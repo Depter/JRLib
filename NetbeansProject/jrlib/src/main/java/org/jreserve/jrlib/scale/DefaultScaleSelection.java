@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.scale;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.util.method.AbstractMethodSelection;
 
@@ -121,9 +122,10 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
      * fires a change event.
      */
     protected void setLength(int length) {
+        setState(CalculationState.INVALID);
         this.length = (length<0)? 0 : length;
         doRecalculate();
-        fireChange();
+        setState(CalculationState.VALID);
     }
     
     @Override

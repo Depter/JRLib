@@ -18,7 +18,9 @@ package org.jreserve.jrlib.bootstrap.odp;
 
 import java.util.Collections;
 import java.util.List;
-import javax.swing.event.ChangeListener;
+import org.jreserve.jrlib.AbstractChangeable;
+import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.bootstrap.odp.scaledresiduals.OdpScaledResidualTriangle;
 import org.jreserve.jrlib.bootstrap.odp.scale.OdpResidualScale;
 import org.jreserve.jrlib.bootstrap.residualgenerator.DoubleResidualGenerator;
@@ -32,7 +34,9 @@ import org.jreserve.jrlib.util.random.Random;
  * @author Peter Decsi
  * @version 1.0
  */
-public class OdpPseudoClaimTriangle implements ClaimTriangle {
+public class OdpPseudoClaimTriangle 
+    extends AbstractChangeable
+    implements ClaimTriangle {
     
     private DoubleResidualGenerator<OdpScaledResidualTriangle> residuals;
     private int accidents;
@@ -107,9 +111,9 @@ public class OdpPseudoClaimTriangle implements ClaimTriangle {
     public double[][] toArray() {
         return TriangleUtil.copy(pseudoValues);
     }
-
+    
     @Override
-    public void recalculate() {
+    protected void recalculateLayer() {
         for(int a=0; a<accidents; a++) {
             int devs = fitted[a].length;
             for(int d=0; d<devs; d++)
@@ -118,56 +122,24 @@ public class OdpPseudoClaimTriangle implements ClaimTriangle {
         TriangleUtil.cummulate(pseudoValues);
     }
     
+    @Override
+    protected CalculationState getSourceState() {
+        return CalculationState.VALID;
+    }
+    
     private double recalculatePseudoValue(int accident, int development) {
         double f = fitted[accident][development];
         double s = scales[development];
         double r = residuals.getValue(accident, development);
         return f + r * Math.sqrt(f * s);
     }
+
     
-    /**
-     * Always return false.
-     */
     @Override
-    public boolean isCallsForwarded() {
-        return false;
+    public void detach() {
     }
     
-    /**
-     * Does nothing.
-     */
     @Override
-    public void setCallsForwarded(boolean forwardCalls) {}
-
-    /**
-     * Does nothing.
-     */
-    @Override
-    public void detach() {}
-
-    /**
-     * Does nothing.
-     */
-    @Override
-    public void addChangeListener(ChangeListener listener) {}
-
-    /**
-     * Does nothing.
-     */
-    @Override
-    public void removeChangeListener(ChangeListener listener) {}
-
-    /**
-     * Does nothing.
-     */
-    @Override
-    public void setEventsFired(boolean eventsFired) {}
-
-    /**
-     * Always return false.
-     */
-    @Override
-    public boolean isEventsFired() {
-        return false;
+    public void detach(CalculationData source) {
     }
 }

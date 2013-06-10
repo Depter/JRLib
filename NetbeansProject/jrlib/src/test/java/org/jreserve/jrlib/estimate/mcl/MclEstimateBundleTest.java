@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.estimate.mcl;
 
+import org.jreserve.jrlib.ChangeCounter;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.claimratio.ClaimRatioSelection;
@@ -80,14 +81,17 @@ public class MclEstimateBundleTest {
         {9511539.00000000,  9009128.00783773, 9163838.11121431, 9263473.72021727, 9374940.62364950, 9412468.21919766, 9455658.43838825, 9476549.67599389, 9953016.53722705, 10153657.86386850}
     };
     
+    private ClaimTriangle paidCik;
+    private ClaimTriangle incurredCik;
     private Estimate paid;
     private Estimate incurred;
     private Estimate paidIncurred;
+    private DummyBundle bundle;
     
     @Before
     public void setUp() {
-        ClaimTriangle paidCik = TestData.getCummulatedTriangle(TestData.PAID);
-        ClaimTriangle incurredCik = TestData.getCummulatedTriangle(TestData.INCURRED);
+        paidCik = TestData.getCummulatedTriangle(TestData.PAID);
+        incurredCik = TestData.getCummulatedTriangle(TestData.INCURRED);
         
         LinkRatio paidLr = createLinkRatio(paidCik, 1.05, 1.02);
         LinkRatio incurredLr = createLinkRatio(incurredCik, 1.03, 1.01);
@@ -99,7 +103,7 @@ public class MclEstimateBundleTest {
         LRResidualTriangle incurredLrResiduals = new LinkRatioResiduals(new SimpleLinkRatioScale(incurredLr));
         CRResidualTriangle incurredCrResiduals = createCrResiduals(paidCik, incurredCik, paidLr, incurredLr);
         MclCorrelation incurredLambda = new MclCorrelation(incurredLrResiduals, incurredCrResiduals);
-        MclEstimateBundle bundle = new MclEstimateBundle(paidLambda, incurredLambda);
+        bundle = new DummyBundle(paidLambda, incurredLambda);
         paid = bundle.getPaidEstimate();
         incurred = bundle.getIncurredEstimate();
         paidIncurred = bundle.getIncurredPaidEstimate();
@@ -146,5 +150,36 @@ public class MclEstimateBundleTest {
                 assertEquals(expected[a][d], estimate.getValue(a, d), TestConfig.EPSILON);
         assertEquals(Double.NaN, estimate.getValue(0, devs), TestConfig.EPSILON);
         assertEquals(Double.NaN, estimate.getValue(accidents, 0), TestConfig.EPSILON);
+    }
+    
+    @Test
+    public void testRecalculateCount() {
+        paidCik.recalculate();
+        assertEquals(1, bundle.calculationCounter);
+        
+        assertEstimateEquals(EXPECTED_PAID, paid);
+        assertEstimateEquals(EXPECTED_INCURRED, incurred);
+        assertEstimateEquals(EXPECTED_INCURRED_PAID, paidIncurred);
+    }
+    
+    private static class DummyBundle extends MclEstimateBundle {
+
+        private int calculationCounter;
+        
+        public DummyBundle(MclCorrelation paidCorrelation, MclCorrelation incurredCorrelation) {
+            super(paidCorrelation, incurredCorrelation);
+        }
+
+        public DummyBundle(MclEstimateInput source) {
+            super(source);
+        }
+
+        @Override
+        protected void recalculateLayer() {
+            calculationCounter++;
+            super.recalculateLayer(); //To change body of generated methods, choose Tools | Templates.
+        }
+        
+        
     }
 }

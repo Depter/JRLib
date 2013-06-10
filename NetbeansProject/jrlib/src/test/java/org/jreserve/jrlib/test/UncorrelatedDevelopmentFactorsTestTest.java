@@ -45,7 +45,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         FactorTriangle factors = TestData.getDevelopmentFactors(TestData.MACK_DATA3);
         test = new UncorrelatedDevelopmentFactorsTest(factors);
         counter = new ChangeCounter();
-        test.addChangeListener(counter);
+        test.addCalculationListener(counter);
     }
 
     @Test
@@ -59,7 +59,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         
         test.setAlpha(0.75);
         assertEquals( 0.75000000, test.getAlpha(), TestConfig.EPSILON);
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
 
@@ -68,7 +68,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         ClaimTriangle claims = TestData.getCummulatedTriangle(TestData.Q_PAID);
         FactorTriangle factors =  new DevelopmentFactors(claims);
         test = new UncorrelatedDevelopmentFactorsTest(factors);
-        test.addChangeListener(counter);
+        test.addCalculationListener(counter);
         assertEquals( 0.50000000, test.getAlpha(), TestConfig.EPSILON);
         assertEquals( 0.28288600, test.getTestValue(), TestConfig.EPSILON);
         assertEquals(-0.04654421, test.getLowerBound(), TestConfig.EPSILON);
@@ -78,7 +78,7 @@ public class UncorrelatedDevelopmentFactorsTestTest {
         
         test.setAlpha(0.25);
         assertEquals( 0.25000000, test.getAlpha(), TestConfig.EPSILON);
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
     

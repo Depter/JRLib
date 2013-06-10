@@ -26,6 +26,8 @@ import org.jreserve.jrlib.CalculationData;
  */
 public abstract class AbstractVector<T extends CalculationData> extends AbstractCalculationData<T> implements Vector {
     
+    protected int length;
+    
     /**
      * Creates a class, with the given source.
      * 
@@ -46,6 +48,13 @@ public abstract class AbstractVector<T extends CalculationData> extends Abstract
      */
     protected boolean withinBonds(int index) {
         return 0 <= index && index < getLength();
+    }
+    
+    /**
+     * Retunrs the length of this vector.
+     */
+    public int getLength() {
+        return length;
     }
     
     @Override

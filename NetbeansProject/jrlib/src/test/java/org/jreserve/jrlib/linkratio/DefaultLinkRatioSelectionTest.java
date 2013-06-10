@@ -16,13 +16,6 @@
  */
 package org.jreserve.jrlib.linkratio;
 
-import org.jreserve.jrlib.linkratio.MinLRMethod;
-import org.jreserve.jrlib.linkratio.LinkRatioMethod;
-import org.jreserve.jrlib.linkratio.DefaultLinkRatioSelection;
-import org.jreserve.jrlib.linkratio.AverageLRMethod;
-import org.jreserve.jrlib.linkratio.WeightedAverageLRMethod;
-import org.jreserve.jrlib.linkratio.MaxLRMethod;
-import org.jreserve.jrlib.linkratio.UserInputLRMethod;
 import java.util.HashMap;
 import java.util.Map;
 import org.jreserve.jrlib.ChangeCounter;
@@ -53,7 +46,7 @@ public class DefaultLinkRatioSelectionTest {
         lr = new DefaultLinkRatioSelection(factors);
         
         listener = new ChangeCounter();
-        lr.addChangeListener(listener);
+        lr.addCalculationListener(listener);
     }
 
     @Test
@@ -76,12 +69,12 @@ public class DefaultLinkRatioSelectionTest {
         LinkRatioMethod method = new MinLRMethod();
         lr.setMethod(method, 1);
         assertEquals(method, lr.getMethod(1));
-        assertEquals(1, listener.getChangeCount());
+        assertEquals(2, listener.getChangeCount());
         
         
         lr.setMethod(null, 1);
         assertTrue(lr.getMethod(1) instanceof WeightedAverageLRMethod);
-        assertEquals(2, listener.getChangeCount());
+        assertEquals(4, listener.getChangeCount());
     }
 
     @Test
@@ -91,7 +84,7 @@ public class DefaultLinkRatioSelectionTest {
         methods.put(2, new MaxLRMethod());
         methods.put(3, new AverageLRMethod());
         lr.setMethods(methods);
-        assertEquals(1, listener.getChangeCount());
+        assertEquals(2, listener.getChangeCount());
         
         assertTrue(lr.getMethod(1) instanceof MinLRMethod);
         assertTrue(lr.getMethod(2) instanceof MaxLRMethod);

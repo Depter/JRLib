@@ -37,7 +37,6 @@ import org.jreserve.jrlib.vector.AbstractVector;
  */
 public class ConstantOdpResidualScale extends AbstractVector<OdpResidualTriangle> implements OdpResidualScale {
 
-    private int developments;
     private double scale;
 
     /**
@@ -87,11 +86,6 @@ public class ConstantOdpResidualScale extends AbstractVector<OdpResidualTriangle
     }
 
     @Override
-    public int getLength() {
-        return developments;
-    }
-
-    @Override
     public double getValue(int index) {
         return scale;
     }
@@ -102,7 +96,7 @@ public class ConstantOdpResidualScale extends AbstractVector<OdpResidualTriangle
     }
 
     private void doRecalculate() {
-        developments = source.getDevelopmentCount();
+        length = source.getDevelopmentCount();
         int n = 0;
         double sRs = 0d;
         

@@ -49,7 +49,7 @@ public class DefaultScaleSelectionTest {
         source = new LinkRatioScaleInput(cik);
         selection = new DefaultScaleSelection<LinkRatioScaleInput>(source);
         changeCounter = new ChangeCounter();
-        selection.addChangeListener(changeCounter);
+        selection.addCalculationListener(changeCounter);
     }
 
     @Test

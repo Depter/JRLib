@@ -17,7 +17,6 @@
 package org.jreserve.jrlib.util.method;
 
 import java.util.Map;
-import org.jreserve.jrlib.Changeable;
 
 /**
  * Common interface for class that would like to allow the user
@@ -50,7 +49,7 @@ public interface MethodSelection<T, M extends SelectableMethod<T>> {
      * used for the given develoment period.
      * 
      * Calling this method should fire a change event if the implementing
-     * class also implements {@link Changeable Changeable}.
+     * class also implements {@link org.jreserve.jrlib.CalculationData CalculationData}.
      */
     public void setMethod(M method, int index);
     
@@ -64,7 +63,7 @@ public interface MethodSelection<T, M extends SelectableMethod<T>> {
      * used for the given develoment period.
      * 
      * Calling this method should fire a change event if the implementing
-     * class also implements {@link Changeable Changeable}.
+     * class also implements {@link org.jreserve.jrlib.CalculationData CalculationData}.
      */
     public void setMethod(M method, int... indices);
     

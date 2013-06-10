@@ -16,6 +16,8 @@
  */
 package org.jreserve.jrlib.triangle;
 
+import org.jreserve.jrlib.CalculationState;
+
 /**
  * A triangle correction replaces the value of one cell
  * in the input triangle wiht a custom value.
@@ -24,7 +26,9 @@ package org.jreserve.jrlib.triangle;
  * @version 1.0
  */
 public class TriangleCorrection<T extends Triangle> extends AbstractTriangleModification<T> {
-
+    
+    private int accidents;
+    
     protected final int accident;
     protected final int development;
     protected double correction;
@@ -53,6 +57,7 @@ public class TriangleCorrection<T extends Triangle> extends AbstractTriangleModi
      */
     public TriangleCorrection(T source, int accident, int development, double correction) {
         super(source);
+        this.accidents = source.getAccidentCount();
         this.accident = accident;
         this.development = development;
         this.correction = correction;
@@ -85,8 +90,9 @@ public class TriangleCorrection<T extends Triangle> extends AbstractTriangleModi
      * Calling this method fires a change event.
      */
     public void setCorrigatedValue(double correction) {
+        setState(CalculationState.INVALID);
         this.correction = correction;
-        fireChange();
+        setState(CalculationState.VALID);
     }
     
     @Override
@@ -101,9 +107,15 @@ public class TriangleCorrection<T extends Triangle> extends AbstractTriangleModi
                this.accident == accident &&
                this.development == development;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     @Override
     protected void recalculateLayer() {
+        this.accidents = source.getAccidentCount();
     }
 
     @Override

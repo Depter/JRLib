@@ -18,59 +18,76 @@ package org.jreserve.jrlib;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 /**
- * Default implementation for the {@link Changeable Changeable} 
+ * Most basic implementation for the {@link CalculationData CalculationData} 
  * interface. This class does nothing extra, just reduces 
  * boiler-plate codeing.
  * 
  * @author Peter Decsi
  * @version 1.0
  */
-public class AbstractChangeable implements Changeable {
+public abstract class AbstractChangeable implements CalculationData {
 
-    protected List<ChangeListener> listeners = new ArrayList<ChangeListener>();
-    private boolean eventsFired = true;
+    private int listenerCount = 0;
+    private List<CalculationListener> listeners = new ArrayList<CalculationListener>();
+    private CalculationState state = CalculationState.VALID;
     
     @Override
-    public void addChangeListener(ChangeListener listener) {
-        if(listeners!=null && listener != null && !listeners.contains(listener))
-            listeners.add(listener);
-    }
-
-    @Override
-    public void removeChangeListener(ChangeListener listener) {
-        if(listeners != null)
-            listeners.remove(listener);
+    public CalculationState getState() {
+        return state;
     }
     
     /**
-     * Fires a {@link ChangeEvent ChangeEvent}. The source
-     * of the event will be this object.
+     * Handles the recalculation process. By calling this method at 
+     * first the sources are recalculated (extending class does not 
+     * recieve notifications), then 
+     * {@link #recalculateLayer() recalculateLayer} is called, 
+     * then all registerd listeners (if not detached) are notified.
      */
-    protected void fireChange() {
-        if(eventsFired && listeners != null) {
-            ChangeEvent evt = new ChangeEvent(this);
-            for(ChangeListener listener : getListeners())
-                listener.stateChanged(evt);
+    @Override
+    public void recalculate() {
+        setState(CalculationState.INVALID);
+        recalculateLayer();
+        setState(CalculationState.VALID);
+    }
+    
+    protected void setState(CalculationState state) {
+        if(this.state != state) {
+            this.state = state;
+            fireStateChange();
         }
     }
 
-    private ChangeListener[] getListeners() {
-        int size = listeners.size();
-        ChangeListener[] result = new ChangeListener[size];
-        return listeners.toArray(result);
+    /**
+     * Override this method to recalculate the state based on
+     * the source calculation. If the no-arg constructor is
+     * used the source can be `null`.
+     */
+    protected abstract void recalculateLayer();
+    
+    protected abstract CalculationState getSourceState();
+    
+    @Override
+    public void addCalculationListener(CalculationListener listener) {
+        if(listeners!=null && listener != null && !listeners.contains(listener)) {
+            listeners.add(listener);
+            listenerCount++;
+        }
     }
 
     @Override
-    public void setEventsFired(boolean firesEvents) {
-        this.eventsFired = firesEvents;
+    public void removeCalculationListener(CalculationListener listener) {
+        if(listeners != null && listeners.remove(listener))
+            listenerCount--;
     }
-
-    @Override
-    public boolean isEventsFired() {
-        return eventsFired;
+    
+    /**
+     * Fires a state change event. The source
+     * of the event will be this object.
+     */
+    protected void fireStateChange() {
+        for(int i=0; i<listenerCount; i++)
+            listeners.get(i).stateChanged(this);
     }
 }

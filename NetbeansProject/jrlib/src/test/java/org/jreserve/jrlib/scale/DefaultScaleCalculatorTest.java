@@ -54,7 +54,7 @@ public class DefaultScaleCalculatorTest {
         LinkRatioScaleInput input = new LinkRatioScaleInput(source);
         scale = new DefaultScaleCalculator<LinkRatioScaleInput>(input);
         changeCounter = new ChangeCounter();
-        scale.addChangeListener(changeCounter);
+        scale.addCalculationListener(changeCounter);
     }
 
     @Test

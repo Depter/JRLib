@@ -16,9 +16,6 @@
  */
 package org.jreserve.jrlib;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 /**
  * Basic implementation for the {@link CalculationData CalculationData} 
  * interface. This class is the most generic implementation of the 
@@ -33,11 +30,9 @@ import javax.swing.event.ChangeListener;
 public abstract class AbstractMultiSourceCalculationData<T extends CalculationData> extends AbstractChangeable implements CalculationData {
     
     private SourceListener sourceListener = new SourceListener();
-    private boolean myChange = false;
     
     protected T[] sources;
     private int sourceCount;
-    private boolean forwardCalls = true;
     
     protected AbstractMultiSourceCalculationData(T... sources) {
         sourceCount = sources.length;
@@ -45,89 +40,82 @@ public abstract class AbstractMultiSourceCalculationData<T extends CalculationDa
         attachSources();
     }
     
-    protected AbstractMultiSourceCalculationData(boolean isAttached, T... sources) {
-        sourceCount = sources.length;
-        this.sources = sources;
-        
-        if(isAttached) {
-            attachSources();
-        } else {
-            super.setEventsFired(false);
-            listeners = null;
-            sourceListener = null;
+    private void attachSources() {
+        for(int i=0; i<sourceCount; i++)
+            sources[i].addCalculationListener(sourceListener);
+    }
+    
+    @Override
+    protected CalculationState getSourceState() {
+        for(CalculationData source : sources)
+            if(CalculationState.INVALID == source.getState())
+                return CalculationState.INVALID;
+        return CalculationState.VALID;
+    }
+    
+    @Override
+    public void detach() {
+        if(sourceCount > 0) {
+            setState(CalculationState.INVALID);
+            releaseSources();
+            recalculateLayer();
+            setState(CalculationState.VALID);
+        }    
+    }
+    
+    private void releaseSources() {
+        for(int i=0; i<sourceCount; i++)
+            releaseSource(i);
+        sources = null;
+        sourceCount = 0;
+    }
+    
+    private void releaseSource(int index) {
+        if(sources[index] != null) {
+            sources[index].removeCalculationListener(sourceListener);
+            sources[index] = null;
         }
     }
     
-    private void attachSources() {
+    @Override
+    public void detach(CalculationData source) {
+        int index = getSourceIndex(source);
+        if(index != -1) {
+            setState(CalculationState.INVALID);
+            
+            releaseSource(index);
+            cleanUpSources();
+            recalculateLayer();
+            
+            setState(CalculationState.VALID);
+        }
+    }
+    
+    private void cleanUpSources() {
+        for(CalculationData source : sources)
+            if(source != null)
+                return;
+        sources = null;
+        sourceCount = 0;
+    }
+    
+    private int getSourceIndex(CalculationData source) {
         for(int i=0; i<sourceCount; i++)
-            sources[i].addChangeListener(sourceListener);
+            if(sources[i] == source)
+                return i;
+        return -1;
     }
     
-    @Override
-    public boolean isCallsForwarded() {
-        return forwardCalls;
-    }
-    
-    @Override
-    public void setCallsForwarded(boolean forwardCalls) {
-        this.forwardCalls = forwardCalls;
-    }
-
-    /**
-     * Handles the recalculation process. By calling this method at 
-     * first the sources are recalculated (extending class does not 
-     * recieve notifications), then 
-     * {@link #recalculateLayer() recalculateLayer} is called, 
-     * then all registerd listeners (if not detached) are notified.
-     */
-    @Override
-    public void recalculate() {
-        if(forwardCalls)
-            recalculateSources();
-        recalculateLayer();
-        fireChange();
-    }
-    
-    private void recalculateSources() {
-        myChange = true;
-        for(int i=0; i<sourceCount; i++)
-            sources[i].recalculate();
-        myChange = false;
-    }
-
-    /**
-     * Extending classes should recalculate their inner state. When
-     * this method is called, then the source calculations are already 
-     * recalculated.
-     */
-    protected abstract void recalculateLayer();
-    
-    /**
-     * Detaches all source calculations and removes all
-     * registered listeners.
-     */
-    @Override
-    public void detach() {
-        if(forwardCalls)
-           detachSources();
-        
-        super.setEventsFired(false);
-        listeners = null;
-        sourceListener = null;
-    }
-    
-    private void detachSources() {
-        for(int i=0; i<sourceCount; i++)
-            sources[i].detach();
-    }
-    
-    private class SourceListener implements ChangeListener {
+    private class SourceListener implements CalculationListener {
 
         @Override
-        public void stateChanged(ChangeEvent e) {
-            if(!myChange) {
+        public void stateChanged(CalculationData data) {
+            if(CalculationState.INVALID == getSourceState()) {
+                if(CalculationState.INVALID != getState())
+                    setState(CalculationState.INVALID);
+            } else {
                 recalculateLayer();
-                fireChange();
+                setState(CalculationState.VALID);
             }
         }
     }

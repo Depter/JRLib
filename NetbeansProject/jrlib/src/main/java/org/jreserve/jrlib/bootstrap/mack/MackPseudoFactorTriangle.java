@@ -115,6 +115,11 @@ public class MackPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> im
                 pseudoValues[accident][development] : 
                 Double.NaN;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     @Override
     protected void recalculateLayer() {

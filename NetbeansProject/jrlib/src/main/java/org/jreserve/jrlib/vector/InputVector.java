@@ -17,6 +17,7 @@
 package org.jreserve.jrlib.vector;
 
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 
 /**
  * An InputVector simply wrapes an array, to be able to use
@@ -28,13 +29,16 @@ import org.jreserve.jrlib.CalculationData;
 public class InputVector extends AbstractVector<CalculationData> {
 
     private double[] values;
-    private int length;
     
     /**
      * Creates an instance for the given values. If `values` is
      * `null` then an empty vector with length of 0 is created.
      */
     public InputVector(double[] values) {
+        initData(values);
+    }
+    
+    private void initData(double[] values) {
         if(values == null || values.length == 0) {
             fillEmptyData();
         } else {
@@ -60,17 +64,9 @@ public class InputVector extends AbstractVector<CalculationData> {
      * Calling this method fires a change event.
      */
     protected void setData(double[] data) {
-        if(data == null || data.length == 0) {
-            fillEmptyData();
-        } else {
-            fillData(data);
-        }
-        fireChange();
-    }
-
-    @Override
-    public int getLength() {
-        return length;
+        setState(CalculationState.INVALID);
+        initData(data);
+        setState(CalculationState.VALID);
     }
 
     @Override

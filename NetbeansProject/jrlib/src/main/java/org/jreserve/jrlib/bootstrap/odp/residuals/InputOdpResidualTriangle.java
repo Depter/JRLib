@@ -90,6 +90,11 @@ public class InputOdpResidualTriangle extends AbstractTriangle<LinkRatio> implem
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     public double getFittedValue(int accident, int development) {
         return withinBounds(accident, development)?
                 fitted[accident][development] :

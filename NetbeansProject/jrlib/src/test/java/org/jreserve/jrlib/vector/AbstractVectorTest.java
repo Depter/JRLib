@@ -58,19 +58,12 @@ public class AbstractVectorTest {
 
     private class AbstractVectorImpl extends AbstractVector {
         
-        private int size;
-        
         private AbstractVectorImpl(int size) {
-            this.size = size;
+            super.length = size;
         }
         
         @Override
         protected void recalculateLayer() {
-        }
-
-        @Override
-        public int getLength() {
-            return size;
         }
 
         @Override

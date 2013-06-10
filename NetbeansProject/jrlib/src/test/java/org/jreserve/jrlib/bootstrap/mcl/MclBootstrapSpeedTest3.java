@@ -18,6 +18,7 @@ package org.jreserve.jrlib.bootstrap.mcl;
 
 import java.util.Collections;
 import java.util.List;
+import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
 import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclResidualBundle;
@@ -72,7 +73,7 @@ public class MclBootstrapSpeedTest3 {
     
     @BeforeClass
     public static void setUpClass() {
-        //org.junit.Assume.assumeTrue("Mcl-Bootstrapper3 speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
+        org.junit.Assume.assumeTrue("Mcl-Bootstrapper3 speed test skipped...", TestConfig.EXECUTE_SPEED_TESTS);
     }
 
     @Before
@@ -125,7 +126,7 @@ public class MclBootstrapSpeedTest3 {
         MclCorrelation paidLambda = new MclCorrelation(paidLr, paidCr);
         MclCorrelation incurredLambda = new MclCorrelation(incurredLr, incurredCr);
         MclCalculationBundle calcBundle = new MclCalculationBundle(paidLambda, incurredLambda);
-        MclEstimateBundle eb = new MclEstimateBundle(calcBundle, false);
+        MclEstimateBundle eb = new MclEstimateBundle(calcBundle);
         paidMean = eb.getPaidEstimate().getReserve();
         incurredMean = eb.getIncurredEstimate().getReserve();
     }

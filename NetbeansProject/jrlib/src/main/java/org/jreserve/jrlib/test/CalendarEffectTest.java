@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jreserve.jrlib.AbstractCalculationData;
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
@@ -144,9 +145,10 @@ public class CalendarEffectTest extends AbstractCalculationData<FactorTriangle> 
      * @throws IllegalArgumentException if `alpha` is not in [0;1].
      */
     public void setAlpha(double alpha) {
+        setState(CalculationState.INVALID);
         checkAlpha(alpha);
         this.alpha = alpha;
-        fireChange();
+        setState(CalculationState.VALID);
     }
     
     private void checkAlpha(double alpha) {

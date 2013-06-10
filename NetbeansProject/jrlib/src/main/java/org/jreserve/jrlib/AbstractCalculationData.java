@@ -16,9 +16,6 @@
  */
 package org.jreserve.jrlib;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-
 /**
  * This abstract class represents a link in a calculation chain, whith one 
  * source. The class handles the source calculation (recalculation, detaching,
@@ -32,9 +29,7 @@ import javax.swing.event.ChangeListener;
 public abstract class AbstractCalculationData<T extends CalculationData> extends AbstractChangeable implements CalculationData {
     
     private SourceListener sourceListener = new SourceListener();
-    private boolean myChange = false;
     protected T source;
-    private boolean forwardCalls = true;
     
     /**
      * Creates an instance, with the given source.
@@ -42,28 +37,8 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
      * @throws NullPointerException if `source` is null.
      */
     protected AbstractCalculationData(T source) {
-        this(source, true);
         this.source = source;
-        this.source.addChangeListener(sourceListener);
-    }
-    
-    /**
-     * Creates an instance, with the given source. If 'isAttached' is true,
-     * then the instance attaches itself to the source, if false, it will
-     * be created in a detached state.
-     * 
-     * @throws NullPointerException if `source` is null.
-     */
-    protected AbstractCalculationData(T source, boolean isAttached) {
-        this.source = source;
-        
-        if(isAttached) {
-            this.source.addChangeListener(sourceListener);
-        } else {
-            super.setEventsFired(false);
-            listeners = null;
-            sourceListener = null;
-        }
+        this.source.addCalculationListener(sourceListener);
     }
 
     /**
@@ -73,57 +48,6 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
      * is called.
      */
     protected AbstractCalculationData() {
-    }
-    
-    @Override
-    public boolean isCallsForwarded() {
-        return forwardCalls;
-    }
-    
-    @Override
-    public void setCallsForwarded(boolean forwardCalls) {
-        this.forwardCalls = forwardCalls;
-    }
-    
-    /**
-     * Recalculates the source calculation (if any), then calls
-     * {@link #recalculateLayer() recalculateLayer}, then fires 
-     * a change event (if not detached).
-     */
-    @Override
-    public void recalculate() {
-        recalculateSource();
-        recalculateLayer();
-        fireChange();
-    }
-    
-    private void recalculateSource() {
-        if(source != null && forwardCalls) {
-            myChange = true;
-            source.recalculate();
-            myChange = false;
-        }
-    }
-
-    /**
-     * Override this method to recalculate the state based on
-     * the source calculation. If the no-arg constructor is
-     * used the source can be `null`.
-     */
-    protected abstract void recalculateLayer();
-    
-    /**
-     * Detaches the source calculation (if set), then drops
-     * all registred listeners.
-     */
-    @Override
-    public void detach() {
-        if(source != null && forwardCalls)
-            source.detach();
-        
-        super.setEventsFired(false);
-        listeners = null;
-        sourceListener = null;
     }
     
     /**
@@ -141,23 +65,55 @@ public abstract class AbstractCalculationData<T extends CalculationData> extends
      * extending classes can decide wether they want to implement it.
      */
     public void setSource(T source) {
-        if(this.source != null)
-            this.source.removeChangeListener(sourceListener);
-        this.source = source;
+        setState(CalculationState.INVALID);
+        releaseSource();
+        initSource(source);
         
-        if(this.source != null)
-            this.source.addChangeListener(sourceListener);
-        recalculateLayer();
-        fireChange();
+        if(CalculationState.VALID == getSourceState())
+            recalculate();
     }
     
-    private class SourceListener implements ChangeListener {
+    private void releaseSource() {
+        if(this.source != null)
+            this.source.removeCalculationListener(sourceListener);
+        this.source = null;
+    }
+    
+    private void initSource(T source) {
+        this.source = source;
+        if(this.source != null)
+            this.source.addCalculationListener(sourceListener);
+    }
+    
+    @Override
+    protected CalculationState getSourceState() {
+        return source==null? CalculationState.VALID : source.getState();
+    }
+    
+    @Override
+    public void detach() {
+        detach(source);
+    }
+    
+    @Override
+    public void detach(CalculationData source) {
+        if(this.source!=null && this.source == source) {
+            setState(CalculationState.INVALID);
+            releaseSource();
+            recalculateLayer();
+            setState(CalculationState.VALID);
+        }
+    }
+    
+    private class SourceListener implements CalculationListener {
 
         @Override
-        public void stateChanged(ChangeEvent e) {
-            if(!myChange) {
+        public void stateChanged(CalculationData data) {
+            if(CalculationState.INVALID == getSourceState()) {
+                setState(CalculationState.INVALID);
+            } else {
                 recalculateLayer();
-                fireChange();
+                setState(CalculationState.VALID);
             }
         }
     }

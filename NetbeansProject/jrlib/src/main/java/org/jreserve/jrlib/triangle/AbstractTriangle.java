@@ -39,10 +39,6 @@ public abstract class AbstractTriangle<T extends CalculationData> extends Abstra
         super(source);
     }
     
-    protected AbstractTriangle(T source, boolean isAttached) {
-        super(source, isAttached);
-    }
-    
     /**
      * Creates an instance with no source.
      */
@@ -84,10 +80,10 @@ public abstract class AbstractTriangle<T extends CalculationData> extends Abstra
      * @return `true` if the given accident period is contained in the 
      *          triangle.
      */
-    protected boolean withinBounds(int accident) {
-        return accident >= 0 &&
-               accident < getAccidentCount();
-    }
+    protected abstract boolean withinBounds(int accident);// {
+//        return accident >= 0 &&
+//               accident < getAccidentCount();
+//    }
 
     /**
      * Fills an array with the same dimensions as the triangle with

@@ -65,11 +65,6 @@ class MclPseudoClaimRatio extends AbstractVector<ClaimRatio> implements ClaimRat
     public ClaimTriangle getSourceDenominatorTriangle() {
         return source.getSourceDenominatorTriangle();
     }
-
-    @Override
-    public int getLength() {
-        return source.getLength();
-    }
     
     @Override
     public double getValue(int index) {
@@ -86,5 +81,6 @@ class MclPseudoClaimRatio extends AbstractVector<ClaimRatio> implements ClaimRat
 
     @Override
     protected void recalculateLayer() {
+        length = source.getLength();
     }
 }

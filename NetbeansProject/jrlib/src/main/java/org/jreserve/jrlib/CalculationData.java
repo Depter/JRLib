@@ -22,11 +22,11 @@ package org.jreserve.jrlib;
  * separate calculations. A calculation-link nows only it's input link's but
  * knows noting over the following links up in the chain.
  * 
- * As CalculationData extends the {@link Changeable Changeable} interface,
- * other calculations, interested on the result of this calculation can
- * register a change listener on this calculation. This means that in 
- * order to automatically update their state when needed, all calculation
- * data should listen for changes on their input calculations.
+ * Other calculations, interested on the result of this calculation can
+ * register a {@link CalculationListener CalculationListener} on this 
+ * calculation. This means that in order to automatically update their 
+ * state when needed, all calculation data should listen for changes on 
+ * their input calculations.
  * 
  * This interface exposes two methods, which can be used by 
  * all calculations.
@@ -39,21 +39,12 @@ package org.jreserve.jrlib;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationData extends Changeable {
+public interface CalculationData {
     
     /**
-     * Returns wether a call to {@link #recalculate() recalculate()} or
-     * {@link #detach() detach()} is forewarded to the 
-     * source calculation(s).
+     * Returns the state of this calculation data.
      */
-    public boolean isCallsForwarded();
-    
-    /**
-     * Sets wether a call to {@link #recalculate() recalculate()} or
-     * {@link #detach() detach()} should be forewarded to the 
-     * source calculation(s).
-     */
-    public void setCallsForwarded(boolean forwardCalls);
+    public CalculationState getState();
     
     /**
      * Recalculates the state of this calculation data. After calling this
@@ -65,17 +56,20 @@ public interface CalculationData extends Changeable {
      *     the registered change listeners are notified about the cahnge.
      */
     public void recalculate();
-    
-    /**
-     * By calling this method, the instance becomes detached. A detached
-     * item releases all registered listeners, and will not accept new
-     * listeners. After detaching itself the calculation data detaches
-     * all of it's input data.
-     * 
-     * Calling this method also disables change events.
-     * 
-     * @see Changeable#setEventsFired(boolean).
-     */
-    public void detach();
 
+    /**
+     * Registers the listener on the instance. If <i>listener</i>
+     * is <i>null</i> then nothing should happen.
+     */
+    public void addCalculationListener(CalculationListener listener);
+
+    /**
+     * Removes the listener from the instance if it is not null and
+     * if it was registered.
+     */
+    public void removeCalculationListener(CalculationListener listener);
+    
+    public void detach();
+    
+    public void detach(CalculationData source);
 }

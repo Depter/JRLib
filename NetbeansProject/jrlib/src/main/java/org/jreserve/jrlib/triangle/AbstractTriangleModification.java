@@ -36,11 +36,7 @@ public abstract class AbstractTriangleModification<T extends Triangle> extends A
      * @throws NullPointerException if `source` is null.
      */
     protected AbstractTriangleModification(T source) {
-        this(source, true);
-    }
-    
-    protected AbstractTriangleModification(T source, boolean isAttached) {
-        super(source, isAttached);
+        super(source);
     }
 
     /**

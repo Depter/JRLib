@@ -44,7 +44,7 @@ public class InputVectorTest {
     public void setUp() {
         vector = new InputVector(INPUT);
         changeCounter = new ChangeCounter();
-        vector.addChangeListener(changeCounter);
+        vector.addCalculationListener(changeCounter);
     }
     
     @Test
@@ -58,12 +58,12 @@ public class InputVectorTest {
         double data[] = null;
         vector.setData(data);
         assertEquals(0, vector.getLength());
-        assertEquals(1, changeCounter.getChangeCount());
+        assertEquals(2, changeCounter.getChangeCount());
         
         data = new double[]{1d, 2d, 3d, 4d};
         vector.setData(data);
         assertEquals(data.length, vector.getLength());
-        assertEquals(2, changeCounter.getChangeCount());
+        assertEquals(4, changeCounter.getChangeCount());
         
         assertEquals(Double.NaN, vector.getValue(-1), TestConfig.EPSILON);
         for(int i=0; i<data.length; i++)

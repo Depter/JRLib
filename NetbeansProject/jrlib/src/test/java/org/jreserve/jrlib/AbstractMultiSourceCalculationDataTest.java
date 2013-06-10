@@ -16,7 +16,6 @@
  */
 package org.jreserve.jrlib;
 
-import org.jreserve.jrlib.AbstractMultiSourceCalculationData;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,13 +30,15 @@ public class AbstractMultiSourceCalculationDataTest {
     private AbstractMultiSourceCalculationDataImpl source1;
     private AbstractMultiSourceCalculationDataImpl source2;
     private AbstractMultiSourceCalculationDataImpl data;
-    
+    private ChangeCounter dataListener;
 
     @Before
     public void setUp() {
         source1 = new AbstractMultiSourceCalculationDataImpl();
         source2 = new AbstractMultiSourceCalculationDataImpl();
         data = new AbstractMultiSourceCalculationDataImpl(source1, source2);
+        dataListener = new ChangeCounter();
+        data.addCalculationListener(dataListener);
     }
 
     @Test
@@ -52,97 +53,41 @@ public class AbstractMultiSourceCalculationDataTest {
         assertEquals(1, source2.recalculateCount);
         assertEquals(2, data.recalculateCount);
     }
-
+    
     @Test
-    public void testRecalculate_Source_Detached() {
-        source1.detach();
-        source1.recalculate();
-        assertEquals(1, source1.recalculateCount);
-        assertEquals(0, source2.recalculateCount);
+    public void testGetSourceState() {
+        assertEquals(CalculationState.VALID, data.getSourceState());
+        
+        source1.setState(CalculationState.INVALID);
+        assertEquals(CalculationState.INVALID, data.getSourceState());
+        
+        source2.setState(CalculationState.INVALID);
+        assertEquals(CalculationState.INVALID, data.getSourceState());
+        
+        source1.setState(CalculationState.VALID);
+        assertEquals(CalculationState.INVALID, data.getSourceState());
+        
+        source2.setState(CalculationState.VALID);
+        assertEquals(CalculationState.VALID, data.getSourceState());        
+    }
+    
+    @Test
+    public void testRecalculateInvalidSource() {
+        source1.setState(CalculationState.INVALID);
+        assertEquals(CalculationState.INVALID, data.getState());
         assertEquals(0, data.recalculateCount);
         
-        source2.recalculate();
-        assertEquals(1, source1.recalculateCount);
-        assertEquals(1, source2.recalculateCount);
+        source2.setState(CalculationState.INVALID);
+        assertEquals(CalculationState.INVALID, data.getState());
+        assertEquals(0, data.recalculateCount);
+        
+        source1.setState(CalculationState.VALID);
+        assertEquals(CalculationState.INVALID, data.getState());
+        assertEquals(0, data.recalculateCount);
+        
+        source2.setState(CalculationState.VALID);
+        assertEquals(CalculationState.VALID, data.getState());
         assertEquals(1, data.recalculateCount);
-        
-        source2.detach();
-        source2.recalculate();
-        assertEquals(1, source1.recalculateCount);
-        assertEquals(2, source2.recalculateCount);
-        assertEquals(1, data.recalculateCount);
-    }
-
-    @Test
-    public void testRecalculate_Data() {
-        data.recalculate();
-        assertEquals(1, source1.recalculateCount);
-        assertEquals(1, source2.recalculateCount);
-        assertEquals(1, data.recalculateCount);
-    }
-
-    @Test
-    public void testRecalculate_Data_Detached() {
-        data.detach();
-        data.recalculate();
-        assertEquals(1, source1.recalculateCount);
-        assertEquals(1, source2.recalculateCount);
-        assertEquals(1, data.recalculateCount);
-    }
-
-    @Test
-    public void testDetach_Source() {
-        ChangeCounter sl1 = new ChangeCounter();
-        source1.addChangeListener(sl1);
-        ChangeCounter sl2 = new ChangeCounter();
-        source2.addChangeListener(sl2);
-        
-        ChangeCounter dl = new ChangeCounter();
-        data.addChangeListener(dl);
-        
-        source1.recalculate();
-        assertEquals(1, sl1.getChangeCount());
-        assertEquals(0, sl2.getChangeCount());
-        assertEquals(1, dl.getChangeCount());
-        
-        source2.recalculate();
-        assertEquals(1, sl1.getChangeCount());
-        assertEquals(1, sl2.getChangeCount());
-        assertEquals(2, dl.getChangeCount());
-        
-        source1.detach();
-        data.recalculate();
-        assertEquals(1, sl1.getChangeCount());
-        assertEquals(2, sl2.getChangeCount());
-        assertEquals(3, dl.getChangeCount());
-        
-        source2.detach();
-        data.recalculate();
-        assertEquals(1, sl1.getChangeCount());
-        assertEquals(2, sl2.getChangeCount());
-        assertEquals(4, dl.getChangeCount());
-    }
- 
-    @Test
-    public void testDetach_Data() {
-        ChangeCounter sl1 = new ChangeCounter();
-        source1.addChangeListener(sl1);
-        ChangeCounter sl2 = new ChangeCounter();
-        source2.addChangeListener(sl2);
-        
-        ChangeCounter dl = new ChangeCounter();
-        data.addChangeListener(dl);
-        
-        data.recalculate();
-        assertEquals(1, sl1.getChangeCount());
-        assertEquals(1, sl2.getChangeCount());
-        assertEquals(1, dl.getChangeCount());
-        
-        data.detach();
-        data.recalculate();
-        assertEquals(1, sl1.getChangeCount());
-        assertEquals(1, sl2.getChangeCount());
-        assertEquals(1, dl.getChangeCount());
     }
    
     private class AbstractMultiSourceCalculationDataImpl extends 

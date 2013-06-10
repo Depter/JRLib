@@ -17,6 +17,7 @@
 package org.jreserve.jrlib.bootstrap;
 
 import org.jreserve.jrlib.estimate.Estimate;
+import org.jreserve.jrlib.CalculationData;
 
 /**
  * An isntance of EstimateBootstrapper bootstraps {@link Estimate Estimate}
@@ -34,22 +35,24 @@ import org.jreserve.jrlib.estimate.Estimate;
  * @author Peter Decsi
  * @version 1.0
  */
-public class EstimateBootstrapper<T extends Estimate> extends Bootstrapper<T> {
+public class EstimateBootstrapper<T extends CalculationData> extends Bootstrapper<T> {
     
+    protected final Estimate estimate;
     protected final int devCount;
     protected final int accidents;
     protected final int[] observedDevCount;
     protected double [][] reserves;
     private int iteration = 0;
     
-    public EstimateBootstrapper(T source, int bootstrapCount) {
+    public EstimateBootstrapper(T source, int bootstrapCount, Estimate estimate) {
         super(source, bootstrapCount);
+        this.estimate = estimate;
         
-        devCount = source.getDevelopmentCount();
-        accidents = source.getAccidentCount();
+        devCount = estimate.getDevelopmentCount();
+        accidents = estimate.getAccidentCount();
         observedDevCount = new int[accidents];
         for(int a=0; a<accidents; a++)
-            observedDevCount[a] = source.getObservedDevelopmentCount(a);
+            observedDevCount[a] = estimate.getObservedDevelopmentCount(a);
         reserves = new double[bootstrapCount][];
     }
     
@@ -58,9 +61,8 @@ public class EstimateBootstrapper<T extends Estimate> extends Bootstrapper<T> {
      * stores the reserves from the iteration.
      */
     @Override
-    protected void bootstrap() {
-        source.recalculate();
-        reserves[iteration++] = source.toArrayReserve();
+    protected void collectBootstrapResult() {
+        reserves[iteration++] = estimate.toArrayReserve();
     }
     
     /**

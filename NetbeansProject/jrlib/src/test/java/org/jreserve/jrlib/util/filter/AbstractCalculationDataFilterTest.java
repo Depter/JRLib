@@ -45,7 +45,7 @@ public class AbstractCalculationDataFilterTest {
         source = new InputVector(getCachedVector(EXPOSURE));
         filter = new AbstractCalculationDataFilterImpl(source);
         counter = new ChangeCounter();
-        filter.addChangeListener(counter);
+        filter.addCalculationListener(counter);
     }
 
     @Test(expected=NullPointerException.class)
@@ -68,7 +68,7 @@ public class AbstractCalculationDataFilterTest {
         Filter expected = new SigmaFilter(2d);
         filter.setFilter(expected);
         assertEquals(expected, filter.getFilter());
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
     }
     
     @Test(expected=NullPointerException.class)

@@ -55,6 +55,7 @@ public class SmoothedVector extends AbstractVectorModification {
     }
     
     private void doRecalculate() {
+        length = source.getLength();
         this.values = smoothing.smooth(source);
     }
 }

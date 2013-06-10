@@ -18,6 +18,7 @@ package org.jreserve.jrlib.test;
 
 import java.util.Arrays;
 import org.jreserve.jrlib.AbstractCalculationData;
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
@@ -139,9 +140,10 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
      * @throws IllegalArgumentException if `alpha` is not in [0;1].
      */
     public void setAlpha(double alpha) {
+        setState(CalculationState.INVALID);
         checkAlpha(alpha);
         this.alpha = alpha;
-        fireChange();
+        setState(CalculationState.VALID);
     }
     
     private void checkAlpha(double alpha) {

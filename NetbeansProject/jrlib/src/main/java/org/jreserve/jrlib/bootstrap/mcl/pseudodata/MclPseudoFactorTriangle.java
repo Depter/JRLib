@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.bootstrap.mcl.pseudodata;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.scale.LinkRatioScale;
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle;
@@ -28,7 +29,9 @@ import org.jreserve.jrlib.triangle.factor.FactorTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements FactorTriangle {
+class MclPseudoFactorTriangle 
+    extends AbstractTriangle<ClaimTriangle> 
+    implements FactorTriangle {
     
     static MclPseudoFactorTriangle createPaid(MclResidualBundle bundle) {
         return new MclPseudoFactorTriangle(bundle, true);
@@ -51,8 +54,7 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
         this.isPaid = isPaid;
         source = getSourceResiduals(bundle).getSourceTriangle();
         initState(bundle);
-        detach();
-        super.setCallsForwarded(false);
+        super.setState(CalculationState.INVALID);
     }
 
     private void initState(MclResidualBundle bundle) {
@@ -137,11 +139,21 @@ class MclPseudoFactorTriangle extends AbstractTriangle<ClaimTriangle> implements
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     public void recalculate() {
     }
     
     @Override
     public void recalculateLayer() {
+    }
+    
+    @Override
+    protected void setState(CalculationState state) {
+        super.setState(state);
     }
     
     void setValueAt(int accident, int development, MclResidualCell cell) {

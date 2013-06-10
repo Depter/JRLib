@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 import org.jreserve.jrlib.AbstractCalculationData;
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 
 /**
  * The AbstractMethodSelection is a basic implementation for the
@@ -108,8 +109,9 @@ public abstract class AbstractMethodSelection<T extends CalculationData, M exten
     }
     
     private void methodsChanged() {
+        setState(CalculationState.INVALID);
         recalculateLayer();
-        fireChange();
+        setState(CalculationState.VALID);
     }
 
     /**

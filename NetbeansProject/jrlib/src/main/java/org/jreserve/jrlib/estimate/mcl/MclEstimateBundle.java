@@ -48,11 +48,7 @@ public class MclEstimateBundle extends AbstractCalculationData<MclEstimateInput>
     }
     
     public MclEstimateBundle(MclEstimateInput source) {
-        this(source, true);
-    }
-    
-    public MclEstimateBundle(MclEstimateInput source, boolean isAttached) {
-        super(source, isAttached);
+        super(source);
         paidProxy = new EstimateProxy(true);
         incurredProxy = new EstimateProxy(false);
         paidIncurredProxy = new PaidIncurredEstimateProxy();

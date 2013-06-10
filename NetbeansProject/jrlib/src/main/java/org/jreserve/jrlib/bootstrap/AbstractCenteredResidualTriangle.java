@@ -29,6 +29,7 @@ import org.jreserve.jrlib.triangle.Triangle;
 public class AbstractCenteredResidualTriangle<T extends Triangle> extends AbstractTriangleModification<T> {
 
     private double mean;
+    private int accidents;
     
     public AbstractCenteredResidualTriangle(T source) {
         super(source);
@@ -43,6 +44,11 @@ public class AbstractCenteredResidualTriangle<T extends Triangle> extends Abstra
     public double getValue(int accident, int development) {
         return source.getValue(accident, development) - mean;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     @Override
     protected void recalculateLayer() {
@@ -50,7 +56,7 @@ public class AbstractCenteredResidualTriangle<T extends Triangle> extends Abstra
     }
     
     private void doRecalculate() {
-        int accidents = source.getAccidentCount();
+        accidents = source.getAccidentCount();
         mean = 0d;
         int n = 0;
         

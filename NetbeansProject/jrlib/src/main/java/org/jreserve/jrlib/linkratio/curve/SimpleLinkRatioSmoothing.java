@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.linkratio.curve;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
@@ -30,8 +31,6 @@ import org.jreserve.jrlib.util.method.AbstractSimpleMethodSelection;
  * @version 1.0
  */
 public class SimpleLinkRatioSmoothing extends AbstractSimpleMethodSelection<LinkRatio, LinkRatioCurve> implements LinkRatioSmoothing {
-
-    private int developments;
     
     /**
      * Creates an instance, which calculates the tail factors with the given 
@@ -109,7 +108,7 @@ public class SimpleLinkRatioSmoothing extends AbstractSimpleMethodSelection<Link
      */
     public SimpleLinkRatioSmoothing(LinkRatio source, LinkRatioCurve method, int developments) {
         super(source, new DefaultLRCurve(), method);
-        this.developments = (developments<0)? 0 : developments;
+        this.length = (developments<0)? 0 : developments;
         super.recalculateLayer();
     }
 
@@ -128,11 +127,6 @@ public class SimpleLinkRatioSmoothing extends AbstractSimpleMethodSelection<Link
         return source.getSourceTriangle();
     }
 
-    @Override
-    public int getLength() {
-        return developments;
-    }
-
     /**
      * Sets the number of development periods. If the 
      * input value is less then 0, then 0 will be used insted.
@@ -142,9 +136,10 @@ public class SimpleLinkRatioSmoothing extends AbstractSimpleMethodSelection<Link
      */
     @Override
     public void setDevelopmentCount(int developments) {
-        this.developments = (developments<0)? 0 : developments;
+        setState(CalculationState.INVALID);
+        this.length = (developments<0)? 0 : developments;
         super.recalculateLayer();
-        fireChange();
+        setState(CalculationState.VALID);
     }
 
     /**
@@ -163,7 +158,7 @@ public class SimpleLinkRatioSmoothing extends AbstractSimpleMethodSelection<Link
     }
     
     private boolean withinBounds(int development) {
-        return 0<=development && development < developments;
+        return 0<=development && development < length;
     }
 
     /**

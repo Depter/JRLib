@@ -36,8 +36,6 @@ public class EmptyOdpResidualScale
     implements OdpResidualScale {
 
     private final static double SCALE = 1d;
-    
-    private int developments;
 
     public EmptyOdpResidualScale(OdpResidualTriangle source) {
         super(source);
@@ -70,13 +68,8 @@ public class EmptyOdpResidualScale
     }
     
     @Override
-    public int getLength() {
-        return developments;
-    }
-    
-    @Override
     public double getValue(int development) {
-        return (0<=development && development<developments)? 
+        return (0<=development && development<length)? 
                 SCALE : 
                 Double.NaN;
     }
@@ -87,7 +80,7 @@ public class EmptyOdpResidualScale
     }
     
     private void doRecalculate() {
-        developments = source.getDevelopmentCount();
+        length = source.getDevelopmentCount();
     }
 
 }

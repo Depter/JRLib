@@ -90,6 +90,7 @@ public class MclBootstrapEstimateBundleTest {
     };
     
     private MclBootstrapEstimateBundle bsBundle;
+    private MclPseudoData pseudoData;
     
     @Before
     public void setUp() {
@@ -137,7 +138,7 @@ public class MclBootstrapEstimateBundleTest {
     
     private void createBs(LRResidualTriangle paidLr, LRResidualTriangle incurredLr, CRResidualTriangle paidCr, CRResidualTriangle incurredCr) {
         MclResidualBundle resBundle = new MclResidualBundle(paidLr, paidCr, incurredLr, incurredCr);
-        MclPseudoData pseudoData = new MclPseudoData(new FixedRandom(), resBundle);
+        pseudoData = new MclPseudoData(new FixedRandom(), resBundle);
         MclProcessSimulator ps = new DummyMclProcessSimulator();
         MclProcessSimulator is = new DummyMclProcessSimulator();
         
@@ -146,7 +147,7 @@ public class MclBootstrapEstimateBundleTest {
     
     @Test
     public void testRecalculate() {
-        bsBundle.recalculate();
+        pseudoData.recalculate();
         int accidents = PAID.length;
         
         double[] paid = bsBundle.getPaidReserves();

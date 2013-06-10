@@ -65,7 +65,7 @@ public class TriangleOutlierFilterTest {
         filter = new SigmaFilter(1.5);
         triangleFilter = new TriangleOutlierFilter(source, filter);
         counter = new ChangeCounter();
-        triangleFilter.addChangeListener(counter);
+        triangleFilter.addCalculationListener(counter);
     }
 
     @Test

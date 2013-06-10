@@ -1,9 +1,0 @@
-home=1369953183716
-bin=1369953183716
-etc=1369953183716
-grscript_gui=1369953183716
-platform=1369953183716
-user=1369953183716
-crc=7
-locale=hu_HU
-branding=grscript_gui

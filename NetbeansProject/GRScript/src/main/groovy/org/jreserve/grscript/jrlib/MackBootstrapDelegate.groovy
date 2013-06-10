@@ -74,7 +74,7 @@ class MackBootstrapDelegate extends AbstractBootstrapDelegate implements Functio
         lrs.setSource(pseudoFik)
         MackBootstrapEstimate estimate = new MackBootstrapEstimate(lrs, procSim);
         int count = super.getCount()
-        return new EstimateBootstrapper<MackBootstrapEstimate>(estimate, count);
+        return new EstimateBootstrapper(pseudoFik, count, estimate);
     }
     
     private MackProcessSimulator createProcessSimulator(JRandom rnd) {

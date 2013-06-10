@@ -31,7 +31,6 @@ public class OdpEstimate extends ChainLadderEstimate {
     
     public OdpEstimate(LinkRatio lrs, ProcessSimulator processSimulator) {
         super(lrs);
-        this.detach();
 
         if(processSimulator == null)
             throw new NullPointerException("ProcessSimulator is null!");

@@ -16,9 +16,6 @@
  */
 package org.jreserve.jrlib;
 
-import org.jreserve.jrlib.AbstractChangeable;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,43 +26,70 @@ import org.junit.Test;
  */
 public class AbstractChangeableTest {
 
-    private AbstractChangeable changeable;
-    private Listener listener;
+    private AbstractChangeableImpl source;
+    private ChangeCounter listener;
     
     public AbstractChangeableTest() {
     }
 
     @Before
     public void setUp() {
-        changeable = new AbstractChangeable();
-        listener = new Listener();
+        source = new AbstractChangeableImpl();
+        listener = new ChangeCounter();
+        source.addCalculationListener(listener);
     }
 
     @Test
     public void testAddChangeListener() {
-        changeable.addChangeListener(listener);
-        changeable.fireChange();
-        assertEquals(1, listener.changeCount);
+        source.addCalculationListener(listener);
+        source.fireStateChange();
+        assertEquals(1, listener.getChangeCount());
         
-        changeable.removeChangeListener(listener);
-        changeable.fireChange();
-        assertEquals(1, listener.changeCount);
+        source.removeCalculationListener(listener);
+        source.fireStateChange();
+        assertEquals(1, listener.getChangeCount());
     }
 
     @Test
     public void testAddChangeListener_Twice() {
-        changeable.addChangeListener(listener);
-        changeable.addChangeListener(listener);
-        changeable.fireChange();
-        assertEquals(1, listener.changeCount);
+        source.addCalculationListener(listener);
+        source.addCalculationListener(listener);
+        source.fireStateChange();
+        assertEquals(1, listener.getChangeCount());
     }
 
-    private class Listener implements ChangeListener {
+    @Test
+    public void testRecalculate() {
+        source.recalculate();
+        assertEquals(2, listener.getChangeCount());
+        assertEquals(CalculationState.INVALID, listener.getStateAt(0));
+        assertEquals(CalculationState.VALID, listener.getStateAt(1));
+        assertEquals(1, source.calculationCount);
+    }
+    
+    private static class AbstractChangeableImpl extends AbstractChangeable {
+
+        private int calculationCount = 0;
         
-        private int changeCount;
+        public AbstractChangeableImpl() {
+        }
         
-        public void stateChanged(ChangeEvent e) {
-            changeCount++;
+        @Override
+        protected void recalculateLayer() {
+            calculationCount++;
+        }
+
+        @Override
+        protected CalculationState getSourceState() {
+            return CalculationState.VALID;
+        }
+
+        public void detach() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+
+        public void detach(CalculationData source) {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
 }

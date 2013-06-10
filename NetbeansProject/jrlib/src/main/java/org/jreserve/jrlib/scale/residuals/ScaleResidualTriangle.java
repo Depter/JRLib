@@ -103,6 +103,11 @@ public class ScaleResidualTriangle<T extends ScaleInput, S extends Scale<T>> ext
                 values[accident][development] :
                 Double.NaN;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     @Override
     protected void recalculateLayer() {

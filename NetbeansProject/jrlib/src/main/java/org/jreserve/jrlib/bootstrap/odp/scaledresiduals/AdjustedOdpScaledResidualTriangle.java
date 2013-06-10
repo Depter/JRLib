@@ -45,6 +45,7 @@ public class AdjustedOdpScaledResidualTriangle
     implements ModifiedOdpScaledResidualTriangle {
     
     private double adjustment;
+    private int accidents;
     
     /**
      * Creates a new instance for the given source.
@@ -108,6 +109,11 @@ public class AdjustedOdpScaledResidualTriangle
     public double getValue(int accident, int development) {
         return source.getValue(accident, development) * adjustment;
     }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
     
     @Override
     protected void recalculateLayer() {
@@ -115,7 +121,7 @@ public class AdjustedOdpScaledResidualTriangle
     }
 
     private void doRecalculate() {
-        int accidents = source.getAccidentCount();
+        accidents = source.getAccidentCount();
         int devs = source.getDevelopmentCount();
         
         int[] pA = new int[accidents];

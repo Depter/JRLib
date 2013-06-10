@@ -47,7 +47,7 @@ public class AbstractMethodSelectionTest {
         Vector source = new InputVector(getCachedVector(EXPOSURE));
         selection = new AbstractOutputSelectionImpl(source, DEFAULT);
         counter = new ChangeCounter();
-        selection.addChangeListener(counter);
+        selection.addCalculationListener(counter);
     }
     
     @Test(expected=NullPointerException.class)
@@ -84,12 +84,12 @@ public class AbstractMethodSelectionTest {
         Method method = new Method(1d);
         selection.setMethod(method, 1);
         assertEquals(method, selection.getMethod(1));
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
         
         
         selection.setMethod(null, 1);
         assertEquals(DEFAULT, selection.getMethod(1));
-        assertEquals(2, counter.getChangeCount());
+        assertEquals(4, counter.getChangeCount());
     }
 
     @Test
@@ -99,7 +99,7 @@ public class AbstractMethodSelectionTest {
         methods.put(2, new Method(2d));
         methods.put(3, new Method(3d));
         selection.setMethods(methods);
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
         
         for(int i=1; i<4; i++) {
             Method method = selection.getMethod(i);

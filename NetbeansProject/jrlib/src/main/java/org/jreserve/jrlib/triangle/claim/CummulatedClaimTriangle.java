@@ -28,7 +28,8 @@ import org.jreserve.jrlib.triangle.TriangleUtil;
  * @version 1.0
  */
 public class CummulatedClaimTriangle extends AbstractTriangleModification<ClaimTriangle> implements ModifiedClaimTriangle {
-
+    
+    private int accidents;
     private double[][] values;
     
     /**
@@ -40,6 +41,7 @@ public class CummulatedClaimTriangle extends AbstractTriangleModification<ClaimT
         super(source);
         values = source.toArray();
         TriangleUtil.cummulate(values);
+        this.accidents = values.length;
     }
 
     @Override
@@ -58,5 +60,11 @@ public class CummulatedClaimTriangle extends AbstractTriangleModification<ClaimT
     protected void recalculateLayer() {
         values = source.toArray();
         TriangleUtil.cummulate(values);
+        this.accidents = values.length;
+    }
+
+    @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
     }
 }

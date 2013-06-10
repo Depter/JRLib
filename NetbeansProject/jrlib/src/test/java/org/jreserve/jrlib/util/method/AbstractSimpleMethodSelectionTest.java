@@ -65,11 +65,7 @@ public class AbstractSimpleMethodSelectionTest {
 
         @Override
         public void initCalculation() {
-        }
-
-        @Override
-        public int getLength() {
-            return estimatorMethod.length;
+            length = estimatorMethod.length;
         }
     }
     

@@ -44,7 +44,7 @@ public class CalendarEffectTestTest {
         FactorTriangle factors = TestData.getDevelopmentFactors(TestData.MACK_DATA3);
         CalendarEffectTest test = new CalendarEffectTest(factors);
         ChangeCounter counter = new ChangeCounter();
-        test.addChangeListener(counter);
+        test.addCalculationListener(counter);
         
         assertEquals( 0.05000000, test.getAlpha(), TestConfig.EPSILON);
         assertEquals(14.0000000, test.getTestValue(), TestConfig.EPSILON);
@@ -55,7 +55,7 @@ public class CalendarEffectTestTest {
         
         test.setAlpha(0.75);
         assertEquals( 0.75000000, test.getAlpha(), TestConfig.EPSILON);
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
         assertFalse(test.isTestPassed());
     }
 
@@ -64,7 +64,7 @@ public class CalendarEffectTestTest {
         ClaimTriangle triangle = TestData.getCummulatedTriangle(TestData.Q_PAID);
         CalendarEffectTest test = new CalendarEffectTest(triangle);
         ChangeCounter counter = new ChangeCounter();
-        test.addChangeListener(counter);
+        test.addCalculationListener(counter);
         
         assertEquals( 0.05000000, test.getAlpha(), TestConfig.EPSILON);
         assertEquals(75.00000000, test.getTestValue(), TestConfig.EPSILON);
@@ -75,7 +75,7 @@ public class CalendarEffectTestTest {
         
         test.setAlpha(0.25);
         assertEquals( 0.25000000, test.getAlpha(), TestConfig.EPSILON);
-        assertEquals(1, counter.getChangeCount());
+        assertEquals(2, counter.getChangeCount());
         assertTrue(test.isTestPassed());
     }
     

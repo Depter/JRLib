@@ -16,6 +16,8 @@
  */
 package org.jreserve.jrlib.vector;
 
+import org.jreserve.jrlib.CalculationState;
+
 /**
  * A vector correction replaces the value of one cell
  * in the input vector wiht a custom value.
@@ -39,6 +41,7 @@ public class VectorCorrection extends AbstractVectorModification {
      */
     public VectorCorrection(Vector source, int index, double correction) {
         super(source);
+        this.length = source.getLength();
         this.index = index;
         this.correction = correction;
     }
@@ -63,8 +66,9 @@ public class VectorCorrection extends AbstractVectorModification {
      * Calling this method fires a change event.
      */
     public void setCorrigatedValue(double correction) {
+        setState(CalculationState.INVALID);
         this.correction = correction;
-        fireChange();
+        setState(CalculationState.VALID);
     }
     
     @Override
@@ -80,6 +84,7 @@ public class VectorCorrection extends AbstractVectorModification {
     
     @Override
     protected void recalculateLayer() {
+        length = source.getLength();
     }
 
     @Override

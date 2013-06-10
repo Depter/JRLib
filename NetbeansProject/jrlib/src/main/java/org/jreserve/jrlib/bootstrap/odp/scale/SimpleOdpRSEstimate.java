@@ -30,8 +30,6 @@ import org.jreserve.jrlib.util.method.AbstractSimpleMethodSelection;
  */
 public class SimpleOdpRSEstimate extends AbstractSimpleMethodSelection<OdpResidualScale, OdpRSMethod> implements OdpResidualScale {
     
-    private int developments;
-    
     /**
      * Creates an instance for the given source, using the given method to
      * fill NaN values.
@@ -76,11 +74,6 @@ public class SimpleOdpRSEstimate extends AbstractSimpleMethodSelection<OdpResidu
 
     @Override
     protected void initCalculation() {
-        developments = source.getLength();
-    }
-    
-    @Override
-    public int getLength() {
-        return developments;
+        length = source.getLength();
     }
 }

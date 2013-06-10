@@ -16,10 +16,6 @@
  */
 package org.jreserve.jrlib;
 
-import org.jreserve.jrlib.CalculationData;
-import org.jreserve.jrlib.AbstractCalculationData;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +28,7 @@ public class AbstractCalculationDataTest {
 
     private AbstractCalculationDataImpl source;
     private AbstractCalculationDataImpl data;
+    private ChangeCounter dataListener;
     
     public AbstractCalculationDataTest() {
     }
@@ -40,6 +37,8 @@ public class AbstractCalculationDataTest {
     public void setUp() {
         source = new AbstractCalculationDataImpl();
         data = new AbstractCalculationDataImpl(source);
+        dataListener = new ChangeCounter();
+        data.addCalculationListener(dataListener);
     }
 
     @Test
@@ -50,62 +49,28 @@ public class AbstractCalculationDataTest {
     }
 
     @Test
-    public void testRecalculate_Source_Detached() {
-        source.detach();
-        source.recalculate();
-        assertEquals(1, source.recalculateCount);
-        assertEquals(0, data.recalculateCount);
-    }
-
-    @Test
     public void testRecalculate_Data() {
         data.recalculate();
-        assertEquals(1, source.recalculateCount);
+        assertEquals(0, source.recalculateCount);
         assertEquals(1, data.recalculateCount);
     }
-
+    
     @Test
-    public void testRecalculate_Data_Detached() {
-        data.detach();
-        data.recalculate();
-        assertEquals(1, source.recalculateCount);
-        assertEquals(1, data.recalculateCount);
+    public void testGetSourceState() {
+        assertEquals(CalculationState.VALID, data.getSourceState());
+        
+        source.setState(CalculationState.INVALID);
+        assertEquals(CalculationState.INVALID, data.getSourceState());
+        
+        source.setState(CalculationState.VALID);
+        assertEquals(CalculationState.VALID, data.getSourceState());
     }
-
+    
     @Test
-    public void testDetach_Source() {
-        Listener sourceListener = new Listener();
-        source.addChangeListener(sourceListener);
-        
-        Listener dataListener = new Listener();
-        data.addChangeListener(dataListener);
-        
+    public void testSourceRecalculate() {
         source.recalculate();
-        assertEquals(1, sourceListener.count);
-        assertEquals(1, dataListener.count);
-        
-        source.detach();
-        data.recalculate();
-        assertEquals(1, sourceListener.count);
-        assertEquals(2, dataListener.count);
-    }
-
-    @Test
-    public void testDetach_Data() {
-        Listener sourceListener = new Listener();
-        source.addChangeListener(sourceListener);
-        
-        Listener dataListener = new Listener();
-        data.addChangeListener(dataListener);
-        
-        data.recalculate();
-        assertEquals(1, sourceListener.count);
-        assertEquals(1, dataListener.count);
-        
-        data.detach();
-        data.recalculate();
-        assertEquals(1, sourceListener.count);
-        assertEquals(1, dataListener.count);
+        assertEquals(2, dataListener.getChangeCount());
+        assertEquals(1, data.recalculateCount);
     }
 
     public class AbstractCalculationDataImpl extends AbstractCalculationData {
@@ -123,16 +88,5 @@ public class AbstractCalculationDataTest {
         protected void recalculateLayer() {
             recalculateCount++;
         }
-    }
-
-    private class Listener implements ChangeListener {
-        
-        private int count;
-        
-        @Override
-        public void stateChanged(ChangeEvent e) {
-            count++;
-        }
-    
     }
 }

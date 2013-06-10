@@ -104,5 +104,15 @@ public abstract class Bootstrapper<T extends CalculationData> implements Runnabl
      * Extending class, should make a bootstrap iteration an 
      * store the results.
      */
-    protected abstract void bootstrap();
+    protected void bootstrap() {
+        source.recalculate();
+        collectBootstrapResult();
+    }
+    
+    /**
+     * Called after the source is recalculated. The
+     * implementations should collect their results (estimates)
+     * at this call.
+     */
+    protected abstract void collectBootstrapResult();
 }

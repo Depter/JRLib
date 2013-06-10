@@ -16,8 +16,6 @@
  */
 package org.jreserve.jrlib.linkratio.curve;
 
-import org.jreserve.jrlib.linkratio.curve.SimpleLinkRatioSmoothing;
-import org.jreserve.jrlib.linkratio.curve.UserInputLRCurve;
 import org.jreserve.jrlib.ChangeCounter;
 import org.jreserve.jrlib.TestConfig;
 import org.jreserve.jrlib.TestData;
@@ -54,7 +52,7 @@ public class SimpleLinkRatioSmoothingTest {
         lr = new SimpleLinkRatio(factors);
         smoothing = new SimpleLinkRatioSmoothing(lr, createTail(lr), lr.getLength()+1);
         listener = new ChangeCounter();
-        smoothing.addChangeListener(listener);
+        smoothing.addCalculationListener(listener);
     }
     
     private UserInputLRCurve createTail(LinkRatio lr) {
@@ -89,7 +87,7 @@ public class SimpleLinkRatioSmoothingTest {
         assertTrue(!Double.isNaN(smoothing.getValue(length-1)));
         
         smoothing.setDevelopmentCount(length-1);
-        assertEquals(1, listener.getChangeCount());
+        assertEquals(2, listener.getChangeCount());
         assertEquals(length-1, smoothing.getLength());
         assertTrue(Double.isNaN(smoothing.getValue(length-1)));
     }

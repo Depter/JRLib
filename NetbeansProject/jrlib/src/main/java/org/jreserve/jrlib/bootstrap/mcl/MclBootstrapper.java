@@ -17,6 +17,7 @@
 package org.jreserve.jrlib.bootstrap.mcl;
 
 import org.jreserve.jrlib.bootstrap.Bootstrapper;
+import org.jreserve.jrlib.bootstrap.mcl.pseudodata.MclPseudoData;
 import org.jreserve.jrlib.estimate.Estimate;
 
 /**
@@ -35,8 +36,9 @@ import org.jreserve.jrlib.estimate.Estimate;
  * @author Peter Decsi
  * @version 1.0
  */
-public class MclBootstrapper extends Bootstrapper<MclBootstrapEstimateBundle> {
+public class MclBootstrapper extends Bootstrapper<MclPseudoData> {
     
+    private MclBootstrapEstimateBundle bundle;
     protected final double [][] paidReserves;
     protected final double [][] incurredReserves;
     protected final double [][] paidIncurredReserves;
@@ -48,19 +50,19 @@ public class MclBootstrapper extends Bootstrapper<MclBootstrapEstimateBundle> {
      * @throws NullPointerException if `source` is null.
      * @throws IllegalArgumentException if `bootstrapCount` is less then 1.
      */
-    public MclBootstrapper(MclBootstrapEstimateBundle source, int bootstrapCount) {
-        super(source, bootstrapCount);
+    public MclBootstrapper(MclBootstrapEstimateBundle bundle, int bootstrapCount) {
+        super(bundle.getSourcePseudoData(), bootstrapCount);
+        this.bundle = bundle;
         paidReserves = new double[bootstrapCount][];
         incurredReserves = new double[bootstrapCount][];
         paidIncurredReserves = new double[bootstrapCount][];
     }
     
     @Override
-    protected void bootstrap() {
-        source.recalculate();
-        paidReserves[iteration] = source.getPaidReserves();
-        incurredReserves[iteration] = source.getIncurredReserves();
-        paidIncurredReserves[iteration] = source.getPaidIncurredReserves();
+    protected void collectBootstrapResult() {
+        paidReserves[iteration] = bundle.getPaidReserves();
+        incurredReserves[iteration] = bundle.getIncurredReserves();
+        paidIncurredReserves[iteration] = bundle.getPaidIncurredReserves();
         iteration++;
     }
     

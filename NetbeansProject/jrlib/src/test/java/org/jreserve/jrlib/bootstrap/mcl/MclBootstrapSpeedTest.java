@@ -164,7 +164,7 @@ public class MclBootstrapSpeedTest {
         MclCorrelation paidLambda = new MclCorrelation(paidLr, paidCr);
         MclCorrelation incurredLambda = new MclCorrelation(incurredLr, incurredCr);
         MclCalculationBundle calcBundle = new MclCalculationBundle(paidLambda, incurredLambda);
-        MclEstimateBundle eb = new MclEstimateBundle(calcBundle, false);
+        MclEstimateBundle eb = new MclEstimateBundle(calcBundle);
         paidMean = eb.getPaidEstimate().getReserve();
         incurredMean = eb.getIncurredEstimate().getReserve();
     }

@@ -119,6 +119,11 @@ public class DefaultOdpScaledResidualTriangle extends AbstractTriangle<OdpResidu
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     protected void recalculateLayer() {
         doRecalculate();
     }

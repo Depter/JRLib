@@ -114,6 +114,11 @@ public class DevelopmentFactors extends AbstractTriangle<ClaimTriangle> implemen
     }
 
     @Override
+    protected boolean withinBounds(int accident) {
+        return 0<=accident && accident<accidents;
+    }
+
+    @Override
     protected void recalculateLayer() {
         doRecalculate();
     }

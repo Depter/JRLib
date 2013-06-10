@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.claimratio;
 
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.ratio.DefaultRatioTriangle;
 import org.jreserve.jrlib.triangle.ratio.RatioTriangle;
@@ -31,8 +32,6 @@ import org.jreserve.jrlib.util.method.AbstractSimpleMethodSelection;
  * @version 1.0
  */
 public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, ClaimRatioMethod> implements ClaimRatio {
-    
-    private int developments;
     
     /**
      * Creates an instance for the given input, using the 
@@ -104,7 +103,7 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
         super(source, 
               (method instanceof DefaultCRMethod)? method : new DefaultCRMethod(),
               method);
-        this.developments = source.getLength();
+        this.length = source.getLength();
         super.recalculateLayer();
     }
     
@@ -141,11 +140,6 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
     protected void initCalculation() {
         //developments = source.getLength();
     }
-
-    @Override
-    public int getLength() {
-        return developments;
-    }
     
     /**
      * Sets the length for the claim ratios. If 'developments' is less 
@@ -153,8 +147,9 @@ public class SimpleClaimRatio extends AbstractSimpleMethodSelection<ClaimRatio, 
      * change event.
      */
     public void setDevelopmentCount(int developments) {
-        this.developments = developments<0? 0 : developments;
+        setState(CalculationState.INVALID);
+        this.length = developments<0? 0 : developments;
         super.recalculateLayer();
-        fireChange();
+        setState(CalculationState.VALID);
     }
 }

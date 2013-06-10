@@ -67,7 +67,7 @@ public class BootstrapCallBackTest {
         }
         
         @Override
-        protected void bootstrap() {
+        protected void collectBootstrapResult() {
         }
     }
     

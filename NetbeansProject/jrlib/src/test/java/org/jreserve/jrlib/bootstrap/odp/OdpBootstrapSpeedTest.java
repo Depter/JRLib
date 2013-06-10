@@ -52,10 +52,10 @@ public class OdpBootstrapSpeedTest {
     
     private final static long SEED = 100;
     private final static int N = 100000;
-    private final static double LIMIT = 5d;
+    private final static double LIMIT = 6d;
     private final static long TIMEOUT = 2L * ((long)LIMIT * 1000L);
     
-    private EstimateBootstrapper<OdpEstimate> bootstrap;
+    private EstimateBootstrapper<ClaimTriangle> bootstrap;
     private double mean;
     
     @BeforeClass
@@ -83,7 +83,7 @@ public class OdpBootstrapSpeedTest {
         OdpGammaProcessSimulator procSim = new OdpGammaProcessSimulator(rnd, residuals.getSourceOdpResidualScales());
         lrs.getSourceFactors().setSource(pseudoCik);
         OdpEstimate odpEstimate = new OdpEstimate(lrs, procSim);
-        bootstrap = new EstimateBootstrapper<OdpEstimate>(odpEstimate, N);
+        bootstrap = new EstimateBootstrapper<ClaimTriangle>(pseudoCik, N, odpEstimate);
     }
     
     private OdpResidualScale getResidualScale(LinkRatio lrs) {
@@ -96,8 +96,6 @@ public class OdpBootstrapSpeedTest {
     private double calculateReserve(LinkRatio lrs) {
         ChainLadderEstimate e = new ChainLadderEstimate(lrs);
         double reserve = e.getReserve();
-        e.setCallsForwarded(false);
-        e.detach();
         return reserve;
     }
     

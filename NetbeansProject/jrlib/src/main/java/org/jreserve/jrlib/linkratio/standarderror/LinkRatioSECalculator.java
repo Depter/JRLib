@@ -48,7 +48,6 @@ import org.jreserve.jrlib.vector.AbstractVector;
  */
 public class LinkRatioSECalculator extends AbstractVector<LinkRatioScale> implements LinkRatioSE {
 
-    private int developments;
     private double[] values;
     
     public LinkRatioSECalculator(LinkRatioScale source) {
@@ -82,13 +81,8 @@ public class LinkRatioSECalculator extends AbstractVector<LinkRatioScale> implem
     }
 
     @Override
-    public int getLength() {
-        return developments;
-    }
-
-    @Override
     public double getValue(int development) {
-        if(development < developments && development >= 0)
+        if(development < length && development >= 0)
             return values[development];
         return Double.NaN;
     }
@@ -104,14 +98,14 @@ public class LinkRatioSECalculator extends AbstractVector<LinkRatioScale> implem
     
     private void doRecalculate() {
         initState();
-        for(int d=0; d<developments; d++)
+        for(int d=0; d<length; d++)
             values[d] = calculateSE(d);
         clearState();
     }
     
     private void initState() {
-        developments = source.getLength();
-        values = new double[developments];
+        length = source.getLength();
+        values = new double[length];
         lrk = getSourceLinkRatios();
         accidents = getSourceFactors().getAccidentCount();
     }
