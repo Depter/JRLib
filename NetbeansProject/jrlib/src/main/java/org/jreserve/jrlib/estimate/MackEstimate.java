@@ -108,17 +108,41 @@ public class MackEstimate extends AbstractEstimate<LinkRatioSE> {
     }
 
     private void doRecalculate() {
-        initState();
-        calculateProcessSDs();
-        calculateParameterSDs();
-        sumSDs();
+        if(source == null) {
+            initEmptyState();
+            calculateEmptyState();
+        } else {
+            initSourceState();
+            calculateSourceState();
+        }
     }
     
-    private void initState() {
+    private void initEmptyState() {
+        super.accidents = 0;
+        super.developments = 0;
+        super.values = new double[0][0];
+    }
+    
+    private void initSourceState() {
         super.accidents = cik.getAccidentCount();
         super.developments = lrSE.getLength()+1;
         LinkRatio lrs = lrSE.getSourceLinkRatios();
         super.values = EstimateUtil.completeTriangle(cik, lrs);
+    }
+    
+    private void calculateEmptyState() {
+        procSEs  = new double[0];
+        paramSEs = new double[0];
+        SEs      = new double[0];
+        procSE   = Double.NaN;
+        paramSE  = Double.NaN;
+        SE       = Double.NaN;
+    }
+    
+    private void calculateSourceState() {
+        calculateProcessSDs();
+        calculateParameterSDs();
+        sumSDs();
     }
     
     private void calculateProcessSDs() {

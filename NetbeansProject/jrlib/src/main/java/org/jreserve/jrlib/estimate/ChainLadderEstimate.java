@@ -17,7 +17,6 @@
 package org.jreserve.jrlib.estimate;
 
 import org.jreserve.jrlib.linkratio.LinkRatio;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
  * The class calculates the standard chain-ladder reserve estimates. The
@@ -28,35 +27,32 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ChainLadderEstimate extends AbstractEstimate<LinkRatio> {
-
-    private LinkRatio lrs;
-    private ClaimTriangle ciks;
+public class ChainLadderEstimate extends AbstractTriangleEstimate<LinkRatio> {
 
     public ChainLadderEstimate(LinkRatio lrs) {
-        super(lrs);
-        this.lrs = lrs;
-        this.ciks = lrs.getSourceTriangle();
-        doRecalculate();
-    }
-
-    @Override
-    public int getObservedDevelopmentCount(int accident) {
-        return ciks.getDevelopmentCount(accident);
+        super(lrs, lrs.getSourceTriangle());
+        super.recalculateLayer();
     }
 
     public LinkRatio getSourceLinkRatios() {
-        return lrs;
-    }
-
-    @Override
-    protected void recalculateLayer() {
-        doRecalculate();
+        return source;
     }
     
-    private void doRecalculate() {
-        accidents = ciks.getAccidentCount();
-        developments = lrs.getLength()+1;
-        values = EstimateUtil.completeTriangle(ciks, lrs);
+    @Override
+    protected void initDimensions() {
+        if(source == null) {
+            accidents = 0;
+            developments = 0;
+        } else {
+            accidents = triangle.getAccidentCount();
+            developments = source.getLength()+1;
+        }
+    }
+    
+    protected double getEstimatedValue(int accident, int development) {
+        int d = development-1;
+        return d<0?
+                Double.NaN :
+                values[accident][d] * source.getValue(d);
     }
 }

@@ -24,6 +24,8 @@ import org.jreserve.jrlib.estimate.BornhuetterFergusonEstimate
 import org.jreserve.jrlib.estimate.ExpectedLossRatioEstimate
 import org.jreserve.jrlib.estimate.CapeCodEstimate
 import org.jreserve.jrlib.estimate.ChainLadderEstimate
+import org.jreserve.jrlib.estimate.ProcessSimulatorCompositeEstimate
+import org.jreserve.jrlib.estimate.ProcessSimulatorEstimate
 import org.jreserve.jrlib.linkratio.standarderror.LinkRatioSE
 import org.jreserve.jrlib.estimate.MackEstimate
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
@@ -36,6 +38,7 @@ import org.jreserve.grscript.util.PrintDelegate
 import org.jreserve.grscript.AbstractDelegate
 import org.jreserve.jrlib.triangle.Cell
 import org.jreserve.jrlib.estimate.CompositeEstimate
+import org.jreserve.jrlib.estimate.ProcessSimulatorEstimate
 
 /**
  *
@@ -173,12 +176,26 @@ class EstimateDelegate extends AbstractDelegate {
         }
     }
     
-    Estimate compositeEstimate(Estimate... estimates) {
-        new CompositeEstimate(estimates)
+    Estimate compositeEstimate(Collection estimates) {
+        return isProcessSimulators(estimates)?
+            createCompositeProcessSimulator(estimates) :
+            new CompositeEstimate(estimates)
     }
     
-    Estimate compositeEstimate(Collection estimates) {
-        new CompositeEstimate(estimates)
+    Estimate compositeEstimate(Estimate... estimates) {
+        return isProcessSimulators(estimates)?
+            createCompositeProcessSimulator(estimates) :
+            new CompositeEstimate(estimates)
+    }
+    
+    private boolean isProcessSimulators(def estimates) {
+        estimates.findAll {!(it instanceof ProcessSimulatorEstimate)}.isEmpty()
+    }
+    
+    private Estimate createCompositeProcessSimulator(def estimates) {
+        ProcessSimulatorEstimate[] result = new ProcessSimulatorEstimate[estimates.size()]
+        estimates.eachWithIndex {it, i -> result[i] = it}
+        new ProcessSimulatorCompositeEstimate(result);
     }
     
     void printData(String title, Estimate estimate) {

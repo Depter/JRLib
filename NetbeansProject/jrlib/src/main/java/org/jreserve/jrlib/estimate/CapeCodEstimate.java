@@ -17,7 +17,6 @@
 package org.jreserve.jrlib.estimate;
 
 import org.jreserve.jrlib.linkratio.LinkRatio;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.vector.Vector;
 
 /**
@@ -36,10 +35,8 @@ import org.jreserve.jrlib.vector.Vector;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CapeCodEstimate extends AbstractEstimate<CapeCodEstimateInput> {
+public class CapeCodEstimate extends AbstractTriangleEstimate<CapeCodEstimateInput> {
 
-    private ClaimTriangle cik;
-    
     /**
      * Creates an instance for the given input.
      * 
@@ -55,72 +52,63 @@ public class CapeCodEstimate extends AbstractEstimate<CapeCodEstimateInput> {
      * @throws NullPointerException if `source` is null.
      */
     public CapeCodEstimate(CapeCodEstimateInput source) {
-        super(source);
-        cik = source.getSourceLinkRatio().getSourceTriangle();
-        doRecalculate();
+        super(source, source.getSourceLinkRatio().getSourceTriangle());
+        super.recalculateLayer();
     }
     
     public CapeCodEstimateInput getSource() {
         return source;
     }
     
+    private double[] gammas;
+    private double kappa;
+    private double ultimate;
+    
     @Override
-    public int getObservedDevelopmentCount(int accident) {
-        return cik.getDevelopmentCount(accident);
+    protected void initDimensions() {
+        if(source == null)
+            initDimensionsFromEmpty();
+        else
+            initDimensionsFromSource();
+    }
+    
+    private void initDimensionsFromEmpty() {
+        accidents = 0;
+        developments = 0;
+    }
+    
+    private void initDimensionsFromSource() {
+        accidents = triangle.getAccidentCount();
+        developments = source.getDevelopmentCount() + 1;
+        gammas = EstimateUtil.getCompletionRatios(source.getSourceLinkRatio());
+        kappa = getKappa(gammas);
     }
 
-    @Override
-    protected void recalculateLayer() {
-        doRecalculate();
-    }
-    
-    private void doRecalculate() {
-        initCalculation();
-        double[] gammas = EstimateUtil.getCompletionRatios(source.getSourceLinkRatio());
-        double kappa = getKappa(gammas);
-        
-        for(int a=0; a<accidents; a++) {
-            double ultimate = source.getExposure(a) * kappa;
-            int observedDevs = cik.getDevelopmentCount(a);
-            
-            for(int d=0; d<observedDevs; d++)
-                values[a][d] = cik.getValue(a, d);
-            
-            for(int d=observedDevs; d<developments; d++)
-                values[a][d] = (d==(developments-1)? 1d: gammas[d]) * ultimate;
-        }
-    }
-    
-    private void initCalculation() {
-        accidents = cik.getAccidentCount();
-        developments = source.getDevelopmentCount() + 1;
-        values = new double[accidents][developments];
-    }
-    
-    private double[] getGammas() {
-        double[] gammas = new double[developments];
-        gammas[developments-1] = 1d;
-        for(int d=(developments-2); d>=0; d--) {
-            double lr = source.getLinkRatio(d);
-            gammas[d] = gammas[d+1] / lr;
-        }
-        return gammas;
-    }
-    
     private double getKappa(double[] gammas) {
         int gammaLength = gammas.length;
         double sumS = 0d;
         double sumEG = 0d;
         
         for(int a=0; a<accidents; a++) {
-            int dev = cik.getDevelopmentCount(a) - 1;
+            int dev = triangle.getDevelopmentCount(a) - 1;
             
-            sumS += cik.getValue(a, dev);
+            sumS += triangle.getValue(a, dev);
             double gamma = (dev<0)? Double.NaN : dev >= gammaLength? 1d : gammas[dev];
             
             sumEG += (gamma * source.getExposure(a));
         }
         
         return (sumEG == 0d)? Double.NaN : (sumS / sumEG);
+    }
+    
+    @Override
+    protected void fillAccident(int accident) {
+        ultimate = source.getExposure(accident) * kappa;
+        super.fillAccident(accident);
+    }
+    
+    @Override
+    protected double getEstimatedValue(int a, int d) {
+        return ((d+1)==developments? 1d: gammas[d]) * ultimate;
     }
 }

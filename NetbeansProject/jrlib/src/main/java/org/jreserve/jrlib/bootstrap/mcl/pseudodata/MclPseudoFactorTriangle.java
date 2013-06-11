@@ -151,11 +151,6 @@ class MclPseudoFactorTriangle
     public void recalculateLayer() {
     }
     
-    @Override
-    protected void setState(CalculationState state) {
-        super.setState(state);
-    }
-    
     void setValueAt(int accident, int development, MclResidualCell cell) {
         if(withinBounds(accident, development)) {
             double r = getResidualFromCell(cell);

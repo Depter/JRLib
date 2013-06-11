@@ -319,6 +319,16 @@ class EstimateDelegateTest {
             }
         }
     }
+
+    @Test
+    public void testComposite() {
+        String script = 
+        "cl = CLEstimate(lrs)\n"                            +
+        "cc = CCEstimate(lrs, exposure)\n"                  +
+        "compositeEstimate(cl, cl, cl, cl, cl, cl, cc, cc)" ;
+        Estimate estimate = runScript(script)
+        assertTrue(estimate instanceof org.jreserve.jrlib.estimate.ProcessSimulatorEstimate)
+    }
     
     @Test
     public void testPrintData() {

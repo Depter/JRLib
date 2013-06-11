@@ -45,6 +45,10 @@ public abstract class AbstractMultiSourceCalculationData<T extends CalculationDa
             sources[i].addCalculationListener(sourceListener);
     }
     
+    protected int getSourceCount() {
+        return sourceCount;
+    }
+    
     @Override
     protected CalculationState getSourceState() {
         for(CalculationData source : sources)

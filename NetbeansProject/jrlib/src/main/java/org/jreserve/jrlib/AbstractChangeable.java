@@ -52,7 +52,8 @@ public abstract class AbstractChangeable implements CalculationData {
         setState(CalculationState.VALID);
     }
     
-    protected void setState(CalculationState state) {
+    @Override
+    public void setState(CalculationState state) {
         if(this.state != state) {
             this.state = state;
             fireStateChange();

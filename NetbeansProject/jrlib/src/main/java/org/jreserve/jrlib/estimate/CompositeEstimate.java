@@ -20,8 +20,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.jreserve.jrlib.AbstractMultiSourceCalculationData;
+import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationState;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.TriangleUtil;
+import org.jreserve.jrlib.bootstrap.StaticProcessSimulator;
+import org.jreserve.jrlib.bootstrap.ProcessSimulator;
 
 /**
  * The CompositeEstimate class allowes to combine the result of multiple
@@ -35,7 +39,9 @@ import org.jreserve.jrlib.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CompositeEstimate extends AbstractMultiSourceCalculationData<Estimate> implements Estimate {
+public class CompositeEstimate 
+    extends AbstractMultiSourceCalculationData<Estimate> 
+    implements Estimate {
     
     private static Estimate[] getUniqueEstimates(Estimate[] estimates) {
         List<Estimate> result = new ArrayList<Estimate>(estimates.length);
@@ -85,6 +91,17 @@ public class CompositeEstimate extends AbstractMultiSourceCalculationData<Estima
         System.arraycopy(estimates, 0, this.estimates, 0, accidents);
     }
 
+    /**
+     * Returns the Estimate used to calculate the values for the given 
+     * accident period, or 'null' it 'accident' falls outside the bounds 
+     * '[0; {@link #getAccidentCount() getAccidentCount()}['.
+     */
+    public Estimate getEstimate(int accident) {
+        return withinBounds(accident)?
+                estimates[accident] :
+                null;
+    }
+    
     @Override
     public int getAccidentCount() {
         return accidents;
@@ -158,17 +175,22 @@ public class CompositeEstimate extends AbstractMultiSourceCalculationData<Estima
     }
 
     private void doRecalculate() {
-        recalculateDevelopments();
+        if(sources == null) {
+            accidents = 0;
+            developments = 0;
+        } else {
+            recalculateDevelopments();
+        }
         values = new double[accidents][developments];
         recalculateValues();
     }
     
     private void recalculateDevelopments() {
-        developments = (accidents==0)? 0 : sources[0].getDevelopmentCount();
-        for(int a=1; a<accidents; a++) {
-            int aD = estimates[a].getDevelopmentCount();
-            if(aD < developments)
-                developments = aD;
+        developments = -1;
+        for(Estimate e : sources) {
+            int d = e==null? 0 : e.getDevelopmentCount();
+            if(developments==-1 || developments>d)
+                developments = d;
         }
     }
     

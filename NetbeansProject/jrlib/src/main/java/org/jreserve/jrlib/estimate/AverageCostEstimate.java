@@ -28,7 +28,7 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AverageCostEstimate extends AbstractEstimate<AverageCostEstimate.AverageCostEstimateInput> {
+public class AverageCostEstimate extends AbstractTriangleEstimate<AverageCostEstimate.AverageCostEstimateInput> {
     
     /**
      * Creates a new instance for the given input.
@@ -45,13 +45,8 @@ public class AverageCostEstimate extends AbstractEstimate<AverageCostEstimate.Av
      * @throws NullPointerException if `input` is null.
      */
     public AverageCostEstimate(AverageCostEstimateInput input) {
-        super(input);
-        doRecalculate();
-    }
-    
-    @Override
-    public int getObservedDevelopmentCount(int accident) {
-        return source.numberCik.getDevelopmentCount(accident);
+        super(input, input.numberCik);
+        super.recalculateLayer();
     }
 
     public LinkRatio getSourceCostLinkRatios() {
@@ -61,26 +56,20 @@ public class AverageCostEstimate extends AbstractEstimate<AverageCostEstimate.Av
     public LinkRatio getSourceNumberLinkRatios() {
         return source.numberLrs;
     }
-
+    
+    private double[][] numbers;
+    private double[][] costs;
+    
     @Override
-    protected void recalculateLayer() {
-        doRecalculate();
-    }
-    
-    private void doRecalculate() {
-        initValues();
-        double[][] number = EstimateUtil.completeTriangle(source.numberCik, source.numberLrs);
-        double[][] cost = EstimateUtil.completeTriangle(source.costCik, source.costLrs);
-        
-        for(int a=0; a<accidents; a++)
-            for(int d=0; d<developments; d++)
-                values[a][d] = number[a][d] * cost[a][d];
-    }
-    
-    private void initValues() {
-        initAccidents();
-        initDevelopments();
-        values = new double[accidents][developments];
+    protected void initDimensions() {
+        if(source == null) {
+            accidents = 0;
+            developments = 0;
+        } else {
+            initAccidents();
+            initDevelopments();
+            initValues();
+        }
     }
     
     private void initAccidents() {
@@ -94,6 +83,27 @@ public class AverageCostEstimate extends AbstractEstimate<AverageCostEstimate.Av
         int costDevs = source.costLrs.getLength();
         developments = (numberDevs < costDevs)? numberDevs : costDevs;
         developments++;
+    }    
+    
+    private void initValues() {
+        numbers = EstimateUtil.completeTriangle(source.numberCik, source.numberLrs);
+        costs = EstimateUtil.completeTriangle(source.costCik, source.costLrs);
+    }
+    
+    @Override
+    protected double getObservedValue(int accident, int development) {
+        return getEstimatedValue(accident, development);
+    }
+    
+    @Override
+    protected double getEstimatedValue(int accident, int development) {
+        return numbers[accident][development] * costs[accident][development];
+    }
+    
+    @Override
+    protected void cleanUpCalculation() {
+        numbers = null;
+        costs = null;
     }
     
     public static class AverageCostEstimateInput extends AbstractMultiSourceCalculationData<LinkRatio> {

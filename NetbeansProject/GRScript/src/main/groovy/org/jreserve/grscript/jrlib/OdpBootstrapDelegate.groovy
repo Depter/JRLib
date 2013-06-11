@@ -27,6 +27,7 @@ import org.jreserve.jrlib.bootstrap.odp.OdpGammaProcessSimulator
 import org.jreserve.jrlib.bootstrap.odp.OdpConstantProcessSimulator
 import org.jreserve.jrlib.bootstrap.ProcessSimulator
 import org.jreserve.jrlib.linkratio.LinkRatio
+import org.jreserve.jrlib.estimate.ProcessSimulatorEstimate
 
 /**
  *
@@ -36,6 +37,7 @@ import org.jreserve.jrlib.linkratio.LinkRatio
 class OdpBootstrapDelegate extends AbstractBootstrapDelegate implements FunctionProvider {
     
     private String processType = "Gamma"
+    private ProcessSimulatorEstimate estimate;
     private OdpScaledResidualTriangle residuals
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
@@ -56,6 +58,10 @@ class OdpBootstrapDelegate extends AbstractBootstrapDelegate implements Function
         this.processType = type
     }
     
+    void estimate(ProcessSimulatorEstimate estimate) {
+        this.estimate = estimate
+    }
+    
     void residuals(OdpScaledResidualTriangle residuals) {
         this.residuals = residuals
     }
@@ -67,13 +73,23 @@ class OdpBootstrapDelegate extends AbstractBootstrapDelegate implements Function
         if(residuals == null)
             throw new IllegalStateException("Residuals not set!")
         OdpPseudoClaimTriangle pseudoCik = new OdpPseudoClaimTriangle(rnd, residuals, super.getSegments());
-        ProcessSimulator procSim = createProcessSimulator(rnd)
         
         LinkRatio lrs = residuals.getSourceLinkRatios()
+        Estimate bsEstimate = buildEstimate(lrs, rnd);
+        
         lrs.getSourceFactors().setSource(pseudoCik);
-        OdpEstimate odpEstimate = new OdpEstimate(lrs, procSim);
         int count = super.getCount()
-        return new EstimateBootstrapper(pseudoCik, count, odpEstimate);
+        return new EstimateBootstrapper(pseudoCik, count, bsEstimate);
+    }
+    
+    private Estimate buildEstimate(LinkRatio lrs, JRandom rnd) {
+        ProcessSimulator procSim = createProcessSimulator(rnd)
+        if(estimate) {
+            estimate.setProcessSimulator(procSim)
+            return estimate
+        } else {
+            new OdpEstimate(lrs, procSim);
+        }
     }
     
     private ProcessSimulator createProcessSimulator(JRandom rnd) {

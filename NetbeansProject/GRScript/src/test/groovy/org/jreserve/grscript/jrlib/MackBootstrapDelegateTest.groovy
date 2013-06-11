@@ -69,6 +69,7 @@ class MackBootstrapDelegateTest {
         executor.addFunctionProvider(new LinkRatioCurveDelegate())
         executor.addFunctionProvider(new LinkRatioScaleDelegate())
         executor.addFunctionProvider(new LRResidualTriangleDelegate())
+        executor.addFunctionProvider(new EstimateDelegate())
         executor.addFunctionProvider(new MackBootstrapDelegate())
     }
     
@@ -87,6 +88,43 @@ class MackBootstrapDelegateTest {
         double[][] res = (double[][]) executor.runScript(BASE_SCRIPT + script)
         def paidLrRes = executor.getVariable("paidLrRes")
         double mean = BootstrapUtil.getMeanTotalReserve(res)
+        assertEquals(1000, res.length)
+    }
+    
+    @Test
+    public void testEstEstimate() {
+        String script = 
+        "paidData = apcPaid()\n"                        +
+        "paidData = cummulate(paidData)\n"              +
+        "paidTriangle = triangle(paidData)\n"           +
+        ""                                              +
+        "paidLr = linkRatio(paidData)\n"                +
+        "paidLr = smooth(paidLr, 10, \"exponential\")\n"+
+        "paidLrScales = scale(paidLr)\n"                +
+        ""                                              +
+        "paidLrRes = residuals(paidLrScales) {\n"       +
+        "    exclude(accident:0, development:6)\n"      +
+        "    exclude(accident:6, development:0)\n"      +
+        "    adjust()\n"                                +
+        "}\n"                                           +
+        ""                                              +
+        "cl = CLEstimate(paidLr)\n"                     +
+        ""                                              +
+        "bootstrap = mackBootstrap {\n"                 +
+        "   count 1000\n"                               +
+        "   random \"Java\", 10\n"                      +
+        "   residuals paidLrRes\n"                      +
+        "   estimate cl\n"                              +
+        "   process \"Gamma\"\n"                        +
+        "   segment {\n"                                +
+        "       from(accident:0, development:0)\n"      +
+        "       to(a:8, d:2)\n"                         +
+        "   }\n"                                        +
+        "}\n"                                           +
+        "bootstrap.run()\n"                             +
+        "bootstrap.getReserves()\n"                     ;
+        
+        double[][] res = (double[][]) executor.runScript(script)
         assertEquals(1000, res.length)
     }
 }

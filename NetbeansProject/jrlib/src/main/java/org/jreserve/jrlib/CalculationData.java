@@ -47,6 +47,12 @@ public interface CalculationData {
     public CalculationState getState();
     
     /**
+     * Sets the state of this object. Calling this method
+     * will fire an event, only if the state really changed.
+     */
+    public void setState(CalculationState state);
+    
+    /**
      * Recalculates the state of this calculation data. After calling this
      * method the following actions are made in strict order:
      * 

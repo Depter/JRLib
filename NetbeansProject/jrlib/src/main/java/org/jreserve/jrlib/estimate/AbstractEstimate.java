@@ -32,8 +32,10 @@ import org.jreserve.jrlib.triangle.TriangleUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractEstimate<T extends CalculationData> extends AbstractCalculationData<T> implements Estimate {
-    
+public abstract class AbstractEstimate<T extends CalculationData>
+    extends AbstractCalculationData<T> 
+    implements Estimate {
+
     protected int accidents;
     protected int developments;
     protected double[][] values;
@@ -99,5 +101,5 @@ public abstract class AbstractEstimate<T extends CalculationData> extends Abstra
         for(int a=0; a<accidents; a++)
             result[a] = getReserve(a);
         return result;
-    }
+    }    
 }

@@ -32,11 +32,14 @@ paidRes = residuals(paidResScale) {
     exclude(8, 0)
 }
 
+estimate = CLEstimate(paidLr)
+
 //Bootstrap
 bootstrap = odpBootstrap {
     count 1000
     random "Java", 10   //random(String) , random(Random), DEFAULT = Java
     residuals paidRes
+    estimate estimate
     process "Gamma"     //Default: Gamma, values: [Gamma, Constant]
     segment {
         from(accient:0, development:0)

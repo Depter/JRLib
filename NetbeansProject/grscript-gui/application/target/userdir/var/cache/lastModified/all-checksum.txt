@@ -1,0 +1,9 @@
+home=1370964017114
+bin=1370964017114
+etc=1370964017114
+grscript_gui=1370964017114
+platform=1370964017114
+user=1370964017114
+crc=7
+locale=nl_NL
+branding=grscript_gui

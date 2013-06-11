@@ -161,8 +161,8 @@ public class MclBootstrapSpeedTest3 {
         
         double bsPaidMean = BootstrapUtil.getMeanTotalReserve(bootstrap.getPaidReserves());
         double bsIncurredMean = BootstrapUtil.getMeanTotalReserve(bootstrap.getIncurredReserves());
-        printHistogram(bootstrap.getPaidReserves(), paidMean);
-        printHistogram(bootstrap.getIncurredReserves(), incurredMean);
+//        printHistogram(bootstrap.getPaidReserves(), paidMean);
+//        printHistogram(bootstrap.getIncurredReserves(), incurredMean);
         
         String msg = "MCL-Bootstrapping3 %d times took %.3f seconds.%n";
         msg += "\tPaid-reserve:%n\t\tBootstrap: %.0f%n\t\tOriginal: %.0f%n";

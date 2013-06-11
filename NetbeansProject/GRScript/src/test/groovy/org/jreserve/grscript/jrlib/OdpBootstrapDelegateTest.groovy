@@ -68,6 +68,7 @@ class OdpBootstrapDelegateTest {
         executor.addFunctionProvider(new LinkRatioCurveDelegate())
         executor.addFunctionProvider(new ClaimResidualScaleDelegate())
         executor.addFunctionProvider(new ScaledClaimResidualDelegate())
+        executor.addFunctionProvider(new EstimateDelegate())
         executor.addFunctionProvider(new OdpBootstrapDelegate())
     }
     
@@ -91,6 +92,41 @@ class OdpBootstrapDelegateTest {
         double[][] res = (double[][]) executor.runScript(BASE_SCRIPT + script)
         def paidResScale = executor.getVariable("paidResScale")
         double mean = BootstrapUtil.getMeanTotalReserve(res)
+        assertEquals(1000, res.length)
+    }
+    
+    @Test
+    public void testSetEstimate() {
+        String script = 
+            "paidData = apcPaid()\n"                        +
+            "paidData = cummulate(paidData)\n"              +
+            "paidTriangle = triangle(paidData)\n"           +
+            "paidLr = linkRatio(paidData)\n"                +
+            "paidLr = smooth(paidLr, 10, \"exponential\")\n"+
+            "paidResScale = variableScale(paidLr) {\n"      +
+            "   fixed(7:172)\n"                             +
+            "}\n"                                           +
+            "paidRes = residuals(paidResScale) {\n"         +
+            "   exclude(0, 7)\n"                            +
+            "   exclude(7, 0)\n"                            +
+            "}\n"                                           +
+            "\n"                                            +
+            "cl = CLEstimate(paidLr)\n"                     +
+            "bootstrap = odpBootstrap {\n"                  +
+            "   count 1000\n"                               +
+            "   random \"Java\", 10\n"                      +
+            "   residuals paidRes\n"                        +
+            "   estimate cl\n"                              +
+            "   process \"Gamma\"\n"                        +
+            "   segment {\n"                                +
+            "       from(accident:0, development:0)\n"      +
+            "       to(a:8, d:2)\n"                         +
+            "   }\n"                                        +
+            "}\n"                                           +
+            "bootstrap.run()\n"                             +
+            "bootstrap.getReserves()\n"                     ;
+
+        double[][] res = (double[][]) executor.runScript(script)
         assertEquals(1000, res.length)
     }
 }

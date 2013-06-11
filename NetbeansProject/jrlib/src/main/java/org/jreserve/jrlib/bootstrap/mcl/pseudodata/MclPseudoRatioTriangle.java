@@ -169,11 +169,6 @@ class MclPseudoRatioTriangle
         pseudoValues[accident][development] = cr + r * s / w;
     }
     
-    @Override
-    protected void setState(CalculationState state) {
-        super.setState(state);
-    }
-    
     private double getResidualFromCell(MclResidualCell cell) {
         if(cell == null)
             return Double.NaN;

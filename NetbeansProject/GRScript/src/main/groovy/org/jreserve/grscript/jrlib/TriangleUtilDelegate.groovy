@@ -47,6 +47,12 @@ class TriangleUtilDelegate implements FunctionProvider {
         emc.divide       << {double[][] a, double[][] b -> TriangleUtil.divide(a, b)}
         emc.multiply     << {double[][] a, double[][] b -> TriangleUtil.multiply(a, b)}
         
+        emc.max          << {double[] a -> MathUtil.max(a)}
+        emc.min          << {double[] a -> MathUtil.min(a)}
+        emc.sum          << {double[] a -> MathUtil.sum(a)}
+        emc.mean         << {double[] a -> MathUtil.mean(a)}
+        emc.sd           << {double[] a -> MathUtil.standardDeviation(a)}
+        
         emc.printData   << {Triangle t -> printData(t.toArray())}
         emc.printData   << {String title, Triangle t -> printData(title, t.toArray())}
         emc.printData   << {org.jreserve.jrlib.vector.Vector v -> printData(v.toArray())}

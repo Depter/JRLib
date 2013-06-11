@@ -20,6 +20,7 @@ import org.jreserve.grscript.FunctionProvider
 import org.jreserve.jrlib.linkratio.scale.residuals.LRResidualTriangle
 import org.jreserve.jrlib.bootstrap.EstimateBootstrapper
 import org.jreserve.jrlib.estimate.Estimate
+import org.jreserve.jrlib.estimate.ProcessSimulatorEstimate
 import org.jreserve.jrlib.bootstrap.mack.MackBootstrapEstimate
 import org.jreserve.jrlib.util.random.Random as JRandom
 import org.jreserve.jrlib.bootstrap.mack.MackPseudoFactorTriangle
@@ -37,6 +38,7 @@ import org.jreserve.jrlib.linkratio.LinkRatio
 class MackBootstrapDelegate extends AbstractBootstrapDelegate implements FunctionProvider {
     
     private String processType = "Gamma"
+    private ProcessSimulatorEstimate estimate
     private LRResidualTriangle residuals
     
     void initFunctions(Script script, ExpandoMetaClass emc) {
@@ -61,6 +63,10 @@ class MackBootstrapDelegate extends AbstractBootstrapDelegate implements Functio
         this.residuals = residuals
     }
     
+    void estimate(ProcessSimulatorEstimate estimate) {
+        this.estimate = estimate
+    }
+    
     private EstimateBootstrapper<MackBootstrapEstimate> buildBootstrap() {
         super.checkState()
         JRandom rnd = super.getRandom()
@@ -68,13 +74,24 @@ class MackBootstrapDelegate extends AbstractBootstrapDelegate implements Functio
         if(residuals == null)
             throw new IllegalStateException("Residuals not set!")
         MackPseudoFactorTriangle pseudoFik = new MackPseudoFactorTriangle(rnd, residuals, super.getSegments());
-        MackProcessSimulator procSim = createProcessSimulator(rnd)
         
         LinkRatio lrs = residuals.getSourceLinkRatios()
+        Estimate bsEstimate = buildEstimate(lrs, rnd);
+        
         lrs.setSource(pseudoFik)
-        MackBootstrapEstimate estimate = new MackBootstrapEstimate(lrs, procSim);
         int count = super.getCount()
-        return new EstimateBootstrapper(pseudoFik, count, estimate);
+        return new EstimateBootstrapper(pseudoFik, count, bsEstimate);
+    }
+    
+    private Estimate buildEstimate(LinkRatio lrs, JRandom rnd) {
+        MackProcessSimulator procSim = createProcessSimulator(rnd)
+        if(estimate) {
+            procSim.setEstimate(estimate)
+            estimate.setProcessSimulator(procSim)
+            return estimate
+        } else {
+            new MackBootstrapEstimate(lrs, procSim);
+        }
     }
     
     private MackProcessSimulator createProcessSimulator(JRandom rnd) {
