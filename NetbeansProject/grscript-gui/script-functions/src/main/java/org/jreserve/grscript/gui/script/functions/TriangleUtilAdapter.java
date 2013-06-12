@@ -17,7 +17,6 @@
 package org.jreserve.grscript.gui.script.functions;
 
 import java.util.List;
-import java.util.Map;
 import org.jreserve.grscript.FunctionProvider;
 import org.jreserve.grscript.jrlib.TriangleUtilDelegate;
 import org.openide.util.NbBundle;
@@ -52,6 +51,12 @@ public class TriangleUtilAdapter extends AbstractFunctionProviderAdapter {
         functions.add("copy(double[][])");
         functions.add("copy(double[])");
 
+        functions.add("max(double[])");
+        functions.add("min(double[])");
+        functions.add("sum(double[])");
+        functions.add("mean(double[])");
+        functions.add("sd(double[])");
+        
         functions.add("printData(Triangle)");
         functions.add("printData(String, Triangle)");
         functions.add("printData(Vector)");
