@@ -32,6 +32,12 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="Triangle">
+                <attr name="position" intvalue="1000"/>
+                <file name="org-jreserve-dummy-claimtriangle-edtior-ribbon-ClaimTrianglePane.instance">
+                    <attr name="position" intvalue="1000"/>
+                </file>
+            </folder>
         </folder>
     </folder>
 
@@ -62,17 +68,6 @@
                         <attr name="iconBase" stringvalue="org/jreserve/dummy/projecttree/resources/triangle.png"/>
                     </file>
                 </folder>
-            </folder>
-        </folder>
-    </folder>
-    
-    <folder name="Ribbon">
-        <folder name="TaskPanes">
-            <folder name="Triangle">
-                <attr name="position" intvalue="1000"/>
-                <file name="org-jreserve-dummy-claimtriangle-edtior-ribbon-ClaimTrianglePane.instance">
-                    <attr name="position" intvalue="1000"/>
-                </file>
             </folder>
         </folder>
     </folder>

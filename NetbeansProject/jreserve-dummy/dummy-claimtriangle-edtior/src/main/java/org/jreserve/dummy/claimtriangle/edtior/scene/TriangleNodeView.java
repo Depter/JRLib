@@ -20,12 +20,14 @@ package org.jreserve.dummy.claimtriangle.edtior.scene;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
+import javax.swing.JSplitPane;
+import javax.swing.ScrollPaneConstants;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
+import org.openide.explorer.propertysheet.PropertySheetView;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -41,20 +43,43 @@ public class TriangleNodeView implements MultiViewElement {
 
     private Scene component;
     private JComponent scene;
-    private JScrollPane scroll;
+    private JComponent sattelite;
+    private PropertySheetView properties;
+    private JComponent panel;
+    private JSplitPane mainSplit;
+    private JSplitPane rightSplit;
     
-    private JToolBar toolBar = new JToolBar();
+    private JComponent toolBar = new javax.swing.JPanel();
     private Action[] actions = new Action[0];
     private MultiViewElementCallback callback;
     
     @Override
     public JComponent getVisualRepresentation() {
-        if(component == null) {
-            component = new TriangleVMDScene();
-            scene = component.createView();
-            scroll = new JScrollPane(scene);
-        }
-        return scroll;
+        if(panel == null)
+            panel = createPanel();
+        return panel;
+    }
+    
+    private JComponent createPanel() {
+        properties = new PropertySheetView();
+        properties.setDescriptionAreaVisible(false);
+        component = new TriangleVMDScene(properties);
+        scene = component.createView();
+        sattelite = component.createSatelliteView();
+        mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
+        rightSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        
+        mainSplit.setDividerLocation(0.8);
+        mainSplit.setLeftComponent(new JScrollPane(scene));
+        mainSplit.setRightComponent(rightSplit);
+        
+        rightSplit.setDividerLocation(0.5);
+        rightSplit.setBottomComponent(new JScrollPane(sattelite));
+        
+        properties.setBorder(new JScrollPane().getBorder());
+        rightSplit.setTopComponent(properties);
+        
+        return mainSplit;
     }
 
     @Override
@@ -74,7 +99,11 @@ public class TriangleNodeView implements MultiViewElement {
 
     @Override public void componentOpened() {}
     @Override public void componentClosed() {}
-    @Override public void componentShowing() {}
+    @Override 
+    public void componentShowing() {
+        mainSplit.setDividerLocation(0.8);
+        rightSplit.setDividerLocation(0.5);
+    }
     @Override public void componentHidden() {}
     @Override public void componentActivated() {}
     @Override public void componentDeactivated() {}

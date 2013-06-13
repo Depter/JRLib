@@ -15,7 +15,7 @@
    centered-vertically="false"
    maximize-if-width-below="0"
    maximize-if-height-below="0"
-   frame-state="0"
+   frame-state="6"
 />
   <separated-properties
    x="128"
@@ -39,14 +39,14 @@
   </constraints>
   <bounds x="422" y="184" width="537" height="338" />
     </editor-area>
-    <screen width="1280" height="800"/>
-    <active-mode name="output"/>
+    <screen width="1600" height="900"/>
+    <active-mode name="properties"/>
     <toolbar configuration="Standard" preferred-icon-size="24"/>
     <tc-list>
-  <tc-id id="output"/>
-  <tc-id id="MultiView-GRScript#007C"/>
-  <tc-id id="ScriptExplorerTopComponent"/>
   <tc-id id="HelpTopComponent"/>
+  <tc-id id="MultiView-GRScript#007C_1"/>
+  <tc-id id="ScriptExplorerTopComponent"/>
+  <tc-id id="output"/>
   <tc-id id="FunctionExplorerTopComponent"/>
   <tc-id id="ClassPathExplorerTopComponent"/>
     </tc-list>

@@ -49,7 +49,7 @@ import org.openide.util.lookup.Lookups;
 public class TriangleEditorMultiview extends JPanel implements MultiViewElement {
     final static String MIME_TYPE = "application/jreserve-triangle-claim";
 
-    private JToolBar toolBar;
+    private JComponent toolBar;
     private ExpandableContainerHandler handler;
     private MultiViewElementCallback callback;
     
@@ -65,7 +65,7 @@ public class TriangleEditorMultiview extends JPanel implements MultiViewElement 
     @Override
     public JComponent getToolbarRepresentation() {
         if(toolBar == null)
-            toolBar = new JToolBar();
+            toolBar = new JPanel();
         return toolBar;
     }
 

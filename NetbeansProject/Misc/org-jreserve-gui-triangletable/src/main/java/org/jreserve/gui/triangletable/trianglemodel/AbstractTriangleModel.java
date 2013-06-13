@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.CalculationListener;
 import org.jreserve.jrlib.triangle.Triangle;
 
 /**
@@ -52,7 +54,7 @@ public abstract class AbstractTriangleModel implements TriangleModel {
     protected AbstractTriangleModel(Triangle triangle, TitleModel horizontalTitles, TitleModel verticalTitles) {
         this.triangle = triangle;
         if(triangle != null)
-            triangle.addChangeListener(triangleListener);
+            triangle.addCalculationListener(triangleListener);
         
         this.xTitles = horizontalTitles==null? new IndexTitleModel() : horizontalTitles;
         this.yTitles = verticalTitles==null? new IndexTitleModel() : verticalTitles;
@@ -72,13 +74,13 @@ public abstract class AbstractTriangleModel implements TriangleModel {
     
     private void releaseOldTriangle() {
         if(this.triangle != null)
-            this.triangle.removeChangeListener(triangleListener);
+            this.triangle.removeCalculationListener(triangleListener);
     }
     
     private void initNewTriangle(Triangle triangle) {
         this.triangle = triangle;
         if(this.triangle != null)
-            this.triangle.addChangeListener(triangleListener);
+            this.triangle.addCalculationListener(triangleListener);
     }
     
     @Override
@@ -150,9 +152,10 @@ public abstract class AbstractTriangleModel implements TriangleModel {
         return listeners.toArray(result);
     }
     
-    private class TriangleListener implements ChangeListener {
+    private class TriangleListener implements CalculationListener {
+
         @Override
-        public void stateChanged(ChangeEvent e) {
+        public void stateChanged(CalculationData data) {
             fireChange();
         }
     }

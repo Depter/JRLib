@@ -90,6 +90,7 @@ public class TriangleGraphScene extends GraphScene<TriangleGraphScene.ComponentN
 
     @Override
     protected Widget attachEdgeWidget(Object edge) {
+        
         return null;
     }
 

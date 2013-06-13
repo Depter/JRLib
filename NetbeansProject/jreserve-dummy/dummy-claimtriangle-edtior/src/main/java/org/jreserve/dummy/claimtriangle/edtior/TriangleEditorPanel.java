@@ -87,13 +87,34 @@ class TriangleEditorPanel extends JPanel {
     }
     
     private void initComponents() {
-        setLayout(new BorderLayout(5, 5));
-        add(createToolBar(), BorderLayout.NORTH);
+        setLayout(new GridBagLayout());
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.gridx=0; gc.gridy=0;
+        gc.weightx=1d; gc.weighty=0d;
+        gc.fill = GridBagConstraints.HORIZONTAL;
+        gc.anchor = GridBagConstraints.NORTH;
+        gc.insets = new Insets(0, 0, 5, 0);
+        add(createToolBar(), gc);
         
         widget = new TriangleWidget(layers, new DevelopmentTriangleModel(developmentTitle, accidentTitle));
-        add(widget, BorderLayout.CENTER);
+        gc.gridy = 1;
+        gc.insets = new Insets(0, 0, 0, 0);
+        add(widget, gc);
         
+        gc.gridy = 2;
+        gc.fill = GridBagConstraints.VERTICAL;
+        gc.weighty = 1d;
+        add(Box.createVerticalGlue(), gc);
+
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        
+//        setLayout(new BorderLayout(5, 5));
+//        add(createToolBar(), BorderLayout.NORTH);
+//        
+//        widget = new TriangleWidget(layers, new DevelopmentTriangleModel(developmentTitle, accidentTitle));
+//        add(widget, BorderLayout.CENTER);
+//        
+//        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
     }
     
     private JPanel createToolBar() {
@@ -202,7 +223,7 @@ class TriangleEditorPanel extends JPanel {
                         widget.setModel(new AccidentTriangleModel(accidentTitle, developmentTitle));
                         break;
                     default:
-                        widget.setModel(new CalendarTriangleModel(accidentTitle, developmentTitle));
+                        widget.setModel(new CalendarTriangleModel(accidentTitle, accidentTitle));
                         break;
                 }
             }

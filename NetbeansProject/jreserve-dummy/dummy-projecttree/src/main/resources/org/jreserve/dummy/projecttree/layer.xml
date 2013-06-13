@@ -23,13 +23,15 @@
                             <attr name="position" intvalue="10"/>
                             <attr name="tooltip" stringvalue="Tooltip to show"/>
                         </file>
-                        <file name="Exclusion">
-                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/exclude.png"/>
+                        
+                        <file name="Smooth">
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/cell_smoothing.png"/>
                             <attr name="position" intvalue="20"/>
                             <attr name="tooltip" stringvalue="Tooltip to show"/>
                         </file>
-                        <file name="Smooth">
-                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/cell_smoothing.png"/>
+                        
+                        <file name="Exclusion">
+                            <attr name="icon" stringvalue="org/jreserve/dummy/projecttree/resources/exclude.png"/>
                             <attr name="position" intvalue="30"/>
                             <attr name="tooltip" stringvalue="Tooltip to show"/>
                         </file>

@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.triangletable.widget;
 
+import java.awt.GridBagLayout;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.JScrollPane;
@@ -73,6 +74,7 @@ public class TriangleWidget extends JScrollPane {
         xHeader = new WidgetHeader(this, WidgetHeader.X_AXIS);
         yHeader = new WidgetHeader(this, WidgetHeader.Y_AXIS);
         corner = new WidgetCorner(this);
+        
         super.setViewportView(content);
         super.setColumnHeaderView(xHeader);
         super.setRowHeaderView(yHeader);
