@@ -21,7 +21,6 @@ import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.ScrollPaneConstants;
 import org.netbeans.api.visual.widget.Scene;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -56,11 +55,11 @@ public class TriangleNodeView implements MultiViewElement {
     @Override
     public JComponent getVisualRepresentation() {
         if(panel == null)
-            panel = createPanel();
+            panel = createJRLibPanel();
         return panel;
     }
     
-    private JComponent createPanel() {
+    private JComponent createVmdPanel() {
         properties = new PropertySheetView();
         properties.setDescriptionAreaVisible(false);
         component = new TriangleVMDScene(properties);
@@ -79,6 +78,18 @@ public class TriangleNodeView implements MultiViewElement {
         properties.setBorder(new JScrollPane().getBorder());
         rightSplit.setTopComponent(properties);
         
+        return mainSplit;
+    }
+    
+    private JComponent createJRLibPanel() {
+        component = new TriangleScene();
+        scene = component.createView();
+        sattelite = component.createSatelliteView();
+        
+        mainSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
+        mainSplit.setDividerLocation(0.8);
+        mainSplit.setLeftComponent(new JScrollPane(scene));
+        mainSplit.setRightComponent(new JScrollPane(sattelite));
         return mainSplit;
     }
 
@@ -102,7 +113,8 @@ public class TriangleNodeView implements MultiViewElement {
     @Override 
     public void componentShowing() {
         mainSplit.setDividerLocation(0.8);
-        rightSplit.setDividerLocation(0.5);
+        if(rightSplit != null)
+            rightSplit.setDividerLocation(0.5);
     }
     @Override public void componentHidden() {}
     @Override public void componentActivated() {}

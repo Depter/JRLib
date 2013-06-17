@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/grscript/gui/eventbus/B
  undle.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130611
-OpenIDE-Module-Build-Version: 201306111517
+OpenIDE-Module-Implementation-Version: 1.0-20130617
+OpenIDE-Module-Build-Version: 201306171121
 OpenIDE-Module: org.jreserve.grscript.gui.util.eventbus
 OpenIDE-Module-Public-Packages: org.jreserve.grscript.gui.eventbus.*
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
