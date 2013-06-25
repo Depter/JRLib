@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/jreserve/gui/misc/flamingo/modules/Installer.class
+OpenIDE-Module-Layer: org/jreserve/gui/misc/flamingo/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/flamingo/Bundle.properties

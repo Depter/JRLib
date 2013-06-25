@@ -1,0 +1,49 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/jreserve/gui/misc/flamingo/modules/Install
+ er.class
+OpenIDE-Module-Layer: org/jreserve/gui/misc/flamingo/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/flamingo/Bundl
+ e.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130625
+OpenIDE-Module-Build-Version: 201306251538
+OpenIDE-Module: org.jreserve.flamingo
+OpenIDE-Module-Public-Packages: com.jgoodies.**, org.pushingpixels.fla
+ mingo.**, org.pushingpixels.trident.**, org.jreserve.gui.misc.flaming
+ o.api.*, org.jreserve.gui.misc.flamingo.spi.*
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: Flamingo
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+X-Class-Path: ext/org.pushingpixels/flamengo-5.0.jar ext/com.jgoodies/
+ forms-1.2.1.jar ext/org.pushingpixels/trident-1.3.jar ext/com.google.
+ android/android-2.3.3.jar ext/commons-logging/commons-logging-1.1.1.j
+ ar ext/org.apache.httpcomponents/httpclient-4.0.1.jar ext/org.apache.
+ httpcomponents/httpcore-4.0.1.jar ext/commons-codec/commons-codec-1.3
+ .jar ext/org.khronos/opengl-api-gl1.1-android-2.1_r1.jar ext/xerces/x
+ mlParserAPIs-2.6.2.jar ext/xpp3/xpp3-1.1.4c.jar ext/org.json/json-200
+ 80701.jar ext/org.eclipse.swt.gtk.linux/x86_64-3.3.0-v3346.jar ext/or
+ g.eclipse.swt.gtk.linux/x86-3.3.0-v3346.jar ext/com.svnkit/svnkit-1.1
+ .0.jar ext/ch.ethz.ganymed/ganymed-ssh2-build210.jar ext/batik/batik-
+ transcoder-1.6.jar ext/batik/batik-bridge-1.6.jar ext/batik/batik-uti
+ l-1.6.jar ext/batik/batik-swing-1.6.jar ext/batik/batik-gvt-1.6.jar e
+ xt/batik/batik-ext-1.6.jar ext/batik/batik-extension-1.6.jar ext/bati
+ k/batik-awt-util-1.6.jar ext/batik/batik-script-1.6.jar
+Maven-Class-Path: org.pushingpixels:flamengo:5.0 com.jgoodies:forms:1.
+ 2.1 org.pushingpixels:trident:1.3 com.google.android:android:2.3.3 co
+ mmons-logging:commons-logging:1.1.1 org.apache.httpcomponents:httpcli
+ ent:4.0.1 org.apache.httpcomponents:httpcore:4.0.1 commons-codec:comm
+ ons-codec:1.3 org.khronos:opengl-api:gl1.1-android-2.1_r1 xerces:xmlP
+ arserAPIs:2.6.2 xpp3:xpp3:1.1.4c org.json:json:20080701 org.eclipse.s
+ wt.gtk.linux:x86_64:3.3.0-v3346 org.eclipse.swt.gtk.linux:x86:3.3.0-v
+ 3346 com.svnkit:svnkit:1.1.0 ch.ethz.ganymed:ganymed-ssh2:build210 ba
+ tik:batik-transcoder:1.6 batik:batik-bridge:1.6 batik:batik-util:1.6 
+ batik:batik-swing:1.6 batik:batik-gvt:1.6 batik:batik-ext:1.6 batik:b
+ atik-extension:1.6 batik:batik-awt-util:1.6 batik:batik-script:1.6
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.openide.util > 8.25.1, org.openide.filesystems > 7.
+ 62.1, org.openide.modules > 7.32.1, org.openide.windows > 6.55.1, org
+ .openide.awt > 7.46.1, org.openide.util.lookup > 8.15.1, org.netbeans
+ .modules.javahelp/1 > 2.27.1
+
