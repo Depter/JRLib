@@ -94,12 +94,13 @@ public class NbRibbonApplicationMenuButtonUI extends BasicRibbonApplicationMenuB
                             if ((y + ph) > (scrBounds.y + scrBounds.height)) {
                                 y = scrBounds.y + scrBounds.height - ph;
                             }
-
+                            
+                            int height = Math.max(menuPopupPanel.getPreferredSize().height, AppMenuFiller.getMinHeight());
                             return new Rectangle(
                                     x,
                                     y,
                                     menuPopupPanel.getPreferredSize().width,
-                                    menuPopupPanel.getPreferredSize().height);
+                                    height);
                         }
                     });
                     return menuPopupPanel;
