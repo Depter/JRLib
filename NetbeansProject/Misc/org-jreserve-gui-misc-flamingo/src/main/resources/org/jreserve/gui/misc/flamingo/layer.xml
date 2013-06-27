@@ -55,6 +55,14 @@
         <folder name="TaskPanes">
             <folder name="Windows">
                 <attr name="position" intvalue="10000"/>
+                <folder name="Utilities">
+                    <attr name="position" intvalue="2000"/>
+                    <file name="org-netbeans-modules-options-OptionsWindowAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-options-OptionsWindowAction.instance"/>
+                        <attr name="position" intvalue="10000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/settings.png"/>
+                    </file>
+                </folder>
                 <folder name="Development">
                     <attr name="position" intvalue="3000"/>
                 </folder>

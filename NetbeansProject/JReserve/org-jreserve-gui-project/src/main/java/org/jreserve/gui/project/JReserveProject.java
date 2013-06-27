@@ -52,7 +52,10 @@ public class JReserveProject implements Project {
     
     private Object[] createLookupContent() {
         return new Object[] {
-            new JReserveProjectInformation(this)
+            this,
+            new JReserveProjectInformation(this),
+            new JReserveLogicalView(this),
+            new JReserveProjectCustomizer(this)
         };
     }
 }

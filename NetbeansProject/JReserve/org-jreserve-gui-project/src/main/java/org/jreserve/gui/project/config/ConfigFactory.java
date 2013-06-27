@@ -54,9 +54,9 @@ public class ConfigFactory {
     
     private static File getConfigFile(Project project) throws FileNotFoundException {
         FileObject dir = project.getProjectDirectory();
-        FileObject config = dir.getFileObject(JReserveProjectFactory.CONFIG_NAME, JReserveProjectFactory.CONFIG_EXTENSION);
+        FileObject config = dir.getFileObject(JReserveProjectFactory.CONFIG_FILE);
         if(config == null)
-            throw new FileNotFoundException("File not found: "+dir.getPath()+"/"+JReserveProjectFactory.CONFIG_NAME+"."+JReserveProjectFactory.CONFIG_EXTENSION);
+            throw new FileNotFoundException("File not found: "+dir.getPath()+"/"+JReserveProjectFactory.CONFIG_FILE);
         return FileUtil.toFile(config);
     }
     

@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/branding/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/branding/Bundle.properties
 AutoUpdate-Essential-Module: true

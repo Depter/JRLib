@@ -17,7 +17,7 @@
 package org.jreserve.gui.project;
 
 import java.io.IOException;
-import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectManager;
@@ -36,16 +36,16 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ProjectFactory.class)
 public class JReserveProjectFactory implements ProjectFactory2 {
     
-    public final static String CONFIG_NAME = "jrp";
-    public final static String CONFIG_EXTENSION = "xml";
+    public final static String LAYER_NAME = "org-jreserve-project-jreserve";
+    public final static String CONFIG_FILE = "jrp.xml";
     
     @StaticResource
-    private final static String ICON_PATH = "org/jreserve/gui/project/project.png"; //NOI18
-    private static Icon ICON = null;
+    final static String ICON_PATH = "org/jreserve/gui/project/project.png"; //NOI18
+    private static ImageIcon ICON = null;
     
     @Override
     public boolean isProject(FileObject folder) {
-        return folder.getFileObject(CONFIG_NAME, CONFIG_EXTENSION) != null;
+        return folder.getFileObject(CONFIG_FILE) != null;
     }
 
     @Override
@@ -65,7 +65,7 @@ public class JReserveProjectFactory implements ProjectFactory2 {
                 null;
     }
     
-    static Icon getProjectIcon() {
+    static ImageIcon getProjectIcon() {
         if(ICON == null)
             ICON = ImageUtilities.loadImageIcon(ICON_PATH, false);
         return ICON;

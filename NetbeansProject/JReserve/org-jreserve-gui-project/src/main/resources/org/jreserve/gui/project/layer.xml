@@ -20,7 +20,6 @@
         <folder name="TaskPanes">
             <folder name="Windows">
                 <folder name="Utilities">
-                    <attr name="position" intvalue="2000"/>
                     <file name="org-netbeans-modules-project-ui-logical-tab-action.shadow">
                         <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-logical-tab-action.instance"/>
                         <attr name="position" intvalue="1000"/>
