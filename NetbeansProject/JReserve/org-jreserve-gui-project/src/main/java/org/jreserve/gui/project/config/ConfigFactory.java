@@ -22,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import org.jreserve.gui.project.JReserveProjectFactory;
 import org.netbeans.api.project.Project;
@@ -37,6 +38,7 @@ public class ConfigFactory {
     private final static Logger logger = Logger.getLogger(ConfigFactory.class.getName());
     private static JAXBContext CTX;
     private static Unmarshaller UM;
+    private static Marshaller M;
     
     public static ProjectConfiguration readConfig(Project project) throws JAXBException, FileNotFoundException {
         try {
@@ -66,5 +68,23 @@ public class ConfigFactory {
         if(UM == null)
             UM = CTX.createUnmarshaller();
         return UM;
+    }
+    
+    public static void writeConfig(ProjectConfiguration config, File file) throws JAXBException {
+        try {
+            Marshaller m = getMarshaller();
+            m.marshal(config, file);
+        } catch (JAXBException ex) {
+            logger.log(Level.SEVERE, "Config file can not be parsed!", ex);
+            throw ex;
+        } 
+    }
+    
+    private static Marshaller getMarshaller() throws JAXBException {
+        if(CTX == null)
+            CTX = JAXBContext.newInstance(ProjectConfiguration.class);
+        if(M == null)
+            M = CTX.createMarshaller();
+        return M;
     }
 }

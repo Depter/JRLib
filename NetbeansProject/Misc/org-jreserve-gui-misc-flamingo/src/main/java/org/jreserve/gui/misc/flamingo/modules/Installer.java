@@ -57,25 +57,17 @@ public class Installer extends ModuleInstall {
             @Override
             public void run() {
                 initLAF();
-                //Get the main window of the NetBeans Platform:
-                JFrame frame = (JFrame) WindowManager.getDefault().getMainWindow();
-                //Get our custom main toolbar:
-                JComponent toolbar = RibbonComponentProvider.getDefault().createRibbon();
-                //Set the new layout of our root pane:
-                frame.getRootPane().setLayout(new RibbonRootPaneLayout(toolbar));
-                //Install a new toolbar component into the layered pane
-                //of the main frame on layer 0:
-                toolbar.putClientProperty(JLayeredPane.LAYER_PROPERTY, 0);
-                frame.getRootPane().getLayeredPane().add(toolbar, 0);
+                UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
+                installRibbonBar();
             }
         });
     }
 
     private static void initLAF() {
         LookAndFeel laf = getNimbus();
-        if (laf != null)
+        if (laf != null) {
             setLookAndFeel(laf);
-        UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
+        }
     }
 
     private static LookAndFeel getNimbus() {
@@ -97,5 +89,13 @@ public class Installer extends ModuleInstall {
         } catch (Exception ex) {
             logger.log(Level.WARNING, String.format("Unble to apply L&F: ", laf), ex);
         }
+    }
+    
+    private static void installRibbonBar() {
+        JFrame frame = (JFrame) WindowManager.getDefault().getMainWindow();
+        JComponent toolbar = RibbonComponentProvider.getDefault().createRibbon();
+        frame.getRootPane().setLayout(new RibbonRootPaneLayout(toolbar));
+        toolbar.putClientProperty(JLayeredPane.LAYER_PROPERTY, 0);
+        frame.getRootPane().getLayeredPane().add(toolbar, 0);
     }
 }

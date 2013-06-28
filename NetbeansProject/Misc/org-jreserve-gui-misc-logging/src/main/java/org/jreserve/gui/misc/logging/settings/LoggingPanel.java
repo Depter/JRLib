@@ -188,6 +188,7 @@ class LoggingPanel extends javax.swing.JPanel
         northPanel.add(levelLabel, gridBagConstraints);
 
         levelCombo.setModel(new DefaultComboBoxModel(new Level[]{Level.SEVERE, Level.WARNING, Level.INFO, Level.FINE, Level.FINER, Level.FINEST, Level.ALL}));
+        levelCombo.setPreferredSize(new java.awt.Dimension(100, 22));
         levelCombo.setRenderer(new LevelComboRenderer());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
