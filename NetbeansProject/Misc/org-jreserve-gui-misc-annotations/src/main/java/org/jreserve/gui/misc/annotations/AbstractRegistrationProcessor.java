@@ -19,7 +19,6 @@ package org.jreserve.gui.misc.annotations;
 import java.lang.annotation.Annotation;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;

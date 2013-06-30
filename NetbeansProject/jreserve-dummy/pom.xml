@@ -74,6 +74,7 @@
     <module>dummy-projecttree</module>
     <module>dummy-claimtriangle-edtior</module>
     <module>dummy-plot</module>
+    <module>substance</module>
   </modules>
 
     <properties>

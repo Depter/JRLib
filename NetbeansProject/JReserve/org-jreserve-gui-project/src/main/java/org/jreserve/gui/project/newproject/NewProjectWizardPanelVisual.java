@@ -208,6 +208,7 @@ class NewProjectWizardPanelVisual extends javax.swing.JPanel {
 
         pathText.setEditable(false);
         pathText.setText(null);
+        pathText.setOpaque(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;

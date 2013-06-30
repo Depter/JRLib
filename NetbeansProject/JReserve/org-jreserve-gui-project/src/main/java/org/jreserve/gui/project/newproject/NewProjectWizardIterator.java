@@ -24,11 +24,7 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import javax.xml.bind.JAXBException;
-import org.jreserve.gui.project.config.ConfigFactory;
-import org.jreserve.gui.project.config.ProjectConfiguration;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileUtil;
@@ -149,26 +145,15 @@ public class NewProjectWizardIterator implements WizardDescriptor.ProgressInstan
     public Set instantiate(ProgressHandle ph) throws IOException {
         ph.switchToIndeterminate();
         ph.start();
-        
-        File file = getProjectFile();
-        if(!file.mkdir())
-            throw new IOException("Unable to create folder: "+file.getAbsolutePath());
-        ProjectConfiguration config = new ProjectConfiguration();
-        config.setName(file.getName());
-        try {
-            ConfigFactory.writeConfig(config, file);
-        } catch (JAXBException ex) {
-            throw new IOException(ex);
-        }
-
+        Set result = ProjectBuilder.buildProject(getProjectFile());
         ph.finish();
-        throw new UnsupportedOperationException("Not supported yet1."); //To change body of generated methods, choose Tools | Templates.
+        return result;
     }
     
     private File getProjectFile() {
         String name = (String) wizard.getProperty(PROP_PROJECT_NAME);
-        String folder = (String) wizard.getProperty(PROP_PROJECT_FOLDER);
-        return FileUtil.normalizeFile(new File(folder + File.separator + name));
+        File folder = (File) wizard.getProperty(PROP_PROJECT_FOLDER);
+        return FileUtil.normalizeFile(new File(folder, name));
     }
 
     @Override

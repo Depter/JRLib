@@ -56,6 +56,9 @@ public class NbRibbonApplicationMenuButtonUI extends BasicRibbonApplicationMenuB
     public static ComponentUI createUI(JComponent c) {
         return new NbRibbonApplicationMenuButtonUI();
     }
+    
+    private NbRibbonApplicationMenuButtonUI() {
+    }
 
     @Override
     protected void installComponents() {

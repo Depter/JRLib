@@ -47,7 +47,7 @@ public class FileRibbonApplicationMenuButtonUI extends BasicRibbonApplicationMen
     {
         return new FileRibbonApplicationMenuButtonUI();
     }
-
+    
     // TODO: Add custom layout manager to produce the proper sized rectangle for the button
 
 

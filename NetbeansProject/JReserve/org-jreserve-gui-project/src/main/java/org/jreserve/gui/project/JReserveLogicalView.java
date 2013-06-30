@@ -38,7 +38,7 @@ import org.openide.util.lookup.ProxyLookup;
 class JReserveLogicalView implements LogicalViewProvider {
 
     private final static String LAYER_PATH = "Projects/"+JReserveProjectFactory.LAYER_NAME+"/Nodes";    //NOI18
-    private final static String ACTION_PATH = "Node/Actions/JReserveProject";
+    private final static String ACTION_PATH = "Node/JReserveProject/Actions";
     
     private final Project project;
 

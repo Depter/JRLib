@@ -99,7 +99,7 @@ public class LoggingSetting {
     private static void setLevel(String property, String value) {
         Logger l = getLogger(property);
         Level level = Level.parse(value);
-        logger.warning(String.format("Logger level: \"%s\" => %s", l.getName(), level.getName()));
+        logger.config(String.format("Logger level: \"%s\" => %s", l.getName(), level.getName()));
         l.setLevel(level);
     }
     

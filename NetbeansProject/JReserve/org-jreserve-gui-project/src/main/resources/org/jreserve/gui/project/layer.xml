@@ -29,4 +29,29 @@
         </folder>
         
     </folder>
+    
+    <folder name="Projects">
+        <folder name="org-jreserve-project-jreserve">
+            <folder name="CreateFileProviders">
+                <file name="org-jreserve-gui-project-config-ConfigFileProvider.instance">
+                    <attr name="position" intvalue="100"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+    
+    <folder name="Node">
+        <folder name="JReserveProject">
+            <folder name="Actions">
+                <file name="deleteProjectAction.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.spi.project.ui.support.CommonProjectActions.deleteProjectAction"/>
+                    <attr name="position" intvalue="300"/>
+                </file>
+                <file name="customizeProjectAction.instance">
+                    <attr name="instanceCreate" methodvalue="org.netbeans.spi.project.ui.support.CommonProjectActions.customizeProjectAction"/>
+                    <attr name="position" intvalue="400"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

@@ -46,7 +46,9 @@ public class Installer extends ModuleInstall {
 
     private final static Logger logger = Logger.getLogger(Installer.class.getName());
     private final static String NIMBUS = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
-
+    private final static String SUBSTANCE = "org.pushingpixels.substance.api.skin.OfficeBlack2007Skin";
+    private final static String L_F = NIMBUS;
+    
     @Override
     public void restored() {
         System.setProperty("netbeans.winsys.no_toolbars", "true");
@@ -59,6 +61,7 @@ public class Installer extends ModuleInstall {
                 initLAF();
                 UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
                 installRibbonBar();
+//                SubstanceLookAndFeel.setSkin(SUBSTANCE);
             }
         });
     }
@@ -72,10 +75,10 @@ public class Installer extends ModuleInstall {
 
     private static LookAndFeel getNimbus() {
         try {
-            Class clazz = Class.forName("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+            Class clazz = Class.forName(L_F);
             return (LookAndFeel) clazz.newInstance();
         } catch (Exception ex) {
-            logger.log(Level.WARNING, String.format("Unable to load L&F instnce: %s", NIMBUS), ex);
+            logger.log(Level.WARNING, String.format("Unable to load L&F instnce: %s", L_F), ex);
             return null;
         }
     }

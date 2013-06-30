@@ -36,8 +36,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=ProjectFactory.class)
 public class JReserveProjectFactory implements ProjectFactory2 {
     
-    public final static String LAYER_NAME = "org-jreserve-project-jreserve";
-    public final static String CONFIG_FILE = "jrp.xml";
+    public final static String LAYER_NAME = "org-jreserve-project-jreserve"; //NOI18
+    public final static String CONFIG_FILE = "jrp.xml"; //NOI18
     
     @StaticResource
     final static String ICON_PATH = "org/jreserve/gui/project/project.png"; //NOI18
