@@ -16,6 +16,8 @@
  */
 package org.jreserve.gui.project;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.gui.project.api.ProjectConfigurator;
@@ -47,6 +49,7 @@ public class ProjectBaseCustomizerPanel extends javax.swing.JPanel {
     public ProjectBaseCustomizerPanel(ProjectCustomizer.Category category, Lookup lookup) {
         this.lkp = lookup;
         this.category = category;
+        this.category.setOkButtonListener(new OkButtonListener());
         initComponents();
         readValues();
         checkValidity();
@@ -54,11 +57,9 @@ public class ProjectBaseCustomizerPanel extends javax.swing.JPanel {
     
     private void readValues() {
         ProjectConfigurator.Manager config = lkp.lookup(ProjectConfigurator.Manager.class);
-        if(config != null) {
-            ProjectConfigurator base = config.getConfigurator("org.jreserve.gui.project");
-            nameText.setText(base.getProperty(NAME_PROP));
-            descriptionText.setText(base.getProperty(DESCRIPTION_PROP));
-        }
+        ProjectConfigurator base = config.getConfigurator("org.jreserve.gui.project");
+        nameText.setText(base.getProperty(NAME_PROP));
+        descriptionText.setText(base.getProperty(DESCRIPTION_PROP));
     }
 
     /**
@@ -167,5 +168,23 @@ public class ProjectBaseCustomizerPanel extends javax.swing.JPanel {
         private void changeEvent(DocumentEvent evt) {
             checkValidity();
         }
+    }
+    
+    private class OkButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ProjectConfigurator.Manager config = lkp.lookup(ProjectConfigurator.Manager.class);
+            ProjectConfigurator base = config.getConfigurator("org.jreserve.gui.project");
+            base.setProperty(NAME_PROP, nameText.getText());
+            
+            String description = descriptionText.getText();
+            if(description==null || description.trim().length()==0) {
+                base.setProperty(DESCRIPTION_PROP, null);
+            } else {
+                base.setProperty(DESCRIPTION_PROP, description);
+            }
+        }
+    
     }
 }

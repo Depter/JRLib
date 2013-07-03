@@ -88,4 +88,8 @@ class JReserveProjectInformation implements ProjectInformation, ProjectConfigura
     public ProjectConfigurator getConfigurator(String id) {
         return configuration.getConfigurator(id);
     }
+    
+    public ProjectConfiguration getConfiguration() {
+        return configuration;
+    }
 }
