@@ -23,6 +23,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBException;
 import org.jreserve.gui.project.JReserveProjectFactory;
+import org.jreserve.gui.project.api.ProjectConfigurator;
 import org.jreserve.gui.project.api.ProjectFileProvider;
 
 /**
@@ -37,7 +38,10 @@ public class ConfigFileProvider implements ProjectFileProvider {
     @Override
     public void createFiles(File projectFolder) throws IOException {
         ProjectConfiguration config = new ProjectConfiguration();
-        config.setName(projectFolder.getName());
+        
+        ProjectConfigurator base = config.getConfigurator("org.jreserve.gui.project");
+        base.setProperty("name", projectFolder.getName());
+        
         try {
             ConfigFactory.writeConfig(config, new File(projectFolder, JReserveProjectFactory.CONFIG_FILE));
         } catch (JAXBException ex) {

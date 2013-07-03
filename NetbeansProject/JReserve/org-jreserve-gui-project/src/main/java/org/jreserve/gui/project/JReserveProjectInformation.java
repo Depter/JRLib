@@ -33,6 +33,8 @@ import org.openide.util.Exceptions;
  */
 class JReserveProjectInformation implements ProjectInformation, ProjectConfigurator.Manager {
 
+    private final static String BASE_ID = "org.jreserve.gui.project";
+    
     private JReserveProject project;
     private PropertyChangeSupport pcs;
     private ProjectConfiguration configuration;
@@ -43,7 +45,7 @@ class JReserveProjectInformation implements ProjectInformation, ProjectConfigura
             configuration = ConfigFactory.readConfig(project);
         } catch (Exception ex) {
             configuration = new ProjectConfiguration();
-            configuration.setName(project.getProjectDirectory().getName());
+            configuration.getConfigurator(BASE_ID).setProperty("name", project.getProjectDirectory().getName());
             Exceptions.printStackTrace(ex);
         }
     }
@@ -55,7 +57,8 @@ class JReserveProjectInformation implements ProjectInformation, ProjectConfigura
 
     @Override
     public String getDisplayName() {
-        return configuration.getName();
+        String name = configuration.getConfigurator(BASE_ID).getProperty("name");
+        return name==null || name.length()==0? getName() : name;
     }
 
     @Override

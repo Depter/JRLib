@@ -92,7 +92,7 @@ public class ConfigurationPropertyTest {
 
     @Test
     public void testToString() {
-        String expected = "<property name=\""+NAME+"\" value=\""+VALUE+"\"/>";
+        String expected = "<property name=\""+NAME+"\">"+VALUE+"</property>";
         assertEquals(expected, property.toString());
     }
 
@@ -108,7 +108,7 @@ public class ConfigurationPropertyTest {
     
     @Test
     public void testXmlMarshalling() throws Exception {
-        String expected = "<property value=\""+VALUE+"\" name=\""+NAME+"\"/>";
+        String expected = "<property name=\""+NAME+"\">"+VALUE+"</property>";
         String found = JAXBUtil.marshall(property);
         assertEquals(expected, found);
     }
@@ -116,7 +116,7 @@ public class ConfigurationPropertyTest {
     @Test
     public void testXmlUnmarshalling() throws Exception {
         String xml = 
-            "<property name=\"xmlName\" value=\"xmlValue\"/>";
+            "<property name=\"xmlName\">xmlValue</property>";
         property = JAXBUtil.unmarshall(xml, ConfigurationProperty.class);
         assertEquals("xmlName", property.getName());
         assertEquals("xmlValue", property.getValue());
@@ -126,7 +126,7 @@ public class ConfigurationPropertyTest {
     public void testXmlUnmarshalling_NoName() throws Throwable {
         try {
             String xml = 
-                "<property name=\" \" value=\"xmlValue\"/>";
+                "<property name=\" \">xmlValue</property>";
             property = JAXBUtil.unmarshall(xml, ConfigurationProperty.class);
         } catch (Exception ex) {
             Throwable t = ex;

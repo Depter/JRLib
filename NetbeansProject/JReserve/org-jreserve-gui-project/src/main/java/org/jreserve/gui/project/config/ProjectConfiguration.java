@@ -18,10 +18,8 @@ package org.jreserve.gui.project.config;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementRef;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -36,32 +34,9 @@ import org.jreserve.gui.project.api.ProjectConfigurator;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class ProjectConfiguration implements ProjectConfigurator.Manager {
     
-    @XmlElement(name="name", required=false)
-    private String name;
-    @XmlElement(name="description", required=false)
-    private String description;
-    
     @XmlElementWrapper(name="configurations", required=true)
     @XmlElementRef
     private Set<ModuleConfiguration> configs = new LinkedHashSet<ModuleConfiguration>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        if(ConfigurationProperty.isNull(name))
-            throw new IllegalArgumentException("Name can not be null, or empty: "+name);
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
     
     @Override
     public boolean hasConfigurator(String id) {
@@ -88,9 +63,4 @@ public class ProjectConfiguration implements ProjectConfigurator.Manager {
         configs.add(config);
         return config;
     }
-    
-    void afterUnmarshal(Unmarshaller um, Object parent) {
-        if(ConfigurationProperty.isNull(name))
-            throw new IllegalStateException("ProjectConfiguration unmarshalled with empty name: '"+name+"'");
-    }    
 }

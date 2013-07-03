@@ -21,6 +21,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 
 /**
  *
@@ -33,7 +34,7 @@ class ConfigurationProperty {
     
     @XmlAttribute(name="name", required=true)
     private String name;
-    @XmlAttribute(name="value", required=true)
+    @XmlValue
     private String value;
     
     ConfigurationProperty() {
@@ -83,7 +84,7 @@ class ConfigurationProperty {
     @Override
     public String toString() {
         return String.format(
-                "<property name=\"%s\" value=\"%s\"/>", 
+                "<property name=\"%s\">%s</property>", 
                 isNull(name)? "" : name, 
                 value==null? "" : value);
     }

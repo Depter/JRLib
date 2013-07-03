@@ -98,8 +98,8 @@ public class ModuleConfigurationTest {
     public void testXmlMarshalling() throws Exception {
         String expected =
             "<configuration ownerId=\""+OWNER_ID+"\">" + 
-                "<property value=\""+V1+"\" name=\""+N1+"\"/>" + 
-                "<property value=\""+V2+"\" name=\""+N2+"\"/>" + 
+                "<property name=\""+N1+"\">"+V1+"</property>" + 
+                "<property name=\""+N2+"\">"+V2+"</property>" + 
             "</configuration>";
         String found = JAXBUtil.marshall(mc);
         assertEquals(expected, found);
@@ -109,8 +109,8 @@ public class ModuleConfigurationTest {
     public void testXmlUnmarshalling() throws Exception {
         String xml =
             "<configuration ownerId=\"xml.owner.id\">" + 
-                "<property value=\"xml value 1\" name=\"xml.prop.1\"/>" + 
-                "<property value=\"xml value 2\" name=\"xml.prop.2\"/>" + 
+                "<property name=\"xml.prop.1\">xml value 1</property>" + 
+                "<property name=\"xml.prop.2\">xml value 2</property>" + 
             "</configuration>";
         
         mc = JAXBUtil.unmarshall(xml, ModuleConfiguration.class);
