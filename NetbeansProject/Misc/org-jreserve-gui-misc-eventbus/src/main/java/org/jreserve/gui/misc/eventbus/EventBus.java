@@ -1,0 +1,141 @@
+/*
+ *  Copyright (C) 2013, Peter Decsi.
+ * 
+ *  This library is free software: you can redistribute it and/or
+ *  modify it under the terms of the GNU Lesser General Public 
+ *  License as published by the Free Software Foundation, either 
+ *  version 3 of the License, or (at your option) any later version.
+ * 
+ *  This library is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ * 
+ *  You should have received a copy of the GNU General Public License
+ *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package org.jreserve.gui.misc.eventbus;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ *
+ * @author Peter Decsi
+ * @version 1.0
+ */
+class EventBus {
+    
+    final static String PATH_SEPARATOR = ".";
+    
+    private final EventBus parent;
+    private final Set<EventBus> children = new HashSet<EventBus>();
+    
+    private final String name;
+    private final String path;
+    private final List<Subscription> subscriptions = new ArrayList<Subscription>();
+    
+    EventBus(EventBus parent, String name) {
+        this.parent = parent;
+        this.name = name;
+        path = parent==null? name : parent.getPath() + PATH_SEPARATOR + name;
+    }
+    
+    String getName() {
+        return name;
+    }
+    
+    String getPath() {
+        return path;
+    }
+    
+    EventBus getChild(String path) {
+        if(path.length() == 0)
+            return this;
+        
+        int index = path.indexOf('.');
+        
+        String childName;
+        if(index < 0) {
+            childName = path;
+        } else {
+           childName = path.substring(0, index);
+        }
+        
+        EventBus child = getChildByName(childName);
+        path = path.substring(childName.length()+1);
+        if(path.charAt(0) == 'c')
+            path = path.substring(1);
+
+        return child.getChild(path);
+    }
+    
+    private EventBus getChildByName(String name) {
+        for(EventBus bus : children)
+            if(bus.name.equals(name))
+                return bus;
+        
+        EventBus bus = new EventBus(this, name);
+        children.add(bus);
+        return bus;
+    }
+    
+    void subscribe(Object listener) {
+        cleanSubscriptions();
+        Subscription s = new Subscription(listener);
+        subscriptions.add(s);
+    }
+    
+    private void cleanSubscriptions() {
+        int size = subscriptions.size();
+        for(int i=0; i<size; i++) {
+            Subscription s = subscriptions.get(i);
+            if(s.isEmpty()) {
+                subscriptions.remove(s);
+                i--;
+                size--;
+            }
+        }
+    }
+    
+    void unsubscribe(Object listener) {
+        cleanSubscriptions();
+        int index = indexOf(listener);
+        if(index >= 0)
+            subscriptions.remove(index);
+    }
+    
+    private int indexOf(Object listener) {
+        int size = subscriptions.size();
+        for(int i=0; i<size; i++)
+            if(subscriptions.get(i).references(listener))
+                return i;
+        return -1;
+    }
+    
+    void fillSubscriptions(List<Subscription> subscriptions, Class eventClass) {
+        for(Subscription s : this.subscriptions)
+            s.addSelf(subscriptions, eventClass);
+        if(parent != null)
+            parent.fillSubscriptions(subscriptions, eventClass);
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof EventBus) &&
+               path.equals(((EventBus)o).path);
+    }
+    
+    @Override
+    public int hashCode() {
+        return path.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return path;
+    }
+}
