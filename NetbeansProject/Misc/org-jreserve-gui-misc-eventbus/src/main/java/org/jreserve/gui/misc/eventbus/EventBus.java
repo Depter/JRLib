@@ -29,19 +29,31 @@ import java.util.Set;
  */
 class EventBus {
     
-    final static String PATH_SEPARATOR = ".";
+    final static char PATH_SEPARATOR = '.';
     
-    private final EventBus parent;
+    private EventBus parent;
     private final Set<EventBus> children = new HashSet<EventBus>();
     
     private final String name;
     private final String path;
     private final List<Subscription> subscriptions = new ArrayList<Subscription>();
+
+    EventBus() {
+        this.parent = null;
+        this.name = "";
+        this.path = "";
+    }
     
-    EventBus(EventBus parent, String name) {
+    private EventBus(EventBus parent, String name) {
         this.parent = parent;
         this.name = name;
-        path = parent==null? name : parent.getPath() + PATH_SEPARATOR + name;
+        
+        if(parent == null) {
+            path = name;
+        } else {
+            String parentPath = parent.getPath();
+            path = parentPath.length()>0? parentPath+PATH_SEPARATOR+name : name;
+        }
     }
     
     String getName() {
@@ -66,8 +78,8 @@ class EventBus {
         }
         
         EventBus child = getChildByName(childName);
-        path = path.substring(childName.length()+1);
-        if(path.charAt(0) == 'c')
+        path = path.substring(childName.length());
+        if(path.length()>0 && path.charAt(0) == PATH_SEPARATOR)
             path = path.substring(1);
 
         return child.getChild(path);
@@ -106,6 +118,24 @@ class EventBus {
         int index = indexOf(listener);
         if(index >= 0)
             subscriptions.remove(index);
+        
+        if(subscriptions.isEmpty() && isChildrenEmpty())
+            removeFromParent();
+    }
+    
+    private boolean isChildrenEmpty() {
+        for(EventBus bus : children) {
+            if(!bus.subscriptions.isEmpty() || !bus.isChildrenEmpty())
+                return false;
+        }
+        return true;
+    }
+    
+    private void removeFromParent() {
+        if(this.parent != null) {
+            this.parent.children.remove(this);
+            this.parent = null;
+        }
     }
     
     private int indexOf(Object listener) {

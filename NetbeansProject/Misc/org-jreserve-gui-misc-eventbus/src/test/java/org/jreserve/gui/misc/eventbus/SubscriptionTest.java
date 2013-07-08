@@ -18,6 +18,7 @@ package org.jreserve.gui.misc.eventbus;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingUtilities;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -114,6 +115,22 @@ public class SubscriptionTest {
         
         subscription.publish(Integer.valueOf(1));
         assertEquals(2, listener.callCount);
+    }
+
+    @Test
+    public void testPublish_FromEdt() {
+        class EdtListener {
+            @EventBusListener(forceEDT = true)
+            public void listen(Double value) {
+                boolean onEdt = SwingUtilities.isEventDispatchThread();
+                System.out.println("On EDT: "+onEdt);
+                assertTrue(onEdt);
+            }
+        }
+        
+        EdtListener l = new EdtListener();
+        Subscription s = new Subscription(l);
+        s.publish(Double.valueOf(0.5));
     }
     
     private class Listener {

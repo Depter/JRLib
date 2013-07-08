@@ -16,11 +16,9 @@
  */
 package org.jreserve.gui.misc.eventbus;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -31,136 +29,85 @@ import static org.junit.Assert.*;
  */
 public class EventBusTest {
     
+    private EventBus bus;
+    
     public EventBusTest() {
     }
     
     @Before
     public void setUp() {
+        bus = new EventBus();
     }
 
-    /**
-     * Test of getName method, of class EventBus.
-     */
     @Test
     public void testGetName() {
-        System.out.println("getName");
-        EventBus instance = null;
-        String expResult = "";
-        String result = instance.getName();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals("", bus.getName());
     }
 
-    /**
-     * Test of getPath method, of class EventBus.
-     */
     @Test
     public void testGetPath() {
-        System.out.println("getPath");
-        EventBus instance = null;
-        String expResult = "";
-        String result = instance.getPath();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        String n2 = "bus2";
+        EventBus bus2 = bus.getChild(n2);
+        assertEquals(n2, bus2.getName());
+        assertEquals(n2, bus2.getPath());
     }
 
-    /**
-     * Test of getChild method, of class EventBus.
-     */
     @Test
     public void testGetChild() {
-        System.out.println("getChild");
-        String path = "";
-        EventBus instance = null;
-        EventBus expResult = null;
-        EventBus result = instance.getChild(path);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        EventBus child = bus.getChild("bus2.bus3");
+        assertEquals("bus3", child.getName());
+        assertEquals("bus2.bus3", child.getPath());
+        
+        child = bus.getChild("bus2.bus4");
+        assertEquals("bus4", child.getName());
+        assertEquals("bus2.bus4", child.getPath());
     }
 
-    /**
-     * Test of subscribe method, of class EventBus.
-     */
     @Test
     public void testSubscribe() {
-        System.out.println("subscribe");
-        Object listener = null;
-        EventBus instance = null;
-        instance.subscribe(listener);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        Listener listener = new Listener();
+        bus.subscribe(listener);
+        
+        List<Subscription> ss = new ArrayList<Subscription>();
+        bus.fillSubscriptions(ss, Double.class);
+        assertEquals(1, ss.size());
+        assertTrue(ss.get(0).references(listener));
+        
+        bus.unsubscribe(listener);
+        ss.clear();
+        bus.fillSubscriptions(ss, Double.class);
+        assertEquals(0, ss.size());
+        
+        EventBus bus3 = bus.getChild("bus2.bus3");
+        Listener l3 = new Listener();
+        bus3.subscribe(l3);
+        
+        EventBus bus2 = bus.getChild("bus2");
+        Listener l2 = new Listener();
+        bus2.subscribe(l2);
+        
+        bus.subscribe(listener);
+        
+        ss.clear();
+        bus3.fillSubscriptions(ss, Double.class);
+        assertEquals(3, ss.size());
+        
+        ss.clear();
+        bus2.fillSubscriptions(ss, Double.class);
+        assertEquals(2, ss.size());
+        
+        ss.clear();
+        bus.fillSubscriptions(ss, Double.class);
+        assertEquals(1, ss.size());
     }
-
-    /**
-     * Test of unsubscribe method, of class EventBus.
-     */
-    @Test
-    public void testUnsubscribe() {
-        System.out.println("unsubscribe");
-        Object listener = null;
-        EventBus instance = null;
-        instance.unsubscribe(listener);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of fillSubscriptions method, of class EventBus.
-     */
-    @Test
-    public void testFillSubscriptions() {
-        System.out.println("fillSubscriptions");
-        List<Subscription> subscriptions = null;
-        Class eventClass = null;
-        EventBus instance = null;
-        instance.fillSubscriptions(subscriptions, eventClass);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of equals method, of class EventBus.
-     */
-    @Test
-    public void testEquals() {
-        System.out.println("equals");
-        Object o = null;
-        EventBus instance = null;
-        boolean expResult = false;
-        boolean result = instance.equals(o);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of hashCode method, of class EventBus.
-     */
-    @Test
-    public void testHashCode() {
-        System.out.println("hashCode");
-        EventBus instance = null;
-        int expResult = 0;
-        int result = instance.hashCode();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of toString method, of class EventBus.
-     */
-    @Test
-    public void testToString() {
-        System.out.println("toString");
-        EventBus instance = null;
-        String expResult = "";
-        String result = instance.toString();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+    
+    private class Listener {
+        
+        private int count;
+        
+        @EventBusListener
+        public void event(Double value) {
+            count++;
+        }
     }
 }

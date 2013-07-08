@@ -19,6 +19,10 @@ package org.jreserve.gui.misc.eventbus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -27,15 +31,28 @@ import java.util.List;
  */
 public class EventBusManager {
     
-    private final static EventBusManager INSTANCE = new EventBusManager();
+    private final static String DISPATCHER_NAME = "EventBus_Dispatcher";
+    private final static Logger logger = Logger.getLogger(EventBusManager.class.getName());
     
-    public static EventBusManager getDefault() {
+    private static EventBusManager INSTANCE;
+    
+    public synchronized static EventBusManager getDefault() {
+        if(INSTANCE == null) {
+            INSTANCE = new EventBusManager();
+            INSTANCE.dispatcherThread.start();
+        }
         return INSTANCE;
     }
     
-    private final EventBus root = new EventBus(null, "");
+    private final EventBus root = new EventBus();
+    private final BlockingQueue<Event> eventQue = new LinkedBlockingQueue<Event>();
+    private final EventDispatcher dispatcher = new EventDispatcher();
+    private final Thread dispatcherThread;
     
     private EventBusManager() {
+        dispatcherThread = new Thread(dispatcher, DISPATCHER_NAME);
+        dispatcherThread.setPriority(Thread.NORM_PRIORITY);
+        dispatcherThread.setDaemon(true);
     }
     
     public synchronized void subscribe(Object listener) {
@@ -66,17 +83,56 @@ public class EventBusManager {
         publish("", event);
     }
     
-    public synchronized void publish(String busName, Object event) {
-        if(event == null)
+    public synchronized void publish(String busName, Object value) {
+        if(value == null)
             throw new NullPointerException("Can not publish null events!");
         if(busName == null)
             busName = "";
-        EventBus bus = root.getChild(busName);
         
-        List<Subscription> subscriptions = new ArrayList<Subscription>();
-        bus.fillSubscriptions(subscriptions, event.getClass());
+        try {
+            eventQue.put(new Event(busName, value));
+        } catch (Exception ex) {
+            logger.log(Level.WARNING, "Unable to publish event: "+value, ex);
+        }
+    }
+    
+    
+    private class EventDispatcher implements Runnable {
         
-        for(Subscription s : subscriptions)
-            s.publish(event);
+        @Override
+        public void run() {
+            try {
+                while(true)
+                    publishEvent(eventQue.take());
+            } catch (InterruptedException ex) {
+                String msg = "EventBus dispatcher thread interrupted!";
+                logger.log(Level.WARNING, msg, ex);
+            }
+        }
+        
+        private void publishEvent(Event event) {
+            synchronized(root) {
+                Object value = event.value;
+                for(Subscription s : getSubscriptons(event.bus, value.getClass()))
+                    s.publish(value);
+            }
+        }
+        
+        private List<Subscription> getSubscriptons(String busName, Class clazz) {
+            EventBus bus = root.getChild(busName);
+            List<Subscription> subscriptions = new ArrayList<Subscription>();
+            bus.fillSubscriptions(subscriptions, clazz);
+            return subscriptions;
+        }
+    }
+    
+    private static class Event {
+        private final String bus;
+        private final Object value;
+
+        private Event(String bus, Object value) {
+            this.bus = bus;
+            this.value = value;
+        }        
     }
 }

@@ -77,6 +77,12 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-misc-eventbus</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-project</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
