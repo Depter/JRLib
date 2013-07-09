@@ -57,7 +57,7 @@ class TxtAuditDb implements AuditDb {
     
     TxtAuditDb(FileObject projectFolder) throws IOException {
         this.projectDir = projectFolder;
-        this.auditFile = FileUtil.createData(projectFolder, "Audit/db.txt");
+        this.auditFile = FileUtil.createData(projectFolder, "Audit/db.aud");
         this.lock = auditFile.lock();
     }
     

@@ -39,7 +39,7 @@ class AuditLogger implements Runnable {
     private static AuditLogger instance;
 
     static void startLogger() {
-        if (instance != null) {
+        if (instance == null) {
             instance = new AuditLogger();
             startAuditThread();
             EventBusManager.getDefault().subscribe(instance.eventListener);
