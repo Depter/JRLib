@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.misc.audit;
 
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.openide.modules.OnStart;
 import org.openide.modules.OnStop;
 
@@ -39,7 +40,7 @@ public class LifeCycle {
         @Override
         public void run() {
             AuditLogger.stopLogger();
-            //TODO Close connections
+            AuditDbManager.getInstance().close();
         }
     
     }

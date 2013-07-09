@@ -38,6 +38,7 @@ public class EventBusManager {
     
     public synchronized static EventBusManager getDefault() {
         if(INSTANCE == null) {
+            logger.info("Starting EventBusManager...");
             INSTANCE = new EventBusManager();
             INSTANCE.dispatcherThread.start();
         }

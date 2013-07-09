@@ -16,57 +16,86 @@
  */
 package org.jreserve.gui.misc.audit.db;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.misc.audit.event.AuditEvent;
+import org.jreserve.gui.misc.audit.event.AuditRecord;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class AuditDbManager {
-    
+public abstract class AuditDbManager {
+
     private final static Logger logger = Logger.getLogger(AuditDbManager.class.getName());
-    private final static String AUDIT_PATH = "Audit";
     
-    public static AuditDbManager getInstance() {
-        return null;
+    protected final static String AUDIT_PATH = "Audit";
+    private static AuditDbManager INSTANCE;
+    
+    public synchronized static AuditDbManager getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = Lookup.getDefault().lookup(AuditDbManager.class);
+            //TODO dummy impl, log if null
+        }
+        return INSTANCE;
     }
+
+    private final Map<Project, AuditDb> dbs = new HashMap<Project, AuditDb>();
+    private boolean closed = false;
     
-    private final Map<String, AuditDb> dbs = new HashMap<String, AuditDb>();
-    
-    private AuditDbManager() {
-    }
-    
-    public AuditDb getAuditDb(FileObject projectFolder) {
-        String path = projectFolder.getPath();
-        AuditDb db = dbs.get(projectFolder.getPath());
+    private synchronized AuditDb getAuditDb(Project project) {
+        if(closed)
+            throw new IllegalStateException("AuditDbManager is closed!");
+        
+        AuditDb db = dbs.get(project);
         if(db == null) {
-            db = createAuitDb(projectFolder);
-            dbs.put(path, db);
+            FileObject projectDir = project.getProjectDirectory();
+            try {
+                db = createAuitDb(projectDir);
+            } catch (Exception ex) {
+                logger.log(Level.SEVERE, "Unable to create audit db within project: "+projectDir.getPath(), ex);
+                db = new DummyDb(projectDir);
+            }
+            dbs.put(project, db);
         }
         return db;
     }
     
-    private AuditDb createAuitDb(FileObject projectFolder) {
-        try {
-            
-            FileObject auditDir = FileUtil.createFolder(projectFolder, AUDIT_PATH);
-            
-            return null;
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Unable to create audit db within project: "+projectFolder.getPath(), ex);
-            return new DummyDb(projectFolder);
+    protected abstract AuditDb createAuitDb(FileObject projectFolder) throws Exception;
+    
+    public List<AuditRecord> getAuditRecords(Project project) {
+        AuditDb db = getAuditDb(project);
+        synchronized(db) {
+            return db.getAuditRecords();
         }
     }
     
-    private static class DummyDb implements AuditDb {
-
+    public void storeEvent(AuditEvent event) {
+        AuditDb db = getAuditDb(event.getAuditedProject());
+        synchronized(db) {
+            db.storeEvent(event);
+        }
+    }
+    
+    public synchronized void close() {
+        if(!closed) {
+            for(AuditDb db : dbs.values())
+                db.close();
+            closed = true;
+        }
+    }
+    
+    private final static class DummyDb implements AuditDb {
+        
+        private final static Logger logger = Logger.getLogger(DummyDb.class.getName());
         private final FileObject projectDir;
         
         private DummyDb(FileObject projectDir) {
@@ -87,6 +116,15 @@ public class AuditDbManager {
         public void storeEvent(AuditEvent event) {
             String msg = "Unable to log AuditEvent, because audit db was not ceated!\n\t"+event;
             logger.log(Level.SEVERE, msg);
+        }
+
+        @Override
+        public List<AuditRecord> getAuditRecords() {
+            return Collections.EMPTY_LIST;
+        }
+        
+        @Override
+        public void close() {
         }
     }
 }

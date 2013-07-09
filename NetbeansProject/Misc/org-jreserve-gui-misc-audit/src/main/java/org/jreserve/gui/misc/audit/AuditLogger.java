@@ -20,6 +20,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.jreserve.gui.misc.audit.event.AuditEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
@@ -30,72 +31,102 @@ import org.jreserve.gui.misc.eventbus.EventBusManager;
  * @version 1.0
  */
 class AuditLogger implements Runnable {
-    
+
     private final static Logger logger = Logger.getLogger(AuditLogger.class.getName());
     private final static String THREAD_NAME = "AuditLoggerThread";
     private final static BlockingQueue<AuditEvent> events = new LinkedBlockingQueue<AuditEvent>();
-    
     private static Thread auditThread;
     private static AuditLogger instance;
-    
+
     static void startLogger() {
-        if(instance != null) {
+        if (instance != null) {
             instance = new AuditLogger();
             startAuditThread();
-            EventBusManager.getDefault().subscribe(instance);
+            EventBusManager.getDefault().subscribe(instance.eventListener);
+            EventBusManager.getDefault().subscribe(instance.providerListener);
             logger.log(Level.INFO, "Audit logger thread started...");
         }
     }
-    
+
     private static void startAuditThread() {
         auditThread = new Thread(instance, THREAD_NAME);
         auditThread.setDaemon(true);
         auditThread.start();
     }
-    
+
     static void stopLogger() {
         logger.log(Level.INFO, "Audit logger thread stopping...");
         try {
-            EventBusManager.getDefault().unsubscribe(instance);
+            EventBusManager.getDefault().unsubscribe(instance.eventListener);
+            EventBusManager.getDefault().unsubscribe(instance.providerListener);
             auditThread.interrupt();
         } catch (Exception ex) {
             logger.log(Level.WARNING, "Exception when stopping audit thread", ex);
         }
-        
+
         logger.log(Level.INFO, "Flushing audit event queu...");
-        synchronized(events) {
-            while(!events.isEmpty())
+        synchronized (events) {
+            while (!events.isEmpty()) {
                 instance.logEvent(events.poll());
+            }
         }
     }
     
+    private final EventListener eventListener = new EventListener();
+    private final ProviderListener providerListener = new ProviderListener();
+
     private AuditLogger() {
     }
-    
-    @EventBusListener
-    public void auditEventPublished(AuditEvent evt) {
-        try {
-            events.put(evt);
-        } catch (Exception ex) {
-            logger.log(Level.WARNING, "Unable to publish event: "+evt, ex);
-        }
-    }
-    
+
     @Override
     public void run() {
         try {
-            while(true)
+            while (true) {
                 logEvent(events.take());
+            }
         } catch (InterruptedException ex) {
             logger.log(Level.WARNING, THREAD_NAME + " interrupted!", ex);
         }
     }
-    
+
     private void logEvent(AuditEvent event) {
         try {
-        
+            AuditDbManager.getInstance().storeEvent(event);
         } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Unable to log audit event: "+event, ex);
+            logger.log(Level.SEVERE, "Unable to log audit event: " + event, ex);
+        }
+    }
+
+    public class EventListener {
+
+        private EventListener() {
+        }
+
+        @EventBusListener
+        public void auditEventPublished(AuditEvent evt) {
+            try {
+                events.put(evt);
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "Unable to publish event: " + evt, ex);
+            }
+        }
+    }
+
+    public class ProviderListener {
+
+        private ProviderListener() {
+        }
+
+        @EventBusListener
+        public void auditEventPublished(AuditEvent.Provider provider) {
+            try {
+                AuditEvent evt = provider.getAuditEvent();
+                if(evt == null)
+                    throw new NullPointerException("AuditEvent.Provider '"+provider+"' provided a null AuditEvent!");
+                events.put(evt);
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "Unable to publish event: " + provider, ex);
+            }
         }
     }
 }

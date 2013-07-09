@@ -24,10 +24,15 @@ import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.project.api.ProjectEvent;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.project.Project;
+import org.netbeans.api.project.ProjectManager;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -145,8 +150,10 @@ public class NewProjectWizardIterator implements WizardDescriptor.ProgressInstan
     public Set instantiate(ProgressHandle ph) throws IOException {
         ph.switchToIndeterminate();
         ph.start();
-        Set result = ProjectBuilder.buildProject(getProjectFile());
+        File file = getProjectFile();
+        Set result = ProjectBuilder.buildProject(file);
         ph.finish();
+        publishProjectCreated(file);
         return result;
     }
     
@@ -154,6 +161,16 @@ public class NewProjectWizardIterator implements WizardDescriptor.ProgressInstan
         String name = (String) wizard.getProperty(PROP_PROJECT_NAME);
         File folder = (File) wizard.getProperty(PROP_PROJECT_FOLDER);
         return FileUtil.normalizeFile(new File(folder, name));
+    }
+    
+    private void publishProjectCreated(File file) {
+        FileObject projectFO = FileUtil.toFileObject(file);
+        try {
+            Project project = ProjectManager.getDefault().findProject(projectFO);
+            ProjectEvent.publishProjectCreatedEvent(project);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
     }
 
     @Override

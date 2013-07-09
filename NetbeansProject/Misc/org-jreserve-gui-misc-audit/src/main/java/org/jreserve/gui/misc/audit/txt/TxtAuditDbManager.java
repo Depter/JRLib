@@ -14,32 +14,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.misc.audit.event;
+package org.jreserve.gui.misc.audit.txt;
 
 import org.jreserve.gui.misc.audit.db.AuditDb;
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.openide.filesystems.FileObject;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class H2AuditDb implements AuditDb {
-
+@ServiceProvider(service=AuditDbManager.class)
+public class TxtAuditDbManager extends AuditDbManager {
     
     @Override
-    public FileObject getProjectDir() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public FileObject getDbFile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void storeEvent(AuditEvent event) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected AuditDb createAuitDb(FileObject projectFolder) throws Exception {
+        return new TxtAuditDb(projectFolder);
     }
     
 }

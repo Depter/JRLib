@@ -17,23 +17,44 @@
 package org.jreserve.gui.misc.audit.event;
 
 import java.util.Date;
-import org.netbeans.api.project.Project;
 
 /**
  *
- * @author Peter Decsi
- * @version 1.0
+ * @author AA461472
  */
-public interface AuditEvent {
+public final class AuditRecord {
     
-    public static interface Provider {
-        public AuditEvent getAuditEvent();
+    private final Date changeDate;
+    private final Date logDate;
+    private final String component;
+    private final String user;
+    private final String change;
+
+    public AuditRecord(Date changeDate, Date logDate, String component, String user, String change) {
+        this.changeDate = changeDate;
+        this.logDate = logDate;
+        this.component = component;
+        this.user = user;
+        this.change = change;
     }
-    
-    public Project getAuditedProject();
-    
-    public Date getChangeDate();
-    public String getUserName();
-    public String getComponent();
-    public String getChange();
+
+    public Date getChangeDate() {
+        return changeDate;
+    }
+
+    public Date getLogDate() {
+        return logDate;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public String getChange() {
+        return change;
+    }
 }

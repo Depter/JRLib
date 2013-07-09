@@ -72,11 +72,16 @@
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
-        
         <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.3.172</version>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-projectapi</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-util-lookup</artifactId>
+            <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
     </dependencies>
@@ -88,6 +93,13 @@
                 <artifactId>nbm-maven-plugin</artifactId>
                 <version>3.10.1</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <cluster>jreserve-misc</cluster>
+                    <publicPackages>
+                        <publicPackage>org.jreserve.gui.misc.audit.db</publicPackage>
+                        <publicPackage>org.jreserve.gui.misc.audit.event</publicPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>
