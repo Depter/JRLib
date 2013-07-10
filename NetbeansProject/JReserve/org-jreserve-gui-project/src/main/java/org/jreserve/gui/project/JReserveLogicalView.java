@@ -19,6 +19,10 @@ package org.jreserve.gui.project;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.Action;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
+import org.jreserve.gui.project.api.ProjectEvent;
+import org.jreserve.gui.project.api.ProjectEvent.ProjectPropertyChangedEvent;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
 import org.netbeans.spi.project.ui.LogicalViewProvider;
@@ -67,6 +71,7 @@ class JReserveLogicalView implements LogicalViewProvider {
                   new ProxyLookup(project.getLookup(), node.getLookup())
             );
             setDisplayName(ProjectUtils.getInformation(project).getDisplayName());
+            EventBusManager.getDefault().subscribe(this);
         }
 
         @Override
@@ -91,6 +96,17 @@ class JReserveLogicalView implements LogicalViewProvider {
 //                CommonProjectActions.customizeProjectAction(),
 //                CommonProjectActions.closeProjectAction()
 //            };
+        }
+        
+        @EventBusListener(forceEDT=true)
+        public void projectPropertyChange(ProjectPropertyChangedEvent event) {
+            if(isNamePropertyChange(event))
+                setDisplayName(event.getNewValue());
+        }
+        
+        private boolean isNamePropertyChange(ProjectPropertyChangedEvent event) {
+            return ProjectBaseCustomizerPanel.BASE_CONFIG.equals(event.getConfigName()) &&
+                   ProjectBaseCustomizerPanel.NAME_PROP.equals(event.getProperty());
         }
     }
     

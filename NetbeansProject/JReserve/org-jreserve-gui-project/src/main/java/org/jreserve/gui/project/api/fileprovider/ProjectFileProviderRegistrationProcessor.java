@@ -17,17 +17,25 @@
 
 package org.jreserve.gui.project.api.fileprovider;
 
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.SupportedAnnotationTypes;
+import javax.annotation.processing.SupportedSourceVersion;
+import javax.lang.model.SourceVersion;
 import javax.lang.model.element.TypeElement;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.jreserve.gui.project.api.ProjectFileProvider;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@ServiceProvider(service=Processor.class)
+@SupportedSourceVersion(SourceVersion.RELEASE_6)
+@SupportedAnnotationTypes("org.jreserve.gui.project.api.ProjectFileProvider.Registration")
 public class ProjectFileProviderRegistrationProcessor extends AbstractRegistrationProcessor<ProjectFileProvider.Registration, ProjectFileProvider> {
 
     final static String LAYER_PATH = "Projects/%s/CreateFileProviders/";

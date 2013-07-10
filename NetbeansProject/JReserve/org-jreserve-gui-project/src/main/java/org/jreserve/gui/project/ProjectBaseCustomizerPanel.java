@@ -20,7 +20,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.JTextComponent;
 import org.jreserve.gui.project.api.ProjectConfigurator;
+import org.jreserve.gui.project.api.ProjectEvent;
+import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.ProjectCustomizer;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
@@ -32,12 +35,15 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "MSG.ProjectBaseCustomizerPanel.Name.Empty=Name is empty!",
-    "MSG.ProjectBaseCustomizerPanel.Description.Empty=Description is empty!"
+    "MSG.ProjectBaseCustomizerPanel.Description.Empty=Description is empty!",
+    "MSG.ProjectBaseCustomizerPanel.NameProperty=Name",
+    "MSG.ProjectBaseCustomizerPanel.DescriptionProperty=Description"
 })
 public class ProjectBaseCustomizerPanel extends javax.swing.JPanel {
     
-    private final static String NAME_PROP = "name";
-    private final static String DESCRIPTION_PROP = "description";
+    public final static String NAME_PROP = "name";
+    public final static String DESCRIPTION_PROP = "description";
+    public final static String BASE_CONFIG = "org.jreserve.gui.project";
     
     private ProjectCustomizer.Category category;
     private Lookup lkp;
@@ -174,17 +180,34 @@ public class ProjectBaseCustomizerPanel extends javax.swing.JPanel {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            Project project = lkp.lookup(Project.class);
             ProjectConfigurator.Manager config = lkp.lookup(ProjectConfigurator.Manager.class);
-            ProjectConfigurator base = config.getConfigurator("org.jreserve.gui.project");
-            base.setProperty(NAME_PROP, nameText.getText());
+            ProjectConfigurator base = config.getConfigurator(BASE_CONFIG);
             
-            String description = descriptionText.getText();
-            if(description==null || description.trim().length()==0) {
-                base.setProperty(DESCRIPTION_PROP, null);
-            } else {
-                base.setProperty(DESCRIPTION_PROP, description);
+            setProperty(project, base, NAME_PROP, getValue(nameText));
+            setProperty(project, base, DESCRIPTION_PROP, getValue(descriptionText));
+        }
+        
+        private String getValue(JTextComponent text) {
+            String s = text.getText();
+            return (s==null || s.length()==0)? null : s;
+        }
+        
+        private void setProperty(Project project, ProjectConfigurator config, String property, String newValue) {
+            String oldValue = config.getProperty(property);
+            if(!equals(oldValue, newValue)) {
+                config.setProperty(property, newValue);
+                String userProp = NAME_PROP.equals(property)?
+                        Bundle.MSG_ProjectBaseCustomizerPanel_NameProperty() :
+                        Bundle.MSG_ProjectBaseCustomizerPanel_DescriptionProperty();
+                ProjectEvent.publishPropertyChangedEvent(project, BASE_CONFIG, property, userProp, oldValue, newValue);
             }
         }
-    
+        
+        private boolean equals(String s1, String s2) {
+            if(s1 == null)
+                return s2==null;
+            return s2!=null && s1.equals(s2);
+        }
     }
 }

@@ -17,12 +17,15 @@
 package org.jreserve.gui.misc.systemproperties;
 
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Font;
 import java.util.concurrent.ExecutionException;
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.netbeans.swing.outline.DefaultOutlineModel;
 import org.netbeans.swing.outline.Outline;
@@ -65,7 +68,8 @@ import org.openide.util.NbBundle.Messages;
     preferredID = "SystemPropertiesTopComponent")
 @Messages({
     "CTL_SystemPropertiesAction=System Properties",
-    "CTL_SystemPropertiesTopComponent=System Properties"
+    "CTL_SystemPropertiesTopComponent=System Properties",
+    "CTL.SystemPropertiesTopComponent.SearchPrompt=Search"
 })
 public final class SystemPropertiesTopComponent extends TopComponent {
     
@@ -78,10 +82,12 @@ public final class SystemPropertiesTopComponent extends TopComponent {
     private CardLayout viewLayout = new CardLayout();
     private PropertyTableModel treeModel;
     private PropertyListModel listModel;
+    private TextPrompt searchPrompt;
     
     public SystemPropertiesTopComponent() {
         setName(Bundle.CTL_SystemPropertiesTopComponent());
         initComponents();
+        initSearchPrompt();
         
         PropertyItem root = new PropertyItem(null, "Root");
         root.getChildren().add(new PropertyItem("Loading...", "Loading"));
@@ -89,6 +95,14 @@ public final class SystemPropertiesTopComponent extends TopComponent {
         initList(root);
         viewLayout.show(contentPanel, TREE);
         loadProperties();
+    }
+    
+    private void initSearchPrompt() {
+        searchPrompt = new TextPrompt(Bundle.CTL_SystemPropertiesTopComponent_SearchPrompt(), searchText, TextPrompt.PromptStyle.FOCUS_LOST);
+        searchPrompt.setForeground(Color.GRAY);
+        searchPrompt.changeAlpha(0.5f);
+        searchPrompt.changeStyle(Font.BOLD + Font.ITALIC);
+        searchPrompt.setIcon(SEARCH_IMG);
     }
     
     private void initTree(PropertyItem root) {
@@ -135,7 +149,6 @@ public final class SystemPropertiesTopComponent extends TopComponent {
         java.awt.GridBagConstraints gridBagConstraints;
 
         toolBarPanel = new javax.swing.JPanel();
-        searchLabel = new javax.swing.JLabel();
         searchText = new javax.swing.JTextField();
         toolBarFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         refreshButton = new javax.swing.JButton();
@@ -144,16 +157,6 @@ public final class SystemPropertiesTopComponent extends TopComponent {
         setLayout(new java.awt.BorderLayout());
 
         toolBarPanel.setLayout(new java.awt.GridBagLayout());
-
-        searchLabel.setIcon(SEARCH_IMG);
-        org.openide.awt.Mnemonics.setLocalizedText(searchLabel, org.openide.util.NbBundle.getMessage(SystemPropertiesTopComponent.class, "LBL.SystemPropertiesTopComponent.Search")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
-        toolBarPanel.add(searchLabel, gridBagConstraints);
 
         searchText.setText(null);
         searchText.getDocument().addDocumentListener(new SearchListener());
@@ -202,7 +205,6 @@ public final class SystemPropertiesTopComponent extends TopComponent {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel contentPanel;
     private javax.swing.JButton refreshButton;
-    private javax.swing.JLabel searchLabel;
     private javax.swing.JTextField searchText;
     private javax.swing.Box.Filler toolBarFiller;
     private javax.swing.JPanel toolBarPanel;

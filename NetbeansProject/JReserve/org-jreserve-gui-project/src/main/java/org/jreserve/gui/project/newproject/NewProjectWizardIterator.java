@@ -148,8 +148,8 @@ public class NewProjectWizardIterator implements WizardDescriptor.ProgressInstan
 
     @Override
     public Set instantiate(ProgressHandle ph) throws IOException {
-        ph.switchToIndeterminate();
         ph.start();
+        ph.switchToIndeterminate();
         File file = getProjectFile();
         Set result = ProjectBuilder.buildProject(file);
         ph.finish();

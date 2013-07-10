@@ -70,6 +70,7 @@
         <module>branding</module>
         <module>application</module>
     <module>org-jreserve-gui-project</module>
+    <module>org-jreserve-gui-data</module>
   </modules>
 
     <properties>

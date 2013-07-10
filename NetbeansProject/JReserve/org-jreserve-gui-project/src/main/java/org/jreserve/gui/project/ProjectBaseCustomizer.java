@@ -23,7 +23,8 @@ import org.openide.util.NbBundle.Messages;
 
 /**
  *
- * @author AA461472
+ * @author Peter Decsi
+ * @version 1.0
  */
 @Messages({
     "LBL.ProjectBaseCustomizer.Category=Project"

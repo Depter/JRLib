@@ -20,6 +20,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -36,6 +37,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -46,6 +48,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
@@ -60,6 +63,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.AddLoggerDialog.title=Configure logger",
     "LBL.AddLoggerDialog.logger=Logger:",
+    "LBL.AddLoggerDialog.logger.prompt=logger.name",
     "LBL.AddLoggerDialog.level=Level:",
     "CTL.AddLoggerDialog.add=Add",
     "CTL.AddLoggerDialog.cancel=Cancel",
@@ -92,7 +96,8 @@ class AddLoggerDialog extends JPanel implements ActionListener, DocumentListener
     private final static String ERR_ICON = "org/netbeans/modules/dialogs/error.gif";
     
     private JTextField loggerName;
-    private JTextField levelText;
+    private TextPrompt loggerNamePrompt;
+    private JComboBox levelCombo;
     private JList loggerList;
     private JLabel msgLabel;
     private JButton addButton;
@@ -119,7 +124,7 @@ class AddLoggerDialog extends JPanel implements ActionListener, DocumentListener
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         c.gridx=0; c.gridy=0;
-        c.anchor=GridBagConstraints.NORTHWEST;
+        c.anchor=GridBagConstraints.BASELINE_LEADING;
         c.fill=GridBagConstraints.HORIZONTAL;
         c.weightx=0d;c.weighty=0d;
         c.insets = new Insets(0, 0, 5, 5);
@@ -132,15 +137,25 @@ class AddLoggerDialog extends JPanel implements ActionListener, DocumentListener
         c.gridx=1; c.gridy=0;
         c.weightx=1d;
         c.insets = new Insets(0, 0, 5, 0);
+        c.anchor=GridBagConstraints.BASELINE_TRAILING;
         loggerName = new JTextField();
         loggerName.getDocument().addDocumentListener(this);
+        loggerNamePrompt = new TextPrompt(Bundle.LBL_AddLoggerDialog_logger_prompt(), loggerName, TextPrompt.PromptStyle.FOCUS_LOST);
+        loggerNamePrompt.changeAlpha(0.5f);
+        loggerNamePrompt.changeStyle(Font.ITALIC);
+        loggerNamePrompt.setForeground(Color.GRAY);
         panel.add(loggerName, c);
         
         c.gridy=1;
         c.insets = new Insets(0, 0, 0, 0);
-        levelText = new JTextField();
-        levelText.getDocument().addDocumentListener(this);
-        panel.add(levelText, c);
+        levelCombo = new JComboBox(new Level[]{
+            Level.OFF, Level.SEVERE, Level.WARNING, Level.INFO,
+            Level.CONFIG, Level.FINE, Level.FINER, Level.FINEST,
+            Level.ALL});
+        levelCombo.setRenderer(new LevelComboRenderer());
+        levelCombo.setSelectedItem(null);
+        levelCombo.addActionListener(this);
+        panel.add(levelCombo, c);
 
         return panel;
     }
@@ -193,12 +208,14 @@ class AddLoggerDialog extends JPanel implements ActionListener, DocumentListener
         } else if(addButton == source) {
             addLoggerToTable();
             dialog.dispose();
+        } else if(levelCombo == source) {
+            inputChanged();
         }
     }
 
     private void addLoggerToTable() {
         String logger = loggerName.getText();
-        Level level = Level.parse(levelText.getText());
+        Level level = (Level) levelCombo.getSelectedItem();
         tableModel.addValue(logger, level);
     }
     
@@ -218,8 +235,7 @@ class AddLoggerDialog extends JPanel implements ActionListener, DocumentListener
     
     private void inputChanged() {
         String logger = loggerName.getText();
-        String level = levelText.getText();
-        boolean valid = checkLoggerName(logger) && checkLevel(level);
+        boolean valid = checkLoggerName(logger) && checkLevel();
         addButton.setEnabled(valid);
         msgLabel.setVisible(!valid);
         listModel.setRootName(logger);
@@ -247,18 +263,13 @@ class AddLoggerDialog extends JPanel implements ActionListener, DocumentListener
         msgLabel.setVisible(true);
     }
     
-    private boolean checkLevel(String level) {
-        if(isEmpty(level)) {
+    private boolean checkLevel() {
+        Level level = (Level) levelCombo.getSelectedItem();
+        if(level == null) {
             showError(Bundle.MSG_AddLoggerDialog_level_empty());
             return false;
         }
-        try {
-            Level.parse(level);
-            return true;
-        } catch (IllegalArgumentException ex) {
-            showError(Bundle.MSG_AddLoggerDialog_level_invalid(level));
-            return false;
-        }
+        return true;
     }
 
     @Override

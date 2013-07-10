@@ -18,6 +18,7 @@ package org.jreserve.gui.project;
 
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
+import org.netbeans.spi.project.support.LookupProviderSupport;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -28,7 +29,9 @@ import org.openide.util.lookup.Lookups;
  * @version 1.0
  */
 public class JReserveProject implements Project {
-
+    
+    private final static String LOOKUP_PATH = "Projects/"+JReserveProjectFactory.LAYER_NAME+"/Lookup";
+    
     private final FileObject projectDir;
     private final ProjectState state;
     private Lookup lkp;
@@ -46,16 +49,27 @@ public class JReserveProject implements Project {
     @Override
     public Lookup getLookup() {
         if(lkp == null)
-            lkp = Lookups.fixed(createLookupContent());
+            lkp = createLookup();
         return lkp;
     }
     
-    private Object[] createLookupContent() {
-        return new Object[] {
+    private Lookup createLookup() {
+        Object[] baseInfo = {
             this,
             new JReserveProjectInformation(this),
             new JReserveLogicalView(this),
             new JReserveProjectCustomizer(this)
         };
+        return LookupProviderSupport.createCompositeLookup(
+                Lookups.fixed(baseInfo), LOOKUP_PATH);
     }
+    
+//    private Object[] createLookupContent() {
+//        return new Object[] {
+//            this,
+//            new JReserveProjectInformation(this),
+//            new JReserveLogicalView(this),
+//            new JReserveProjectCustomizer(this)
+//        };
+//    }
 }

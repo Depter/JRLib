@@ -63,18 +63,11 @@ class AuditLogger implements Runnable {
         } catch (Exception ex) {
             logger.log(Level.WARNING, "Exception when stopping audit thread", ex);
         }
-
-        logger.log(Level.INFO, "Flushing audit event queu...");
-        synchronized (events) {
-            while (!events.isEmpty()) {
-                instance.logEvent(events.poll());
-            }
-        }
     }
     
     private final EventListener eventListener = new EventListener();
     private final ProviderListener providerListener = new ProviderListener();
-
+    
     private AuditLogger() {
     }
 
@@ -85,7 +78,16 @@ class AuditLogger implements Runnable {
                 logEvent(events.take());
             }
         } catch (InterruptedException ex) {
-            logger.log(Level.WARNING, THREAD_NAME + " interrupted!", ex);
+            flushEvents();
+            logger.info("Audit logger thread stopped.");
+        }
+    }
+    
+    private void flushEvents() {
+        logger.log(Level.INFO, "Flushing audit event queu...");
+        synchronized (events) {
+            while (!events.isEmpty())
+                logEvent(events.poll());
         }
     }
 

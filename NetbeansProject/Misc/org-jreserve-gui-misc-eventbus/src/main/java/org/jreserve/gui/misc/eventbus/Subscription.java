@@ -35,6 +35,8 @@ class Subscription {
         "it does not have a public method annotated with EventBusListener, "+
         "or the annotated method has more then one parameter, or the one "+
         "parameter is a primitive type!";
+    private final static String ACCESS_ERROR = 
+        "Can not access method '%s()' in '%s' for event publishing!";
     private final static String INVOCATION_ERROR = 
         "Method '%s()' in '%s' has thrown an unexpected exception during event publishing!";
     
@@ -121,13 +123,41 @@ class Subscription {
         
         @Override
         public void run() {
+            Method m = getMethod();
+            if(m != null) {
+                if(m.isAccessible()) {
+                    invokeMethod(m);
+                } else {
+                    invokeInaccessibleMethod(m);
+                }
+            }
+        }
+        
+        private Method getMethod() {
+            
             try {
-                Method m = listener.getClass().getMethod(methodName, eventClass);
+                Class clazz = listener.getClass();
+                return clazz.getMethod(methodName, eventClass);
+            } catch (Exception ex) {
+                String  msg = String.format(ACCESS_ERROR, methodName, listener);
+                logger.log(Level.WARNING, msg, ex);
+                return null;
+            }
+        }
+        
+        private void invokeMethod(Method m) {
+            try {
                 m.invoke(listener, event);
             } catch (Exception ex) {
                 String  msg = String.format(INVOCATION_ERROR, methodName, listener);
                 logger.log(Level.WARNING, msg, ex);
             }
+        }
+        
+        private void invokeInaccessibleMethod(Method m) {
+            m.setAccessible(true);
+            invokeMethod(m);
+            m.setAccessible(false);
         }
     }
 }

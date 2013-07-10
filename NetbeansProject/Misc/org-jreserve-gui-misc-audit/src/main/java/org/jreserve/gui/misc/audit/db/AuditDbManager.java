@@ -43,7 +43,10 @@ public abstract class AuditDbManager {
     public synchronized static AuditDbManager getInstance() {
         if(INSTANCE == null) {
             INSTANCE = Lookup.getDefault().lookup(AuditDbManager.class);
-            //TODO dummy impl, log if null
+            if(INSTANCE == null) {
+                INSTANCE = new DummyDbManager();
+                logger.warning("No ServiceProvider found for AuditDbManager service! Dummy implementation will be used.");
+            }
         }
         return INSTANCE;
     }
@@ -125,6 +128,14 @@ public abstract class AuditDbManager {
         
         @Override
         public void close() {
+        }
+    }
+    
+    private final static class DummyDbManager extends AuditDbManager {
+
+        @Override
+        protected AuditDb createAuitDb(FileObject projectFolder) throws Exception {
+            throw new UnsupportedOperationException("DummyDbManager is used!");
         }
     }
 }

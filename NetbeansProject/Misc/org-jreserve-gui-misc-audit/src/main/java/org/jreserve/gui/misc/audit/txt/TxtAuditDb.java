@@ -32,16 +32,21 @@ import java.util.logging.Logger;
 import org.jreserve.gui.misc.audit.db.AuditDb;
 import org.jreserve.gui.misc.audit.event.AuditEvent;
 import org.jreserve.gui.misc.audit.event.AuditRecord;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "MSG.TxtAuditDb.StoreException=Unable to store audit event!",
+    "MSG.TxtAuditDb.LoadException=Unable to load audit events!"
+})
 class TxtAuditDb implements AuditDb {
     
     private final static Logger logger = Logger.getLogger(TxtAuditDb.class.getName());
@@ -77,7 +82,7 @@ class TxtAuditDb implements AuditDb {
             openWriter();
             writeEvent(event);
         } catch (IOException ex) {
-            //TODO show exception
+            BubbleUtil.showException(Bundle.MSG_TxtAuditDb_StoreException(), ex);
             logger.log(Level.SEVERE, "Unable to store audit event: "+event, ex);
         } finally {
             closeWriter();
@@ -111,8 +116,7 @@ class TxtAuditDb implements AuditDb {
                 writer.flush();
                 writer.close();
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                //TODO log event;
+                logger.log(Level.WARNING, "Unable to close writer for audit file: "+auditFile.getPath(), ex);
             }
             writer = null;
         }
@@ -128,7 +132,7 @@ class TxtAuditDb implements AuditDb {
         } catch(EOFException ex) {
             return records;
         } catch (IOException ex) {
-            //TODO show exception
+            BubbleUtil.showException(Bundle.MSG_TxtAuditDb_LoadException(), ex);
             logger.log(Level.SEVERE, "Unable to read audit events!", ex);
         } finally {
             closeReader();
@@ -164,8 +168,7 @@ class TxtAuditDb implements AuditDb {
             try {
                 reader.close();
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                //TODO log event;
+                logger.log(Level.WARNING, "Unable to close reader for audit file: "+auditFile.getPath(), ex);
             }
             reader = null;
         }

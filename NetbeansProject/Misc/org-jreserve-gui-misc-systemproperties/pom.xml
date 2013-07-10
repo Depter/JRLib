@@ -91,6 +91,13 @@
             <artifactId>org-netbeans-swing-outline</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-misc-utils</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>

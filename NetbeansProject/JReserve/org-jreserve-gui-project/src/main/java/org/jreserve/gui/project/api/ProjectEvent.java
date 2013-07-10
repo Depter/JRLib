@@ -27,7 +27,11 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @Messages({
-    "MSG.ProjectEvent.ProjectCreated=Project created"
+    "MSG.ProjectEvent.ProjectCreated=Project created",
+    "# {0} - propertyName",
+    "# {1} - oldValue",
+    "# {2} - newValue",
+    "MSG.ProjectEvent.ProjectPropertyChanged=Project property \"{0}\" changed from \"{1}\" to \"{2}\"."
 })
 public abstract class ProjectEvent {
     
@@ -40,6 +44,17 @@ public abstract class ProjectEvent {
     private static void publishEvent(ProjectEvent event) {
         EventBusManager.getDefault().publish(event);
     }
+    
+    public static void publishPropertyChangedEvent(Project project, String configName, String property, String oldValue, String newValue) {
+        publishPropertyChangedEvent(project, configName, property, oldValue, newValue);
+    }
+    
+    public static void publishPropertyChangedEvent(Project project, String configName, String property, String userProperty, String oldValue, String newValue) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
+        publishEvent(new ProjectPropertyChangedEvent(project, configName, property, userProperty, oldValue, newValue));
+    }
+    
     
     private final Project project;
     
@@ -64,5 +79,45 @@ public abstract class ProjectEvent {
         public AuditEvent getAuditEvent() {
             return auditEvent;
         }
+    }
+    
+    public static class ProjectPropertyChangedEvent extends ProjectEvent implements AuditEvent.Provider {
+        
+        private final AuditEvent auditEvent;
+        private final String configName;
+        private final String property;
+        private final String oldValue;
+        private final String newValue;
+        
+        private ProjectPropertyChangedEvent(Project project, String configName, String property, String userProperty, String oldValue, String newValue) {
+            super(project);
+            this.configName = configName;
+            this.property = property;
+            this.oldValue = oldValue;
+            this.newValue = newValue;
+            auditEvent = new AbstractAuditEvent(project, "", Bundle.MSG_ProjectEvent_ProjectPropertyChanged(userProperty, oldValue, newValue));
+        }
+
+        public String getConfigName() {
+            return configName;
+        }
+        
+        public String getProperty() {
+            return property;
+        }
+
+        public String getOldValue() {
+            return oldValue;
+        }
+
+        public String getNewValue() {
+            return newValue;
+        }
+        
+        @Override
+        public AuditEvent getAuditEvent() {
+            return auditEvent;
+        }
+    
     }
 }

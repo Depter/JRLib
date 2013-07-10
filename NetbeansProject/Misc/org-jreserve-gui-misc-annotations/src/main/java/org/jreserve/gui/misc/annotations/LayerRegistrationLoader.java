@@ -94,7 +94,7 @@ public abstract class LayerRegistrationLoader<T> {
         DataObject data = DataObject.find(file);
         InstanceCookie cookie = data.getLookup().lookup(InstanceCookie.class);
         Object value = cookie.instanceCreate();
-        getLogger().log(Level.FINE, "Loaded instance: {0}", value.getClass().getName());
+        getLogger().log(Level.FINER, "Loaded instance: {0}", value.getClass().getName());
         return value;
     }
 }

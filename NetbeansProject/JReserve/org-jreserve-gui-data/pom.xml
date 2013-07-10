@@ -1,14 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" 
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>JReserve-parent</artifactId>
+        <groupId>org.jreserve</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
     <groupId>org.jreserve</groupId>
-    <artifactId>org-jreserve-gui-misc-utils</artifactId>
+    <artifactId>org-jreserve-gui-data</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>org-jreserve-gui-misc-utils</name>
+    <name>Data Store</name>
     
     <licenses>
         <license>
@@ -29,8 +35,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <netbeans.version>RELEASE72</netbeans.version>
-        <netbeans.hint.license>gpl3</netbeans.hint.license>
     </properties>
 
     <repositories>
@@ -52,18 +56,34 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-projectapi</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-projectuiapi</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-openide-util</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-dialogs</artifactId>
+            <artifactId>org-openide-util-lookup</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
-            <artifactId>org-openide-awt</artifactId>
+            <artifactId>org-openide-nodes</artifactId>
             <version>${netbeans.version}</version>
+        </dependency>
+                
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-project</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
@@ -72,15 +92,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
-                <version>3.10.1</version>
                 <extensions>true</extensions>
-                <configuration>
-                    <cluster>jreserve-misc</cluster>
-                    <publicPackages>
-                        <publicPackage>org.jreserve.gui.misc.utils.notifications</publicPackage>
-                        <publicPackage>org.jreserve.gui.misc.utils.widgets</publicPackage>
-                    </publicPackages>
-                </configuration>
             </plugin>
 
             <plugin>
