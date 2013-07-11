@@ -14,12 +14,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.model;
+package org.jreserve.gui.data.api;
 
 /**
  *
  * @author Peter Decsi
+ * @version 1.0
  */
-public class DataRoot {
-
+public interface DataSource {
+    public DataManager getDataManager();
+    
+    public DataCategory getParent();
+    
+    public String getName();
+    
+    public String getPath();
 }

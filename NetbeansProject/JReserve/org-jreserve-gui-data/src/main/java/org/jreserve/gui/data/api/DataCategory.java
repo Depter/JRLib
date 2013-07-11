@@ -14,28 +14,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.model;
+package org.jreserve.gui.data.api;
 
-import org.netbeans.api.project.Project;
-import org.netbeans.spi.project.ui.support.NodeFactory;
-import org.netbeans.spi.project.ui.support.NodeFactorySupport;
-import org.netbeans.spi.project.ui.support.NodeList;
-import org.openide.nodes.Node;
+import java.util.List;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@NodeFactory.Registration(
-    position = 100,
-    projectType = "org-jreserve-project-jreserve"
-)
-public class DataRootNodeProvider implements NodeFactory {
+public interface DataCategory {
+    public DataManager getDataManager();
+    
+    public DataCategory getParent();
+    
+    public String getName();
+    
+    public String getPath();
 
-    @Override
-    public NodeList<?> createNodes(Project p) {
-        Node node = new DataRootNode(p.getLookup());
-        return NodeFactorySupport.fixedNodeList(node);
-    }
+    public List<DataCategory> getChildCategories();
+    
+    public List<DataSource> getDataSources();
 }

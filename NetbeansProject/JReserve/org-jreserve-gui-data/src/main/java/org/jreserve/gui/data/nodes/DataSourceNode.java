@@ -14,32 +14,24 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.model;
+package org.jreserve.gui.data.nodes;
 
+import org.jreserve.gui.data.api.DataSource;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.util.Lookup;
-import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.ProxyLookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "LBL.DataRootNode.Name=Data"
-})
-public class DataRootNode extends AbstractNode {
+class DataSourceNode extends AbstractNode {
     
-    private final static String IMG_PATH = "org/jreserve/gui/data/icons/database.png";  //NOI18
-    
-    public DataRootNode(Lookup projectLookup) {
-        super(Children.LEAF, 
-              new ProxyLookup(projectLookup));
-        setDisplayName(Bundle.LBL_DataRootNode_Name());
-        setIconBaseWithExtension(IMG_PATH);
+    DataSourceNode(DataSource source) {
+        super(Children.LEAF, Lookups.singleton(source));
+        setDisplayName(source.getName());
+        //TODO icon
     }
-    
     
 }
