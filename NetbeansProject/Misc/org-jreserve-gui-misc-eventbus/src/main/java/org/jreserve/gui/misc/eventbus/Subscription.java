@@ -47,29 +47,13 @@ class Subscription {
     private final Class[] eventClass;
     private final boolean forceEdt;
     
-    Subscription(Object o) {
-        reference = new WeakReference(o);
+    Subscription(Object listener, Method method) {
+        reference = new WeakReference(listener);
+        methodName = method.getName();
+        eventClass = new Class[]{method.getParameterTypes()[0]};
         
-        Method m = getMethod(o);
-        methodName = m.getName();
-        eventClass = new Class[]{m.getParameterTypes()[0]};
-        
-        EventBusListener annotation = m.getAnnotation(EventBusListener.class);
+        EventBusListener annotation = method.getAnnotation(EventBusListener.class);
         forceEdt = annotation.forceEDT();
-    }
-    
-    private Method getMethod(Object o) {
-        for(Method m : o.getClass().getMethods())
-            if(isListenerMethod(m))
-                return m;
-        String msg = String.format(NO_METHOD_FOUND, o.getClass().getName(), o);
-        throw new IllegalArgumentException(msg);
-    }
-    
-    private boolean isListenerMethod(Method m) {
-        return m.getAnnotation(EventBusListener.class) != null &&
-               m.getParameterTypes().length == 1 &&
-               !m.getParameterTypes()[0].isPrimitive();
     }
     
     boolean isEmpty() {
@@ -93,7 +77,7 @@ class Subscription {
     private boolean isListenerContained(List<Subscription> subscriptions) {
         Object listener = reference.get();
         for(Subscription s : subscriptions) {
-            if(listener == s.reference.get())
+            if(listener == s.reference.get() && methodName.equals(s.methodName))
                 return true;
         }
         return false;

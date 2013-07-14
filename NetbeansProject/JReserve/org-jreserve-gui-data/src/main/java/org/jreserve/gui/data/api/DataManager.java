@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api;
 
+import java.io.IOException;
 import org.netbeans.api.project.Project;
 
 /**
@@ -28,6 +29,8 @@ public interface DataManager {
     public Project getProject();
     
     public DataCategory getCategory(String path);
+    
+    public void createDataCategory(DataCategory parent, String name) throws IOException;
 
     public DataSource getDataSource(String path);
     

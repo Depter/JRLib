@@ -19,6 +19,7 @@ package org.jreserve.gui.data.api.impl;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataManager;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -99,5 +100,13 @@ public class DataManagerImpl implements DataManager {
         
         logger.log(Level.WARNING, LOG_SOURCE_NOT_FOUND, path);
         return null;
+    }
+    
+    @Override
+    public synchronized void createDataCategory(DataCategory parent, String name) throws IOException {
+        if(this != parent.getDataManager())
+            throw new IllegalArgumentException("DataCategory belongs to another data manager!");
+        DataCategoryImpl child = ((DataCategoryImpl) parent).createChildCategory(name);
+        DataEvent.categoryCreated(child);
     }
 }

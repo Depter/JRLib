@@ -16,9 +16,15 @@
  */
 package org.jreserve.gui.data.nodes;
 
+import java.util.List;
+import javax.swing.Action;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.impl.DataEvent;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -28,15 +34,34 @@ import org.openide.util.lookup.Lookups;
  */
 class DataCategoryNode extends AbstractNode {
     
-    private final static String ICON = "org/jreserve/gui/data/icons/data_category.png";
+    private final static String ROOT_ICON = "org/jreserve/gui/data/icons/database.png";
+    private final static String ICON = "org/jreserve/gui/data/icons/folder_db.png";
+    private final static String ACTION_PATH = "Node/DataCategory/Actions";
+    
+    private final DataCategory category;
     
     DataCategoryNode(DataCategory category) {
         super(
             Children.create(new DataCategoryChildren(category),true),
             Lookups.singleton(category)
         );
+        this.category = category;
         setDisplayName(category.getName());
-        setIconBaseWithExtension(ICON);
+        setIconBaseWithExtension(category.getParent()==null? ROOT_ICON : ICON);
+        EventBusManager.getDefault().subscribe(this);
     }
     
+    @Override
+    public Action[] getActions(boolean arg0) {
+        List<? extends Action> actions = Utilities.actionsForPath(ACTION_PATH);
+        int size = actions.size();
+        return actions.toArray(new Action[size]);
+    }    
+    
+    @EventBusListener
+    public void categoryCreated(DataEvent.DataCategoryCreatedEvent evt) {
+        DataCategory child = evt.getDataCategory();
+        if(this.category == child.getParent())
+            setChildren(Children.create(new DataCategoryChildren(category), true));
+    }
 }

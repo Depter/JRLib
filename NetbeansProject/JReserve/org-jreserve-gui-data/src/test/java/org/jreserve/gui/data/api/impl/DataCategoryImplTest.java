@@ -97,4 +97,22 @@ public class DataCategoryImplTest {
         assertEquals("DataCategory [Data/child2]", child2.toString());
         assertEquals("DataCategory [Data/child1/child1]", child1_1.toString());
     }
+    
+    @Test
+    public void testCreateChildCategory() throws IOException {
+        DataCategoryImpl child = child1.createChildCategory("source_1");
+        assertEquals("source_1", child.getName());
+        assertEquals("Data/child1/source_1", child.getPath());
+        assertTrue(child1 == child.getParent());
+    }
+    
+    @Test(expected = IOException.class)
+    public void testCreateChildCategory_Exists() throws IOException {
+        child1.createChildCategory("child1");
+    }
+    
+    @Test(expected = IOException.class)
+    public void testCreateChildCategory_IllegalName() throws IOException {
+        child1.createChildCategory("child3/bela");
+    }
 }

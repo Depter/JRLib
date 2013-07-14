@@ -18,14 +18,17 @@ package org.jreserve.gui.misc.utils.widgets;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.openide.util.ImageUtilities;
 
 /**
  * The TextPrompt class will display a prompt over top of a text component when
@@ -51,7 +54,26 @@ import javax.swing.text.JTextComponent;
  * @see http://tips4java.wordpress.com/2009/11/29/text-prompt/
  */
 public class TextPrompt extends JLabel {
+    
+    public static TextPrompt createStandard(String prompt, JTextComponent component) {
+        TextPrompt result = new TextPrompt(prompt, component, PromptStyle.FOCUS_LOST);
+        result.setForeground(Color.GRAY);
+        result.changeAlpha(0.5f);
+        result.changeStyle(Font.BOLD + Font.ITALIC);
+        return result;
+    }
 
+    public static TextPrompt createStandard(String prompt, String icon, JTextComponent component) {
+        Icon i = ImageUtilities.loadImageIcon(icon, false);
+        return createStandard(prompt, i, component);
+    }
+
+    public static TextPrompt createStandard(String prompt, Icon icon, JTextComponent component) {
+        TextPrompt result = createStandard(prompt, component);
+        result.setIcon(icon);
+        return result;
+    }
+    
     public enum PromptStyle {
         ALWAYS,
         FOCUS_GAINED,

@@ -37,7 +37,7 @@ public class DataRootNodeProvider implements NodeFactory {
     @Override
     public NodeList<?> createNodes(Project p) {
         DataManager manager = p.getLookup().lookup(DataManager.class);
-        Node node = new DataRootNode(manager);
+        Node node = new DataCategoryNode(manager.getCategory(null));
         return NodeFactorySupport.fixedNodeList(node);
     }
 }

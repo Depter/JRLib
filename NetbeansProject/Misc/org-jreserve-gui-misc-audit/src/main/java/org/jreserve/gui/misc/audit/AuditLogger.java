@@ -67,6 +67,8 @@ class AuditLogger implements Runnable {
     
     private final EventListener eventListener = new EventListener();
     private final ProviderListener providerListener = new ProviderListener();
+    private final Object stopLock = new Object();
+    private boolean isStopped = false;
     
     private AuditLogger() {
     }

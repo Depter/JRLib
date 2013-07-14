@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +24,7 @@ import java.util.TreeSet;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -104,7 +106,21 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
                 result.add((DataSourceImpl) item);
         return result;
     }
-
+    
+    DataCategoryImpl createChildCategory(String name) throws IOException {
+        if(file.getFileObject(name) != null)
+            throw new IOException(String.format("DataCategory with name '%s/%s' already exists!", getPath(), name));
+        
+        if(name.indexOf(PATH_SEPARATOR) >= 0)
+            throw new IOException(String.format("DataCategory name '%s' contains an illegal character!", name));
+        
+        FileObject folder = file.createFolder(name);
+        DataCategoryImpl child = new DataCategoryImpl(folder, this);
+        if(children != null)
+            children.add(child);
+        return child;
+    }
+    
     @Override
     public String toString() {
         return String.format("DataCategory [%s]", getPath());

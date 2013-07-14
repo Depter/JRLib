@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.misc.eventbus;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.SwingUtilities;
@@ -37,44 +38,10 @@ public class SubscriptionTest {
     }
     
     @Before
-    public void setUp() {
+    public void setUp() throws NoSuchMethodException {
         listener = new Listener();
-        subscription = new Subscription(listener);
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testContructor_NoAnnotation() {
-        subscription = new Subscription(new Object() {
-            public void listen(Double event) {
-            }
-        });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testContructor_NoParam() {
-        subscription = new Subscription(new Object() {
-            @EventBusListener
-            public void listen() {
-            }
-        });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testContructor_PrimitiveParam() {
-        subscription = new Subscription(new Object() {
-            @EventBusListener
-            public void listen(double event) {
-            }
-        });
-    }
-
-    @Test(expected=IllegalArgumentException.class)
-    public void testContructor_NotAccessible() {
-        subscription = new Subscription(new Object() {
-            @EventBusListener
-            void listen(Double event) {
-            }
-        });
+        Method m = Listener.class.getMethod("listen", Number.class);
+        subscription = new Subscription(listener, m);
     }
     
     @Test
@@ -118,7 +85,7 @@ public class SubscriptionTest {
     }
 
     @Test
-    public void testPublish_FromEdt() {
+    public void testPublish_FromEdt() throws NoSuchMethodException {
         class EdtListener {
             @EventBusListener(forceEDT = true)
             public void listen(Double value) {
@@ -129,7 +96,8 @@ public class SubscriptionTest {
         }
         
         EdtListener l = new EdtListener();
-        Subscription s = new Subscription(l);
+        Method m = EdtListener.class.getMethod("listen", Double.class);
+        Subscription s = new Subscription(l, m);
         s.publish(Double.valueOf(0.5));
     }
     

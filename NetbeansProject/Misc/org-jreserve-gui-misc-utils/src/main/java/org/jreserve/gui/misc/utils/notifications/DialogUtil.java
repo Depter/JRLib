@@ -17,6 +17,9 @@
 
 package org.jreserve.gui.misc.utils.notifications;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 
@@ -123,5 +126,33 @@ public class DialogUtil {
         show(title, message, MessageType.ERROR);
     }
     
+    public static void showDialog(java.awt.Component component, ActionListener okListener) {
+        String title = component.getName();
+        ActionListener listener = okListener==null? null : new OkListener(okListener);
+        DialogDescriptor dd = new DialogDescriptor(component, title, true, listener);
+        if(component instanceof DialogContent)
+            ((DialogContent)component).setDialogDescriptor(dd);
+        DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
+    }
+    
     private DialogUtil() {}
+
+    private static class OkListener implements ActionListener {
+        
+        private final ActionListener delegate;
+        
+        private OkListener(ActionListener delegate) {
+            this.delegate = delegate;
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(DialogDescriptor.OK_OPTION == e.getSource())
+                delegate.actionPerformed(e);
+        }
+    }
+    
+    public static interface DialogContent {
+        public void setDialogDescriptor(DialogDescriptor dd);
+    }
 }

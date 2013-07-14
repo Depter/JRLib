@@ -21,7 +21,6 @@ import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.jreserve.gui.project.api.ProjectEvent;
 import org.jreserve.gui.project.api.ProjectEvent.ProjectPropertyChangedEvent;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;

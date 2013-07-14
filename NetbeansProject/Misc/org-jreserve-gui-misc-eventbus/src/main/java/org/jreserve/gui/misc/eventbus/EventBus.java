@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.misc.eventbus;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -97,8 +98,10 @@ class EventBus {
     
     void subscribe(Object listener) {
         cleanSubscriptions();
-        Subscription s = new Subscription(listener);
-        subscriptions.add(s);
+        for(Method method : getAnnotatedMethods(listener)) {
+            Subscription s = new Subscription(listener, method);
+            subscriptions.add(s);
+        }
     }
     
     private void cleanSubscriptions() {
@@ -111,6 +114,20 @@ class EventBus {
                 size--;
             }
         }
+    }
+    
+    private List<Method> getAnnotatedMethods(Object listener) {
+        List<Method> result = new ArrayList<Method>();
+        for(Method method : listener.getClass().getMethods())
+            if(isListenerMethod(method))
+                result.add(method);
+        return result;
+    }
+    
+    private boolean isListenerMethod(Method m) {
+        return m.getAnnotation(EventBusListener.class) != null &&
+               m.getParameterTypes().length == 1 &&
+               !m.getParameterTypes()[0].isPrimitive();
     }
     
     void unsubscribe(Object listener) {
