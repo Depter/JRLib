@@ -14,6 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.jreserve.gui.data.api;
 
 /**
@@ -21,6 +22,13 @@ package org.jreserve.gui.data.api;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
+public interface DataItem {
+    public DataManager getDataManager();
+
+    public DataCategory getParent();
     
+    public String getName();
+    
+    public String getPath();
+
 }

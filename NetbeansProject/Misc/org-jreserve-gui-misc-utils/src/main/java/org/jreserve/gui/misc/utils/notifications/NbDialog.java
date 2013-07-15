@@ -14,30 +14,37 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api.impl;
 
-import org.jreserve.gui.data.api.DataSource;
-import org.openide.filesystems.FileObject;
+package org.jreserve.gui.misc.utils.notifications;
+
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Point;
+import javax.swing.JDialog;
+import org.openide.windows.WindowManager;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataSourceImpl extends AbstractDataItem implements DataSource {
- 
-    private final static String FILE_EXT = "jds";
+class NbDialog extends JDialog {
     
-    static boolean isSourceFile(FileObject file) {
-        return FILE_EXT.equalsIgnoreCase(file.getExt());
+    NbDialog(String title, Component content) {
+        super(WindowManager.getDefault().getMainWindow(), title);
+        getContentPane().add(content);
+        pack();
+        centerDialog();
     }
     
-    DataSourceImpl(FileObject file, DataCategoryImpl parent) {
-        super(parent.getDataManager(), file, parent);
+    private void centerDialog() {
+        Point ownerLoc = getOwner().getLocationOnScreen();
+        Dimension ownerSize = getOwner().getSize();
+        Dimension dSize = getSize();
+        
+        int x = ownerLoc.x + (ownerSize.width - dSize.width)/2;
+        int y = ownerLoc.y + (ownerSize.height - dSize.height)/2;
+        setLocation(x, y);
     }
     
-    @Override
-    public String toString() {
-        return String.format("DataSource [%s]", getPath());
-    }    
 }

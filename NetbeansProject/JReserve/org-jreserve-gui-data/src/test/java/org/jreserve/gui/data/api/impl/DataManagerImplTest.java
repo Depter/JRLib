@@ -17,6 +17,11 @@
 package org.jreserve.gui.data.api.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -93,6 +98,60 @@ public class DataManagerImplTest {
     @Test(expected = IllegalArgumentException.class)
     public void testGetDataSource_IllegalPath() {
         manager.getDataSource("Data/child2/");
+    }
+    
+    @Test
+    public void testDelete() throws IOException, InterruptedException {
+        DataCategory child1 = manager.getCategory("Data/child1");
+        DeleteListener listener = new DeleteListener();
+        EventBusManager.getDefault().subscribe(listener);
+        manager.deleteDataItem(child1);
+        Thread.sleep(100);
+        
+        List<DeleteEntry> entries  = listener.getEntries();
+        assertEquals(4, entries.size());
+        DeleteEntry entry = entries.get(0);
+        assertEquals("Data/child1/child1", entry.path);
+        assertFalse(entry.isRoot);
+        
+        entry = entries.get(1);
+        assertEquals("Data/child1/source_1", entry.path);
+        assertFalse(entry.isRoot);
+        
+        entry = entries.get(2);
+        assertEquals("Data/child1/source_2", entry.path);
+        assertFalse(entry.isRoot);
+        
+        entry = entries.get(3);
+        assertEquals("Data/child1", entry.path);
+        assertTrue(entry.isRoot);
+    }
+    
+    private static class DeleteListener {
+        private final List<DeleteEntry> entries = new ArrayList<DeleteEntry>();
+        
+        @EventBusListener
+        public void deleted(DataEvent.DataItemDeletedEvent evt) {
+            synchronized(entries) {
+                entries.add(new DeleteEntry(evt.getDataItem().getPath(), evt.isRootDelete()));
+            }
+        }
+        
+        public List<DeleteEntry> getEntries() {
+            synchronized(entries) {
+                return new ArrayList<DeleteEntry>(entries);
+            }
+        }
+    }
+    
+    private static class DeleteEntry {
+        private final String path;
+        private final boolean isRoot;
+
+        private DeleteEntry(String path, boolean isRoot) {
+            this.path = path;
+            this.isRoot = isRoot;
+        }
     }
     
     private static class MockProject implements Project {

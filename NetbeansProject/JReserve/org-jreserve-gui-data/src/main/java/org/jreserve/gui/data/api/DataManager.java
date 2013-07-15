@@ -31,7 +31,9 @@ public interface DataManager {
     public DataCategory getCategory(String path);
     
     public void createDataCategory(DataCategory parent, String name) throws IOException;
-
+    
+    public void deleteDataItem(DataItem item) throws IOException;
+    
     public DataSource getDataSource(String path);
     
 }

@@ -60,8 +60,14 @@ class DataCategoryNode extends AbstractNode {
     
     @EventBusListener
     public void categoryCreated(DataEvent.DataCategoryCreatedEvent evt) {
-        DataCategory child = evt.getDataCategory();
+        DataCategory child = evt.getDataItem();
         if(this.category == child.getParent())
+            setChildren(Children.create(new DataCategoryChildren(category), true));
+    }
+    
+    @EventBusListener
+    public void dataItemDeleted(DataEvent.DataItemDeletedEvent evt) {
+        if(evt.isRootDelete() && this.category==evt.getParent())
             setChildren(Children.create(new DataCategoryChildren(category), true));
     }
 }

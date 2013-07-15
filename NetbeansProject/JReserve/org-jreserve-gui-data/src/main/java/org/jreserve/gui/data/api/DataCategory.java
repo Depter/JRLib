@@ -23,14 +23,7 @@ import java.util.List;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataCategory {
-    public DataManager getDataManager();
-    
-    public DataCategory getParent();
-    
-    public String getName();
-    
-    public String getPath();
+public interface DataCategory extends DataItem {
 
     public List<DataCategory> getChildCategories();
     

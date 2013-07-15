@@ -20,7 +20,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
+import org.jreserve.gui.data.api.DataSource;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
@@ -76,7 +78,7 @@ public class DataManagerImpl implements DataManager {
             return root;
         checkPath(path);
         
-        DataItem item = root.getDataItem(path.substring(ROOT_NAME.length()+1));
+        AbstractDataItem item = root.getDataItem(path.substring(ROOT_NAME.length()+1));
         if(item instanceof DataCategoryImpl)
             return (DataCategoryImpl) item;
         
@@ -85,7 +87,7 @@ public class DataManagerImpl implements DataManager {
     }
     
     private void checkPath(String path) {
-        if(path == null || !path.startsWith("Data") || path.endsWith(""+DataItem.PATH_SEPARATOR)) {
+        if(path == null || !path.startsWith("Data") || path.endsWith(""+AbstractDataItem.PATH_SEPARATOR)) {
             String msg = String.format("Invalid path: \"%s\"! Path must start with Data and must not end with '/'", path);
             throw new IllegalArgumentException(msg);
         }
@@ -94,7 +96,7 @@ public class DataManagerImpl implements DataManager {
     @Override
     public synchronized DataSourceImpl getDataSource(String path) {
         checkPath(path);
-        DataItem item = root.getDataItem(path.substring(ROOT_NAME.length()+1));
+        AbstractDataItem item = root.getDataItem(path.substring(ROOT_NAME.length()+1));
         if(item instanceof DataSourceImpl)
             return (DataSourceImpl) item;
         
@@ -108,5 +110,30 @@ public class DataManagerImpl implements DataManager {
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
         DataCategoryImpl child = ((DataCategoryImpl) parent).createChildCategory(name);
         DataEvent.categoryCreated(child);
+    }
+    
+    @Override
+    public synchronized void deleteDataItem(DataItem item) throws IOException {
+        if(this != item.getDataManager())
+            throw new IllegalArgumentException("DataItem belongs to another data manager!");
+        if(item instanceof DataCategory)
+            deleteChildren((DataCategory) item);
+        
+        DataCategory parent = item.getParent();
+        ((AbstractDataItem)item).delete();
+        DataEvent.itemDeleted(parent, item, true);
+    }
+    
+    private void deleteChildren(DataCategory category) throws IOException {
+        for(DataCategory child : category.getChildCategories()) {
+            deleteChildren(child);
+            ((AbstractDataItem) child).delete();
+            DataEvent.itemDeleted(category, child, false);
+        }
+        
+        for(DataSource child : category.getDataSources()) {
+            ((AbstractDataItem)child).delete();
+            DataEvent.itemDeleted(category, child, false);
+        }
     }
 }

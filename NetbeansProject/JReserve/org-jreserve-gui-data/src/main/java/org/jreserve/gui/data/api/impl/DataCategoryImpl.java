@@ -31,9 +31,9 @@ import org.openide.filesystems.FileUtil;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataCategoryImpl extends DataItem implements DataCategory {
+public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
 
-    private Set<DataItem> children;
+    private Set<AbstractDataItem> children;
 
     DataCategoryImpl(FileObject folder, DataCategoryImpl parent) {
         super(parent.getDataManager(), folder, parent);
@@ -43,7 +43,7 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
         super(manager, folder, parent);
     }
 
-    DataItem getDataItem(String path) {
+    AbstractDataItem getDataItem(String path) {
         int separatorIndex = path.indexOf(PATH_SEPARATOR);
         String childName;
 
@@ -55,7 +55,7 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
             path = path.substring(separatorIndex + 1);
         }
         
-        DataItem child = getChildItemByName(childName);
+        AbstractDataItem child = getChildItemByName(childName);
         if(path == null)
             return child;
         
@@ -64,8 +64,8 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
         return null;
     }
     
-    private DataItem getChildItemByName(String name) {
-        for(DataItem item : getLoadedChildren())
+    private AbstractDataItem getChildItemByName(String name) {
+        for(AbstractDataItem item : getLoadedChildren())
             if(item.getName().equalsIgnoreCase(name))
                 return item;
         return null;
@@ -74,20 +74,20 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
     @Override
     public List<DataCategory> getChildCategories() {
         List<DataCategory> result = new ArrayList<DataCategory>();
-        for(DataItem item : getLoadedChildren())
+        for(AbstractDataItem item : getLoadedChildren())
             if(item instanceof DataCategoryImpl)
             result.add((DataCategoryImpl) item);
         return result;
     }
 
-    private Set<DataItem> getLoadedChildren() {
+    private Set<AbstractDataItem> getLoadedChildren() {
         if(children == null)
             loadChildren();
         return children;
     }
 
     private void loadChildren() {
-        children = new TreeSet<DataItem>();
+        children = new TreeSet<AbstractDataItem>();
 
         for(FileObject fo : file.getChildren()) {
             if(fo.isFolder()) {
@@ -101,7 +101,7 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
     @Override
     public List<DataSource> getDataSources() {
         List<DataSource> result = new ArrayList<DataSource>();
-        for(DataItem item : getLoadedChildren())
+        for(AbstractDataItem item : getLoadedChildren())
             if(item instanceof DataSourceImpl)
                 result.add((DataSourceImpl) item);
         return result;
@@ -119,6 +119,10 @@ public class DataCategoryImpl extends DataItem implements DataCategory {
         if(children != null)
             children.add(child);
         return child;
+    }
+    
+    void removeChild(AbstractDataItem item) {
+        children.remove(item);
     }
     
     @Override

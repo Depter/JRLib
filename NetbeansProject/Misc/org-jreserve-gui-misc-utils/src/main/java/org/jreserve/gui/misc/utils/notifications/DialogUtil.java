@@ -17,6 +17,8 @@
 
 package org.jreserve.gui.misc.utils.notifications;
 
+import java.awt.Component;
+import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.DialogDescriptor;
@@ -133,6 +135,12 @@ public class DialogUtil {
         if(component instanceof DialogContent)
             ((DialogContent)component).setDialogDescriptor(dd);
         DialogDisplayer.getDefault().createDialog(dd).setVisible(true);
+    }
+    
+    public static Dialog createDialog(Component content) {
+        NbDialog dialog = new NbDialog(content.getName(), content);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        return dialog;
     }
     
     private DialogUtil() {}

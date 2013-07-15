@@ -59,6 +59,7 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
     
     CreateDataCategoryDialog(DataCategory parent) {
         treeModel = new DataCategoryTreeModel(parent.getDataManager());
+        setName(Bundle.LBL_CreateDataCategoryDialog_Title());
         initComponents();
         selectOriginalPath(parent);
     }
@@ -66,7 +67,7 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
     private void selectOriginalPath(DataCategory category) {
         List<DataCategory> categories = new ArrayList<DataCategory>();
         while(category != null) {
-            categories.add(category);
+            categories.add(0, category);
             category = category.getParent();
         }
         tree.setSelectionPath(new TreePath(categories.toArray()));
@@ -126,6 +127,8 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         add(treeLabel, gridBagConstraints);
+
+        treeScroll.setPreferredSize(new java.awt.Dimension(300, 200));
 
         tree.setModel(treeModel);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);

@@ -16,6 +16,9 @@
  */
 package org.jreserve.gui.data.api.impl;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -23,18 +26,24 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-class DataItem implements Comparable<DataItem> {
+class AbstractDataItem implements Comparable<AbstractDataItem> {
+    
+    private final static Logger logger = Logger.getLogger(AbstractDataItem.class.getName());
     
     final static char PATH_SEPARATOR = '/';
 
     protected final FileObject file;
     private final DataManagerImpl manager;
     private DataCategoryImpl parent;
+    private String path;
     
-    DataItem(DataManagerImpl manager, FileObject file, DataCategoryImpl parent) {
+    AbstractDataItem(DataManagerImpl manager, FileObject file, DataCategoryImpl parent) {
         this.manager = manager;
         this.file = file;
         this.parent = parent;
+        
+        this.path = parent==null? "" : parent.getPath() + PATH_SEPARATOR;
+        this.path += file.getName();
     }
     
     public DataManagerImpl getDataManager() {
@@ -50,20 +59,32 @@ class DataItem implements Comparable<DataItem> {
     }
     
     public String getPath() {
-        if(parent == null)
-            return getName();
-        return parent.getPath() + PATH_SEPARATOR + getName();
+        return path;
     }
 
+    void delete() throws IOException {
+        try {
+            file.delete();
+            if(parent != null) {
+                parent.removeChild(this);
+                this.parent = null;
+            }
+            logger.log(Level.INFO, "Deleted DataItem: {0}", getPath());
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Unable to delete DataItem: " + getPath(), ex);
+            throw ex;
+        }
+    }
+    
     @Override
-    public int compareTo(DataItem o) {
+    public int compareTo(AbstractDataItem o) {
         return file.getNameExt().compareToIgnoreCase(o.file.getNameExt());
     }
     
     @Override
     public boolean equals(Object o) {
-        return (o instanceof DataItem) &&
-               compareTo(((DataItem)o)) == 0;
+        return (o instanceof AbstractDataItem) &&
+               compareTo(((AbstractDataItem)o)) == 0;
     }
     
     @Override

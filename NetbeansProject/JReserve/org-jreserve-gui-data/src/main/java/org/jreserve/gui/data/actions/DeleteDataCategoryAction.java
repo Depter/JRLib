@@ -17,47 +17,112 @@
 package org.jreserve.gui.data.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
-import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataSource;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import org.jreserve.gui.data.api.DataItem;
+import org.jreserve.gui.data.api.DataManager;
 import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.ContextAwareAction;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 @ActionID(
     category = "File",
     id = "org.jreserve.gui.data.actions.DeleteDataCategoryAction"
 )
 @ActionRegistration(
-    iconBase = "org/jreserve/gui/data/icons/folder_db_delete.png",
-    displayName = "#CTL_DeleteDataCategoryAction"
+    displayName = "#CTL_DeleteDataCategoryAction",
+    lazy = false
 )
-@Messages({
-    "CTL_DeleteDataCategoryAction=Delete Category"
+@ActionReferences({
+    @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 200),
+    @ActionReference(path = "Node/DataCategory/Actions", position = 200)
 })
-public final class DeleteDataCategoryAction implements ActionListener {
-
-    private final List<DataCategory> context;
-
-    public DeleteDataCategoryAction(List<DataCategory> context) {
+@Messages({
+    "CTL_DeleteDataCategoryAction=Delete Items",
+    "MSG.DeleteDataCategoryAction.ContainsRoot=Can not delete \"Data\" category!"
+})
+public final class DeleteDataCategoryAction extends AbstractAction 
+    implements ContextAwareAction, LookupListener {
+    
+    private final static String SMALL_ICON = "org/jreserve/gui/data/icons/folder_db_delete.png";   //NOI18
+    private final static String LARGE_ICON = "org/jreserve/gui/data/icons/folder_db_delete32.png"; //NOI18
+    
+    private Lookup context;
+    private Lookup.Result<DataItem> lkpInfo;
+    private List<DataItem> items = new ArrayList<DataItem>();
+    
+    public DeleteDataCategoryAction() {
+        this(Utilities.actionsGlobalContext());
+    }
+ 
+    private DeleteDataCategoryAction(Lookup context) {
+        putValue(Action.NAME, Bundle.CTL_DeleteDataCategoryAction());
+        super.putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(LARGE_ICON, false));
+        super.putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(SMALL_ICON, false));
         this.context = context;
     }
-
+ 
+    void init() {
+        if (lkpInfo != null)
+            return;
+ 
+        lkpInfo = context.lookupResult(DataItem.class);
+        lkpInfo.addLookupListener(this);
+        resultChanged(null);
+    }
+ 
     @Override
-    public void actionPerformed(ActionEvent ev) {
-        for (DataCategory dataCategory : context) {
-            // TODO use dataCategory
-        }
+    public boolean isEnabled() {
+        init();
+        return super.isEnabled();
+    }
+ 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        init();
+        DeleteDataCategoryDialog.showDialog(items);
+    }
+ 
+    @Override
+    public void resultChanged(LookupEvent ev) {
+        setEnabled(shouldEnable());
     }
     
-    private boolean confirmDelete() {
-        //Set<String> entries = getDeletedEntries();
+    private boolean shouldEnable() {
+        items.clear();
+        items.addAll(lkpInfo.allInstances());
         
-        return false;
+        if(items.isEmpty())
+            return false;
+        
+        DataManager m1 = null;
+        for(DataItem item : items) {
+            if(item.getParent() == null)
+                return false;
+            if(m1 == null)
+                m1 = item.getDataManager();
+            
+            if(m1 != item.getDataManager())
+                return false;
+        }
+        
+        return true;
+        
     }
-    
-
+ 
+    @Override
+    public Action createContextAwareInstance(Lookup context) {
+        return new DeleteDataCategoryAction(context);
+    }
 }
