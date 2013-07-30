@@ -34,7 +34,6 @@ import org.openide.util.lookup.Lookups;
  */
 class DataCategoryNode extends AbstractNode {
     
-    private final static String ROOT_ICON = "org/jreserve/gui/data/icons/database.png";
     private final static String ICON = "org/jreserve/gui/data/icons/folder_db.png";
     private final static String ACTION_PATH = "Node/DataCategory/Actions";
     
@@ -47,7 +46,7 @@ class DataCategoryNode extends AbstractNode {
         );
         this.category = category;
         setDisplayName(category.getName());
-        setIconBaseWithExtension(category.getParent()==null? ROOT_ICON : ICON);
+        setIconBaseWithExtension(ICON);
         EventBusManager.getDefault().subscribe(this);
     }
     

@@ -14,28 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
-
-import java.io.IOException;
-import org.jreserve.gui.data.spi.DataProvider;
-import org.netbeans.api.project.Project;
+package org.jreserve.gui.data.spi;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataManager {
-    
-    public Project getProject();
-    
-    public DataCategory getCategory(String path);
-    
-    public void createDataCategory(DataCategory parent, String name) throws IOException;
-    
-    public void deleteDataItem(DataItem item) throws IOException;
-    
-    public DataSource getDataSource(String path);
-    
-    public void createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException;
+public enum DataProviderFactoryType {
+    INSTANCE,
+    METHOD;
 }

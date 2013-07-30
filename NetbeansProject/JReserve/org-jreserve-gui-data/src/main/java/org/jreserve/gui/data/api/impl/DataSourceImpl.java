@@ -17,6 +17,8 @@
 package org.jreserve.gui.data.api.impl;
 
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
+import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -25,19 +27,37 @@ import org.openide.filesystems.FileObject;
  * @version 1.0
  */
 public class DataSourceImpl extends AbstractDataItem implements DataSource {
- 
-    private final static String FILE_EXT = "jds";
+    
+    final static String FILE_EXT = "jds";
     
     static boolean isSourceFile(FileObject file) {
         return FILE_EXT.equalsIgnoreCase(file.getExt());
     }
     
+    private DataProvider dataProvider;
+    
     DataSourceImpl(FileObject file, DataCategoryImpl parent) {
         super(parent.getDataManager(), file, parent);
+        dataProvider = DataSourceUtil.load(file);
+    }
+    
+    DataSourceImpl(FileObject file, DataCategoryImpl parent, DataProvider provider) {
+        super(parent.getDataManager(), file, parent);
+        this.dataProvider = provider;
     }
     
     @Override
     public String toString() {
         return String.format("DataSource [%s]", getPath());
     }    
+
+    @Override
+    public DataType getDataType() {
+        return dataProvider.getDataType();
+    }
+
+    @Override
+    public DataProvider getDataProvider() {
+        return dataProvider;
+    }
 }

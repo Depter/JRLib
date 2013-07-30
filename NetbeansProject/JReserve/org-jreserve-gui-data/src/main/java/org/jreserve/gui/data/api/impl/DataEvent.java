@@ -32,6 +32,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.DataEvent.DataCategory.Created=Data category created.",
     "MSG.DataEvent.DataCategory.Deleted=Data category deleted.",
+    "MSG.DataEvent.DataSource.Created=Data source created.",
     "MSG.DataEvent.DataSource.Deleted=Data source deleted."
 })
 public abstract class DataEvent<T extends DataItem> extends AbstractAuditEvent {
@@ -52,6 +53,12 @@ public abstract class DataEvent<T extends DataItem> extends AbstractAuditEvent {
         EventBusManager.getDefault().publish(evt);
     }
     
+    static void sourceCreated(DataSource source) {
+        String msg = Bundle.MSG_DataEvent_DataSource_Created();
+        DataSourceCreatedEvent evt = new DataSourceCreatedEvent(source, msg);
+        EventBusManager.getDefault().publish(evt);
+    }
+    
     private T item;
     
     protected DataEvent(T item, String change) {
@@ -66,6 +73,12 @@ public abstract class DataEvent<T extends DataItem> extends AbstractAuditEvent {
     public static class DataCategoryCreatedEvent extends DataEvent<DataCategory> {
         private DataCategoryCreatedEvent(DataCategory category, String change) {
             super(category, change);
+        }
+    }
+    
+    public static class DataSourceCreatedEvent extends DataEvent<DataSource> {
+        private DataSourceCreatedEvent(DataSource source, String change) {
+            super(source, change);
         }
     }
     

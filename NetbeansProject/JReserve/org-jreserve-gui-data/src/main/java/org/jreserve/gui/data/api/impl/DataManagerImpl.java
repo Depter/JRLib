@@ -23,6 +23,7 @@ import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.spi.DataProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.filesystems.FileObject;
@@ -135,5 +136,13 @@ public class DataManagerImpl implements DataManager {
             ((AbstractDataItem)child).delete();
             DataEvent.itemDeleted(category, child, false);
         }
+    }
+    
+    @Override
+    public synchronized void createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException {
+        if(this != parent.getDataManager())
+            throw new IllegalArgumentException("DataCategory belongs to another data manager!");
+        DataSourceImpl child = ((DataCategoryImpl) parent).createChildSource(name, dataProvider);
+        DataEvent.sourceCreated(child);
     }
 }

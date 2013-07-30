@@ -17,7 +17,9 @@
 
 package org.jreserve.gui.data.spi;
 
+import org.jreserve.gui.data.api.DataType;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -27,21 +29,24 @@ import java.util.Set;
  */
 public interface DataProvider {
     
-    public static enum DataType {
-        TRIANGLE,
-        VECTOR;
-    }
-    
-    public static enum SaveType {
-        OVERRIDE_EXISTING,
-        SAVE_NEW;
-    }
+    public final static String PROP_DATA_TYPE = "data.type";
+    public final static String PROP_FACTORY_TYPE = "instance.factory.type";
+    public final static String PROP_INSTANCE_PATH = "instance.path";
     
     public DataType getDataType();
+    
+    public DataProviderFactoryType getFactoryType();
+    
+    public String getInstancePath();
+    
+    public Map<String, String> getProperties();
+    
+    public void setProperties(Map<String, String> properties);
     
     public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
     
     public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
     
     public void deleteEntries(Set<DataEntry> entries) throws Exception;
+
 }

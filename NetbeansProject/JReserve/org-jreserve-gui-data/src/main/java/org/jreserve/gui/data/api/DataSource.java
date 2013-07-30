@@ -16,6 +16,8 @@
  */
 package org.jreserve.gui.data.api;
 
+import org.jreserve.gui.data.spi.DataProvider;
+
 /**
  *
  * @author Peter Decsi
@@ -23,4 +25,7 @@ package org.jreserve.gui.data.api;
  */
 public interface DataSource extends DataItem {
     
+    public DataType getDataType();
+    
+    public DataProvider getDataProvider();
 }

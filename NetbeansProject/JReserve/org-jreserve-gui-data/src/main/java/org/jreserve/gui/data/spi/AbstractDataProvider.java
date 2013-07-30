@@ -17,8 +17,11 @@
 
 package org.jreserve.gui.data.spi;
 
+import org.jreserve.gui.data.api.DataType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -36,6 +39,15 @@ public abstract class AbstractDataProvider implements DataProvider {
         if(dataType == null)
             throw new NullPointerException("DataType is null!");
         this.dataType = dataType;
+    }
+    
+    @Override
+    public Map<String, String> getProperties() {
+        return Collections.EMPTY_MAP;
+    }
+    
+    @Override
+    public void setProperties(Map<String, String> properties) {
     }
     
     @Override

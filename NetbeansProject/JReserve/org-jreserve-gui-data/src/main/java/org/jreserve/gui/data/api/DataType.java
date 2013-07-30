@@ -16,26 +16,14 @@
  */
 package org.jreserve.gui.data.api;
 
-import java.io.IOException;
-import org.jreserve.gui.data.spi.DataProvider;
-import org.netbeans.api.project.Project;
-
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataManager {
+public enum DataType {
+
+    TRIANGLE,
+    VECTOR;
     
-    public Project getProject();
-    
-    public DataCategory getCategory(String path);
-    
-    public void createDataCategory(DataCategory parent, String name) throws IOException;
-    
-    public void deleteDataItem(DataItem item) throws IOException;
-    
-    public DataSource getDataSource(String path);
-    
-    public void createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException;
 }

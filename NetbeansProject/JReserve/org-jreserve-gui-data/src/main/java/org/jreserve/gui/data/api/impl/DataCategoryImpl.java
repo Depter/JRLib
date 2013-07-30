@@ -23,8 +23,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -119,6 +119,22 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
         if(children != null)
             children.add(child);
         return child;
+    }
+    
+    DataSourceImpl createChildSource(String name, DataProvider provider) throws IOException {
+        if(provider == null)
+            throw new NullPointerException("DataProvider can not be null!");
+        
+        if(file.getFileObject(name, DataSourceImpl.FILE_EXT) != null)
+            throw new IOException(String.format("DataSource with name '%s/%s' already exists!", getPath(), name));
+        
+        if(name.indexOf(PATH_SEPARATOR) >= 0)
+            throw new IOException(String.format("DataSource name '%s' contains an illegal character!", name));
+        
+        FileObject sourceFile = file.createData(name, DataSourceImpl.FILE_EXT);
+        DataSourceImpl impl = new DataSourceImpl(sourceFile, this, provider);
+        DataSourceXmlDummy.saveDummy(impl);
+        return impl;
     }
     
     void removeChild(AbstractDataItem item) {

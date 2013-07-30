@@ -136,6 +136,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.data.api</publicPackage>
+                        <publicPackage>org.jreserve.gui.data.spi</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>
