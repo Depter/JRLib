@@ -21,6 +21,7 @@ import org.jreserve.gui.data.api.DataType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jreserve.gui.data.api.DataSource;
 
 /**
  *
@@ -33,6 +34,8 @@ public interface DataProvider {
     public final static String PROP_FACTORY_TYPE = "instance.factory.type";
     public final static String PROP_INSTANCE_PATH = "instance.path";
     
+    public void delete() throws Exception;
+    
     public DataType getDataType();
     
     public DataProviderFactoryType getFactoryType();
@@ -41,7 +44,7 @@ public interface DataProvider {
     
     public Map<String, String> getProperties();
     
-    public void setProperties(Map<String, String> properties);
+    public void setProperties(DataSource source, Map<String, String> properties);
     
     public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
     

@@ -71,6 +71,7 @@
         <module>application</module>
     <module>org-jreserve-gui-project</module>
     <module>org-jreserve-gui-data</module>
+    <module>org-jreserve-gui-data-csv</module>
   </modules>
 
     <properties>

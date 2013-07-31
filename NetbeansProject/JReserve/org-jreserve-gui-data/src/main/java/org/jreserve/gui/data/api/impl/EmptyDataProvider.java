@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataEntry;
 import org.jreserve.gui.data.spi.DataEntryFilter;
@@ -47,7 +48,11 @@ public class EmptyDataProvider implements DataProvider {
     
     private EmptyDataProvider() {
     }
-
+    
+    @Override
+    public void delete() {
+    }
+    
     @Override
     public Map<String, String> getProperties() {
         logger.warning("Accessing dummy data provider!");
@@ -55,7 +60,7 @@ public class EmptyDataProvider implements DataProvider {
     }
     
     @Override
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(DataSource ds, Map<String, String> properties) {
         logger.warning("Accessing dummy data provider!");
     }
     

@@ -17,14 +17,16 @@
 package org.jreserve.gui.data.actions;
 
 import java.awt.event.ActionEvent;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.text.MessageFormat;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.jreserve.gui.data.api.DataItem;
+import org.jreserve.gui.data.actions.createsourcewizard.CreateDataSourceWizardIterator;
+import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataManager;
 import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.Project;
+import org.openide.DialogDisplayer;
+import org.openide.WizardDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -37,38 +39,43 @@ import org.openide.util.LookupListener;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 
+/**
+ *
+ * @author Peter Decsi
+ * @version 1.0
+ */
 @ActionID(
     category = "File",
-    id = "org.jreserve.gui.data.actions.DeleteDataCategoryAction"
+    id = "org.jreserve.gui.data.actions.CreateDataSourceAction"
 )
 @ActionRegistration(
-    displayName = "#CTL_DeleteDataCategoryAction",
+    displayName = "#CTL_CreateDataSourceAction",
     lazy = false
 )
 @ActionReferences({
-    @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 300),
-    @ActionReference(path = "Node/DataCategory/Actions", position = 300)
+    @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 200),
+    @ActionReference(path = "Node/DataCategory/Actions", position = 200)
 })
 @Messages({
-    "CTL_DeleteDataCategoryAction=Delete Items",
-    "MSG.DeleteDataCategoryAction.ContainsRoot=Can not delete \"Data\" category!"
+    "CTL_CreateDataSourceAction=New Source",
+    "LBL.CreateDataSourceAction.Wizard.Title=New Data Source"
 })
-public final class DeleteDataCategoryAction extends AbstractAction 
-    implements ContextAwareAction, LookupListener {
+public class CreateDataSourceAction extends AbstractAction
+    implements ContextAwareAction, LookupListener {    
     
-    @StaticResource private final static String SMALL_ICON = "org/jreserve/gui/data/icons/folder_db_delete.png";   //NOI18
-    @StaticResource private final static String LARGE_ICON = "org/jreserve/gui/data/icons/folder_db_delete32.png"; //NOI18
+    @StaticResource private final static String SMALL_ICON = "org/jreserve/gui/data/icons/database_add.png";   //NOI18
+    @StaticResource private final static String LARGE_ICON = "org/jreserve/gui/data/icons/database_add32.png"; //NOI18
     
     private Lookup context;
-    private Lookup.Result<DataItem> lkpInfo;
-    private List<DataItem> items = new ArrayList<DataItem>();
+    private Lookup.Result<Object> lkpInfo;
+    private DataCategory dataCategory;
     
-    public DeleteDataCategoryAction() {
+    public CreateDataSourceAction() {
         this(Utilities.actionsGlobalContext());
     }
  
-    private DeleteDataCategoryAction(Lookup context) {
-        putValue(Action.NAME, Bundle.CTL_DeleteDataCategoryAction());
+    private CreateDataSourceAction(Lookup context) {
+        putValue(Action.NAME, Bundle.CTL_CreateDataSourceAction());
         super.putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(LARGE_ICON, false));
         super.putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(SMALL_ICON, false));
         this.context = context;
@@ -77,8 +84,8 @@ public final class DeleteDataCategoryAction extends AbstractAction
     void init() {
         if (lkpInfo != null)
             return;
- 
-        lkpInfo = context.lookupResult(DataItem.class);
+
+        lkpInfo = context.lookupResult(Object.class);
         lkpInfo.addLookupListener(this);
         resultChanged(null);
     }
@@ -92,7 +99,13 @@ public final class DeleteDataCategoryAction extends AbstractAction
     @Override
     public void actionPerformed(ActionEvent e) {
         init();
-        DeleteDataCategoryDialog.showDialog(items);
+        
+        WizardDescriptor wiz = new WizardDescriptor(new CreateDataSourceWizardIterator(dataCategory));
+        // {0} will be replaced by WizardDescriptor.Panel.getComponent().getName()
+        // {1} will be replaced by WizardDescriptor.Iterator.name()
+        wiz.setTitleFormat(new MessageFormat("{0} ({1})"));
+        wiz.setTitle(Bundle.LBL_CreateDataSourceAction_Wizard_Title());
+        DialogDisplayer.getDefault().notify(wiz);
     }
  
     @Override
@@ -101,29 +114,23 @@ public final class DeleteDataCategoryAction extends AbstractAction
     }
     
     private boolean shouldEnable() {
-        items.clear();
-        items.addAll(lkpInfo.allInstances());
+        dataCategory = context.lookup(DataCategory.class);
+        if(dataCategory != null)
+            return true;
         
-        if(items.isEmpty())
+        Project project = context.lookup(Project.class);
+        if(project == null)
             return false;
         
-        DataManager m1 = null;
-        for(DataItem item : items) {
-            if(item.getParent() == null)
-                return false;
-            if(m1 == null)
-                m1 = item.getDataManager();
-            
-            if(m1 != item.getDataManager())
-                return false;
-        }
-        
-        return true;
-        
+        DataManager dm = project.getLookup().lookup(DataManager.class);
+        if(dm == null)
+            return false;
+        dataCategory = dm.getCategory(null);
+        return dataCategory != null;
     }
  
     @Override
     public Action createContextAwareInstance(Lookup context) {
-        return new DeleteDataCategoryAction(context);
+        return new CreateDataSourceAction(context);
     }
 }

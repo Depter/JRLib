@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api.impl;
 
+import java.io.IOException;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
@@ -38,12 +39,24 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
     
     DataSourceImpl(FileObject file, DataCategoryImpl parent) {
         super(parent.getDataManager(), file, parent);
-        dataProvider = DataSourceUtil.load(file);
+        dataProvider = DataSourceUtil.load(this);
     }
     
     DataSourceImpl(FileObject file, DataCategoryImpl parent, DataProvider provider) {
         super(parent.getDataManager(), file, parent);
         this.dataProvider = provider;
+    }
+    
+    @Override
+    void delete() throws IOException {
+        try {
+            dataProvider.delete();
+        } catch (Exception ex) {
+            throw new IOException("Unable to delete DataProvider for: "+getPath(), ex);
+        } finally {
+            dataProvider = EmptyDataProvider.getInstance();
+            super.delete();
+        }
     }
     
     @Override

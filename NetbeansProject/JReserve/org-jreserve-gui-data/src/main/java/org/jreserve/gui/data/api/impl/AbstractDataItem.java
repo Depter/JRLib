@@ -76,6 +76,10 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
         }
     }
     
+    public FileObject getFile() {
+        return file;
+    }
+    
     @Override
     public int compareTo(AbstractDataItem o) {
         return file.getNameExt().compareToIgnoreCase(o.file.getNameExt());

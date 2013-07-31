@@ -18,6 +18,7 @@ package org.jreserve.gui.data.api.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -48,7 +49,7 @@ class DataSourceUtil {
         FileObject file = ds.file;
         logger.log(Level.FINE, "Daving DataProvider: {0}", file.getPath());
         Properties props = createProperties(ds.getDataProvider());
-        
+        save(file, props);
     }
     
     private static Properties createProperties(DataProvider provider) throws IOException {
@@ -65,8 +66,30 @@ class DataSourceUtil {
         return props;
     }
     
-    private static void save(FileObject fo, Properties props) {
+    private static void save(FileObject file, Properties props) {
+        OutputStream os = null;
+        FileLock lock = null;
         
+        try {
+            lock = file.lock();
+            os = file.getOutputStream(lock);
+            props.storeToXML(os, null);
+        } catch (Exception ex) {
+        } finally {
+            close(file, os);
+            if(lock != null)
+                lock.releaseLock();
+        }
+    }
+    
+    private static void close(FileObject file, OutputStream os) {
+        if(os != null) {
+            try {os.close();} catch (IOException ex) {
+                String msg = "Unable to close OutputStream for file '%s'!";
+                msg = String.format(msg, file.getPath());
+                logger.log(Level.SEVERE, msg, ex);
+            }
+        }
     }
     
     private static boolean isFixedProperty(String name) {
@@ -75,12 +98,13 @@ class DataSourceUtil {
                DataProvider.PROP_INSTANCE_PATH.equalsIgnoreCase(name);
     }
     
-    static DataProvider load(FileObject file) {
+    static DataProvider load(DataSource ds) {
+        FileObject file = ds.getFile();
         logger.log(Level.FINE, "Loading DataProvider: {0}", file.getPath());
         try {
             Properties props = loadProperties(file);
             DataProvider provider = loadProvider(props);
-            provider.setProperties(toMapp(props));
+            provider.setProperties(ds, toMapp(props));
             return provider;
         } catch (Exception ex) {
             String msg = "Unable to load DataProvider from file '%s'!";
@@ -99,28 +123,17 @@ class DataSourceUtil {
     
     private static Properties loadProperties(FileObject file) throws IOException {
         FileLock lock = null;
-        InputStream is = null;
         
         try {
             lock = file.lock();
-            is = file.getInputStream();
+            InputStream is = file.getInputStream();
             Properties props = new Properties();
+            props.loadFromXML(is);
             props.load(is);
+            return props;
         } finally {
-            close(file, is);
             if(lock != null)
                 lock.releaseLock();
-        }
-        return null;
-    }
-    
-    private static void close(FileObject file, InputStream is) {
-        if(is != null) {
-            try{is.close();} catch (IOException ex) {
-                String msg = "Unable to close InputStream for file '%s'!";
-                msg = String.format(msg, file.getPath());
-                logger.log(Level.SEVERE, msg, ex);
-            }
         }
     }
     

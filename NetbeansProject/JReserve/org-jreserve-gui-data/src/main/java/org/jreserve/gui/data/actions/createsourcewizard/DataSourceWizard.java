@@ -14,24 +14,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.jreserve.gui.data.actions.createsourcewizard;
 
-package org.jreserve.gui.data.api;
-
-import org.openide.filesystems.FileObject;
+import java.util.List;
+import javax.swing.Icon;
+import javax.swing.event.ChangeListener;
+import org.openide.WizardDescriptor;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataItem {
-    public DataManager getDataManager();
+public interface DataSourceWizard {
 
-    public DataCategory getParent();
-    
-    public String getName();
-    
-    public String getPath();
-    
-    public FileObject getFile();
+    public final static String PROP_SOURCE_PROPERTIES = "dataSource.properties";    //NOI18
+
+    public Icon getIcon();
+
+    public String getDisplayName();
+
+    public List<WizardDescriptor.Panel> getPanels();
+
+    public void addChangeListener(ChangeListener listener);
+
+    public void removeChangeListener(ChangeListener listener);
 }

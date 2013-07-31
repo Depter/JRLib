@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jreserve.gui.data.api.DataSource;
 
 /**
  *
@@ -31,9 +32,10 @@ import java.util.Set;
  */
 public abstract class AbstractDataProvider implements DataProvider {
     
-    private final Object lock = new Object();
+    protected final Object lock = new Object();
     private final DataType dataType;
     private Set<DataEntry> entries;
+    private DataSource ds;
     
     protected AbstractDataProvider(DataType dataType) {
         if(dataType == null)
@@ -47,7 +49,12 @@ public abstract class AbstractDataProvider implements DataProvider {
     }
     
     @Override
-    public void setProperties(Map<String, String> properties) {
+    public void setProperties(DataSource source, Map<String, String> properties) {
+        this.ds = source;
+    }
+    
+    protected DataSource getDataSource() {
+        return ds;
     }
     
     @Override
@@ -70,14 +77,8 @@ public abstract class AbstractDataProvider implements DataProvider {
     }
     
     private Set<DataEntry> getLoadedEntries() throws Exception {
-        if(entries == null) {
-            try {
-                entries = loadEntries();
-            } catch (Exception ex) {
-                //TODO log error
-                throw ex;
-            }
-        }
+        if(entries == null)
+            entries = loadEntries();
         return entries;
     }
     

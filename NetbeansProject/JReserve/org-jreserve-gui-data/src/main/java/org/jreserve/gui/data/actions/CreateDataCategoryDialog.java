@@ -16,27 +16,19 @@
  */
 package org.jreserve.gui.data.actions;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.Icon;
-import javax.swing.JTree;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultTreeCellRenderer;
-import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.DialogDescriptor;
 import org.openide.NotificationLineSupport;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -133,7 +125,7 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
         tree.setModel(treeModel);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.getSelectionModel().addTreeSelectionListener(new ParentListener());
-        tree.setCellRenderer(new CategoryRenderer());
+        tree.setCellRenderer(new DataCategoryTreeRenderer());
         treeScroll.setViewportView(tree);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -264,71 +256,6 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
         @Override
         public void valueChanged(TreeSelectionEvent e) {
             updatePath();
-        }
-    }
-    
-    private class DataCategoryTreeModel implements TreeModel {
-        
-        private final DataManager manager;
-        
-        private DataCategoryTreeModel(DataManager manager) {
-            this.manager = manager;
-        }
-        
-        @Override
-        public Object getRoot() {
-            return manager.getCategory(null);
-        }
-
-        @Override
-        public Object getChild(Object parent, int index) {
-            return getChildren(parent).get(index);
-        }
-        
-        private List<DataCategory> getChildren(Object parent) {
-            return ((DataCategory) parent).getChildCategories();
-        }
-        
-        @Override
-        public int getChildCount(Object parent) {
-            return getChildren(parent).size();
-        }
-
-        @Override
-        public boolean isLeaf(Object node) {
-            return false;
-        }
-
-        @Override
-        public void valueForPathChanged(TreePath path, Object newValue) {
-        }
-
-        @Override
-        public int getIndexOfChild(Object parent, Object child) {
-            return getChildren(parent).indexOf(child);
-        }
-
-        @Override
-        public void addTreeModelListener(TreeModelListener l) {
-        }
-
-        @Override
-        public void removeTreeModelListener(TreeModelListener l) {
-        }
-    }
-
-    
-    private static class CategoryRenderer extends DefaultTreeCellRenderer {
-        
-        private final static Icon ICON = ImageUtilities.loadImageIcon("org/jreserve/gui/data/icons/folder_db.png", false);
-
-        @Override
-        public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-            super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-            if(value instanceof DataCategory)
-                setText(((DataCategory)value).getName());
-            super.setIcon(ICON);
-            return this;
         }
     }
 }

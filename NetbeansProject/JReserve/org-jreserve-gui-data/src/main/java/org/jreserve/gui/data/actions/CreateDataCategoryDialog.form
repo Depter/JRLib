@@ -86,7 +86,7 @@
             </Property>
           </Properties>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);&#xa;tree.getSelectionModel().addTreeSelectionListener(new ParentListener());&#xa;tree.setCellRenderer(new CategoryRenderer());"/>
+            <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);&#xa;tree.getSelectionModel().addTreeSelectionListener(new ParentListener());&#xa;tree.setCellRenderer(new DataCategoryTreeRenderer());"/>
           </AuxValues>
         </Component>
       </SubComponents>
