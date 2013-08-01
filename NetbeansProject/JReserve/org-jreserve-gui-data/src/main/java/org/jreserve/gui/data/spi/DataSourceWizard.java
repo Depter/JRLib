@@ -14,11 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.actions.createsourcewizard;
+package org.jreserve.gui.data.spi;
 
 import java.util.List;
-import javax.swing.Icon;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.DataType;
 import org.openide.WizardDescriptor;
 
 /**
@@ -28,15 +28,21 @@ import org.openide.WizardDescriptor;
  */
 public interface DataSourceWizard {
 
-    public final static String PROP_SOURCE_PROPERTIES = "dataSource.properties";    //NOI18
+//    public Icon getIcon();
+//
+//    public String getDisplayName();
 
-    public Icon getIcon();
+    public List<? extends WizardDescriptor.Panel> getPanels();
 
-    public String getDisplayName();
-
-    public List<WizardDescriptor.Panel> getPanels();
-
+    public DataProvider createDataProvider(DataType dataType, WizardDescriptor wizard);
+    
     public void addChangeListener(ChangeListener listener);
 
     public void removeChangeListener(ChangeListener listener);
+
+    public static @interface Registration {
+        public String displayName();
+        public String iconBase() default "";
+        public int position() default Integer.MAX_VALUE;
+    }
 }

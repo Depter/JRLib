@@ -17,13 +17,16 @@
 package org.jreserve.gui.data.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
+import org.jreserve.gui.data.api.DataSource;
 
 /**
  *
@@ -33,20 +36,36 @@ import org.jreserve.gui.data.api.DataManager;
 public class DataCategoryTreeModel implements TreeModel {
 
     private DataManager manager;
+    private boolean showSources;
     private List<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
     
     public DataCategoryTreeModel() {
+        this(null);
     }
     
     public DataCategoryTreeModel(DataManager manager) {
+        this(manager, false);
+    }
+    
+    public DataCategoryTreeModel(DataManager manager, boolean showSources) {
         this.manager = manager;
+        this.showSources = showSources;
+    }
+    
+    public void setShowSources(boolean showSources) {
+        this.showSources = showSources;
+        fireChange();
+    }
+    
+    private void fireChange() {
+        TreeModelEvent evt = new TreeModelEvent(this, new Object[]{getRoot()});
+        for(TreeModelListener l : listeners.toArray(new TreeModelListener[listeners.size()]))
+            l.treeStructureChanged(evt);
     }
     
     public void setDataManager(DataManager manager) {
         this.manager = manager;
-        TreeModelEvent evt = new TreeModelEvent(this, new Object[]{getRoot()});
-        for(TreeModelListener l : listeners.toArray(new TreeModelListener[listeners.size()]))
-            l.treeStructureChanged(evt);
+        fireChange();
     }
 
     @Override
@@ -59,8 +78,18 @@ public class DataCategoryTreeModel implements TreeModel {
         return getChildren(parent).get(index);
     }
 
-    private List<DataCategory> getChildren(Object parent) {
-        return ((DataCategory) parent).getChildCategories();
+    private List<DataItem> getChildren(Object parent) {
+        if(parent instanceof DataCategory)
+            return getChildren((DataCategory)parent);
+        return Collections.EMPTY_LIST;
+    }
+    
+    private List<DataItem> getChildren(DataCategory category) {
+        List<DataItem> result = new ArrayList<DataItem>();
+        result.addAll(category.getChildCategories());
+        if(showSources)
+            result.addAll(category.getDataSources());
+        return result;
     }
 
     @Override
@@ -70,7 +99,7 @@ public class DataCategoryTreeModel implements TreeModel {
 
     @Override
     public boolean isLeaf(Object node) {
-        return node==null;
+        return node==null || (node instanceof DataSource);
     }
 
     @Override

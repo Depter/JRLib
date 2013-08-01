@@ -48,6 +48,16 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
     }
     
     @Override
+    void rename(String name) throws IOException {
+        try {
+            dataProvider.rename(name);
+        } catch (Exception ex) {
+            throw new IOException("Unable to rename DataProvider for: "+getPath(), ex);
+        }
+        super.rename(name);
+    }
+    
+    @Override
     void delete() throws IOException {
         try {
             dataProvider.delete();

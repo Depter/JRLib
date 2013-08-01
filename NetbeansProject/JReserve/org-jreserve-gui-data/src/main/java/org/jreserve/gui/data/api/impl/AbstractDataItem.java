@@ -19,6 +19,7 @@ package org.jreserve.gui.data.api.impl;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -41,7 +42,10 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
         this.manager = manager;
         this.file = file;
         this.parent = parent;
-        
+        initPath();
+    }
+    
+    private void initPath() {
         this.path = parent==null? "" : parent.getPath() + PATH_SEPARATOR;
         this.path += file.getName();
     }
@@ -60,6 +64,24 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
     
     public String getPath() {
         return path;
+    }
+    
+    void rename(String name) throws IOException {
+        FileLock lock = null;
+        try {
+            String oldPath = getPath();
+            lock = file.lock();
+            file.rename(lock, name, file.getExt());
+            initPath();
+            logger.info(String.format("Renamed DataItem: '%s' -> '%s'", oldPath, getPath()));
+        } catch (Exception ex) {
+            String msg = "Unable to rename DataItem: " + getPath();
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        } finally {
+            if(lock != null)
+                lock.releaseLock();
+        }
     }
 
     void delete() throws IOException {

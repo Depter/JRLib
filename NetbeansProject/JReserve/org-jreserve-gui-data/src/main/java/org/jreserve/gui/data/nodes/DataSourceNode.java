@@ -16,9 +16,21 @@
  */
 package org.jreserve.gui.data.nodes;
 
+import java.awt.datatransfer.Transferable;
+import java.io.IOException;
+import java.util.List;
+import javax.swing.Action;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
+import org.jreserve.gui.data.api.impl.DataEvent;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -26,12 +38,69 @@ import org.openide.util.lookup.Lookups;
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - path",
+    "MSG.DataSourceNode.Rename.Error=Unable to rename Data Storage: {0}"
+})
 class DataSourceNode extends AbstractNode {
+    
+    @StaticResource private final static String TRIANGLE_IMG = "org/jreserve/gui/data/icons/database_triangle.png";
+    @StaticResource private final static String VECTOR_IMG = "org/jreserve/gui/data/icons/database_vector.png";
+    private final static String ACTION_PATH = "Node/DataSource/Actions";  //NOI18
+    
+    private final DataSource source;
     
     DataSourceNode(DataSource source) {
         super(Children.LEAF, Lookups.singleton(source));
+        this.source = source;
         setDisplayName(source.getName());
-        //TODO icon
+        initIconBase();
+        EventBusManager.getDefault().subscribe(this);
     }
     
+    private void initIconBase() {
+        if(DataType.TRIANGLE == source.getDataType())
+            setIconBaseWithExtension(TRIANGLE_IMG);
+        else
+            setIconBaseWithExtension(VECTOR_IMG);
+    }
+    
+    @Override
+    public Action[] getActions(boolean context) {
+        List<? extends Action> actions = Utilities.actionsForPath(ACTION_PATH);
+        int size = actions.size();
+        return actions.toArray(new Action[size]);
+    }    
+
+    @Override
+    public boolean canRename() {
+        return true;
+    }
+
+    @Override
+    public void setName(String s) {
+        try {
+            source.getDataManager().renameDataItem(source, s);
+        } catch (Exception ex) {
+            BubbleUtil.showException(Bundle.MSG_DataSourceNode_Rename_Error(source.getPath()), ex);
+        }
+    }
+    
+    @EventBusListener
+    public void dataEvent(DataEvent evt) {
+        if(isRenamed(evt))
+            setDisplayName(source.getName());
+    }
+    
+    private boolean isRenamed(DataEvent evt) {
+        return (source == evt.getDataItem()) &&
+               (evt instanceof DataEvent.DataItemRenamed) &&
+                !getDisplayName().equals(source.getName());
+    }
+    
+    @Override
+    public Transferable clipboardCut() throws IOException {
+        Transferable t = super.clipboardCut();
+        return DataItemFlavor.createTransferable(t, source);
+    }
 }

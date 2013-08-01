@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import javax.swing.SwingWorker;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
@@ -50,6 +51,7 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
     private Dialog dialog;
     private List<DataItem> items;
     private Set<String> entries;
+    private DeleteWorker worker;
     
     private DeleteDataCategoryDialog(List<DataItem> items) {
         initComponents();
@@ -183,14 +185,11 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
     }//GEN-LAST:event_cancelButtonActionPerformed
 
     private void okButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_okButtonActionPerformed
-        for(DataItem item : items) {
-            try {
-                item.getDataManager().deleteDataItem(item);
-            } catch (IOException ex) {
-                BubbleUtil.showException(Bundle.MSG_DeleteDataCategoryDialog_Delete_Error(item.getPath()), ex);
-            }
-        }
-        dialog.setVisible(false);
+        okButton.setEnabled(false);
+        pBar.setMaximum(items.size());
+        pBar.setVisible(true);
+        worker = new DeleteWorker(items);
+        worker.execute();
     }//GEN-LAST:event_okButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -204,4 +203,52 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
     private javax.swing.JPanel pbarPanel;
     private javax.swing.JLabel questionLabel;
     // End of variables declaration//GEN-END:variables
+
+    private class DeleteWorker extends SwingWorker<Void, Integer> {
+        
+        private final DataItem[] items;
+        private int step = 0;
+        
+        private DeleteWorker(List<DataItem> items) {
+            this.items = items.toArray(new DataItem[items.size()]);
+        }
+        
+        @Override
+        protected Void doInBackground() throws Exception {
+            for(DataItem item : this.items)
+                deleteItem(item);
+            return null;
+        }
+        
+        private void deleteItem(DataItem item) throws Exception {
+            try {
+                item.getDataManager().deleteDataItem(item);
+                publish(step++);
+            } catch (Exception ex) {
+                String msg = Bundle.MSG_DeleteDataCategoryDialog_Delete_Error(item.getPath());
+                throw new Exception(msg, ex);
+            }
+        }
+
+        @Override
+        protected void process(List<Integer> chunks) {
+            int size = chunks.size();
+            if(size > 0)
+                pBar.setValue(chunks.get(size-1));
+        }
+        
+        @Override
+        protected void done() {
+            try {
+                get();
+                dialog.setVisible(false);
+            } catch (Exception ex) {
+                BubbleUtil.showException(ex);
+            } finally {
+                okButton.setEnabled(true);
+                pBar.setValue(0);
+                pBar.setVisible(false);
+            }
+        }
+    }
 }

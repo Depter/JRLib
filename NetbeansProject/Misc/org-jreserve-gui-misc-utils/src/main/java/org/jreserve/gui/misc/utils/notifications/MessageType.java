@@ -37,11 +37,13 @@ public enum MessageType {
     WARNING (NotifyDescriptor.WARNING_MESSAGE    , "warning.gif"),
     ERROR   (NotifyDescriptor.ERROR_MESSAGE      , "error.gif");
     
+    private final static String IMG_HOME = "org/jreserve/gui/misc/utils/notifications/"; //NOI18
+    
     private static Icon loadImage(String resourceID) {
         if(resourceID == null)
             return new ImageIcon();
         
-        Icon img = ImageUtilities.loadImageIcon(resourceID, false);
+        Icon img = ImageUtilities.loadImageIcon(IMG_HOME+resourceID, false);
         if(img == null) {
             logLoadError(resourceID);
             img = new ImageIcon();

@@ -17,6 +17,10 @@
 package org.jreserve.gui.data.api.impl;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
@@ -106,11 +110,12 @@ public class DataManagerImpl implements DataManager {
     }
     
     @Override
-    public synchronized void createDataCategory(DataCategory parent, String name) throws IOException {
+    public synchronized DataCategory createDataCategory(DataCategory parent, String name) throws IOException {
         if(this != parent.getDataManager())
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
         DataCategoryImpl child = ((DataCategoryImpl) parent).createChildCategory(name);
         DataEvent.categoryCreated(child);
+        return child;
     }
     
     @Override
@@ -139,10 +144,87 @@ public class DataManagerImpl implements DataManager {
     }
     
     @Override
-    public synchronized void createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException {
+    public synchronized DataSource createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException {
         if(this != parent.getDataManager())
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
         DataSourceImpl child = ((DataCategoryImpl) parent).createChildSource(name, dataProvider);
         DataEvent.sourceCreated(child);
+        return child;
     }
+    
+    @Override
+    public synchronized void renameDataItem(DataItem item, String newName) throws IOException {
+        if(this != item.getDataManager())
+            throw new IllegalArgumentException("DataItem belongs to another data manager!");
+        
+        AbstractDataItem impl = (AbstractDataItem) item;
+        checkValidName(impl, newName);
+        LinkedHashMap<DataItem, String> oldNames = new LinkedHashMap<DataItem, String>();
+        fillOldNames(oldNames, item);
+        impl.rename(newName);
+        
+        for(Map.Entry<DataItem, String> entry : oldNames.entrySet())
+            DataEvent.itemRenamed(entry.getKey(), entry.getValue());
+    }
+    
+    private void checkValidName(AbstractDataItem item, String name) {
+        if(name == null)
+            throw new NullPointerException("Name can not be null!");
+        if(name.length() == 0)
+            throw new IllegalArgumentException("Name can not be empty!");
+        
+        DataCategory parent = item.getParent();
+        if(parent == null)
+            throw new IllegalArgumentException("Can not rename root category!");
+        
+        for(DataItem sibling : getSiblings(item)) {
+            if(sibling.getName().equalsIgnoreCase(name))
+                throw new IllegalArgumentException(String.format("Name '%s' already used by '%s'!", name, sibling.getPath()));
+        }
+    }
+    
+    private List<DataItem> getSiblings(AbstractDataItem item) {
+        List<DataItem> result = new ArrayList<DataItem>();
+        if(item instanceof DataCategory)
+            result.addAll(item.getParent().getChildCategories());
+        else
+            result.addAll(item.getParent().getDataSources());
+        result.remove(item);
+        return result;
+    }
+    
+    private void fillOldNames(Map<DataItem, String> names, DataItem item) {
+        if(item instanceof DataCategory) {
+            DataCategory category = (DataCategory) item;
+            for(DataCategory child : category.getChildCategories())
+                fillOldNames(names, child);
+            for(DataSource child : category.getDataSources())
+                names.put(child, child.getPath());
+        }
+        names.put(item, item.getPath());
+    }
+    
+    @Override
+    public void moveDataItem(DataCategory target,  DataItem item) throws IOException {
+        checkMovable(target, item);
+        
+        AbstractDataItem itemImpl = (AbstractDataItem) item;
+        LinkedHashMap<DataItem, String> oldNames = new LinkedHashMap<DataItem, String>();
+        fillOldNames(oldNames, item);
+        //TODO move
+    }
+    
+    private void checkMovable(DataCategory target, DataItem item) {
+        if(this != item.getDataManager())
+            throw new IllegalArgumentException("DataItem belongs to another data manager!");
+        if(this != target.getDataManager())
+            throw new IllegalArgumentException("DataCategory belongs to another data manager!");
+        if(isChildOf(item, target))
+            throw new IllegalArgumentException(String.format("Can not move a DataItem '%s' to one of it's children '%s'!", item.getPath(), target.getPath()));
+    }
+    
+    private boolean isChildOf(DataItem parent, DataItem child) {
+        return child.getPath().startsWith(parent.getPath());
+    }
+    
 }

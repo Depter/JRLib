@@ -16,15 +16,11 @@
  */
 package org.jreserve.gui.data.actions;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataItemChooser;
+import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.DialogDescriptor;
@@ -38,35 +34,31 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.CreateDataCategoryDialog.NameText.Prompt=Category Name",
     "LBL.CreateDataCategoryDialog.Title=New Data Category",
-    "MSG.CreateDataCategoryDialog.Parent.Empty=Parent category not selected!",
+    "MSG.CreateDataCategoryDialog.Parent.Empty=Parent category not found!",
     "MSG.CreateDataCategoryDialog.Name.Empty=Name is not set!",
     "# {0} - name",
-    "MSG.CreateDataCategoryDialog.Name.Exists=Name \"{0}\" already exists!"
+    "MSG.CreateDataCategoryDialog.Name.Exists=Name \"{0}\" already exists!",
+    "# {0} - name",
+    "MSG.CreateDataCategoryDialog.Name.Invalid=Name \"{0}\" is invalid!"
 })
 class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.DialogContent {
     
-    private final DataCategoryTreeModel treeModel;
+    private DataManager dm;
     private TextPrompt namePrompt;
+    private DialogDescriptor dd;
     private NotificationLineSupport nls;
-    
+    private NameListener textListener = new NameListener();
+            
     CreateDataCategoryDialog(DataCategory parent) {
-        treeModel = new DataCategoryTreeModel(parent.getDataManager());
+        this.dm = parent.getDataManager();
         setName(Bundle.LBL_CreateDataCategoryDialog_Title());
         initComponents();
-        selectOriginalPath(parent);
-    }
-    
-    private void selectOriginalPath(DataCategory category) {
-        List<DataCategory> categories = new ArrayList<DataCategory>();
-        while(category != null) {
-            categories.add(0, category);
-            category = category.getParent();
-        }
-        tree.setSelectionPath(new TreePath(categories.toArray()));
+        parentText.setText(parent.getPath());
     }
     
     @Override
     public void setDialogDescriptor(DialogDescriptor dd) {
+        this.dd = dd;
         this.nls = dd.createNotificationLineSupport();
         updatePath();
     }
@@ -83,13 +75,14 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
 
         nameLabel = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
-        treeLabel = new javax.swing.JLabel();
-        treeScroll = new javax.swing.JScrollPane();
-        tree = new javax.swing.JTree();
+        parentLabel = new javax.swing.JLabel();
+        parentText = new javax.swing.JTextField();
+        parentButton = new javax.swing.JButton();
         pathLabel = new javax.swing.JLabel();
         pathText = new javax.swing.JTextField();
+        filler = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(400, 0), new java.awt.Dimension(32767, 32767));
 
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(CreateDataCategoryDialog.class, "CreateDataCategoryDialog.nameLabel.text")); // NOI18N
@@ -103,45 +96,52 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
 
         nameText.setText(null);
         namePrompt = TextPrompt.createStandard(Bundle.LBL_CreateDataCategoryDialog_NameText_Prompt(), nameText);
-        nameText.getDocument().addDocumentListener(new NameListener());
+        nameText.getDocument().addDocumentListener(textListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(nameText, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(treeLabel, org.openide.util.NbBundle.getMessage(CreateDataCategoryDialog.class, "CreateDataCategoryDialog.treeLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(parentLabel, org.openide.util.NbBundle.getMessage(CreateDataCategoryDialog.class, "CreateDataCategoryDialog.parentLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        add(treeLabel, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(parentLabel, gridBagConstraints);
 
-        treeScroll.setPreferredSize(new java.awt.Dimension(300, 200));
-
-        tree.setModel(treeModel);
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.getSelectionModel().addTreeSelectionListener(new ParentListener());
-        tree.setCellRenderer(new DataCategoryTreeRenderer());
-        treeScroll.setViewportView(tree);
-
+        parentText.setText(null);
+        parentText.getDocument().addDocumentListener(textListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        add(treeScroll, gridBagConstraints);
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(parentText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(parentButton, org.openide.util.NbBundle.getMessage(CreateDataCategoryDialog.class, "CreateDataCategoryDialog.parentButton.text")); // NOI18N
+        parentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                parentButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        add(parentButton, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(CreateDataCategoryDialog.class, "CreateDataCategoryDialog.pathLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
@@ -152,20 +152,37 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
         pathText.setFocusable(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(pathText, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(filler, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void parentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parentButtonActionPerformed
+        DataCategory parent = DataItemChooser.chooseCategory(dm);
+        if(parent != null)
+            parentText.setText(parent.getPath());
+    }//GEN-LAST:event_parentButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.Box.Filler filler;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameText;
+    private javax.swing.JButton parentButton;
+    private javax.swing.JLabel parentLabel;
+    private javax.swing.JTextField parentText;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathText;
-    private javax.swing.JTree tree;
-    private javax.swing.JLabel treeLabel;
-    private javax.swing.JScrollPane treeScroll;
     // End of variables declaration//GEN-END:variables
 
     String getCategoryName() {
@@ -173,10 +190,12 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
     }
     
     DataCategory getParentCategory() {
-        TreePath path = tree.getSelectionPath();
-        if(path == null)
+        String path = parentText.getText();
+        
+        if(path == null || path.length() == 0)
             return null;
-        return (DataCategory) path.getLastPathComponent();
+        
+        return dm.getCategory(path);
     }
     
     private void updatePath() {
@@ -192,7 +211,10 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
     }
     
     private void validateInput() {
-        if(isParentValid() && nameNotEmpty() && nameNotExis())
+        if(!isParentValid())
+            return;
+        String name = nameText.getText();
+        if(nameNotEmpty(name) && nameValid(name) && nameNotExis(name))
             showError(null);
     }
     
@@ -212,10 +234,12 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
                 nls.clearMessages();
             }
         }
+        
+        if(dd != null)
+            dd.setValid(msg == null);
     }
     
-    private boolean nameNotEmpty() {
-        String name = nameText.getText();
+    private boolean nameNotEmpty(String name) {
         if(name == null || name.trim().length() == 0) {
             showError(Bundle.MSG_CreateDataCategoryDialog_Name_Empty());
             return false;
@@ -223,8 +247,7 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
         return true;
     }
     
-    private boolean nameNotExis() {
-        String name = nameText.getText();
+    private boolean nameNotExis(String name) {
         DataCategory parent = getParentCategory();
         for(DataCategory child : parent.getChildCategories()) {
             if(name.equalsIgnoreCase(child.getName())) {
@@ -233,6 +256,13 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
             }
         }
         return true;
+    }
+    
+    private boolean nameValid(String name) {
+        if(name.indexOf('/') < 0)
+            return true;
+        showError(Bundle.MSG_CreateDataCategoryDialog_Name_Invalid(name));
+        return false;
     }
     
     private class NameListener implements DocumentListener {
@@ -251,11 +281,4 @@ class CreateDataCategoryDialog extends javax.swing.JPanel implements DialogUtil.
         public void changedUpdate(DocumentEvent e) {
         }
     } 
-    
-    private class ParentListener implements TreeSelectionListener {
-        @Override
-        public void valueChanged(TreeSelectionEvent e) {
-            updatePath();
-        }
-    }
 }

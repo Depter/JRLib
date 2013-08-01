@@ -89,6 +89,19 @@ public abstract class LayerRegistrationLoader<T> {
     }
     
     protected abstract T getValue(FileObject file) throws Exception;
+
+    protected <E> E getInstance(FileObject file, Class<E> clazz) throws Exception {
+        try {
+            Object instance = loadInstance(file);
+            if(instance != null && clazz.isAssignableFrom(instance.getClass()))
+                return (E) instance;
+            throw new IllegalArgumentException(String.format("Object '%s' is not instance of %s!", instance, clazz));
+        } catch (Exception ex) {
+            String msg = String.format("Unable to instantiate '%s' from file '%s'!", clazz, file.getPath());
+            getLogger().log(Level.SEVERE, msg, ex);
+            throw ex;
+        }
+    }
     
     protected Object loadInstance(FileObject file) throws DataObjectNotFoundException, IOException, ClassNotFoundException {
         DataObject data = DataObject.find(file);

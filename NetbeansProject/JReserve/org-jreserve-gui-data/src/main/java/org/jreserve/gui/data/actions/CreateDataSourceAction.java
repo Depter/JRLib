@@ -57,7 +57,7 @@ import org.openide.util.Utilities;
     @ActionReference(path = "Node/DataCategory/Actions", position = 200)
 })
 @Messages({
-    "CTL_CreateDataSourceAction=New Source",
+    "CTL_CreateDataSourceAction=New Storage",
     "LBL.CreateDataSourceAction.Wizard.Title=New Data Source"
 })
 public class CreateDataSourceAction extends AbstractAction

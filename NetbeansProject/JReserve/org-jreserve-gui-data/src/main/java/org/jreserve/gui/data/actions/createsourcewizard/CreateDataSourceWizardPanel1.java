@@ -22,12 +22,11 @@ import java.beans.PropertyChangeListener;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
-import org.openide.NotificationLineSupport;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 
-public class CreateDataSourceWizardPanel1 implements WizardDescriptor.FinishablePanel<WizardDescriptor> {
+public class CreateDataSourceWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor> {
     
     private WizardDescriptor wiz;
     private DataCategory category;
@@ -91,15 +90,8 @@ public class CreateDataSourceWizardPanel1 implements WizardDescriptor.Finishable
 
     @Override
     public void storeSettings(WizardDescriptor wiz) {
-        // use wiz.putProperty to remember current panel state
-    }
-
-    @Override
-    public boolean isFinishPanel() {
-        if(!isValid)
-            return false;
-        DataSourceWizard sw = (DataSourceWizard) component.getClientProperty(CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD);
-        return sw==null || sw.getPanels().isEmpty();
+        wiz.putProperty(CreateDataSourceWizardIterator.PROP_DATA_CATEGORY, parent);
+        wiz.putProperty(CreateDataSourceWizardIterator.PROP_DATA_NAME, name);
     }
     
     private void validateInput() {
@@ -112,10 +104,8 @@ public class CreateDataSourceWizardPanel1 implements WizardDescriptor.Finishable
     }
     
     private boolean checkValid() {
-        return isParentValid() && 
-               nameNotEmpty() && 
-               nameNotExis() &&
-               sourceWizardSelected();
+        return isParentValid() && nameNotEmpty() && 
+               nameValid() && nameNotExis();
     }
     
     private boolean isParentValid() {
@@ -139,6 +129,13 @@ public class CreateDataSourceWizardPanel1 implements WizardDescriptor.Finishable
         return true;
     }
     
+    private boolean nameValid() {
+        if(name.indexOf('/') < 0)
+            return true;
+        showError(Bundle.MSG_CreateDataSourceWizardVisualPanel1_Name_Invalid(name));
+        return false;
+    }
+    
     private boolean nameNotExis() {
         for(DataSource child : parent.getDataSources()) {
             if(name.equalsIgnoreCase(child.getName())) {
@@ -149,27 +146,14 @@ public class CreateDataSourceWizardPanel1 implements WizardDescriptor.Finishable
         return true;
     }
     
-    private boolean sourceWizardSelected() {
-        if(component.getClientProperty(CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD) == null) {
-            showError(Bundle.MSG_CreateDataSourceWizardVisualPanel1_SourceWizard_Empty());
-            return false;
-        }
-        return true;
-    }
-    
     private class PanelListener implements PropertyChangeListener {
-
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             String propName = evt.getPropertyName();
             if(CreateDataSourceWizardVisualPanel1.PROP_NAME.equals(propName) ||
                CreateDataSourceWizardVisualPanel1.PROP_PARENT.equals(propName)) {
                 validateInput();
-            } else if(CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD.equals(propName)) {
-                wiz.putProperty(CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD, evt.getNewValue());
-                cs.fireChange();
             }
         }
-        
     }
 }

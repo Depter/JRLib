@@ -54,6 +54,10 @@ public class EmptyDataProvider implements DataProvider {
     }
     
     @Override
+    public void rename(String newName) {
+    }
+    
+    @Override
     public Map<String, String> getProperties() {
         logger.warning("Accessing dummy data provider!");
         return Collections.EMPTY_MAP;

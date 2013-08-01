@@ -32,10 +32,24 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.DataEvent.DataCategory.Created=Data category created.",
     "MSG.DataEvent.DataCategory.Deleted=Data category deleted.",
-    "MSG.DataEvent.DataSource.Created=Data source created.",
-    "MSG.DataEvent.DataSource.Deleted=Data source deleted."
+    "MSG.DataEvent.DataSource.Created=Data storage created.",
+    "MSG.DataEvent.DataSource.Deleted=Data storage deleted.",
+    "# {0} - oldPath",
+    "# {1} - newPath",
+    "MSG.DataEvent.DataCategory.Renamed=Data category renamed '{0}' -> '{1}'.",
+    "# {0} - oldPath",
+    "# {1} - newPath",
+    "MSG.DataEvent.DataSource.Renamed=Data storage renamed '{0}' -> '{1}'."
 })
 public abstract class DataEvent<T extends DataItem> extends AbstractAuditEvent {
+    
+    static void itemRenamed(DataItem item, String oldPath) {
+        String change = (item instanceof DataCategory)?
+                Bundle.MSG_DataEvent_DataCategory_Renamed(oldPath, item.getPath()) :
+                Bundle.MSG_DataEvent_DataSource_Renamed(oldPath, item.getPath());
+        DataItemRenamed evt = new DataItemRenamed(item, change, oldPath);
+        EventBusManager.getDefault().publish(evt);
+    }
     
     static void categoryCreated(DataCategory category) {
         String msg = Bundle.MSG_DataEvent_DataCategory_Created();
@@ -68,6 +82,18 @@ public abstract class DataEvent<T extends DataItem> extends AbstractAuditEvent {
     
     public T getDataItem() {
         return item;
+    }
+    
+    public static class DataItemRenamed<T extends DataItem> extends DataEvent<T> {
+        private final String oldPath;
+        private DataItemRenamed(T item, String change, String oldPath) {
+            super(item, change);
+            this.oldPath = oldPath;
+        }
+        
+        public String getOldPath() {
+            return oldPath;
+        }
     }
     
     public static class DataCategoryCreatedEvent extends DataEvent<DataCategory> {

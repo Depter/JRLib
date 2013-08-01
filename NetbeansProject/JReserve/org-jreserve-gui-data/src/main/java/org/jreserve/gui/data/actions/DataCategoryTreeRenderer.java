@@ -21,6 +21,8 @@ import javax.swing.Icon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -31,13 +33,20 @@ import org.openide.util.ImageUtilities;
 public class DataCategoryTreeRenderer extends DefaultTreeCellRenderer {
         
     private final static Icon ICON = ImageUtilities.loadImageIcon("org/jreserve/gui/data/icons/folder_db.png", false);
+    private final static Icon TRIANGLE = ImageUtilities.loadImageIcon("org/jreserve/gui/data/icons/database_triangle.png", false);
+    private final static Icon VECTOR = ImageUtilities.loadImageIcon("org/jreserve/gui/data/icons/database_vector.png", false);
 
     @Override
     public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
-        if(value instanceof DataCategory)
+        if(value instanceof DataCategory) {
             setText(((DataCategory)value).getName());
-        super.setIcon(ICON);
+            setIcon(ICON);
+        } else if(value instanceof DataSource) {
+            DataSource ds = (DataSource) value;
+            setText(ds.getName());
+            setIcon(ds.getDataType()== DataType.TRIANGLE? TRIANGLE : VECTOR);
+        }
         return this;
     }
 }

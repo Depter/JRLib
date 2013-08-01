@@ -16,28 +16,38 @@
  */
 package org.jreserve.gui.data.actions.createsourcewizard;
 
+import org.jreserve.gui.data.spi.DataSourceWizard;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
+import org.jreserve.gui.data.spi.DataProvider;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.WeakListeners;
 
 public final class CreateDataSourceWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
-
+    
+    private final static Logger logger = Logger.getLogger(CreateDataSourceWizardIterator.class.getName());
+    
     final static String PROP_SOURCE_WIZARD = "source.type.iterator";
-    final static String PROP_DATA_CATEGORY = "dataCategory";
+    final static String PROP_DATA_CATEGORY = "data.Category";
+    final static String PROP_DATA_NAME = "data.Name";
+    final static String PROP_DATA_TYPE = "data.Type";
     
     private DataCategory dataCategory;
     private ChangeSupport cs = new ChangeSupport(this);
@@ -58,9 +68,9 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     @Override
     public void initialize(WizardDescriptor wizard) {
         panels.add(new CreateDataSourceWizardPanel1());
+        panels.add(new CreateDataSourceWizardPanel2());
         
         this.wizardDesc = wizard;
-        wizard.putProperty(DataSourceWizard.PROP_SOURCE_PROPERTIES, new HashMap<String, String>());
         wizard.putProperty(PROP_DATA_CATEGORY, dataCategory);
 
         wizard.putProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.TRUE);
@@ -81,15 +91,16 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     private void releaseOldIterator() {
         if(sourceWizard != null) {
             sourceWizard.removeChangeListener(sourceItListener);
-            while(panels.size() > 1)
-                panels.remove(1);
+            while(panels.size() > 2)
+                panels.remove(2);
         }
     }
     
     private void reclaulcateState() {
         initPanels();
         String[] steps = initSteps();
-        index = 0;
+        if(index > 1)
+            index = 1;
         wizardDesc.putProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
     }
     
@@ -127,7 +138,7 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
 
     @Override
     public String name() {
-        if(index == 0)
+        if(index < 2)
             return (index+1) + " of ...";
         return (index+1) + " of " + panels.size();
     }
@@ -169,17 +180,46 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     public void removeChangeListener(ChangeListener l) {
         cs.removeChangeListener(l);
     }
-    
-    @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public Set instantiate() throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-        
+    
+    @Override
+    public Set instantiate(ProgressHandle handle) throws IOException {
+        handle.switchToIndeterminate();
+        handle.start();
+        try {
+            return Collections.singleton(createDataSource());
+        } finally {
+            handle.finish();
+        }
+    }
+    
+    private DataSource createDataSource() throws IOException {
+        try {
+            DataProvider provider = createDataProvider();
+            return createDataSource(provider);
+        } catch (Exception ex) {
+            String msg = "Unable to create new DataSource!";
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        }
+    }
+    
+    private DataProvider createDataProvider() {
+        DataType dataType = (DataType) wizardDesc.getProperty(PROP_DATA_TYPE);
+        DataSourceWizard wizard = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
+        return wizard.createDataProvider(dataType, wizardDesc);
+    }
+    
+    private DataSource createDataSource(DataProvider provider) throws IOException {
+        String name = (String) wizardDesc.getProperty(PROP_DATA_NAME);
+        DataCategory parent = (DataCategory) wizardDesc.getProperty(PROP_DATA_CATEGORY);
+        return parent.getDataManager().createDataSource(parent, name, provider);
+    }
+    
     private class SourceIteratorListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {
@@ -194,97 +234,4 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
             }
         }
     }
-
-    // Example of invoking this wizard:
-    // @ActionID(category="...", id="...")
-    // @ActionRegistration(displayName="...")
-    // @ActionReference(path="Menu/...")
-    // public static ActionListener run() {
-    //     return new ActionListener() {
-    //         @Override public void actionPerformed(ActionEvent e) {
-    //             WizardDescriptor wiz = new WizardDescriptor(new CreateDataSourceWizardWizardIterator());
-    //             // {0} will be replaced by WizardDescriptor.Panel.getComponent().getName()
-    //             // {1} will be replaced by WizardDescriptor.Iterator.name()
-    //             wiz.setTitleFormat(new MessageFormat("{0} ({1})"));
-    //             wiz.setTitle("...dialog title...");
-    //             if (DialogDisplayer.getDefault().notify(wiz) == WizardDescriptor.FINISH_OPTION) {
-    //                 ...do something...
-    //             }
-    //         }
-    //     };
-    // }
-    
-//    private int index;
-//    private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
-//
-//    private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
-//        if (panels == null) {
-//            panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-//            panels.add(new CreateDataSourceWizardWizardPanel1());
-//            String[] steps = new String[panels.size()];
-//            for (int i = 0; i < panels.size(); i++) {
-//                Component c = panels.get(i).getComponent();
-//                // Default step name to component name of panel.
-//                steps[i] = c.getName();
-//                if (c instanceof JComponent) { // assume Swing components
-//                    JComponent jc = (JComponent) c;
-//                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, i);
-//                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
-//                    jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, true);
-//                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, true);
-//                    jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, true);
-//                }
-//            }
-//        }
-//        return panels;
-//    }
-//
-//    @Override
-//    public WizardDescriptor.Panel<WizardDescriptor> current() {
-//        return getPanels().get(index);
-//    }
-//
-//    @Override
-//    public String name() {
-//        return index + 1 + ". from " + getPanels().size();
-//    }
-//
-//    @Override
-//    public boolean hasNext() {
-//        return index < getPanels().size() - 1;
-//    }
-//
-//    @Override
-//    public boolean hasPrevious() {
-//        return index > 0;
-//    }
-//
-//    @Override
-//    public void nextPanel() {
-//        if (!hasNext()) {
-//            throw new NoSuchElementException();
-//        }
-//        index++;
-//    }
-//
-//    @Override
-//    public void previousPanel() {
-//        if (!hasPrevious()) {
-//            throw new NoSuchElementException();
-//        }
-//        index--;
-//    }
-//
-//    // If nothing unusual changes in the middle of the wizard, simply:
-//    @Override
-//    public void addChangeListener(ChangeListener l) {
-//    }
-//
-//    @Override
-//    public void removeChangeListener(ChangeListener l) {
-//    }
-    // If something changes dynamically (besides moving between panels), e.g.
-    // the number of panels changes in response to user input, then use
-    // ChangeSupport to implement add/removeChangeListener and call fireChange
-    // when needed
 }

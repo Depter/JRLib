@@ -31,11 +31,15 @@ public interface DataManager {
     
     public DataCategory getCategory(String path);
     
-    public void createDataCategory(DataCategory parent, String name) throws IOException;
+    public DataCategory createDataCategory(DataCategory parent, String name) throws IOException;
     
     public void deleteDataItem(DataItem item) throws IOException;
     
     public DataSource getDataSource(String path);
     
-    public void createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException;
+    public DataSource createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException;
+    
+    public void renameDataItem(DataItem item, String newName) throws IOException;
+
+    public void moveDataItem(DataCategory target, DataItem item) throws IOException;
 }

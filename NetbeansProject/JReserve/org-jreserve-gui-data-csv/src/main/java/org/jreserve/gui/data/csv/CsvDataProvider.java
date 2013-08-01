@@ -82,10 +82,33 @@ public class CsvDataProvider extends AbstractDataProvider {
     }
     
     @Override
+    public void rename(String newName) throws IOException {
+        synchronized(lock) {
+            if(csvFile != null)
+                renameCsvFile(newName);
+        }
+    }
+    
+    private void renameCsvFile(String newName) throws IOException {
+        try {
+            FileLock fileLock = csvFile.lock();
+            String oldPath = csvFile.getPath();
+            csvFile.rename(fileLock, newName, csvFile.getExt());
+            logger.info(String.format("Renamed CsvFile: '%s' -> '%s'", oldPath, csvFile.getPath()));
+        } catch (Exception ex) {
+            String msg = "Unable to rename CsvFile: " + csvFile.getPath();
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        }
+    }
+    
+    @Override
     protected Set<DataEntry> loadEntries() throws Exception {
         try {
-            initFile();
-            return loader.loadEntries();
+            synchronized(lock) {
+                initFile();
+                return loader.loadEntries();
+            }
         } catch (Exception ex) {
             String msg = String.format("Unable to load data for data source '%s'!", getDataSource().getPath());
             logger.log(Level.SEVERE, msg, ex);
@@ -104,8 +127,10 @@ public class CsvDataProvider extends AbstractDataProvider {
     @Override
     protected void saveEntries(Set<DataEntry> entries) throws Exception {
         try {
-            initFile();
-            writer.write(entries);
+            synchronized(lock) {
+                initFile();
+                writer.write(entries);
+            }
         } catch (Exception ex) {
             String msg = String.format("Unable to write data for data source '%s'!", getDataSource().getPath());
             logger.log(Level.SEVERE, msg, ex);

@@ -16,21 +16,11 @@
  */
 package org.jreserve.gui.data.actions.createsourcewizard;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
-import javax.swing.tree.TreeSelectionModel;
-import org.jreserve.gui.data.actions.DataCategoryTreeModel;
-import org.jreserve.gui.data.actions.DataCategoryTreeRenderer;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataItemChooser;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.netbeans.api.project.Project;
@@ -38,20 +28,21 @@ import org.netbeans.api.project.ProjectUtils;
 import org.openide.util.NbBundle.Messages;
 
 @Messages({
-    "LBL.CreateDataSourceWizardVisualPanel1.Name=Step 1",
+    "LBL.CreateDataSourceWizardVisualPanel1.Name=Name & Category",
     "LBL.CreateDataSourceWizardVisualPanel1.Name.Prompt=Name of the source...",
     "MSG.CreateDataSourceWizardVisualPanel1.Parent.Empty=Parent category not selected!",
     "MSG.CreateDataSourceWizardVisualPanel1.Name.Empty=Name is not set!",
     "# {0} - name",
     "MSG.CreateDataSourceWizardVisualPanel1.Name.Exists=Name \"{0}\" already exists!",
-    "MSG.CreateDataSourceWizardVisualPanel1.SourceWizard.Empty=Type not selected!"
+    "# {0} - name",
+    "MSG.CreateDataSourceWizardVisualPanel1.Name.Invalid=Name \"{0}\" is invalid!"
 })
 class CreateDataSourceWizardVisualPanel1 extends JPanel {
     final static String PROP_NAME = "source.Name";
     final static String PROP_PARENT = "source.Parent";
     
     private DataManager dm;
-    private final DataCategoryTreeModel treeModel = new DataCategoryTreeModel();
+    private NameListener textListener = new NameListener();
     
     private DataCategory parent;
     private String name;
@@ -64,7 +55,6 @@ class CreateDataSourceWizardVisualPanel1 extends JPanel {
     void setDataCategory(DataCategory category) {
         this.dm = category.getDataManager();
         setProjectName();
-        treeModel.setDataManager(dm);
         selectCategory(category);
     }
     
@@ -75,19 +65,8 @@ class CreateDataSourceWizardVisualPanel1 extends JPanel {
     }
     
     private void selectCategory(DataCategory category) {
-        if(category == null)
-            locationTree.clearSelection();
-        else
-            locationTree.setSelectionPath(getPath(category));
-    }
-    
-    private TreePath getPath(DataCategory category) {
-        List<DataCategory> path = new ArrayList<DataCategory>();
-        while(category != null) {
-            path.add(0, category);
-            category = category.getParent();
-        }
-        return new TreePath(path.toArray());
+        String path = category==null? null : category.getPath();
+        parentText.setText(path);
     }
 
     @Override
@@ -106,15 +85,14 @@ class CreateDataSourceWizardVisualPanel1 extends JPanel {
 
         projectLabel = new javax.swing.JLabel();
         projectText = new javax.swing.JLabel();
-        typeLabel = new javax.swing.JLabel();
-        typeCombo = new javax.swing.JComboBox();
         nameLabel = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
         locationLabel = new javax.swing.JLabel();
-        locationScroll = new javax.swing.JScrollPane();
-        locationTree = new javax.swing.JTree();
+        parentText = new javax.swing.JTextField();
+        browseParentButton = new javax.swing.JButton();
         pathLabel = new javax.swing.JLabel();
         pathText = new javax.swing.JTextField();
+        filler = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -133,75 +111,67 @@ class CreateDataSourceWizardVisualPanel1 extends JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
         add(projectText, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(typeLabel, org.openide.util.NbBundle.getMessage(CreateDataSourceWizardVisualPanel1.class, "CreateDataSourceWizardVisualPanel1.typeLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 5);
-        add(typeLabel, gridBagConstraints);
-
-        typeCombo.setModel(new DefaultComboBoxModel());
-        typeCombo.setSelectedIndex(-1);
-        typeCombo.addActionListener(new FactoryListener());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        add(typeCombo, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(CreateDataSourceWizardVisualPanel1.class, "CreateDataSourceWizardVisualPanel1.nameLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 5);
         add(nameLabel, gridBagConstraints);
 
         nameText.setText(null);
-        nameText.getDocument().addDocumentListener(new NameListener());
+        nameText.getDocument().addDocumentListener(textListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(nameText, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(locationLabel, org.openide.util.NbBundle.getMessage(CreateDataSourceWizardVisualPanel1.class, "CreateDataSourceWizardVisualPanel1.locationLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 5);
         add(locationLabel, gridBagConstraints);
 
-        locationTree.setModel(treeModel);
-        locationTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        locationTree.getSelectionModel().addTreeSelectionListener(new ParentListener());
-        locationTree.setCellRenderer(new DataCategoryTreeRenderer());
-        locationScroll.setViewportView(locationTree);
-
+        parentText.setText(null);
+        parentText.getDocument().addDocumentListener(textListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        add(locationScroll, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        add(parentText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(browseParentButton, org.openide.util.NbBundle.getMessage(CreateDataSourceWizardVisualPanel1.class, "CreateDataSourceWizardVisualPanel1.browseParentButton.text")); // NOI18N
+        browseParentButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseParentButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 5, 0, 0);
+        add(browseParentButton, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(CreateDataSourceWizardVisualPanel1.class, "CreateDataSourceWizardVisualPanel1.pathLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 5);
@@ -212,24 +182,39 @@ class CreateDataSourceWizardVisualPanel1 extends JPanel {
         pathText.setFocusable(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
         add(pathText, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(filler, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void browseParentButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseParentButtonActionPerformed
+        DataCategory category = DataItemChooser.chooseCategory(dm);
+        if(category != null)
+            parentText.setText(category.getPath());
+    }//GEN-LAST:event_browseParentButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton browseParentButton;
+    private javax.swing.Box.Filler filler;
     private javax.swing.JLabel locationLabel;
-    private javax.swing.JScrollPane locationScroll;
-    private javax.swing.JTree locationTree;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameText;
+    private javax.swing.JTextField parentText;
     private javax.swing.JLabel pathLabel;
     private javax.swing.JTextField pathText;
     private javax.swing.JLabel projectLabel;
     private javax.swing.JLabel projectText;
-    private javax.swing.JComboBox typeCombo;
-    private javax.swing.JLabel typeLabel;
     // End of variables declaration//GEN-END:variables
 
     
@@ -240,54 +225,42 @@ class CreateDataSourceWizardVisualPanel1 extends JPanel {
           pathText.setText(parent.getPath()+"/"+name);
     }
     
-    private class FactoryListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            DataSourceWizard wizard = (DataSourceWizard) typeCombo.getSelectedItem();
-            putClientProperty(CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD, wizard);
-        }
-    }
-    
     private class NameListener implements DocumentListener {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            setNameProperty();
+            setNameProperty(e);
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            setNameProperty();
+            setNameProperty(e);
         }
         
-        private void setNameProperty() {
-            name = nameText.getText();
+        private void setNameProperty(DocumentEvent e) {
+            updateState(e);
             updatePath();
-            putClientProperty(PROP_NAME, name);
+        }
+        
+        private void updateState(DocumentEvent e) {
+            if(nameText.getDocument() == e.getDocument()) {
+                name = nameText.getText();
+                putClientProperty(PROP_NAME, name);
+            } else {
+                parent = getParent();
+                putClientProperty(PROP_PARENT, parent);
+            }
+        }
+        
+        private DataCategory getParent() {
+            String path = parentText.getText();
+            if(path == null || path.length() == 0)
+                return null;
+            return dm.getCategory(path);
         }
         
         @Override
         public void changedUpdate(DocumentEvent e) {
         }
     } 
-    
-    private class ParentListener implements TreeSelectionListener {
-        @Override
-        public void valueChanged(TreeSelectionEvent e) {
-            parent = getSelectedCategory();
-            updatePath();
-            putClientProperty(PROP_PARENT, parent);
-        }
-        
-        private DataCategory getSelectedCategory() {
-            TreePath path = locationTree.getSelectionPath();
-            if(path == null)
-                return null;
-            Object selection = path.getLastPathComponent();
-            if(selection instanceof DataCategory)
-                return (DataCategory) selection;
-            return null;
-        }
-    }
-
 }

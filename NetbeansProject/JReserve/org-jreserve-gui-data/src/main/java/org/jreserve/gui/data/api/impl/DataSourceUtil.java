@@ -47,7 +47,7 @@ class DataSourceUtil {
     
     static void save(DataSourceImpl ds) throws IOException {
         FileObject file = ds.file;
-        logger.log(Level.FINE, "Daving DataProvider: {0}", file.getPath());
+        logger.log(Level.FINE, "Saving DataProvider: {0}", file.getPath());
         Properties props = createProperties(ds.getDataProvider());
         save(file, props);
     }
@@ -129,7 +129,6 @@ class DataSourceUtil {
             InputStream is = file.getInputStream();
             Properties props = new Properties();
             props.loadFromXML(is);
-            props.load(is);
             return props;
         } finally {
             if(lock != null)

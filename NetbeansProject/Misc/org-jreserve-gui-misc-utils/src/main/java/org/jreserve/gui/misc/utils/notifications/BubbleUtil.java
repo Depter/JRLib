@@ -136,8 +136,9 @@ public class BubbleUtil {
         @Override
         public void actionPerformed(ActionEvent e) {
             nd.clear();
-            if(dialogMsg != null)
+            if(dialogMsg != null) {
                 DialogUtil.show(title, dialogMsg, type);
+            }
         }
     }
 }

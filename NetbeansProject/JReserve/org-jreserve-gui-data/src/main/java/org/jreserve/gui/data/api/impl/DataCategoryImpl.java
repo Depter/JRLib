@@ -134,6 +134,10 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
         FileObject sourceFile = file.createData(name, DataSourceImpl.FILE_EXT);
         DataSourceImpl impl = new DataSourceImpl(sourceFile, this, provider);
         DataSourceUtil.save(impl);
+        
+        if(children != null)
+            children.add(impl);
+        
         return impl;
     }
     

@@ -36,6 +36,8 @@ public interface DataProvider {
     
     public void delete() throws Exception;
     
+    public void rename(String newName) throws Exception;
+    
     public DataType getDataType();
     
     public DataProviderFactoryType getFactoryType();

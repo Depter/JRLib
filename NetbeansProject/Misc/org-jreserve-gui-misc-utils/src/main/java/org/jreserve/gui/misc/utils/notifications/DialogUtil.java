@@ -17,10 +17,18 @@
 
 package org.jreserve.gui.misc.utils.notifications;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -31,6 +39,8 @@ import org.openide.NotifyDescriptor;
  * @version 1.0
  */
 public class DialogUtil {
+    
+    private final static String ERR_LINE_FORMAT = "%n\t%s.%s(line: %d)";
     
     /**
      * Displays a dialog, for the given type.
@@ -48,12 +58,53 @@ public class DialogUtil {
     }
     
     private static void notify(String title, Object message, MessageType messageType) {
+        if(message instanceof Throwable)
+            message = createThrowableMessage((Throwable)message);
+        
         int ndType = messageType.getNotifyDescriptorType();
         NotifyDescriptor nd = new NotifyDescriptor.Message(message, ndType);
         if(title != null)
             nd.setTitle(title);
         
-        DialogDisplayer.getDefault().notify(nd);
+        DialogDisplayer.getDefault().notifyLater(nd);
+    }
+    
+    private static Object createThrowableMessage(Throwable t) {
+        JPanel panel = new JPanel(new BorderLayout(12, 12));
+        panel.add(new JLabel(t.getLocalizedMessage()), BorderLayout.NORTH);
+        
+        JTextArea stackTrace = new JTextArea();
+        stackTrace.setForeground(Color.red);
+        stackTrace.setColumns(50);
+        stackTrace.setEditable(false);
+        stackTrace.setTabSize(4);
+        stackTrace.setText(toString(t));
+        JScrollPane scroll = new JScrollPane(stackTrace);
+        scroll.setPreferredSize(new Dimension(600, 200));
+        panel.add(scroll, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    private static String toString(Throwable t) {
+        StringBuilder sb = new StringBuilder();
+        boolean isFirst = true;
+        while(t != null) {
+            appendThrowable(t, sb, isFirst);
+            t = t.getCause();
+            isFirst = false;
+        }
+        
+        return sb.toString();
+    }
+    
+    private static void appendThrowable(Throwable t, StringBuilder sb, boolean isFirst) {
+        if(!isFirst)
+            sb.append("Caused by: ");
+        sb.append(t.getClass().getName()).append(": ").append(t.getLocalizedMessage());
+        
+        for(StackTraceElement e : t.getStackTrace())
+            sb.append(String.format(ERR_LINE_FORMAT, e.getClassName(), e.getMethodName(), e.getLineNumber()));
     }
     
     /**
