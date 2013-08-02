@@ -24,6 +24,7 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
 import org.jreserve.gui.data.api.DataType;
+import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
@@ -111,7 +112,7 @@ public class CreateDataSourceWizardVisualPanel2 extends javax.swing.JPanel {
         add(storageTypeLabel, gridBagConstraints);
 
         storageTypeCombo.setModel(new DefaultComboBoxModel(DataSourceWizardRegistry.getAdapters().toArray()));
-        storageTypeCombo.setRenderer(new SourceWizardRenderer());
+        storageTypeCombo.setRenderer(WidgetUtils.displayableListRenderer());
         storageTypeCombo.addActionListener(comboListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -150,22 +151,6 @@ public class CreateDataSourceWizardVisualPanel2 extends javax.swing.JPanel {
             return (dataTypeCombo == combo)?
                 CreateDataSourceWizardIterator.PROP_DATA_TYPE :
                 CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD;
-        }
-    }
-    
-    private static class SourceWizardRenderer extends DefaultListCellRenderer {
-
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); //To change body of generated methods, choose Tools | Templates.
-            if(value instanceof DataSourceWizardAdapter)
-                render((DataSourceWizardAdapter) value);
-            return this;
-        }
-        
-        private void render(DataSourceWizardAdapter adapter) {
-            setIcon(adapter.getIcon());
-            setText(adapter.getName());
         }
     }
     

@@ -18,6 +18,9 @@ package org.jreserve.gui.data.csv;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -30,12 +33,14 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.AbstractDataProvider;
 import org.jreserve.gui.data.spi.DataEntry;
 import org.jreserve.gui.data.spi.DataProviderFactoryType;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -63,11 +68,9 @@ public class CsvDataProvider extends AbstractDataProvider {
     }
     
     @Override
-    public void delete() throws IOException {
-        synchronized(lock) {
-            if(csvFile != null)
-                deleteCsvFile();
-        }
+    public synchronized void delete() throws IOException {
+        if(csvFile != null)
+            deleteCsvFile();
     }
     
     private void deleteCsvFile() throws IOException {
@@ -82,21 +85,67 @@ public class CsvDataProvider extends AbstractDataProvider {
     }
     
     @Override
-    public void rename(String newName) throws IOException {
-        synchronized(lock) {
-            if(csvFile != null)
-                renameCsvFile(newName);
-        }
+    public synchronized void rename(String newName) throws IOException {
+        if(csvFile != null)
+            renameCsvFile(newName);
     }
     
     private void renameCsvFile(String newName) throws IOException {
+        FileLock lock = null;
         try {
-            FileLock fileLock = csvFile.lock();
+            lock = csvFile.lock();
             String oldPath = csvFile.getPath();
-            csvFile.rename(fileLock, newName, csvFile.getExt());
+            csvFile.rename(lock, newName, CSV_EXTENSION);
             logger.info(String.format("Renamed CsvFile: '%s' -> '%s'", oldPath, csvFile.getPath()));
         } catch (Exception ex) {
             String msg = "Unable to rename CsvFile: " + csvFile.getPath();
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        } finally {
+            if(lock != null)
+                lock.releaseLock();
+        }
+    }
+    
+    @Override
+    public synchronized void move(DataCategory newParent) throws Exception {
+        if(csvFile != null)
+            moveCsvFile(newParent.getFile());
+    }
+    
+    private void moveCsvFile(FileObject newParent) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        
+        try {
+            String oldPath = csvFile.getPath();
+            File dest = FileUtil.toFile(newParent);
+            File source = FileUtil.toFile(csvFile);
+            File target = new File(dest, source.getName());
+            
+            is = new FileInputStream(source);
+            os = new FileOutputStream(target);
+            
+            byte[] buffer = new byte[1024];
+            int length;
+            while((length = is.read(buffer)) > 0)
+                os.write(buffer, 0, length);
+            
+            os.close();
+            os = null;
+            is.close();
+            is = null;
+            
+            source.delete();
+            csvFile = FileUtil.toFileObject(target);
+            logger.info(String.format("Moved CsvFile: '%s' -> '%s'", oldPath, csvFile.getPath()));
+        } catch (Exception ex) {
+            if(os != null)
+                os.close();
+            if(is != null)
+                is.close();
+            
+            String msg = "Unable to move CsvFile: " + csvFile.getPath();
             logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         }
@@ -105,10 +154,8 @@ public class CsvDataProvider extends AbstractDataProvider {
     @Override
     protected Set<DataEntry> loadEntries() throws Exception {
         try {
-            synchronized(lock) {
-                initFile();
-                return loader.loadEntries();
-            }
+            initFile();
+            return loader.loadEntries();
         } catch (Exception ex) {
             String msg = String.format("Unable to load data for data source '%s'!", getDataSource().getPath());
             logger.log(Level.SEVERE, msg, ex);
@@ -127,10 +174,8 @@ public class CsvDataProvider extends AbstractDataProvider {
     @Override
     protected void saveEntries(Set<DataEntry> entries) throws Exception {
         try {
-            synchronized(lock) {
-                initFile();
-                writer.write(entries);
-            }
+            initFile();
+            writer.write(entries);
         } catch (Exception ex) {
             String msg = String.format("Unable to write data for data source '%s'!", getDataSource().getPath());
             logger.log(Level.SEVERE, msg, ex);

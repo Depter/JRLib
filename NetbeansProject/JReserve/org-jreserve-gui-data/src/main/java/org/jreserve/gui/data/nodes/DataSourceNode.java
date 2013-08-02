@@ -99,8 +99,7 @@ class DataSourceNode extends AbstractNode {
     }
     
     @Override
-    public Transferable clipboardCut() throws IOException {
-        Transferable t = super.clipboardCut();
-        return DataItemFlavor.createTransferable(t, source);
+    public Transferable drag() {
+        return DataItemFlavor.createTransferable(source);
     }
 }

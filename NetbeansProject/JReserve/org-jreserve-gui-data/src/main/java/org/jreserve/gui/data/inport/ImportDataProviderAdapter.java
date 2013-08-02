@@ -14,17 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.actions.createsourcewizard;
+package org.jreserve.gui.data.inport;
 
-import java.util.List;
 import javax.swing.Icon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.spi.DataProvider;
-import org.jreserve.gui.data.spi.DataSourceWizard;
+import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 
 /**
@@ -32,14 +28,14 @@ import org.openide.util.ChangeSupport;
  * @author Peter Decsi
  * @version 1.0
  */
-class DataSourceWizardAdapter implements DataSourceWizard, Displayable {
+class ImportDataProviderAdapter implements Displayable {
     
     private final String name;
     private final Icon icon;
-    private final DataSourceWizard delegate;
+    private final ImportDataProvider delegate;
     private final ChangeSupport cs;
     
-    DataSourceWizardAdapter(String name, Icon icon, DataSourceWizard delegate) {
+    ImportDataProviderAdapter(String name, Icon icon, ImportDataProvider delegate) {
         this.name = name;
         this.icon = icon;
         this.delegate = delegate;
@@ -62,22 +58,14 @@ class DataSourceWizardAdapter implements DataSourceWizard, Displayable {
         return name;
     }
     
-    @Override
-    public List<? extends WizardDescriptor.Panel> getPanels() {
-        return delegate.getPanels();
+    public ImportDataProvider getImportDataProvider() {
+        return delegate;
     }
-
-    @Override
-    public DataProvider createDataProvider(DataType dataType, WizardDescriptor wizard) {
-        return delegate.createDataProvider(dataType, wizard);
-    }
-
-    @Override
+    
     public void addChangeListener(ChangeListener listener) {
         cs.addChangeListener(listener);
     }
-
-    @Override
+    
     public void removeChangeListener(ChangeListener listener) {
         cs.removeChangeListener(listener);
     }

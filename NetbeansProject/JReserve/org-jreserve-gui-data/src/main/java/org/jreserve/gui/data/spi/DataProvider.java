@@ -21,6 +21,7 @@ import org.jreserve.gui.data.api.DataType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
 
 /**
@@ -37,6 +38,8 @@ public interface DataProvider {
     public void delete() throws Exception;
     
     public void rename(String newName) throws Exception;
+    
+    public void move(DataCategory newParent) throws Exception;
     
     public DataType getDataType();
     

@@ -28,10 +28,6 @@ import org.openide.WizardDescriptor;
  */
 public interface DataSourceWizard {
 
-//    public Icon getIcon();
-//
-//    public String getDisplayName();
-
     public List<? extends WizardDescriptor.Panel> getPanels();
 
     public DataProvider createDataProvider(DataType dataType, WizardDescriptor wizard);

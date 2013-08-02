@@ -14,9 +14,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.actions.createsourcewizard;
+package org.jreserve.gui.data.inport;
 
-import org.jreserve.gui.data.spi.DataSourceWizard;
 import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -26,52 +25,52 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.spi.DataProvider;
+import org.jreserve.gui.data.api.DataItem;
+import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.WeakListeners;
 
-public final class CreateDataSourceWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
+/**
+ *
+ * @author Peter Decsi
+ * @version 1.0
+ */
+public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
     
-    private final static Logger logger = Logger.getLogger(CreateDataSourceWizardIterator.class.getName());
+    private final static Logger logger = Logger.getLogger(ImportDataWizardIterator.class.getName());
     
-    final static String PROP_SOURCE_WIZARD = "source.type.iterator";
-    final static String PROP_DATA_CATEGORY = "data.Category";
-    final static String PROP_DATA_NAME = "data.Name";
-    final static String PROP_DATA_TYPE = "data.Type";
+    final static String PROP_INIT_DATA_ITEM = "init.data.item";
+    final static String PROP_DATA_SOURCE = "data.source";
+    final static String PROP_IMPORT_WIZARD = "import.wizard";
+    final static String PROP_SAVE_TYPE = "save.type";
     
-    private DataCategory dataCategory;
+    private DataItem dataItem;
+    private WizardDescriptor wizardDesc;
+    private ImportWizardListener stListener = new ImportWizardListener();
+    private ImportDataProvider importWizard;
+    private SourceIteratorListener sourceItListener = new SourceIteratorListener();
     private ChangeSupport cs = new ChangeSupport(this);
-    private SourceTypeListener stListener = new SourceTypeListener();
-    private ChangeListener sourceItListener = new SourceIteratorListener();
     private List<WizardDescriptor.Panel> panels = new ArrayList<WizardDescriptor.Panel>();
-    
     private int panelCount;
     private int index;
-    private WizardDescriptor wizardDesc;
     
-    private DataSourceWizard sourceWizard;
-    
-    public CreateDataSourceWizardIterator(DataCategory dataCategory) {
-        this.dataCategory = dataCategory;
+    public ImportDataWizardIterator(DataItem dataItem) {
+        this.dataItem = dataItem;
     }
     
     @Override
     public void initialize(WizardDescriptor wizard) {
-        panels.add(new CreateDataSourceWizardPanel1());
-        panels.add(new CreateDataSourceWizardPanel2());
+        panels.add(new ImportDataWizardPanel1());
+        panels.add(new ImportDataWizardPanelLast());
         
         this.wizardDesc = wizard;
-        wizard.putProperty(PROP_DATA_CATEGORY, dataCategory);
+        wizard.putProperty(PROP_INIT_DATA_ITEM, dataItem);
 
         wizard.putProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.TRUE);
         wizard.putProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
@@ -82,17 +81,17 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
         reclaulcateState();
     }
     
-    private void typeChanged() {
-        releaseOldIterator();
-        sourceWizard = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
+    private void importWizardChanged() {
+        releaseOldWizard();
+        importWizard = (ImportDataProvider) wizardDesc.getProperty(PROP_IMPORT_WIZARD);
         reclaulcateState();
     }
     
-    private void releaseOldIterator() {
-        if(sourceWizard != null) {
-            sourceWizard.removeChangeListener(sourceItListener);
+    private void releaseOldWizard() {
+        if(importWizard != null) {
+            importWizard.removeChangeListener(sourceItListener);
             while(panels.size() > 2)
-                panels.remove(2);
+                panels.remove(1);
         }
     }
     
@@ -105,8 +104,8 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     }
     
     private void initPanels() {
-        if(sourceWizard != null)
-            panels.addAll(sourceWizard.getPanels());
+        if(importWizard != null)
+            panels.addAll(1, importWizard.getPanels());
         panelCount = panels.size();
     }
     
@@ -169,8 +168,8 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
 
     @Override
     public void uninitialize(WizardDescriptor wizard) {
-        if(sourceWizard != null)
-            sourceWizard.removeChangeListener(sourceItListener);
+        if(importWizard != null)
+            importWizard.removeChangeListener(sourceItListener);
     }
 
     @Override
@@ -190,37 +189,38 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     
     @Override
     public Set instantiate(ProgressHandle handle) throws IOException {
-        handle.switchToIndeterminate();
-        handle.start();
-        try {
-            return Collections.singleton(createDataSource());
-        } finally {
-            handle.finish();
-        }
+//        handle.switchToIndeterminate();
+//        handle.start();
+//        try {
+//            return Collections.singleton(createDataSource());
+//        } finally {
+//            handle.finish();
+//        }
+        return Collections.EMPTY_SET;
     }
     
-    private DataSource createDataSource() throws IOException {
-        try {
-            DataProvider provider = createDataProvider();
-            return createDataSource(provider);
-        } catch (Exception ex) {
-            String msg = "Unable to create new DataSource!";
-            logger.log(Level.SEVERE, msg, ex);
-            throw new IOException(msg, ex);
-        }
-    }
-    
-    private DataProvider createDataProvider() {
-        DataType dataType = (DataType) wizardDesc.getProperty(PROP_DATA_TYPE);
-        DataSourceWizard wizard = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
-        return wizard.createDataProvider(dataType, wizardDesc);
-    }
-    
-    private DataSource createDataSource(DataProvider provider) throws IOException {
-        String name = (String) wizardDesc.getProperty(PROP_DATA_NAME);
-        DataCategory parent = (DataCategory) wizardDesc.getProperty(PROP_DATA_CATEGORY);
-        return parent.getDataManager().createDataSource(parent, name, provider);
-    }
+//    private DataSource createDataSource() throws IOException {
+//        try {
+//            DataProvider provider = createDataProvider();
+//            return createDataSource(provider);
+//        } catch (Exception ex) {
+//            String msg = "Unable to create new DataSource!";
+//            logger.log(Level.SEVERE, msg, ex);
+//            throw new IOException(msg, ex);
+//        }
+//    }
+//    
+//    private DataProvider createDataProvider() {
+//        DataType dataType = (DataType) wizardDesc.getProperty(PROP_DATA_TYPE);
+//        DataSourceWizard wizard = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
+//        return wizard.createDataProvider(dataType, wizardDesc);
+//    }
+//    
+//    private DataSource createDataSource(DataProvider provider) throws IOException {
+//        String name = (String) wizardDesc.getProperty(PROP_DATA_NAME);
+//        DataCategory parent = (DataCategory) wizardDesc.getProperty(PROP_DATA_CATEGORY);
+//        return parent.getDataManager().createDataSource(parent, name, provider);
+//    }
     
     private class SourceIteratorListener implements ChangeListener {
         @Override
@@ -230,12 +230,12 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
         }
     }
     
-    private class SourceTypeListener implements PropertyChangeListener {
+    private class ImportWizardListener implements PropertyChangeListener {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if(PROP_SOURCE_WIZARD.equals(evt.getPropertyName())) {
-                typeChanged();
+            if(PROP_IMPORT_WIZARD.equals(evt.getPropertyName())) {
+                importWizardChanged();
             }
         }
-    }
+    }    
 }

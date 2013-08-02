@@ -23,7 +23,14 @@ import java.io.IOException;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
 import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.datatransfer.PasteType;
 
@@ -32,18 +39,21 @@ import org.openide.util.datatransfer.PasteType;
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - path",
+    "MSG.DataItemFlavor.Move=Moving: {0}",
+    "# {0} - path",
+    "MSG.DataItemFlavor.Move.Error=Mave of {0}!"
+})
 class DataItemFlavor<T extends DataItem> extends DataFlavor {
     
     private final static DataFlavor DATA_CATEGORY_FLAVOR = new DataCategoryFlavor();
     private final static DataFlavor DATA_SOURCE_FLAVOR = new DataSourceFlavor();
     
-    static Transferable createTransferable(Transferable t, DataItem item) {
+    static Transferable createTransferable(DataItem item) {
         if(item.getParent() == null)
-            return t;
-        
-        ExTransferable added = ExTransferable.create(t);
-        added.put(new DataItemSingle(item));
-        return added;
+            return null;
+        return new DataItemTransferable(item);
     }
     
     private static DataFlavor getFlavor(DataItem item) {
@@ -104,7 +114,9 @@ class DataItemFlavor<T extends DataItem> extends DataFlavor {
         }
     }
     
-    private static class DataItemPasteType extends PasteType {
+    private static class DataItemPasteType extends PasteType implements Runnable {
+        
+        private final static RequestProcessor RP = RequestProcessor.getDefault();
         
         private final DataCategory target;
         private final DataItem item;
@@ -116,23 +128,57 @@ class DataItemFlavor<T extends DataItem> extends DataFlavor {
         
         @Override
         public Transferable paste() throws IOException {
-            target.getDataManager().moveDataItem(target, item);
+            final RequestProcessor.Task task = RP.create(this);
+            final ProgressHandle ph = ProgressHandleFactory.createHandle("Move: "+item.getPath());
+            task.addTaskListener(new TaskListener() {
+                @Override
+                public void taskFinished(Task task) {
+                    ph.finish();
+                }
+            });
+            ph.start();
+            task.schedule(0);
             return null;
         }
+        
+        @Override
+        public void run() {
+            try {
+                target.getDataManager().moveDataItem(target, item);
+            } catch (Exception ex) {
+                BubbleUtil.showException(Bundle.MSG_DataItemFlavor_Move_Error(item.getPath()), ex);
+            }
+        }
+    }
     
-//        private void checkMove(DataItem target, DataItem item) {
-//            if(target.getDataManager() != item.getDataManager()) {
-//            }
-//               !isChildOf(item, target);
-//        }
-//    
-//        private static boolean isChildOf(DataItem parent, DataItem child) {
-//            while(child != null) {
-//                if(parent == child)
-//                    return true;
-//                child = child.getParent();
-//            }
-//            return false;
-//        }
+    private static class DataItemTransferable implements Transferable {
+        
+        private final DataItem item;
+        private final DataFlavor flavor;
+        private final DataFlavor[] flavors;
+        
+        private DataItemTransferable(DataItem item) {
+            this.item = item;
+            this.flavor = (item instanceof DataCategory)?
+                    DATA_CATEGORY_FLAVOR : DATA_SOURCE_FLAVOR;
+            this.flavors = new DataFlavor[]{flavor};
+        }
+        
+        @Override
+        public DataFlavor[] getTransferDataFlavors() {
+            return flavors;
+        }
+
+        @Override
+        public boolean isDataFlavorSupported(DataFlavor flavor) {
+            return this.flavor == flavor;
+        }
+
+        @Override
+        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
+            if(isDataFlavorSupported(flavor))
+                return item;
+            throw new UnsupportedFlavorException(flavor);
+        }
     }
 }

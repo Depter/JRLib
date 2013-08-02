@@ -211,7 +211,10 @@ public class DataManagerImpl implements DataManager {
         AbstractDataItem itemImpl = (AbstractDataItem) item;
         LinkedHashMap<DataItem, String> oldNames = new LinkedHashMap<DataItem, String>();
         fillOldNames(oldNames, item);
-        //TODO move
+        ((AbstractDataItem) item).move((DataCategoryImpl)target);
+        
+        for(Map.Entry<DataItem, String> entry : oldNames.entrySet())
+            DataEvent.itemRenamed(entry.getKey(), entry.getValue());
     }
     
     private void checkMovable(DataCategory target, DataItem item) {
@@ -221,10 +224,20 @@ public class DataManagerImpl implements DataManager {
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
         if(isChildOf(item, target))
             throw new IllegalArgumentException(String.format("Can not move a DataItem '%s' to one of it's children '%s'!", item.getPath(), target.getPath()));
+        if(nameExists(target, item.getName(), (item instanceof DataSource)))
+            throw new IllegalArgumentException(String.format("Can not move a DataItem '%s' to category '%s'. Name already exists!", item.getPath(), target.getPath()));
     }
     
     private boolean isChildOf(DataItem parent, DataItem child) {
         return child.getPath().startsWith(parent.getPath());
     }
     
+    private boolean nameExists(DataCategory parent, String name, boolean isSource) {
+        List<DataItem> items = new ArrayList<DataItem>();
+        items.addAll(isSource? parent.getDataSources() : parent.getChildCategories());
+        for(DataItem item : items)
+            if(item.getName().equalsIgnoreCase(name))
+                return true;
+        return false;
+    }
 }

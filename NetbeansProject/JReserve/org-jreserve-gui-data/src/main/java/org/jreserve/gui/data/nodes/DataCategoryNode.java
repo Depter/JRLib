@@ -90,13 +90,40 @@ class DataCategoryNode extends AbstractNode {
     }
     
     private boolean shouldUpdateChildren(DataEvent evt) {
-        if((evt instanceof DataEvent.DataCategoryCreatedEvent) ||
-           (evt instanceof DataEvent.DataSourceCreatedEvent))
-            return this.category == evt.getDataItem().getParent();
-        else if(evt instanceof DataEvent.DataItemDeletedEvent)
-            return this.category == ((DataEvent.DataItemDeletedEvent)evt).getParent();
-        else
-            return false;
+        return isChildCreated(evt) || 
+               isChildDeleted(evt) ||
+               isChildMoved(evt);
+    }
+    
+    private boolean isChildCreated(DataEvent evt) {
+        return (
+                (evt instanceof DataEvent.DataCategoryCreatedEvent) ||
+                (evt instanceof DataEvent.DataSourceCreatedEvent)
+               ) && 
+               this.category == evt.getDataItem().getParent();
+    }
+    
+    private boolean isChildDeleted(DataEvent evt) {
+        return (evt instanceof DataEvent.DataItemDeletedEvent) &&
+                this.category == ((DataEvent.DataItemDeletedEvent)evt).getParent();
+    }
+    
+    private boolean isChildMoved(DataEvent evt) {
+        if(evt instanceof DataEvent.DataItemRenamed) {
+            DataEvent.DataItemRenamed e = (DataEvent.DataItemRenamed)evt;
+            String path = category.getPath();
+            String oldItemPath = getParentPath(e.getOldPath());
+            String newItemPath = getParentPath(e.getDataItem().getPath());
+            return path.equals(oldItemPath) || path.equals(newItemPath);
+        }
+        return false;
+    }
+    
+    private String getParentPath(String path) {
+        int index = path.lastIndexOf('/');
+        if(index < 0)
+            return "";
+        return path.substring(0, index);
     }
     
     private boolean isRenamed(DataEvent evt) {
@@ -106,9 +133,8 @@ class DataCategoryNode extends AbstractNode {
     }
     
     @Override
-    public Transferable clipboardCut() throws IOException {
-        Transferable t = super.clipboardCut();
-        return DataItemFlavor.createTransferable(t, category);
+    public Transferable drag() {
+        return DataItemFlavor.createTransferable(category);
     }
 
     @Override

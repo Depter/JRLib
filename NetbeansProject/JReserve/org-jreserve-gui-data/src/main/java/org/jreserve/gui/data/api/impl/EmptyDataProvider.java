@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
+import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataEntry;
@@ -55,6 +56,10 @@ public class EmptyDataProvider implements DataProvider {
     
     @Override
     public void rename(String newName) {
+    }
+    
+    @Override
+    public void move(DataCategory newParent) {
     }
     
     @Override

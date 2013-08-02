@@ -32,7 +32,6 @@ import org.jreserve.gui.data.api.DataSource;
  */
 public abstract class AbstractDataProvider implements DataProvider {
     
-    protected final Object lock = new Object();
     private final DataType dataType;
     private Set<DataEntry> entries;
     private DataSource ds;
@@ -49,7 +48,7 @@ public abstract class AbstractDataProvider implements DataProvider {
     }
     
     @Override
-    public void setProperties(DataSource source, Map<String, String> properties) {
+    public synchronized void setProperties(DataSource source, Map<String, String> properties) {
         this.ds = source;
     }
     
@@ -63,16 +62,16 @@ public abstract class AbstractDataProvider implements DataProvider {
     }
 
     @Override
-    public final List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {
+    public synchronized final List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {
         if(filter == null)
             throw new NullPointerException("Filter is null!");
-            
+        if(ds == null)
+            throw new NullPointerException("DataSource not set!");
+        
         List<DataEntry> result = new ArrayList<DataEntry>();
-        synchronized(lock) {
-            for(DataEntry entry : getLoadedEntries())
-                if(filter.acceptsEntry(entry))
-                    result.add(entry);
-        }
+        for(DataEntry entry : getLoadedEntries())
+            if(filter.acceptsEntry(entry))
+                result.add(entry);
         return result;
     }
     
@@ -85,22 +84,20 @@ public abstract class AbstractDataProvider implements DataProvider {
     protected abstract Set<DataEntry> loadEntries() throws Exception;
 
     @Override
-    public final void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception {
+    public synchronized final void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception {
         if(entries == null)
             throw new NullPointerException("Entries is null!");
         if(saveType == null)
             throw new NullPointerException("SaveType is null!");
         
-        synchronized(lock) {
-            boolean changed = false;
-            for(DataEntry entry : entries)
-                if(addEntry(entry, saveType))
-                    changed = true;
+        boolean changed = false;
+        for(DataEntry entry : entries)
+            if(addEntry(entry, saveType))
+                changed = true;
             
-            if(changed) {
-                saveEntries(entries);
-                //TODO publish change event
-            }
+        if(changed) {
+            saveEntries(entries);
+            //TODO publish change event
         }
     }
     
@@ -135,25 +132,23 @@ public abstract class AbstractDataProvider implements DataProvider {
     protected abstract void saveEntries(Set<DataEntry> entries) throws Exception;
     
     @Override
-    public final void deleteEntries(Set<DataEntry> entries) throws Exception {
+    public synchronized final void deleteEntries(Set<DataEntry> entries) throws Exception {
         if(entries == null)
             throw new NullPointerException("Entries is null!");
         
-        synchronized(lock) {
-            getLoadedEntries();
-            boolean changed = false;
-            for(DataEntry entry : entries) {
-                if(this.entries.remove(entry)) {
-                    changed = true;
-                    //TODO log remove
-                    //TODO publis audit event
-                }
+        getLoadedEntries();
+        boolean changed = false;
+        for(DataEntry entry : entries) {
+            if(this.entries.remove(entry)) {
+                changed = true;
+                //TODO log remove
+                //TODO publish audit event
             }
+        }
             
-            if(changed) {
-                saveEntries(this.entries);
-                //TODO publish change event
-            }
+        if(changed) {
+            saveEntries(this.entries);
+            //TODO publish change event
         }
     }
 }

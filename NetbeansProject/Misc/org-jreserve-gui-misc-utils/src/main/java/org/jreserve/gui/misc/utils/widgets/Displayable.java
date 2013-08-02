@@ -14,39 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.spi;
+package org.jreserve.gui.misc.utils.widgets;
 
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "LBL.SaveType.Override=Override existing values",
-    "LBL.SaveType.SaveNew=Keep existing"
-})
-public enum SaveType implements Displayable {
+public interface Displayable {
     
-    OVERRIDE_EXISTING(Bundle.LBL_SaveType_Override()),
-    SAVE_NEW(Bundle.LBL_SaveType_SaveNew());
-
-    private final String displayName;
-
-    private SaveType(String displayName) {
-        this.displayName = displayName;
-    }
+    public Icon getIcon();
     
-    @Override
-    public Icon getIcon() {
-        return null;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return displayName;
-    }
+    public String getDisplayName();
+    
+    
 }

@@ -33,7 +33,7 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
     
     final static char PATH_SEPARATOR = '/';
 
-    protected final FileObject file;
+    protected FileObject file;
     private final DataManagerImpl manager;
     private DataCategoryImpl parent;
     private String path;
@@ -66,7 +66,7 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
         return path;
     }
     
-    void rename(String name) throws IOException {
+    synchronized void rename(String name) throws IOException {
         FileLock lock = null;
         try {
             String oldPath = getPath();
@@ -84,7 +84,7 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
         }
     }
 
-    void delete() throws IOException {
+    synchronized void delete() throws IOException {
         try {
             file.delete();
             if(parent != null) {
@@ -96,6 +96,17 @@ class AbstractDataItem implements Comparable<AbstractDataItem> {
             logger.log(Level.SEVERE, "Unable to delete DataItem: " + getPath(), ex);
             throw ex;
         }
+    }
+    
+    synchronized void move(DataCategoryImpl newParent) throws IOException {
+        if(parent != newParent) {
+            if(parent != null)
+                parent.removeChild(this);
+            parent = newParent;
+            if(parent != null)
+                parent.addChild(this);
+        }
+        initPath();
     }
     
     public FileObject getFile() {

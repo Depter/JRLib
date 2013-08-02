@@ -16,37 +16,27 @@
  */
 package org.jreserve.gui.data.spi;
 
-import javax.swing.Icon;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.openide.util.NbBundle.Messages;
+import java.util.List;
+import javax.swing.event.ChangeListener;
+import org.openide.WizardDescriptor;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "LBL.SaveType.Override=Override existing values",
-    "LBL.SaveType.SaveNew=Keep existing"
-})
-public enum SaveType implements Displayable {
-    
-    OVERRIDE_EXISTING(Bundle.LBL_SaveType_Override()),
-    SAVE_NEW(Bundle.LBL_SaveType_SaveNew());
+public interface ImportDataProvider {
 
-    private final String displayName;
+    public List<? extends WizardDescriptor.Panel> getPanels();
 
-    private SaveType(String displayName) {
-        this.displayName = displayName;
+    public void addChangeListener(ChangeListener listener);
+
+    public void removeChangeListener(ChangeListener listener);
+
+    public static @interface Registration {
+        public String displayName();
+        public String iconBase() default "";
+        public int position() default Integer.MAX_VALUE;
     }
     
-    @Override
-    public Icon getIcon() {
-        return null;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return displayName;
-    }
 }

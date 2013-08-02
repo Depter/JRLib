@@ -16,11 +16,19 @@
  */
 package org.jreserve.gui.data.api.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -29,6 +37,7 @@ import org.openide.filesystems.FileObject;
  */
 public class DataSourceImpl extends AbstractDataItem implements DataSource {
     
+    private final static Logger logger = Logger.getLogger(DataSourceImpl.class.getName());
     final static String FILE_EXT = "jds";
     
     static boolean isSourceFile(FileObject file) {
@@ -66,6 +75,55 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
         } finally {
             dataProvider = EmptyDataProvider.getInstance();
             super.delete();
+        }
+    }
+    
+    @Override
+    synchronized void move(DataCategoryImpl newParent) throws IOException {
+        String oldPath = getPath();
+        try {
+            dataProvider.move(newParent);
+        } catch (Exception ex) {
+            throw new IOException("Unable to move DataProvider!", ex);
+        }
+        moveFile(newParent);
+        super.move(newParent);
+        logger.info(String.format("Moved DataItem: %s -> %s", oldPath, getPath()));
+    }
+    
+    private void moveFile(DataCategoryImpl newParent) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        
+        try {
+            File dest = FileUtil.toFile(newParent.file);
+            File source = FileUtil.toFile(file);
+            File target = new File(dest, source.getName());
+            
+            is = new FileInputStream(source);
+            os = new FileOutputStream(target);
+            
+            byte[] buffer = new byte[1024];
+            int length;
+            while((length = is.read(buffer)) > 0)
+                os.write(buffer, 0, length);
+            
+            os.close();
+            os = null;
+            is.close();
+            is = null;
+            
+            source.delete();
+            file = FileUtil.toFileObject(target);
+        } catch (Exception ex) {
+            if(os != null)
+                os.close();
+            if(is != null)
+                is.close();
+            
+            String msg = String.format("Unable to move file: "+file.getPath());
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
         }
     }
     

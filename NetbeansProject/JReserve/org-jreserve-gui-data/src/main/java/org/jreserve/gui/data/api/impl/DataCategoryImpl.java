@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.spi.DataProvider;
@@ -32,7 +33,9 @@ import org.openide.filesystems.FileObject;
  * @version 1.0
  */
 public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
-
+    
+    private final static Logger logger = Logger.getLogger(DataCategoryImpl.class.getName());
+    
     private Set<AbstractDataItem> children;
 
     DataCategoryImpl(FileObject folder, DataCategoryImpl parent) {
@@ -143,6 +146,28 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
     
     void removeChild(AbstractDataItem item) {
         children.remove(item);
+    }
+    
+    void addChild(AbstractDataItem item) {
+        children.add(item);
+    }
+    
+    @Override
+    synchronized void move(DataCategoryImpl newParent) throws IOException {
+        String oldPath = getPath();
+        
+        FileObject oldFile = file;
+        file = newParent.file.createFolder(file.getName());
+        super.move(newParent);
+        moveChildren();
+        oldFile.delete();
+        
+        logger.info(String.format("Moved DataItem: %s -> %s", oldPath, getPath()));
+    }
+    
+    private void moveChildren() throws IOException {
+        for(AbstractDataItem item : children)
+            item.move(this);
     }
     
     @Override

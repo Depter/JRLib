@@ -46,9 +46,9 @@ import org.openide.util.Utilities;
     lazy = false
 )
 @ActionReferences({
-    @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 300),
-    @ActionReference(path = "Node/DataCategory/Actions", position = 300),
-    @ActionReference(path = "Node/DataSource/Actions", position = 300)
+    @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 400),
+    @ActionReference(path = "Node/DataCategory/Actions", position = 400),
+    @ActionReference(path = "Node/DataSource/Actions", position = 400)
 })
 @Messages({
     "CTL_DeleteDataCategoryAction=Delete Items",
