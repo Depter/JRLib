@@ -21,22 +21,30 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Action;
 import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
+import org.jreserve.gui.misc.utils.widgets.AbstractContextAwareAction;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 @ActionID(
     category = "File",
     id = "org.jreserve.gui.data.actions.CreateDataCategoryAction"
 )
 @ActionRegistration(
-    iconBase = "org/jreserve/gui/data/icons/folder_db_add.png",
-    displayName = "#CTL_CreateDataCategoryAction"
+    displayName = "#CTL_CreateDataCategoryAction",
+    lazy = false
 )
 @ActionReferences({
     @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 100),
@@ -46,19 +54,50 @@ import org.openide.util.NbBundle.Messages;
     "CTL_CreateDataCategoryAction=New Category",
     "MSG.CreateDataCategoryAction.Create.Error=Unable to create data category."
 })
-public final class CreateDataCategoryAction implements ActionListener {
+public final class CreateDataCategoryAction extends AbstractContextAwareAction { 
     
+    @StaticResource private final static String SMALL_ICON = "org/jreserve/gui/data/icons/folder_db_add.png";   //NOI18
+    @StaticResource private final static String LARGE_ICON = "org/jreserve/gui/data/icons/folder_db_add32.png"; //NOI18
     private final static Logger logger = Logger.getLogger(CreateDataCategoryAction.class.getName());
     
-    private final DataCategory context;
+    private DataCategory dataCategory;
 
-    public CreateDataCategoryAction(DataCategory context) {
-        this.context = context;
+    public CreateDataCategoryAction() {
+        this(Utilities.actionsGlobalContext());
+    }
+ 
+    private CreateDataCategoryAction(Lookup context) {
+        super(context);
+        putValue(Action.NAME, Bundle.CTL_CreateDataCategoryAction());
+        super.putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(LARGE_ICON, false));
+        super.putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(SMALL_ICON, false));
+    }
+    
+    @Override
+    protected boolean shouldEnable(Lookup context) {
+        dataCategory = context.lookup(DataCategory.class);
+        if(dataCategory != null)
+            return true;
+        
+        Project project = context.lookup(Project.class);
+        if(project == null)
+            return false;
+        
+        DataManager dm = project.getLookup().lookup(DataManager.class);
+        if(dm == null)
+            return false;
+        dataCategory = dm.getCategory(null);
+        return dataCategory != null;
     }
 
     @Override
-    public void actionPerformed(ActionEvent ev) {
-        CreateDataCategoryDialog panel = new CreateDataCategoryDialog(context);
+    public Action createContextAwareInstance(Lookup lkp) {
+        return new CreateDataCategoryAction(lkp);
+    }
+
+    @Override
+    protected void performAction(ActionEvent evt) {
+        CreateDataCategoryDialog panel = new CreateDataCategoryDialog(dataCategory);
         DialogListener listener = new DialogListener(panel);
         DialogUtil.showDialog(panel, listener);
     }
@@ -75,7 +114,7 @@ public final class CreateDataCategoryAction implements ActionListener {
             String name = panel.getCategoryName();
             DataCategory parent = panel.getParentCategory();
             try {
-                context.getDataManager().createDataCategory(parent, name);
+                parent.getDataManager().createDataCategory(parent, name);
                 logger.log(Level.FINE, String.format("DataCategory created: %s/%s", parent.getPath(), name));
             } catch (IOException ex) {
                 String msg = "Unable to create data category '%s' under '%s'!";
