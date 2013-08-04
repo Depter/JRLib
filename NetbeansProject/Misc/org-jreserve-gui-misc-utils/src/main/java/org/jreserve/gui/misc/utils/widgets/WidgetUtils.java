@@ -17,9 +17,16 @@
 package org.jreserve.gui.misc.utils.widgets;
 
 import java.awt.Component;
+import java.awt.Toolkit;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.JTextComponent;
 
 /**
  *
@@ -33,8 +40,16 @@ public class WidgetUtils {
         return new DisplayableListRenderer();
     }
     
+    public static void oneCharacterInput(JTextComponent txt) {
+        Document doc = txt.getDocument();
+        if(doc instanceof AbstractDocument) {
+            ((AbstractDocument) doc).setDocumentFilter(new CharacterDocumentFilter());
+        } else {
+            throw new IllegalArgumentException("Component "+txt+" does not have an AbstractDocument as Document! "+doc.getClass().getName());
+        }
+    }
+    
     private static class DisplayableListRenderer extends DefaultListCellRenderer {
-
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
@@ -47,6 +62,42 @@ public class WidgetUtils {
             }
             return this;
         }
-        
     }
+    
+    private static class CharacterDocumentFilter extends DocumentFilter {
+        
+        @Override
+        public void insertString(FilterBypass fb, int offset, String str, AttributeSet attr) throws BadLocationException {
+            if(fb.getDocument().getLength() > 0) {
+                Toolkit.getDefaultToolkit().beep();
+                return;
+            }
+            
+            if(str.length() > 1) {
+                Toolkit.getDefaultToolkit().beep();
+                return;
+            }
+            
+            if(Character.isDigit(str.charAt(0))) {
+                Toolkit.getDefaultToolkit().beep();
+                return;
+            }
+            super.insertString(fb, offset, str, attr);
+        }
+
+        @Override
+        public void replace(FilterBypass fb, int offset, int length, String str, AttributeSet attrs) throws BadLocationException {
+            if(str.length() > 1) {
+                Toolkit.getDefaultToolkit().beep();
+                return;
+            }
+            
+            if(Character.isDigit(str.charAt(0))) {
+                Toolkit.getDefaultToolkit().beep();
+                return;
+            }
+            super.replace(fb, offset, length, str, attrs); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+    
 }

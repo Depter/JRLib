@@ -87,7 +87,7 @@ public class DataManagerImpl implements DataManager {
         if(item instanceof DataCategoryImpl)
             return (DataCategoryImpl) item;
         
-        logger.log(Level.WARNING, LOG_CATEGORY_NOT_FOUND, path);
+        logger.log(Level.FINE, LOG_CATEGORY_NOT_FOUND, path);
         return null;
     }
     
@@ -105,7 +105,7 @@ public class DataManagerImpl implements DataManager {
         if(item instanceof DataSourceImpl)
             return (DataSourceImpl) item;
         
-        logger.log(Level.WARNING, LOG_SOURCE_NOT_FOUND, path);
+        logger.log(Level.FINE, LOG_SOURCE_NOT_FOUND, path);
         return null;
     }
     

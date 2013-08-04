@@ -45,10 +45,10 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     
     private final static Logger logger = Logger.getLogger(ImportDataWizardIterator.class.getName());
     
-    final static String PROP_INIT_DATA_ITEM = "init.data.item";
-    final static String PROP_DATA_SOURCE = "data.source";
-    final static String PROP_IMPORT_WIZARD = "import.wizard";
-    final static String PROP_SAVE_TYPE = "save.type";
+    final static String PROP_INIT_DATA_ITEM = "init.data.item"; //Panel 0
+    final static String PROP_DATA_SOURCE = "data.source";       //Panel 1
+    final static String PROP_IMPORT_WIZARD = "import.wizard";   //Panel 1
+    final static String PROP_SAVE_TYPE = "save.type";           //Panel Last
     
     private DataItem dataItem;
     private WizardDescriptor wizardDesc;
@@ -137,7 +137,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
 
     @Override
     public String name() {
-        if(index < 2)
+        if(index < 1)
             return (index+1) + " of ...";
         return (index+1) + " of " + panels.size();
     }
