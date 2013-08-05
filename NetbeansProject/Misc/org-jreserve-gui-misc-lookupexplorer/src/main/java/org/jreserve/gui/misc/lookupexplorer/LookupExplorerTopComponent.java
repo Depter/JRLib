@@ -50,7 +50,7 @@ import org.openide.util.Utilities;
     id = "org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Window" /*, position = 333 */),
+    @ActionReference(path = "Menu/Window", position = 80),
     @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 200)
 })
 @TopComponent.OpenActionRegistration(

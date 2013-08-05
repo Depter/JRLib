@@ -19,22 +19,49 @@ package org.jreserve.gui.data.csv.input;
 
 import java.awt.Component;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
+import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
+import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class CsvTableImportWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
-
+@Messages({
+    "MSG.CsvTableImportWizardPanel.File.Empty=Input file not set!",
+    "# {0} - path",
+    "MSG.CsvTableImportWizardPanel.File.NotFound=File ''{0}'' not found!",
+    "MSG.CsvTableImportWizardPanel.CellSeparator.Empty=Cell separator not set!",
+    "MSG.CsvTableImportWizardPanel.DecimalSeparator.Empty=Decimal separator not set!",
+    "MSG.CsvTableImportWizardPanel.DateFormat.Empty=Date format not set!",
+    "MSG.CsvTableImportWizardPanel.DateFormat.Invalid=Date format is invalid!"
+})
+public class CsvTableImportWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
+    
     private CsvTableImportVisualPanel component;
     private boolean valid = false;
     private final ChangeSupport cs = new ChangeSupport(this);
+    
+    private DataSource ds;
     private WizardDescriptor wiz;
+    
+    private final Date checkDate = new Date();
+    private final SimpleDateFormat sdf = new SimpleDateFormat();
+    private volatile ValidationData validationData;
+    private volatile List<DataEntry> entries;
     
     @Override
     public Component getComponent() {
@@ -50,6 +77,8 @@ public class CsvTableImportWizardPanel implements WizardDescriptor.Panel<WizardD
 
     @Override
     public void readSettings(WizardDescriptor settings) {
+        this.wiz = settings;
+        this.ds = (DataSource) wiz.getProperty(ImportDataProvider.PROP_DATA_SOURCE);
     }
 
     @Override
@@ -84,34 +113,100 @@ public class CsvTableImportWizardPanel implements WizardDescriptor.Panel<WizardD
     }
     
     private boolean isInputValid() {
-        return false;
+        return component != null &&
+               isFileValid() &&
+               isCellSeparatorValid() &&
+               isDecimalSeparatorValid() &&
+               isDateFormatValid();
     }
     
     private boolean isFileValid() {
         String path = component.getCsvPath();
         if(path==null || path.length()==0) {
-            showError("empty");
+            showError(Bundle.MSG_CsvTableImportWizardPanel_File_Empty());
             return false;
         }
         
         File f = new File(path);
         if(!f.isFile()) {
-            showError("not found");
+            showError(Bundle.MSG_CsvTableImportWizardPanel_File_NotFound(path));
             return false;
         }
         return true;
     }
     
     private boolean isCellSeparatorValid() {
+        String sep = component.getCellSeparator();
+        if(sep==null || sep.length()==0) {
+            showError(Bundle.MSG_CsvTableImportWizardPanel_CellSeparator_Empty());
+            return false;
+        }
         return true;
     }
     
     private boolean isDecimalSeparatorValid() {
+        String sep = component.getDecimalSeparator();
+        if(sep==null || sep.length()==0) {
+            showError(Bundle.MSG_CsvTableImportWizardPanel_DecimalSeparator_Empty());
+            return false;
+        }
         return true;
     }
     
     private boolean isDateFormatValid() {
+        String pattern = component.getDateFormat();
+        if(pattern==null || pattern.length()==0) {
+            showError(Bundle.MSG_CsvTableImportWizardPanel_DateFormat_Empty());
+            return false;
+        }
+        
+        try {
+            sdf.applyPattern(pattern);
+            sdf.format(checkDate);
+        } catch (Exception ex) {
+            showError(Bundle.MSG_CsvTableImportWizardPanel_DateFormat_Invalid());
+            return false;
+        }
         return true;
+    }
+
+    @Override
+    public void prepareValidation() {
+        validationData = new ValidationData();
+        component.startProgressBar();
+    }
+
+    @Override
+    public void validate() throws WizardValidationException {
+        try {
+            CsvTableReader reader = new CsvTableReader(validationData);
+            entries = reader.readEntries();
+        } catch (Exception ex) {
+            entries = Collections.EMPTY_LIST;
+            throw new WizardValidationException(component, ex.getMessage(), ex.getLocalizedMessage());
+        } finally {
+            stopProgressBar();
+        }
+    }
+    
+    void stopProgressBar() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                component.stopProgressBar();
+            }
+        });
+    }
+    
+    class ValidationData {
+        final DataType dt = CsvTableImportWizardPanel.this.ds.getDataType();
+        final File csv = new File(component.getCsvPath());
+        final boolean columnHeader = component.hasColumnHeader();
+        final boolean rowHeaders = component.hasRowHeader();
+        final boolean cellsQuoted = component.isCellsQuoted();
+        final String cellSep = component.getCellSeparator();
+        final char decimalSep = component.getDecimalSeparator().charAt(0);
+        final String dateFormat = component.getDateFormat();
     }
     
 }

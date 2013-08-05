@@ -69,7 +69,7 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
     }
     
     private DataItem getInitDataItem() {
-        DataItem item = (DataItem) wizard.getProperty(ImportDataWizardIterator.PROP_DATA_SOURCE);
+        DataItem item = (DataItem) wizard.getProperty(ImportDataProvider.PROP_DATA_SOURCE);
         if(item != null)
             return item;
         return (DataItem) wizard.getProperty(ImportDataWizardIterator.PROP_INIT_DATA_ITEM);
@@ -107,8 +107,8 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
     }
     
     private void validateInput() {
-        dataSource = (DataSource) component.getClientProperty(ImportDataWizardIterator.PROP_DATA_SOURCE);
-        dataProvider = (ImportDataProvider) component.getClientProperty(ImportDataWizardIterator.PROP_IMPORT_WIZARD);
+        dataSource = (DataSource) component.getClientProperty(ImportDataProvider.PROP_DATA_SOURCE);
+        dataProvider = (ImportDataProvider) component.getClientProperty(ImportDataProvider.PROP_IMPORT_WIZARD);
         isValid = checkValid();
         if(isValid)
             showError(null);
@@ -149,10 +149,9 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
             String propName = evt.getPropertyName();
-            if(ImportDataWizardIterator.PROP_DATA_SOURCE.equals(propName)) {
-                validateInput();
-            } else if(ImportDataWizardIterator.PROP_IMPORT_WIZARD.equals(propName)) {
-                wizard.putProperty(ImportDataWizardIterator.PROP_IMPORT_WIZARD, evt.getNewValue());
+            if(ImportDataProvider.PROP_DATA_SOURCE.equals(propName) ||
+               ImportDataProvider.PROP_IMPORT_WIZARD.equals(propName)) {
+                wizard.putProperty(propName, evt.getNewValue());
                 validateInput();
             }
         }

@@ -26,9 +26,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -38,6 +35,7 @@ import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.AbstractDataProvider;
 import org.jreserve.gui.data.spi.DataEntry;
 import org.jreserve.gui.data.spi.DataProviderFactoryType;
+import org.jreserve.gui.data.spi.MonthDate;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -51,7 +49,6 @@ public class CsvDataProvider extends AbstractDataProvider {
     
     private final static String CSV_EXTENSION = "csv";
     private final static String CELL_SEPARATOR = ",";
-    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final static int ACCIDENT_CELL = 0;
     private final static int DEVELOPMENT_CELL = 1;
     private final static int VALUE_CELL = 2;
@@ -227,8 +224,8 @@ public class CsvDataProvider extends AbstractDataProvider {
         private DataEntry readEntry(String line) throws IOException {
             try {
                 String[] cells = line.split(CELL_SEPARATOR);
-                Date accident = DATE_FORMAT.parse(cells[ACCIDENT_CELL]);
-                Date development = DATE_FORMAT.parse(cells[DEVELOPMENT_CELL]);
+                MonthDate accident = new MonthDate(cells[ACCIDENT_CELL]);
+                MonthDate development = new MonthDate(cells[DEVELOPMENT_CELL]);
                 double value = Double.valueOf(cells[VALUE_CELL]);
                 return new DataEntry(accident, development, value);
             } catch (Exception ex) {
@@ -287,9 +284,9 @@ public class CsvDataProvider extends AbstractDataProvider {
         }
         
         private void writeEntry(DataEntry entry) throws IOException {
-            lineBuffer.append(DATE_FORMAT.format(entry.getAccidentDate()))
+            lineBuffer.append(entry.getAccidentDate().toString())
                 .append(CELL_SEPARATOR)
-                .append(DATE_FORMAT.format(entry.getDevelopmentDate()))
+                .append(entry.getDevelopmentDate().toString())
                 .append(CELL_SEPARATOR)
                 .append(Double.toString(entry.getValue()));
             writer.write(lineBuffer.toString());

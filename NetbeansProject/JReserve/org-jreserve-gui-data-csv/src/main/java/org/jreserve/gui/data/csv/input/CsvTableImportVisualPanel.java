@@ -16,23 +16,32 @@
  */
 package org.jreserve.gui.data.csv.input;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+import org.jreserve.gui.data.csv.CsvFileFilter;
 import org.jreserve.gui.data.csv.settings.CsvImportSettings;
 import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.misc.utils.notifications.FileDialog;
+import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
-import org.openide.filesystems.FileChooserBuilder;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.RequestProcessor;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
 
 /**
  *
@@ -40,20 +49,27 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
+    "LBL.CsvTableImportVisualPanel.FilePrompt=Select csv file...",
     "LBL.CsvTableImportVisualPanel.Title=CSV Settings",
     "LBL.CsvTableImportVisualPanel.FileChooser.Title=Select CSV File"
 })
 public class CsvTableImportVisualPanel extends javax.swing.JPanel {
     
+    private static RequestProcessor RP = new RequestProcessor(CsvTableImportDataProvider.class.getName(), 1);
+    private final static String REFRESH_IMG = "org/jreserve/gui/misc/utils/refresh.png";   //NOI18
+    
+    private boolean hasRowHeaders;
     private final CsvTableImportWizardPanel panel;
     private JTextComponent separatorEditor;
     private JTextComponent dateFormatEditor;
     private final InputListener inputListener = new InputListener();
+    private final PreviewTableModel prevModel = new PreviewTableModel();
     
     public CsvTableImportVisualPanel(CsvTableImportWizardPanel panel) {
         this.panel = panel;
         initComponents();
         updateExmapleDate();
+        
     }
     
     @Override
@@ -69,6 +85,16 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         } catch (Exception ex) {
             dateExampleText.setText(null);
         }
+    }
+    
+    void startProgressBar() {
+        pBar.setIndeterminate(true);
+        pBar.setVisible(true);
+    }
+    
+    void stopProgressBar() {
+        pBar.setIndeterminate(false);
+        pBar.setVisible(false);
     }
     
     String getCsvPath() {
@@ -125,7 +151,11 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         dateFormatLabel = new javax.swing.JLabel();
         dateFormatCombo = new javax.swing.JComboBox();
         dateExampleText = new javax.swing.JLabel();
-        filler = new javax.swing.Box.Filler(new java.awt.Dimension(250, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        previewLabel = new javax.swing.JLabel();
+        refreshButton = new javax.swing.JButton();
+        previewScroll = new javax.swing.JScrollPane();
+        previewTable = new javax.swing.JTable();
+        pBar = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -140,6 +170,7 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
 
         fileText.setText(null);
         fileText.getDocument().addDocumentListener(inputListener);
+        TextPrompt.createStandard(Bundle.LBL_CsvTableImportVisualPanel_FilePrompt(), fileText);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -273,7 +304,7 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
         add(dateFormatLabel, gridBagConstraints);
 
         dateFormatCombo.setEditable(true);
@@ -287,7 +318,7 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
         add(dateFormatCombo, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(dateExampleText, null);
@@ -297,31 +328,92 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
         add(dateExampleText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(previewLabel, org.openide.util.NbBundle.getMessage(CsvTableImportVisualPanel.class, "CsvTableImportVisualPanel.previewLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        add(previewLabel, gridBagConstraints);
+
+        refreshButton.setIcon(ImageUtilities.loadImageIcon(REFRESH_IMG, false));
+        org.openide.awt.Mnemonics.setLocalizedText(refreshButton, org.openide.util.NbBundle.getMessage(CsvTableImportVisualPanel.class, "CsvTableImportVisualPanel.refreshButton.text")); // NOI18N
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 7;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        add(refreshButton, gridBagConstraints);
+
+        previewScroll.setPreferredSize(new java.awt.Dimension(300, 150));
+
+        previewTable.setModel(prevModel);
+        previewTable.setDefaultRenderer(String.class, new PreviewRenderer());
+        previewScroll.setViewportView(previewTable);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 4;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        add(filler, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        add(previewScroll, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 9;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        add(pBar, gridBagConstraints);
+        pBar.setVisible(false);
     }// </editor-fold>//GEN-END:initComponents
 
     private void fileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileButtonActionPerformed
-        File f = selectFile();
+        File f = FileDialog.openFile(CsvFileFilter.getDefault(), Bundle.LBL_CsvTableImportVisualPanel_FileChooser_Title());
         if(f != null)
             fileText.setText(f.getAbsolutePath());
     }//GEN-LAST:event_fileButtonActionPerformed
+
+    private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+        refreshButton.setEnabled(false);
+        final PreviewReader reader = new PreviewReader(getCsvFile());
+        Task task = RP.create(reader);
+        task.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        refreshButton.setEnabled(true);
+                        if(prevModel != null) {
+                            prevModel.setHasColumnTitles(columnHeaderCheck.isSelected());
+                            prevModel.setCellSeparator(separatorEditor.getText());
+                            prevModel.setLines(reader.readLines());
+                        }
+                    }
+                });
+            }
+        });
+        RP.execute(task);
+    }//GEN-LAST:event_refreshButtonActionPerformed
     
-    private File selectFile() {
-        CsvFilter filter = new CsvFilter();
-        return new FileChooserBuilder(CsvTableImportVisualPanel.class)
-                .setTitle(Bundle.LBL_CsvTableImportVisualPanel_FileChooser_Title())
-                .setFilesOnly(true)
-                .addFileFilter(filter).setFileFilter(filter)
-                .showOpenDialog();
+    private File getCsvFile() {
+        String path = fileText.getText();
+        if(path==null || path.length()==0)
+            return null;
+        return new File(path);
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -338,55 +430,27 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
     private javax.swing.JButton fileButton;
     private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileText;
-    private javax.swing.Box.Filler filler;
     private javax.swing.JLabel hasColumnHeaderLabel;
     private javax.swing.JLabel hasRowHeaderLabel;
+    private javax.swing.JProgressBar pBar;
+    private javax.swing.JLabel previewLabel;
+    private javax.swing.JScrollPane previewScroll;
+    private javax.swing.JTable previewTable;
+    private javax.swing.JButton refreshButton;
     private javax.swing.JCheckBox rowHeaderCheck;
     // End of variables declaration//GEN-END:variables
-    
-    private static class CsvFilter extends FileFilter {
-
-        @Override
-        public boolean accept(File f) {
-            if(f.isDirectory())
-                return true;
-            String name = f.getName();
-            return name.endsWith(".csv") || name.endsWith(".CSV");
-        }
-
-        @Override
-        public String getDescription() {
-            return "CSV Files";
-        }
-    }
-    
-    private static class CsvBadgeProvider implements FileChooserBuilder.BadgeProvider {
-        
-        private final static Icon CSV_ICON = ImageUtilities.loadImageIcon("org/jreserve/gui/data/csv/csv.png", false);
-        
-        @Override
-        public Icon getBadge(File file) {
-            if(file.getName().endsWith(".csv"))
-                return CSV_ICON;
-            return null;
-        }
-
-        @Override
-        public int getXOffset() {
-            return 0;
-        }
-
-        @Override
-        public int getYOffset() {
-            return 0;
-        }
-
-    }
     
     private class InputListener implements ActionListener, DocumentListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            if(source == columnHeaderCheck)
+                prevModel.setHasColumnTitles(columnHeaderCheck.isSelected());
+            else if(source == rowHeaderCheck) {
+                hasRowHeaders = rowHeaderCheck.isSelected();
+                prevModel.fireTableDataChanged();
+            }
             fireChange();
         }
         
@@ -405,13 +469,33 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         }
         
         private void documentChange(DocumentEvent e) {
-            if(e.getDocument() == dateFormatEditor.getDocument())
+            Document d = e.getDocument();
+            if(d == dateFormatEditor.getDocument())
                 updateExmapleDate();
+            else if(d == separatorEditor.getDocument())
+                prevModel.setCellSeparator(separatorEditor.getText());
             fireChange();
         }
         
         @Override
         public void changedUpdate(DocumentEvent e) {
         }
+    }
+    
+    private class PreviewRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column); //To change body of generated methods, choose Tools | Templates.
+            if(column == 0 && hasRowHeaders) {
+                setOpaque(true);
+                setBackground(table.getBackground());
+            } else {
+                setOpaque(false);
+            }
+            return this;
+        }
+        
+        
     }
 }

@@ -53,6 +53,7 @@ public class LoggerProperties {
             PROPERTIES = new Properties();
             File propFile = getPropertiesFile();
             if(propFile != null) {
+                logger.log(Level.INFO, "Loading logging properties from file: {0}", propFile.getAbsolutePath());
                 is = new FileInputStream(propFile);
                 PROPERTIES.load(is);
             }
@@ -74,17 +75,9 @@ public class LoggerProperties {
 
     
     private static File getPropertiesFile() {
-        File child = new File(getConfigRoot(), "logging.properties");
-        if(!child.exists())
-            return null;
-        return child;
-    }
-    
-    private static File getConfigRoot() {
         InstalledFileLocator locator = InstalledFileLocator.getDefault();
-        File root = locator.locate("logging", PACKAGE, true);
-        logger.log(Level.FINER, "Logging setting root: \"{0}\"", root);
-        return root;
+        File child = locator.locate("logging/logging.properties", null, false);
+        return (child!=null && child.exists())? child : null;
     }
     
     public static void save() {

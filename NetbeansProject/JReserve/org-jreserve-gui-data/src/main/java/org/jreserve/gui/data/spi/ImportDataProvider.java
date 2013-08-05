@@ -26,6 +26,9 @@ import org.openide.WizardDescriptor;
  * @version 1.0
  */
 public interface ImportDataProvider {
+    public final static String PROP_DATA_SOURCE = "data.source";       //Panel 1
+    public final static String PROP_IMPORT_WIZARD = "import.wizard";   //Panel 1
+    public final static String PROP_SAVE_TYPE = "save.type";           //Panel Last
 
     public List<? extends WizardDescriptor.Panel> getPanels();
 

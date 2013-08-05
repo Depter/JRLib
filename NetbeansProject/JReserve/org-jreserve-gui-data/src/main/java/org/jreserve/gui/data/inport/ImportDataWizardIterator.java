@@ -46,9 +46,6 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     private final static Logger logger = Logger.getLogger(ImportDataWizardIterator.class.getName());
     
     final static String PROP_INIT_DATA_ITEM = "init.data.item"; //Panel 0
-    final static String PROP_DATA_SOURCE = "data.source";       //Panel 1
-    final static String PROP_IMPORT_WIZARD = "import.wizard";   //Panel 1
-    final static String PROP_SAVE_TYPE = "save.type";           //Panel Last
     
     private DataItem dataItem;
     private WizardDescriptor wizardDesc;
@@ -83,7 +80,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     
     private void importWizardChanged() {
         releaseOldWizard();
-        importWizard = (ImportDataProvider) wizardDesc.getProperty(PROP_IMPORT_WIZARD);
+        importWizard = (ImportDataProvider) wizardDesc.getProperty(ImportDataProvider.PROP_IMPORT_WIZARD);
         reclaulcateState();
     }
     
@@ -233,7 +230,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     private class ImportWizardListener implements PropertyChangeListener {
         @Override
         public void propertyChange(PropertyChangeEvent evt) {
-            if(PROP_IMPORT_WIZARD.equals(evt.getPropertyName())) {
+            if(ImportDataProvider.PROP_IMPORT_WIZARD.equals(evt.getPropertyName())) {
                 importWizardChanged();
             }
         }

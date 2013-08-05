@@ -53,6 +53,9 @@
         </folder>
         
         <folder name="TaskPanes">
+            <folder name="Edit">
+                <attr name="position" intvalue="1000"/>
+            </folder>
             <folder name="Windows">
                 <attr name="position" intvalue="10000"/>
                 <folder name="Utilities">

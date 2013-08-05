@@ -17,8 +17,6 @@
 
 package org.jreserve.gui.data.spi;
 
-import java.util.Date;
-
 /**
  *
  * @author Peter Decsi
@@ -26,15 +24,15 @@ import java.util.Date;
  */
 public final class DataEntry implements Comparable<DataEntry>{
     
-    private final Date accident;
-    private final Date development;
+    private final MonthDate accident;
+    private final MonthDate development;
     private final double value;
     
-    public DataEntry(Date accident, double value) {
+    public DataEntry(MonthDate accident, double value) {
         this(accident, accident, value);
     }
     
-    public DataEntry(Date accident, Date development, double value) {
+    public DataEntry(MonthDate accident, MonthDate development, double value) {
         if(accident == null)
             throw new NullPointerException("Accident is null!");
         this.accident = accident;
@@ -46,11 +44,11 @@ public final class DataEntry implements Comparable<DataEntry>{
         this.value = value;
     }
     
-    public Date getAccidentDate() {
+    public MonthDate getAccidentDate() {
         return accident;
     }
     
-    public Date getDevelopmentDate() {
+    public MonthDate getDevelopmentDate() {
         return development;
     }
 
@@ -78,6 +76,6 @@ public final class DataEntry implements Comparable<DataEntry>{
     
     @Override
     public String toString() {
-        return String.format("DataEntry [%tF / %tF: %f]", accident, development, value);
+        return String.format("DataEntry [%s / %s: %f]", accident, development, value);
     }
 }

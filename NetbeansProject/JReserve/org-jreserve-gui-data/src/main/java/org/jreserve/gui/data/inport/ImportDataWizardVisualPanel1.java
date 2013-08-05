@@ -24,6 +24,7 @@ import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataItemChooser;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.netbeans.api.project.ProjectUtils;
 import org.openide.util.NbBundle.Messages;
@@ -197,7 +198,7 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
         private void updateStorage() {
             DataSource ds = getSelectedDataSource();
             putClientProperty(ImportDataWizardPanel1.PROP_DATA_SOURCE_PATH, storageText.getText());
-            putClientProperty(ImportDataWizardIterator.PROP_DATA_SOURCE, ds);
+            putClientProperty(ImportDataProvider.PROP_DATA_SOURCE, ds);
         }
         
         private DataSource getSelectedDataSource() {
@@ -214,10 +215,10 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
             ImportDataProviderAdapter adapter = (ImportDataProviderAdapter) providerCombo.getSelectedItem();
             if(adapter == null) {
                 putClientProperty(ImportDataWizardPanel1.PROP_IMPORT_DATA_PROVIDER_ADAPTER, null);
-                putClientProperty(ImportDataWizardIterator.PROP_IMPORT_WIZARD, null);
+                putClientProperty(ImportDataProvider.PROP_IMPORT_WIZARD, null);
             } else {
                 putClientProperty(ImportDataWizardPanel1.PROP_IMPORT_DATA_PROVIDER_ADAPTER, adapter);
-                putClientProperty(ImportDataWizardIterator.PROP_IMPORT_WIZARD, adapter.getImportDataProvider());
+                putClientProperty(ImportDataProvider.PROP_IMPORT_WIZARD, adapter.getImportDataProvider());
             }
         }
     }
