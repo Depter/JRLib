@@ -68,7 +68,7 @@ class CsvTableReader {
                     readLine(line);
                 lineIndex++;
             }
-            return null;
+            return result;
         } catch (Exception ex) {
             String msg = "Unable to read CSV table from file '%s'!";
             msg = String.format(msg, config.csv.getAbsolutePath());

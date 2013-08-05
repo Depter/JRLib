@@ -16,17 +16,76 @@
  */
 package org.jreserve.gui.data.inport;
 
+import java.awt.CardLayout;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.settings.ImportSettings;
+import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
+import org.openide.util.NbBundle.Messages;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "LBL.ImportDataWizardVisualPanelLast.Name=Select Data",
+    "LBL.ImportDataWizardVisualPanelLast.Overview.Triangle=Triangle",
+    "LBL.ImportDataWizardVisualPanelLast.Overview.Table=Table"
+})
 class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
 
+    private static enum OverviewType implements Displayable {
+        TRIANGLE(Bundle.LBL_ImportDataWizardVisualPanelLast_Overview_Triangle()),
+        TABLE(Bundle.LBL_ImportDataWizardVisualPanelLast_Overview_Table());
+        
+        private final String displayName;
+        
+        private OverviewType(String displayName) {
+            this.displayName = displayName;
+        }
+
+        @Override
+        public Icon getIcon() {
+            return null;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return displayName;
+        }
+    }
+    
+    private final ImportDataTableModel tableModel = new ImportDataTableModel();
+    private DataSource ds;
+    private List<DataEntry> entries;
+    
     ImportDataWizardVisualPanelLast() {
         initComponents();
+        CardLayout layout = (CardLayout) overviewPanel.getLayout();
+        layout.show(overviewPanel, "triangle");
+    }
+    
+    @Override
+    public String getName() {
+        return Bundle.LBL_ImportDataWizardVisualPanelLast_Name();
     }
 
+    void setDataSource(DataSource ds) {
+        this.ds = ds;
+        tableModel.setDataType(ds.getDataType());
+    }
+    
+    void setEntries(List<DataEntry> entries) {
+        this.entries = entries;
+        tableModel.setEntries(entries);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,18 +94,98 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        saveTypeLabel = new javax.swing.JLabel();
+        saveTypeCombo = new javax.swing.JComboBox();
+        overviewTypeLabel = new javax.swing.JLabel();
+        overviewTypeCombo = new javax.swing.JComboBox();
+        overviewPanel = new javax.swing.JPanel();
+        tableScroll = new javax.swing.JScrollPane();
+        table = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+
+        setLayout(new java.awt.GridBagLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(saveTypeLabel, org.openide.util.NbBundle.getMessage(ImportDataWizardVisualPanelLast.class, "ImportDataWizardVisualPanelLast.saveTypeLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(saveTypeLabel, gridBagConstraints);
+
+        saveTypeCombo.setModel(new DefaultComboBoxModel(SaveType.values()));
+        saveTypeCombo.setSelectedItem(ImportSettings.getSaveType());
+        saveTypeCombo.setRenderer(WidgetUtils.displayableListRenderer());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(saveTypeCombo, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(overviewTypeLabel, org.openide.util.NbBundle.getMessage(ImportDataWizardVisualPanelLast.class, "ImportDataWizardVisualPanelLast.overviewTypeLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(overviewTypeLabel, gridBagConstraints);
+
+        overviewTypeCombo.setModel(new DefaultComboBoxModel(OverviewType.values()));
+        overviewTypeCombo.setSelectedItem(OverviewType.TRIANGLE);
+        overviewTypeCombo.setRenderer(WidgetUtils.displayableListRenderer());
+        overviewTypeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                overviewTypeComboActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(overviewTypeCombo, gridBagConstraints);
+
+        overviewPanel.setLayout(new java.awt.CardLayout());
+
+        table.setModel(tableModel);
+        tableScroll.setViewportView(table);
+
+        overviewPanel.add(tableScroll, "table");
+        overviewPanel.add(jPanel1, "triangle");
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        add(overviewPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void overviewTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overviewTypeComboActionPerformed
+        CardLayout layout = (CardLayout) overviewPanel.getLayout();
+        if(OverviewType.TABLE == overviewTypeCombo.getSelectedItem())
+            layout.show(overviewPanel, "table");
+        else
+            layout.show(overviewPanel, "triangle");
+    }//GEN-LAST:event_overviewTypeComboActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel overviewPanel;
+    private javax.swing.JComboBox overviewTypeCombo;
+    private javax.swing.JLabel overviewTypeLabel;
+    private javax.swing.JComboBox saveTypeCombo;
+    private javax.swing.JLabel saveTypeLabel;
+    private javax.swing.JTable table;
+    private javax.swing.JScrollPane tableScroll;
     // End of variables declaration//GEN-END:variables
 }

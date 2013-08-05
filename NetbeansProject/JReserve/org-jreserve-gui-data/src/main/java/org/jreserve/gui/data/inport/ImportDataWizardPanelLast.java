@@ -17,7 +17,11 @@
 package org.jreserve.gui.data.inport;
 
 import java.awt.Component;
+import java.util.List;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
@@ -30,6 +34,7 @@ import org.openide.util.HelpCtx;
  */
 class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
     
+    private WizardDescriptor wiz;
     private ImportDataWizardVisualPanelLast component;
     private boolean valid = false;
     private ChangeSupport cs = new ChangeSupport(this);
@@ -38,8 +43,15 @@ class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidati
     public Component getComponent() {
         if(component == null) {
             component = new ImportDataWizardVisualPanelLast();
+            if(wiz != null)
+                initComponent();
         }
         return component;
+    }
+    
+    private void initComponent() {
+        component.setDataSource((DataSource) wiz.getProperty(ImportDataProvider.PROP_DATA_SOURCE));
+        component.setEntries((List< DataEntry>) wiz.getProperty(ImportDataProvider.PROP_IMPORT_DATA));
     }
 
     @Override
@@ -49,6 +61,9 @@ class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidati
 
     @Override
     public void readSettings(WizardDescriptor settings) {
+        this.wiz = settings;
+        if(component != null)
+            initComponent();
     }
 
     @Override

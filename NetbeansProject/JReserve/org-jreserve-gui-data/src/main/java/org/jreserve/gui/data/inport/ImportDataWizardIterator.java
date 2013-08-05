@@ -75,7 +75,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
         
         wizardDesc.addPropertyChangeListener(WeakListeners.propertyChange(stListener, wizard));
         
-        reclaulcateState();
+        importWizardChanged();
     }
     
     private void importWizardChanged() {

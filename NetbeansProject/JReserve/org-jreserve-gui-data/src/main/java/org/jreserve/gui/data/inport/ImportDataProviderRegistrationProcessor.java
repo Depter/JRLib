@@ -40,6 +40,7 @@ public class ImportDataProviderRegistrationProcessor extends AbstractRegistratio
     final static String LAYER_PATH = "DataStore/ImportDataProviders/";
     final static String DISPLAY_NAME = "displayName";
     final static String ICON_BASE = "iconBase";
+    final static String ID = "id";
     
     @Override
     protected Class<ImportDataProvider.Registration> getAnnotationClass() {
@@ -59,6 +60,12 @@ public class ImportDataProviderRegistrationProcessor extends AbstractRegistratio
     @Override
     protected void initAttributes(LayerBuilder.File file, TypeElement element) throws LayerGenerationException {
         ImportDataProvider.Registration an = getAnnotation(element);
+        
+        String id = an.id();
+        if(id == null || id.length()==0)
+            throw new LayerGenerationException("ID not set!", element);
+        file.stringvalue(ID, id);
+        
         file.position(an.position());
         file.bundlevalue(DISPLAY_NAME, an.displayName(), an, "displayName");
         

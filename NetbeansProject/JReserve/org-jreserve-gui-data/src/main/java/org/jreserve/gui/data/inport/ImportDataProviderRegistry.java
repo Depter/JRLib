@@ -31,11 +31,11 @@ import org.openide.util.ImageUtilities;
  * @author Peter Decsi
  * @version 1.0
  */
-class ImportDataProviderRegistry extends LayerRegistrationLoader<ImportDataProviderAdapter> {
+public class ImportDataProviderRegistry extends LayerRegistrationLoader<ImportDataProviderAdapter> {
     
     private static ImportDataProviderRegistry INSTANCE;
     
-    synchronized static List<ImportDataProviderAdapter> getAdapters() {
+    public synchronized static List<ImportDataProviderAdapter> getAdapters() {
         if(INSTANCE == null)
             INSTANCE = new ImportDataProviderRegistry();
         return INSTANCE.getValues();
@@ -59,7 +59,14 @@ class ImportDataProviderRegistry extends LayerRegistrationLoader<ImportDataProvi
         String name = getDisplayName(file);
         Icon icon = getIcon(file);
         ImportDataProvider provider = super.getInstance(file, ImportDataProvider.class);
-        return new ImportDataProviderAdapter(name, icon, provider);
+        String id = getId(file, provider);
+        return new ImportDataProviderAdapter(id, name, icon, provider);
+    }
+    
+    private String getId(FileObject file, ImportDataProvider provider) {
+        return AnnotationUtils.stringAttribute(
+                ImportDataProviderRegistrationProcessor.ID, 
+                file, provider.getClass().getName());
     }
     
     private String getDisplayName(FileObject file) {

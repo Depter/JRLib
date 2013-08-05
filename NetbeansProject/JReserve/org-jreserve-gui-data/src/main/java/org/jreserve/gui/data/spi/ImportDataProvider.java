@@ -28,6 +28,7 @@ import org.openide.WizardDescriptor;
 public interface ImportDataProvider {
     public final static String PROP_DATA_SOURCE = "data.source";       //Panel 1
     public final static String PROP_IMPORT_WIZARD = "import.wizard";   //Panel 1
+    public final static String PROP_IMPORT_DATA = "import.data";       //Custom panels
     public final static String PROP_SAVE_TYPE = "save.type";           //Panel Last
 
     public List<? extends WizardDescriptor.Panel> getPanels();
@@ -37,6 +38,7 @@ public interface ImportDataProvider {
     public void removeChangeListener(ChangeListener listener);
 
     public static @interface Registration {
+        public String id();
         public String displayName();
         public String iconBase() default "";
         public int position() default Integer.MAX_VALUE;

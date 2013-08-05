@@ -27,7 +27,7 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "LBL.SaveType.Override=Override existing values",
-    "LBL.SaveType.SaveNew=Keep existing"
+    "LBL.SaveType.SaveNew=Keep existing values"
 })
 public enum SaveType implements Displayable {
     

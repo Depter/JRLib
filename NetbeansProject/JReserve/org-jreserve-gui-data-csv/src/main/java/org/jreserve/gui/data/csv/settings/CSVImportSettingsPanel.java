@@ -65,6 +65,7 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
         msgLabel = new javax.swing.JLabel();
         defaultButton = new javax.swing.JButton();
 
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(hasRowHeaderLabel, org.openide.util.NbBundle.getMessage(CSVImportSettingsPanel.class, "CSVImportSettingsPanel.hasRowHeaderLabel.text")); // NOI18N

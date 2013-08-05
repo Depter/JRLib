@@ -35,10 +35,15 @@ public class LocaleSettings {
     private final static DecimalFormatSymbols DFS = new DecimalFormatSymbols(locale);
     private final static String[] DEFAULT_DATE_FORMATS = {
         "yyyy-MM-dd", 
+        "yyyy.MM.dd", 
         "yyyy-MM", 
+        "yyyy.MM", 
         "MM-dd-yyyy", 
+        "MM.dd.yyyy", 
         "dd-MM-yyyy",
-        "MM-yyyy"
+        "dd.MM.yyyy",
+        "MM-yyyy",
+        "MM.yyyy"
     };
     private final static int DEFAULT_DECIMAL_COUNT = 2;
     
@@ -108,12 +113,15 @@ public class LocaleSettings {
         if(format != null && format.length() > 0)
             return format;
         String pattern = new SimpleDateFormat().toPattern();
-        if(pattern == null || pattern.length()==0 || pattern.charAt(0) == 'y')
+        if(pattern == null)
             return DEFAULT_DATE_FORMATS[0];
-        else if(pattern.charAt(0) == 'M')
-            return DEFAULT_DATE_FORMATS[2];
-        else 
-            return DEFAULT_DATE_FORMATS[3];
+        if(pattern.length()==0 || pattern.charAt(0) == 'y') {
+            return (pattern.indexOf('-')>0)? DEFAULT_DATE_FORMATS[0] : DEFAULT_DATE_FORMATS[1];
+        } else if(pattern.charAt(0) == 'M') {
+            return (pattern.indexOf('-')>0)? DEFAULT_DATE_FORMATS[4] : DEFAULT_DATE_FORMATS[5];
+        } else {
+            return (pattern.indexOf('-')>0)? DEFAULT_DATE_FORMATS[6] : DEFAULT_DATE_FORMATS[7];
+        }
     }
     
     public synchronized static void setDateFormat(SimpleDateFormat df) {

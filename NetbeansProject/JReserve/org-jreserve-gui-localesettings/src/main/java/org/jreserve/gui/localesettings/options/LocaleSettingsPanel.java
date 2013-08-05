@@ -86,6 +86,7 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         errorLabel = new javax.swing.JLabel();
         defaultButton = new javax.swing.JButton();
 
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(decimalSepLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.decimalSepLabel.text")); // NOI18N

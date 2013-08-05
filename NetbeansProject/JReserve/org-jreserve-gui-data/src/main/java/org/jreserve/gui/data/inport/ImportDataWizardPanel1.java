@@ -22,6 +22,7 @@ import java.beans.PropertyChangeListener;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.settings.ImportSettings;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
@@ -65,7 +66,15 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
     
     private void initComponent() {
         component.setDataItem(getInitDataItem());
-        component.setImportProvider((ImportDataProviderAdapter) wizard.getProperty(PROP_IMPORT_DATA_PROVIDER_ADAPTER));
+        ImportDataProviderAdapter a = (ImportDataProviderAdapter) wizard.getProperty(PROP_IMPORT_DATA_PROVIDER_ADAPTER);
+        if(a == null) {
+            a = ImportSettings.getImportDataProvider();
+            if(a != null) {
+                wizard.putProperty(PROP_IMPORT_DATA_PROVIDER_ADAPTER, a);
+                wizard.putProperty(ImportDataProvider.PROP_IMPORT_WIZARD, a.getImportDataProvider());
+            }
+        }
+        component.setImportProvider(a);
     }
     
     private DataItem getInitDataItem() {

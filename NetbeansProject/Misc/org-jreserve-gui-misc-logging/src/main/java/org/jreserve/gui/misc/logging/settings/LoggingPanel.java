@@ -173,7 +173,7 @@ class LoggingPanel extends javax.swing.JPanel
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 0), new java.awt.Dimension(5, 32767));
         defaultButton = new javax.swing.JButton();
 
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.BorderLayout(15, 15));
 
         northPanel.setLayout(new java.awt.GridBagLayout());

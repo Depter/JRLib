@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.csv.settings;
+package org.jreserve.gui.data.settings;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -26,71 +26,62 @@ import org.openide.util.NbBundle.Messages;
 
 @OptionsPanelController.SubRegistration(
     location = "ImportDataSettings",
-    displayName = "#AdvancedOption_DisplayName_CSVImportSettings",
-    keywords = "#AdvancedOption_Keywords_CSVImportSettings",
-    keywordsCategory = "Advanced/CSVImportSettings",
-    position = 200
+    displayName = "#AdvancedOption_DisplayName_Imports",
+    keywords = "#AdvancedOption_Keywords_Imports",
+    keywordsCategory = "ImportDataSettings/Imports",
+    position = 100
 )
 @Messages({
-    "AdvancedOption_DisplayName_CSVImportSettings=CSV", 
-    "AdvancedOption_Keywords_CSVImportSettings=csv,import"}
-)
-public final class CSVImportSettingsOptionsPanelController extends OptionsPanelController {
+    "AdvancedOption_DisplayName_Imports=General", 
+    "AdvancedOption_Keywords_Imports=import,Import"
+})
+public final class ImportsOptionsPanelController extends OptionsPanelController {
 
-    private CSVImportSettingsPanel panel;
+    private ImportsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
-    @Override
     public void update() {
         getPanel().load();
         changed = false;
     }
 
-    @Override
     public void applyChanges() {
         getPanel().store();
         changed = false;
     }
 
-    @Override
     public void cancel() {
         // need not do anything special, if no changes have been persisted yet
     }
 
-    @Override
     public boolean isValid() {
         return getPanel().valid();
     }
 
-    @Override
     public boolean isChanged() {
         return changed;
     }
 
-    @Override
     public HelpCtx getHelpCtx() {
         return null; // new HelpCtx("...ID") if you have a help set
     }
 
-    @Override
     public JComponent getComponent(Lookup masterLookup) {
         return getPanel();
     }
 
-    @Override
     public void addPropertyChangeListener(PropertyChangeListener l) {
         pcs.addPropertyChangeListener(l);
     }
 
-    @Override
     public void removePropertyChangeListener(PropertyChangeListener l) {
         pcs.removePropertyChangeListener(l);
     }
 
-    private CSVImportSettingsPanel getPanel() {
+    private ImportsPanel getPanel() {
         if (panel == null) {
-            panel = new CSVImportSettingsPanel(this);
+            panel = new ImportsPanel(this);
         }
         return panel;
     }

@@ -4,7 +4,7 @@
   <Properties>
     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
       <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
-        <EmptyBorder bottom="15" left="15" right="15" top="15"/>
+        <EmptyBorder bottom="12" left="12" right="12" top="12"/>
       </Border>
     </Property>
   </Properties>

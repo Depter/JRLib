@@ -190,8 +190,8 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     
     @Override
     public Set instantiate(ProgressHandle handle) throws IOException {
-        handle.switchToIndeterminate();
         handle.start();
+        handle.switchToIndeterminate();
         try {
             return Collections.singleton(createDataSource());
         } finally {

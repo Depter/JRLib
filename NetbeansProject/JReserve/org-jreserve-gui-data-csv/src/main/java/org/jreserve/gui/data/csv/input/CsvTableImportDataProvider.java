@@ -31,6 +31,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @ImportDataProvider.Registration(
+    id = "org.jreserve.gui.data.csv.input.CsvTableImportDataProvider",
     displayName = "#LBL.CsvTableImportDataProvider.Name",
     iconBase = "org/jreserve/gui/data/csv/csv.png",
     position = 5000

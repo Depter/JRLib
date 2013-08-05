@@ -61,7 +61,6 @@ public class CsvTableImportWizardPanel implements WizardDescriptor.AsynchronousV
     private final Date checkDate = new Date();
     private final SimpleDateFormat sdf = new SimpleDateFormat();
     private volatile ValidationData validationData;
-    private volatile List<DataEntry> entries;
     
     @Override
     public Component getComponent() {
@@ -180,9 +179,9 @@ public class CsvTableImportWizardPanel implements WizardDescriptor.AsynchronousV
     public void validate() throws WizardValidationException {
         try {
             CsvTableReader reader = new CsvTableReader(validationData);
-            entries = reader.readEntries();
+            List<DataEntry> entries = reader.readEntries();
+            wiz.putProperty(ImportDataProvider.PROP_IMPORT_DATA, entries);
         } catch (Exception ex) {
-            entries = Collections.EMPTY_LIST;
             throw new WizardValidationException(component, ex.getMessage(), ex.getLocalizedMessage());
         } finally {
             stopProgressBar();
