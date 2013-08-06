@@ -193,24 +193,6 @@ public class TriangleWidget extends JPanel {
     }
     
     /**
-     * Sets the scale used to display the values.
-     * 
-     * @param scale the number of decimals to show. Can be
-     *              negative.
-     */
-    public void setScale(int scale) {
-        content.setScale(scale);
-        resizeAndRepaint();
-    }
-    
-    /**
-     * Returns the scale used to displat the values.
-     */
-    public int getScale() {
-        return content.getScale();
-    }
-    
-    /**
      * Sets wether the values should be cummulated.
      */
     public void setCummulated(boolean cummulated) {

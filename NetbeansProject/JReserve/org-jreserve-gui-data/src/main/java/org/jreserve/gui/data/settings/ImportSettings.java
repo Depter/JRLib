@@ -32,9 +32,12 @@ public class ImportSettings {
     
     private final static SaveType DEFAULT_SAVE_TYPE = SaveType.SAVE_NEW;
     private final static String DEFAULT_IMPORT_PROVIDER = null;
+    private final static boolean DEFAULT_IMPORT_CUMMULATED = false;
     
     private final static String KEY_SAVE_TYPE = "save.type";
     private final static String KEY_IMPORT_PROVIDER = "import.provider";
+    private final static String KEY_IMPORT_CUMMULATED = "import.cummulted";
+    
     private static boolean adapterLoaded = false;
     private static ImportDataProviderAdapter adapter;
     
@@ -86,8 +89,18 @@ public class ImportSettings {
         setString(KEY_IMPORT_PROVIDER, adapter==null? DEFAULT_IMPORT_PROVIDER : adapter.getId());
     }
     
+    public static synchronized boolean isImportCummulated() {
+        return getPreferences().getBoolean(KEY_IMPORT_CUMMULATED, DEFAULT_IMPORT_CUMMULATED);
+    }
+    
+    public static synchronized void setImportCummulated(boolean cummulated) {
+        getPreferences().putBoolean(KEY_IMPORT_CUMMULATED, cummulated);
+    }
+    
     public static void clear() {
         setSaveType(DEFAULT_SAVE_TYPE);
+        setImportCummulated(DEFAULT_IMPORT_CUMMULATED);
+        
         ImportSettings.adapter = null;
         ImportSettings.adapterLoaded = true;
         setString(KEY_IMPORT_PROVIDER, null);

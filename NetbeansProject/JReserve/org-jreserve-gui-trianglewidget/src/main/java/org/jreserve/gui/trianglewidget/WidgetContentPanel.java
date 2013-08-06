@@ -35,8 +35,6 @@ class WidgetContentPanel extends JComponent {
     private TriangleWidget widget;
     private TriangleWidgetRenderer renderer;
     private Rectangle cellBounds = new Rectangle();
-    private double scale = 1d;
-    private int intScale = 0;
     private boolean isCummulated = true;
     
     //Init before painting
@@ -48,15 +46,6 @@ class WidgetContentPanel extends JComponent {
         this.widget = widget;
         this.renderer = renderer;
         calculateSizes();
-    }
-    
-    void setScale(int scale) {
-        this.intScale = scale;
-        this.scale = Math.pow(10d, scale);
-    }
-    
-    int getScale() {
-        return intScale;
     }
     
     void setCummualted(boolean isCummualted) {
@@ -128,14 +117,7 @@ class WidgetContentPanel extends JComponent {
     }
     
     private double getScaledValue(int row, int column) {
-        double value = isCummulated? model.getValueAt(row, column) : getDecummualtedValue(row, column);
-        if(Double.isNaN(value))
-            return value;
-        
-        value = Math.round(value/scale);
-        if(intScale < 0)
-            value *= scale;
-        return value;
+        return isCummulated? model.getValueAt(row, column) : getDecummualtedValue(row, column);
     }
     
     private double getDecummualtedValue(int row, int column) {

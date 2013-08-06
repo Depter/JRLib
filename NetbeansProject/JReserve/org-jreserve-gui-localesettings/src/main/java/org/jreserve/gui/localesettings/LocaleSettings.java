@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.localesettings;
 
+import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -45,12 +46,16 @@ public class LocaleSettings {
         "MM-yyyy",
         "MM.yyyy"
     };
-    private final static int DEFAULT_DECIMAL_COUNT = 2;
+    private final static int DEFAULT_DECIMAL_COUNT = 0;
+    private final static String DEFAULT_NAN = "NaN";
     
     private final static String KEY_DECIMAL_SEPARATOR = "decimal.separator";
     private final static String KEY_THOUSAND_SEPARATOR = "thousand.separator";
-    private final static String KEY_DATE_FORMAT = "date.format";
     private final static String KEY_DECIMAL_COUNT = "decimal.count";
+    private final static String KEY_NAN = "nan";
+    private final static String KEY_EXPONENT_SEPARATOR = "exponent.separator";
+    private final static String KEY_INFINITY = "infinity";
+    private final static String KEY_DATE_FORMAT = "date.format";
     
     public static int getDecimalCount() {
         return getInt(KEY_DECIMAL_COUNT, DEFAULT_DECIMAL_COUNT);
@@ -104,6 +109,30 @@ public class LocaleSettings {
         setString(KEY_THOUSAND_SEPARATOR, c==null? null : ""+c);
     }
     
+    public synchronized static String getNaN() {
+        return getString(KEY_NAN, DEFAULT_NAN);
+    }
+    
+    public synchronized static void setNaN(String nan) {
+        setString(KEY_NAN, nan);
+    }
+    
+    public synchronized static String getExponentSeparator() {
+        return getString(KEY_EXPONENT_SEPARATOR, DFS.getExponentSeparator());
+    }
+    
+    public synchronized static void setExponentSeparator(String exponentSeparator) {
+        setString(KEY_EXPONENT_SEPARATOR, exponentSeparator);
+    }
+    
+    public synchronized static String getInfinity() {
+        return getString(KEY_INFINITY, DFS.getInfinity());
+    }
+    
+    public synchronized static void setInfinity(String infinity) {
+        setString(KEY_INFINITY, infinity);
+    }
+    
     public synchronized static String[] getDateFormats() {
         return Arrays.copyOfRange(DEFAULT_DATE_FORMATS, 0, DEFAULT_DATE_FORMATS.length);
     }
@@ -135,8 +164,103 @@ public class LocaleSettings {
         setDecimalCount(DEFAULT_DECIMAL_COUNT);
         setDecimalSeparator(null);
         setThousandSeparator(null);
+        setNaN(null);
+        setExponentSeparator(null);
+        setInfinity(null);
         setDateFormat(null);
     }
     
+    public synchronized static DecimalFormatter createDecimalFormat() {
+        DecimalFormat df = new DecimalFormat();
+        
+        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
+        dfs.setDecimalSeparator(getDecimalSeparator());
+        dfs.setGroupingSeparator(getThousandSeparator());
+        dfs.setExponentSeparator(getExponentSeparator());
+        dfs.setNaN(getNaN());
+        dfs.setInfinity(getInfinity());
+        
+        DecimalFormatter formatter = new DecimalFormatter(df);
+        formatter.setDecimalCount(getDecimalCount());
+        df.setMaximumFractionDigits(formatter.decimals);
+        df.setMinimumFractionDigits(formatter.decimals);
+        
+        return formatter;
+    }
+    
     private LocaleSettings() {}
+    
+    public final static class DecimalFormatter {
+        
+        private int decimals;
+        private double exp;
+        private final DecimalFormat format;
+        
+        private DecimalFormatter(DecimalFormat format) {
+            this.format = format;
+        }
+        
+        public String format(double value) {
+            if(decimals < 0 && !(Double.isNaN(value) || Double.isInfinite(value)))
+                value /= exp;
+            return format.format(value);
+        }
+        
+        public void setDecimalCount(int decimals) {
+            if(this.decimals != decimals) {
+                this.decimals = decimals;
+                this.exp = Math.pow(10d, -decimals);
+                
+                int fd = decimals<0? 0 : decimals;
+                format.setMaximumFractionDigits(fd);
+                format.setMinimumFractionDigits(fd);
+            }
+        }
+        
+        public int getDecimalCount() {
+            return decimals;
+        }
+        
+        public char getDecimalSepartor() {
+            return format.getDecimalFormatSymbols().getDecimalSeparator();
+        }
+        
+        public void setDecimalSepartor(char decimalSepartor) {
+            format.getDecimalFormatSymbols().setDecimalSeparator(decimalSepartor);
+        }
+        
+        public char getThousandSeparator() {
+            return format.getDecimalFormatSymbols().getGroupingSeparator();
+        }
+        
+        public void setThousandSepartor(char thousandSepartor) {
+            format.getDecimalFormatSymbols().setGroupingSeparator(thousandSepartor);
+        }
+        
+        public String getNaN() {
+            return format.getDecimalFormatSymbols().getNaN();
+        }
+        
+        public void setNaN(String nan) {
+            format.getDecimalFormatSymbols().setNaN(nan);
+        }
+        
+        public String getExponentSeparator() {
+            return format.getDecimalFormatSymbols().getExponentSeparator();
+        }
+        
+        public void setExponentSeparator(String exponentSeparator) {
+            format.getDecimalFormatSymbols().setExponentSeparator(exponentSeparator);
+        }
+        
+        public String getInfinity() {
+            return format.getDecimalFormatSymbols().getInfinity();
+        }
+        
+        public void setInfinity(String infinity) {
+            format.getDecimalFormatSymbols().setInfinity(infinity);
+        }
+        
+        
+    }
 }

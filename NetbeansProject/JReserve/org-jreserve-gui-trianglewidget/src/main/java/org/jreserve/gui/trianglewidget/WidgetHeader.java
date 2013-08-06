@@ -32,9 +32,9 @@ class WidgetHeader extends JComponent {
 
     final static int X_AXIS = 0;
     final static int Y_AXIS = 1;
-    private final static int PREFFERED_CELL_WIDTH = 50;
+    private final static int PREFFERED_CELL_WIDTH = 65;
     private final static int PREFFERED_CELL_HEIGHT = 20;
-    private final static int MIN_CELL_WIDTH = 50;
+    private final static int MIN_CELL_WIDTH = 65;
     private final static int MIN_CELL_HEIGHT = 20;
     
     private final static Dimension MIN_SIZE = new Dimension(0, 0);

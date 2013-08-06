@@ -47,6 +47,8 @@ final class ImportsPanel extends javax.swing.JPanel {
         providerCombo = new javax.swing.JComboBox();
         saveTypeLabel = new javax.swing.JLabel();
         saveTypeCombo = new javax.swing.JComboBox();
+        cummulatedLabel = new javax.swing.JLabel();
+        cummulatedCheck = new javax.swing.JCheckBox();
         filler = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
@@ -78,7 +80,7 @@ final class ImportsPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(saveTypeLabel, gridBagConstraints);
 
         saveTypeCombo.setModel(new DefaultComboBoxModel(SaveType.values()));
@@ -90,9 +92,27 @@ final class ImportsPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         add(saveTypeCombo, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cummulatedLabel, org.openide.util.NbBundle.getMessage(ImportsPanel.class, "ImportsPanel.cummulatedLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        add(cummulatedLabel, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cummulatedCheck, null);
+        cummulatedCheck.addActionListener(inputListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        add(cummulatedCheck, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -103,11 +123,13 @@ final class ImportsPanel extends javax.swing.JPanel {
     void load() {
         saveTypeCombo.setSelectedItem(ImportSettings.getSaveType());
         providerCombo.setSelectedItem(ImportSettings.getImportDataProvider());
+        cummulatedCheck.setSelected(ImportSettings.isImportCummulated());
     }
 
     void store() {
         ImportSettings.setSaveType((SaveType) saveTypeCombo.getSelectedItem());
         ImportSettings.setImportDataProvider((ImportDataProviderAdapter) providerCombo.getSelectedItem());
+        ImportSettings.setImportCummulated(cummulatedCheck.isSelected());
     }
 
     boolean valid() {
@@ -115,6 +137,8 @@ final class ImportsPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cummulatedCheck;
+    private javax.swing.JLabel cummulatedLabel;
     private javax.swing.Box.Filler filler;
     private javax.swing.JComboBox providerCombo;
     private javax.swing.JLabel providerLabel;

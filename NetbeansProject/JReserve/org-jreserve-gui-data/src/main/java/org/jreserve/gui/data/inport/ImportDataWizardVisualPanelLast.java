@@ -24,8 +24,11 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.settings.ImportSettings;
@@ -33,6 +36,8 @@ import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.DataEntryFilter;
 import org.jreserve.gui.data.spi.MonthDate;
 import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
@@ -88,6 +93,9 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private TriangleRenderer triangleRenderer = new TriangleRenderer();
     private TriangleUtil triangleUtil;
     
+    private SaveType saveType = SaveType.SAVE_NEW;
+    private DecimalFormatter df = LocaleSettings.createDecimalFormat();
+    
     ImportDataWizardVisualPanelLast(ImportDataWizardPanelLast controller) {
         this.controller = controller;
         initComponents();
@@ -130,6 +138,20 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         triangleWidget.setLayers(triangleUtil.getLayers());
     }
     
+    private void cummulatedChanged() {
+        if(cummulatedCheck.isSelected()) {
+            //TODO decummulateEntries;
+        } else {
+            //TODO cummulateEntries;
+        }
+    }
+    
+    private void decimalSpinnerChanged() {
+        df.setDecimalCount((Integer) decimalSpinner.getValue());
+        table.repaint();
+        triangleWidget.repaint();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -144,6 +166,10 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         saveTypeCombo = new javax.swing.JComboBox();
         overviewTypeLabel = new javax.swing.JLabel();
         overviewTypeCombo = new javax.swing.JComboBox();
+        cummulatedLabel = new javax.swing.JLabel();
+        cummulatedCheck = new javax.swing.JCheckBox();
+        decimalLabel = new javax.swing.JLabel();
+        decimalSpinner = new org.jreserve.gui.localesettings.ScaleSpinner();
         overviewPanel = new javax.swing.JPanel();
         tableScroll = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
@@ -205,6 +231,45 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(overviewTypeCombo, gridBagConstraints);
 
+        org.openide.awt.Mnemonics.setLocalizedText(cummulatedLabel, org.openide.util.NbBundle.getMessage(ImportDataWizardVisualPanelLast.class, "ImportDataWizardVisualPanelLast.cummulatedLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(cummulatedLabel, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cummulatedCheck, null);
+        cummulatedCheck.setSelected(ImportSettings.isImportCummulated());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(cummulatedCheck, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(decimalLabel, org.openide.util.NbBundle.getMessage(ImportDataWizardVisualPanelLast.class, "ImportDataWizardVisualPanelLast.decimalLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(decimalLabel, gridBagConstraints);
+
+        decimalSpinner.addChangeListener(new ChangeListener() {
+            @Override public void stateChanged(ChangeEvent e) {
+                decimalSpinnerChanged();
+            }
+        });
+        decimalSpinner.setPreferredSize(new java.awt.Dimension(75, 20));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(decimalSpinner, gridBagConstraints);
+
         overviewPanel.setPreferredSize(new java.awt.Dimension(450, 250));
         overviewPanel.setLayout(new java.awt.CardLayout());
 
@@ -237,7 +302,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -245,7 +310,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         add(overviewPanel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -262,19 +327,19 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     }//GEN-LAST:event_overviewTypeComboActionPerformed
 
     private void saveTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveTypeComboActionPerformed
-        SaveType st = (SaveType) saveTypeCombo.getSelectedItem();
-        tableRenderer.saveType = st;
-        triangleRenderer.saveType = st;
+        saveType = (SaveType) saveTypeCombo.getSelectedItem();
         
-        table.revalidate();
-        tableModel.fireTableDataChanged();
-        triangleWidget.revalidate();
+        table.repaint();
         triangleWidget.repaint();
         
         controller.changed();
     }//GEN-LAST:event_saveTypeComboActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cummulatedCheck;
+    private javax.swing.JLabel cummulatedLabel;
+    private javax.swing.JLabel decimalLabel;
+    private org.jreserve.gui.localesettings.ScaleSpinner decimalSpinner;
     private javax.swing.JPanel overviewPanel;
     private javax.swing.JComboBox overviewTypeCombo;
     private javax.swing.JLabel overviewTypeLabel;
@@ -292,6 +357,8 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private void setProgressRunning(boolean running) {
         saveTypeCombo.setEnabled(!running);
         overviewTypeCombo.setEnabled(!running);
+        cummulatedCheck.setEnabled(!running);
+        decimalSpinner.setEnabled(!running);
         pBar.setIndeterminate(running);
         pBar.setVisible(running);
     }
@@ -342,14 +409,19 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     
     private class TableRenderer extends DefaultTableCellRenderer {
         
-        private SaveType saveType = SaveType.SAVE_NEW;
         private final Color alternate = UIManager.getColor("Table.alternateRowColor");
         
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setHorizontalAlignment(SwingConstants.RIGHT);
+            
+            if(value instanceof Double)
+                setText(df.format(((Double)value).doubleValue()));
+            
             if(!isSelected)
                 setBgColor(row);
+            
             return this;
         }
         
@@ -375,11 +447,11 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     }
     
     private class TriangleRenderer extends DefaultTriangleWidgetRenderer {
-        private SaveType saveType = SaveType.SAVE_NEW;
         
         @Override
         public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
             super.getComponent(widget, value, row, column, selected);
+            setText(df.format(value));
             setBackground(getBgColor(row, column));
             return this;
         }

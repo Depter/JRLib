@@ -16,7 +16,6 @@
  */
 package org.jreserve.gui.localesettings.options;
 
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DateFormat;
@@ -25,15 +24,11 @@ import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.AbstractDocument;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.DocumentFilter;
 import javax.swing.text.JTextComponent;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
@@ -71,14 +66,20 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        decimalSepLabel = new javax.swing.JLabel();
-        thousandSepLabel = new javax.swing.JLabel();
         decimalsLabel = new javax.swing.JLabel();
-        decimalsSpinner = new javax.swing.JSpinner();
+        decimalsSpinner = new org.jreserve.gui.localesettings.ScaleSpinner();
         decimalExampleText = new javax.swing.JLabel();
-        dateFormatLabel = new javax.swing.JLabel();
+        decimalSepLabel = new javax.swing.JLabel();
         decimalSepText = new javax.swing.JTextField();
+        thousandSepLabel = new javax.swing.JLabel();
         thousandSepText = new javax.swing.JTextField();
+        nanLabel = new javax.swing.JLabel();
+        nanText = new javax.swing.JTextField();
+        exponentSepLabel = new javax.swing.JLabel();
+        exponentSepText = new javax.swing.JTextField();
+        infinityLabel = new javax.swing.JLabel();
+        infinityText = new javax.swing.JTextField();
+        dateFormatLabel = new javax.swing.JLabel();
         dateFormatCombo = new javax.swing.JComboBox();
         dateExampleText = new javax.swing.JLabel();
         filler = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
@@ -89,37 +90,19 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.GridBagLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(decimalSepLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.decimalSepLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
-        add(decimalSepLabel, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(thousandSepLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.thousandSepLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
-        add(thousandSepLabel, gridBagConstraints);
-
         org.openide.awt.Mnemonics.setLocalizedText(decimalsLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.decimalsLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(decimalsLabel, gridBagConstraints);
 
-        decimalsSpinner.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
-        ((JSpinner.DefaultEditor)decimalsSpinner.getEditor()).getTextField().setEditable(false);
         decimalsSpinner.addChangeListener(spinnerListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
@@ -128,42 +111,114 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(decimalExampleText, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.decimalExampleText.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
         add(decimalExampleText, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(dateFormatLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.dateFormatLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(decimalSepLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.decimalSepLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        add(dateFormatLabel, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(decimalSepLabel, gridBagConstraints);
 
         WidgetUtils.oneCharacterInput(decimalSepText);
         decimalSepText.setText(null);
         decimalSepText.getDocument().addDocumentListener(textListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(decimalSepText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(thousandSepLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.thousandSepLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(thousandSepLabel, gridBagConstraints);
 
         WidgetUtils.oneCharacterInput(thousandSepText);
         thousandSepText.setText(null);
         thousandSepText.getDocument().addDocumentListener(textListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
+        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(thousandSepText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(nanLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.nanLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(nanLabel, gridBagConstraints);
+
+        nanText.setText(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(nanText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(exponentSepLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.exponentSepLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(exponentSepLabel, gridBagConstraints);
+
+        exponentSepText.setText(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(exponentSepText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(infinityLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.infinityLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(infinityLabel, gridBagConstraints);
+
+        infinityText.setText(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(infinityText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(dateFormatLabel, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.dateFormatLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 6;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        add(dateFormatLabel, gridBagConstraints);
 
         dateFormatCombo.setEditable(true);
         dateEditor = (JTextComponent) dateFormatCombo.getEditor().getEditorComponent();
@@ -172,7 +227,7 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         dateFormatCombo.addActionListener(comboListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
@@ -181,14 +236,14 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(dateExampleText, org.openide.util.NbBundle.getMessage(LocaleSettingsPanel.class, "LocaleSettingsPanel.dateExampleText.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 6;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
         add(dateExampleText, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -212,7 +267,7 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -225,9 +280,12 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_defaultButtonActionPerformed
 
     void load() {
+        decimalsSpinner.setValue(LocaleSettings.getDecimalCount());
         decimalSepText.setText(""+LocaleSettings.getDecimalSeparator());
         thousandSepText.setText(""+LocaleSettings.getThousandSeparator());
-        decimalsSpinner.setValue(LocaleSettings.getDecimalCount());
+        nanText.setText(LocaleSettings.getNaN());
+        exponentSepText.setText(LocaleSettings.getExponentSeparator());
+        infinityText.setText(LocaleSettings.getInfinity());
         dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormats()));
         dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());
     }
@@ -236,6 +294,9 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         LocaleSettings.setDecimalCount((Integer) decimalsSpinner.getValue());
         LocaleSettings.setDecimalSeparator(decimalSepText.getText().charAt(0));
         LocaleSettings.setThousandSeparator(thousandSepText.getText().charAt(0));
+        LocaleSettings.setNaN(nanText.getText());
+        LocaleSettings.setExponentSeparator(exponentSepText.getText());
+        LocaleSettings.setInfinity(infinityText.getText());
         LocaleSettings.setDateFormat(new SimpleDateFormat(dateEditor.getText()));
     }
 
@@ -251,10 +312,16 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel decimalSepLabel;
     private javax.swing.JTextField decimalSepText;
     private javax.swing.JLabel decimalsLabel;
-    private javax.swing.JSpinner decimalsSpinner;
+    private org.jreserve.gui.localesettings.ScaleSpinner decimalsSpinner;
     private javax.swing.JButton defaultButton;
     private javax.swing.JLabel errorLabel;
+    private javax.swing.JLabel exponentSepLabel;
+    private javax.swing.JTextField exponentSepText;
     private javax.swing.Box.Filler filler;
+    private javax.swing.JLabel infinityLabel;
+    private javax.swing.JTextField infinityText;
+    private javax.swing.JLabel nanLabel;
+    private javax.swing.JTextField nanText;
     private javax.swing.JLabel thousandSepLabel;
     private javax.swing.JTextField thousandSepText;
     // End of variables declaration//GEN-END:variables
