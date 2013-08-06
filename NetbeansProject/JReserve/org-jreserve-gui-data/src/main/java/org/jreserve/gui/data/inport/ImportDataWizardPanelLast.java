@@ -20,19 +20,22 @@ import java.awt.Component;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
-import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
+@Messages({
+    "MSG.ImportDataWizardPanelLast.NoEntries=There is no new data to save!"
+})
+class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescriptor> {
     
     private WizardDescriptor wiz;
     private ImportDataWizardVisualPanelLast component;
@@ -42,7 +45,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidati
     @Override
     public Component getComponent() {
         if(component == null) {
-            component = new ImportDataWizardVisualPanelLast();
+            component = new ImportDataWizardVisualPanelLast(this);
             if(wiz != null)
                 initComponent();
         }
@@ -68,6 +71,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidati
 
     @Override
     public void storeSettings(WizardDescriptor settings) {
+        settings.putProperty(ImportDataProvider.PROP_SAVE_TYPE, component.getSaveType());
     }
 
     @Override
@@ -85,13 +89,14 @@ class ImportDataWizardPanelLast implements WizardDescriptor.AsynchronousValidati
         cs.removeChangeListener(l);
     }
     
-
-    @Override
-    public void prepareValidation() {
+    void changed() {
+        valid = component.hasEntriesToSave();
+        showError(valid? null : Bundle.MSG_ImportDataWizardPanelLast_NoEntries());
+        cs.fireChange();
     }
-
-    @Override
-    public void validate() throws WizardValidationException {
-        throw new WizardValidationException(component, "Not implemented!", "Not implemented!");
+    
+    private void showError(String msg) {
+        if(wiz != null) 
+            wiz.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, msg);
     }
 }

@@ -74,6 +74,8 @@
     <module>org-jreserve-gui-data-csv</module>
     <module>org-jreserve-gui-excel</module>
     <module>org-jreserve-gui-localesettings</module>
+    <module>org-jreserve-gui-jrlib</module>
+    <module>org-jreserve-gui-trianglewidget</module>
   </modules>
 
     <properties>

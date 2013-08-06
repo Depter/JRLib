@@ -22,10 +22,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.gui.data.api.DataEntry;
+import org.jreserve.gui.data.api.DataEntryFilter;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
+import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -137,8 +142,34 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
         return dataProvider.getDataType();
     }
 
-    @Override
-    public DataProvider getDataProvider() {
+    DataProvider getDataProvider() {
         return dataProvider;
+    }
+
+    @Override
+    public synchronized List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {
+        return dataProvider.getEntries(filter);
+    }
+    
+    @Override
+    public synchronized void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception {
+        try {
+            dataProvider.addEntries(entries, saveType);
+            //TODO fire event
+        } catch (Exception ex) {
+            //TODO fire event
+            throw ex;
+        }
+    }
+    
+    @Override
+    public synchronized void deleteEntries(Set<DataEntry> entries) throws Exception {
+        try {
+            dataProvider.deleteEntries(entries);
+            //TODO fire event
+        } catch (Exception ex) {
+            //TODO fire event
+            throw ex;
+        }
     }
 }

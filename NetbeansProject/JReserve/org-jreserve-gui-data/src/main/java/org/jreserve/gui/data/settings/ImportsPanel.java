@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
 import org.jreserve.gui.data.inport.ImportDataProviderAdapter;
 import org.jreserve.gui.data.inport.ImportDataProviderRegistry;
-import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 
 final class ImportsPanel extends javax.swing.JPanel {

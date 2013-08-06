@@ -14,23 +14,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
 
-import java.util.List;
-import java.util.Set;
+package org.jreserve.gui.trianglewidget;
+
+import java.awt.Component;
 
 /**
- *
+ * TriangleWidgetRenderer renders the values within a layer of
+ * a {@link TriangleWidget TriangleWidget}.
+ * 
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
+public interface TriangleWidgetRenderer {
     
-    public DataType getDataType();
-
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
-    
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
-    
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    /**
+     * Returns the component representing the given cell.
+     * 
+     * @param widget the widget being rendered.
+     * @param value the value, to render.
+     * @param row the row index of the value.
+     * @param column the column index of the value.
+     * @param selected *true* if the cell is selected.
+     */
+    public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected);
 }

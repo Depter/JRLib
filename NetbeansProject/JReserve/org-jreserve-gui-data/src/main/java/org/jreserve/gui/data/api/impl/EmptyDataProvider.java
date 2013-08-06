@@ -24,11 +24,11 @@ import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.spi.DataEntry;
-import org.jreserve.gui.data.spi.DataEntryFilter;
+import org.jreserve.gui.data.api.DataEntry;
+import org.jreserve.gui.data.api.DataEntryFilter;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.DataProviderFactoryType;
-import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.data.api.SaveType;
 
 /**
  *

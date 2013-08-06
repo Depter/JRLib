@@ -14,23 +14,31 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
 
-import java.util.List;
-import java.util.Set;
+package org.jreserve.gui.trianglewidget.model;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
-    
-    public DataType getDataType();
+public class IndexTitleModel implements TitleModel {
 
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
+    private boolean zeroBased;
     
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
+    public IndexTitleModel() {
+        this(false);
+    }
     
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    public IndexTitleModel(boolean zeroBased) {
+        this.zeroBased = zeroBased;
+    }
+    
+    @Override
+    public String getName(int index) {
+        if(!zeroBased)
+            index++;
+        return ""+index;
+    }
+
 }

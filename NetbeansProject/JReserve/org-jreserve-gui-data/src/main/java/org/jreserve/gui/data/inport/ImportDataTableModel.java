@@ -20,7 +20,7 @@ package org.jreserve.gui.data.inport;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.spi.MonthDate;
 import org.openide.util.NbBundle.Messages;
 
@@ -40,6 +40,12 @@ class ImportDataTableModel extends AbstractTableModel {
     private DataType dt;
 
     ImportDataTableModel() {
+    }
+    
+    DataEntry getEntry(int row) {
+        if(entries==null)
+            return null;
+        return entries.get(row);
     }
     
     void setEntries(List<DataEntry> entries) {

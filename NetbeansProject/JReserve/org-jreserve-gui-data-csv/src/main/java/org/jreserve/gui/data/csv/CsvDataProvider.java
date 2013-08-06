@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.AbstractDataProvider;
-import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.spi.DataProviderFactoryType;
 import org.jreserve.gui.data.spi.MonthDate;
 import org.openide.filesystems.FileLock;
@@ -164,8 +164,16 @@ public class CsvDataProvider extends AbstractDataProvider {
         if(csvFile == null) {
             FileObject dsFile = getDataSource().getFile();
             FileObject parent = dsFile.getParent();
-            csvFile = parent.createData(dsFile.getName(), CSV_EXTENSION);
+            File file = createFile(parent, dsFile.getName());
+            csvFile = FileUtil.toFileObject(file);
         }
+    }
+    
+    private File createFile(FileObject parent, String name) throws IOException {
+        File file = new File(FileUtil.toFile(parent), name+"."+CSV_EXTENSION);
+        if(!file.exists() && !file.createNewFile())
+            throw new IOException("Unable to create file: "+file.getAbsolutePath());
+        return file;
     }
 
     @Override
@@ -284,12 +292,21 @@ public class CsvDataProvider extends AbstractDataProvider {
         }
         
         private void writeEntry(DataEntry entry) throws IOException {
-            lineBuffer.append(entry.getAccidentDate().toString())
-                .append(CELL_SEPARATOR)
-                .append(entry.getDevelopmentDate().toString())
-                .append(CELL_SEPARATOR)
-                .append(Double.toString(entry.getValue()));
+            appendDate(entry.getAccidentDate());
+            lineBuffer.append(CELL_SEPARATOR);
+            appendDate(entry.getDevelopmentDate());
+            lineBuffer.append(CELL_SEPARATOR);
+            lineBuffer.append(Double.toString(entry.getValue()));
             writer.write(lineBuffer.toString());
+        }
+        
+        private void appendDate(MonthDate date) {
+            int month = date.getMonth();
+            lineBuffer.append(date.getYear());
+            lineBuffer.append('-');
+            if(month < 10)
+                lineBuffer.append('0');
+            lineBuffer.append(month);
         }
         
         private void close() {

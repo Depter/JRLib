@@ -20,7 +20,7 @@ package org.jreserve.gui.data.settings;
 import java.util.prefs.Preferences;
 import org.jreserve.gui.data.inport.ImportDataProviderAdapter;
 import org.jreserve.gui.data.inport.ImportDataProviderRegistry;
-import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.data.api.SaveType;
 import org.openide.util.NbPreferences;
 
 /**

@@ -17,15 +17,27 @@
 package org.jreserve.gui.data.inport;
 
 import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
+import javax.swing.JTable;
+import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.settings.ImportSettings;
-import org.jreserve.gui.data.spi.DataEntry;
-import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.data.api.DataEntry;
+import org.jreserve.gui.data.api.DataEntryFilter;
+import org.jreserve.gui.data.spi.MonthDate;
+import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
+import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
+import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -36,10 +48,15 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.ImportDataWizardVisualPanelLast.Name=Select Data",
     "LBL.ImportDataWizardVisualPanelLast.Overview.Triangle=Triangle",
-    "LBL.ImportDataWizardVisualPanelLast.Overview.Table=Table"
+    "LBL.ImportDataWizardVisualPanelLast.Overview.Table=Table",
+    "# {0} - path",
+    "MSG.ImportDataWizardVisualPanelLast.LoadError=Unable to load data for ''{0}''!"
 })
 class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
-
+    
+    private final static Color COLOR_NEW = new Color(175, 246, 68);
+    private final static Color COLOR_EXISTS = new Color(190, 190, 190);
+    
     private static enum OverviewType implements Displayable {
         TRIANGLE(Bundle.LBL_ImportDataWizardVisualPanelLast_Overview_Triangle()),
         TABLE(Bundle.LBL_ImportDataWizardVisualPanelLast_Overview_Table());
@@ -61,11 +78,18 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         }
     }
     
+    private final ImportDataWizardPanelLast controller;
     private final ImportDataTableModel tableModel = new ImportDataTableModel();
     private DataSource ds;
     private List<DataEntry> entries;
+    private EntryLoader loader;
+    private List<DataEntry> existingEntries = Collections.EMPTY_LIST;
+    private TableRenderer tableRenderer;
+    private TriangleRenderer triangleRenderer = new TriangleRenderer();
+    private TriangleUtil triangleUtil;
     
-    ImportDataWizardVisualPanelLast() {
+    ImportDataWizardVisualPanelLast(ImportDataWizardPanelLast controller) {
+        this.controller = controller;
         initComponents();
         CardLayout layout = (CardLayout) overviewPanel.getLayout();
         layout.show(overviewPanel, "triangle");
@@ -75,15 +99,35 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     public String getName() {
         return Bundle.LBL_ImportDataWizardVisualPanelLast_Name();
     }
-
+    
+    SaveType getSaveType() {
+        return (SaveType) saveTypeCombo.getSelectedItem();
+    }
+    
     void setDataSource(DataSource ds) {
-        this.ds = ds;
-        tableModel.setDataType(ds.getDataType());
+        if(this.ds != ds) {
+            this.ds = ds;
+            tableModel.setDataType(ds.getDataType());
+            startLoader();
+        }
+    }
+    
+    private void startLoader() {
+        if(loader != null && !loader.isDone())
+            loader.cancel(false);
+        loader = new EntryLoader(ds);
+        setProgressRunning(true);
+        loader.execute();
     }
     
     void setEntries(List<DataEntry> entries) {
         this.entries = entries;
         tableModel.setEntries(entries);
+        
+        triangleUtil = new TriangleUtil(entries);
+        triangleUtil.setRenderer(triangleRenderer);
+        triangleWidget.setModel(triangleUtil.getTriangleModel());
+        triangleWidget.setLayers(triangleUtil.getLayers());
     }
     
     /**
@@ -103,7 +147,11 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         overviewPanel = new javax.swing.JPanel();
         tableScroll = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        jPanel1 = new javax.swing.JPanel();
+        triangleScroll = new javax.swing.JScrollPane();
+        widgetPanel = new javax.swing.JPanel();
+        triangleWidget = new org.jreserve.gui.trianglewidget.TriangleWidget();
+        triangleFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
+        pBar = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -119,6 +167,11 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         saveTypeCombo.setModel(new DefaultComboBoxModel(SaveType.values()));
         saveTypeCombo.setSelectedItem(ImportSettings.getSaveType());
         saveTypeCombo.setRenderer(WidgetUtils.displayableListRenderer());
+        saveTypeCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveTypeComboActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -152,13 +205,35 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(overviewTypeCombo, gridBagConstraints);
 
+        overviewPanel.setPreferredSize(new java.awt.Dimension(450, 250));
         overviewPanel.setLayout(new java.awt.CardLayout());
 
         table.setModel(tableModel);
+        tableRenderer = new TableRenderer();
+        table.setDefaultRenderer(MonthDate.class, tableRenderer);
+        table.setDefaultRenderer(Double.class, tableRenderer);
         tableScroll.setViewportView(table);
 
         overviewPanel.add(tableScroll, "table");
-        overviewPanel.add(jPanel1, "triangle");
+
+        widgetPanel.setLayout(new java.awt.GridBagLayout());
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        widgetPanel.add(triangleWidget, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        widgetPanel.add(triangleFiller, gridBagConstraints);
+
+        triangleScroll.setViewportView(widgetPanel);
+
+        overviewPanel.add(triangleScroll, "triangle");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -168,6 +243,14 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         add(overviewPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        add(pBar, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void overviewTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overviewTypeComboActionPerformed
@@ -178,14 +261,139 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
             layout.show(overviewPanel, "triangle");
     }//GEN-LAST:event_overviewTypeComboActionPerformed
 
+    private void saveTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveTypeComboActionPerformed
+        SaveType st = (SaveType) saveTypeCombo.getSelectedItem();
+        tableRenderer.saveType = st;
+        triangleRenderer.saveType = st;
+        
+        table.revalidate();
+        tableModel.fireTableDataChanged();
+        triangleWidget.revalidate();
+        triangleWidget.repaint();
+        
+        controller.changed();
+    }//GEN-LAST:event_saveTypeComboActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel overviewPanel;
     private javax.swing.JComboBox overviewTypeCombo;
     private javax.swing.JLabel overviewTypeLabel;
+    private javax.swing.JProgressBar pBar;
     private javax.swing.JComboBox saveTypeCombo;
     private javax.swing.JLabel saveTypeLabel;
     private javax.swing.JTable table;
     private javax.swing.JScrollPane tableScroll;
+    private javax.swing.Box.Filler triangleFiller;
+    private javax.swing.JScrollPane triangleScroll;
+    private org.jreserve.gui.trianglewidget.TriangleWidget triangleWidget;
+    private javax.swing.JPanel widgetPanel;
     // End of variables declaration//GEN-END:variables
+    
+    private void setProgressRunning(boolean running) {
+        saveTypeCombo.setEnabled(!running);
+        overviewTypeCombo.setEnabled(!running);
+        pBar.setIndeterminate(running);
+        pBar.setVisible(running);
+    }
+    
+    boolean hasEntriesToSave() {
+        if(entries==null || entries.isEmpty())
+            return false;
+        if(SaveType.OVERRIDE_EXISTING == saveTypeCombo.getSelectedItem())
+            return true;
+        if(existingEntries==null || existingEntries.isEmpty())
+            return true;
+        
+        for(DataEntry entry : entries)
+            if(!existingEntries.contains(entry))
+                return true;
+        return false;
+    }
+    
+    private class EntryLoader extends SwingWorker<List<DataEntry>, Void> {
+        
+        private final DataSource source;
+        
+        private EntryLoader(DataSource ds) {
+            this.source = ds;
+        }
+        
+        @Override
+        protected List<DataEntry> doInBackground() throws Exception {
+            if(source == null)
+                return Collections.EMPTY_LIST;
+            return source.getEntries(DataEntryFilter.ALL);
+        }
+
+        @Override
+        protected void done() {
+            try {
+                existingEntries = get();
+            } catch (Exception ex) {
+                existingEntries = Collections.EMPTY_LIST;
+                BubbleUtil.showException(Bundle.MSG_ImportDataWizardVisualPanelLast_LoadError(ds.getPath()), ex);
+            } finally {
+                setProgressRunning(false);
+                tableModel.fireTableDataChanged();
+                controller.changed();
+            }
+        }
+    }
+    
+    private class TableRenderer extends DefaultTableCellRenderer {
+        
+        private SaveType saveType = SaveType.SAVE_NEW;
+        private final Color alternate = UIManager.getColor("Table.alternateRowColor");
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if(!isSelected)
+                setBgColor(row);
+            return this;
+        }
+        
+        private void setBgColor(int row) {
+            Color c = null;
+            if(SaveType.SAVE_NEW == saveType)
+                c = getColor(row);
+            if(c==null && row%2 == 1)
+                c = alternate;
+            if(c == null)
+                c = Color.WHITE;
+            setBackground(c);
+        }
+        
+        private Color getColor(int row) {
+            DataEntry entry = tableModel.getEntry(row);
+            if(existingEntries.contains(entry)) {
+                return COLOR_EXISTS;
+            } else {
+                return COLOR_NEW;
+            }
+        }
+    }
+    
+    private class TriangleRenderer extends DefaultTriangleWidgetRenderer {
+        private SaveType saveType = SaveType.SAVE_NEW;
+        
+        @Override
+        public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
+            super.getComponent(widget, value, row, column, selected);
+            setBackground(getBgColor(row, column));
+            return this;
+        }
+        
+        private Color getBgColor(int row, int column) {
+            if(triangleUtil == null || SaveType.SAVE_NEW != saveType)
+                return Color.WHITE;
+            DataEntry entry = triangleUtil.getEntry(row, column);
+            
+            if(existingEntries.contains(entry)) {
+                return COLOR_EXISTS;
+            } else {
+                return COLOR_NEW;
+            }
+        }
+    }
 }

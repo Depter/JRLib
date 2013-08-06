@@ -14,23 +14,37 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
 
-import java.util.List;
-import java.util.Set;
+package org.jreserve.gui.trianglewidget;
+
+import java.awt.Dimension;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
-    
-    public DataType getDataType();
+class WidgetCorner extends JComponent {
 
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
+    private TriangleWidget widget;
     
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
+    WidgetCorner(TriangleWidget widget) {
+        this.widget = widget;
+        setPreferredSize(calculatePrefferedSize());
+        setBorder(BorderFactory.createRaisedBevelBorder());
+    }
+
+    private Dimension calculatePrefferedSize() {
+        Dimension xHeader = widget.getHorizontalHeader().getPreferredSize();
+        Dimension yHeader = widget.getVerticalHeader().getPreferredSize();
+        return new Dimension(yHeader.width, xHeader.height);
+    }
     
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    void resize() {
+        setPreferredSize(calculatePrefferedSize());
+        revalidate();
+    }
+    
 }

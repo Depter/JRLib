@@ -27,7 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;

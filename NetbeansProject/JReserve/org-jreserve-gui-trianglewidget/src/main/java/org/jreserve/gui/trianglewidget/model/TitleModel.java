@@ -15,21 +15,15 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.data.spi;
+package org.jreserve.gui.trianglewidget.model;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataEntryFilter {
-
-    public final static DataEntryFilter ALL = new DataEntryFilter() {
-        @Override
-        public boolean acceptsEntry(DataEntry entry) {
-            return true;
-        }
-    };
+public interface TitleModel {
     
-    public boolean acceptsEntry(DataEntry entry);
+    public String getName(int index);
+    
 }

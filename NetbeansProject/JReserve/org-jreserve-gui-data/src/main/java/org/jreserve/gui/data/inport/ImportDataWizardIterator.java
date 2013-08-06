@@ -25,11 +25,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.DataItem;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.WizardDescriptor;
@@ -186,38 +191,26 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     
     @Override
     public Set instantiate(ProgressHandle handle) throws IOException {
-//        handle.switchToIndeterminate();
-//        handle.start();
-//        try {
-//            return Collections.singleton(createDataSource());
-//        } finally {
-//            handle.finish();
-//        }
+        DataSource ds = (DataSource) wizardDesc.getProperty(ImportDataProvider.PROP_DATA_SOURCE);
+        if(ds == null)
+            throw new IOException("DataSource not set!");
+        SaveType st = (SaveType) wizardDesc.getProperty(ImportDataProvider.PROP_SAVE_TYPE);
+        if(st == null)
+            throw new IOException("SaveType not set!");
+        List<DataEntry> entries = (List<DataEntry>) wizardDesc.getProperty(ImportDataProvider.PROP_IMPORT_DATA);
+        if(entries == null)
+            return Collections.EMPTY_SET;
+        
+        try {
+            ds.addEntries(new TreeSet<DataEntry>(entries), st);
+        } catch (Exception ex) {
+            String msg = String.format("Unable to save data to '%s'!", ds.getPath());
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        }
+        
         return Collections.EMPTY_SET;
     }
-    
-//    private DataSource createDataSource() throws IOException {
-//        try {
-//            DataProvider provider = createDataProvider();
-//            return createDataSource(provider);
-//        } catch (Exception ex) {
-//            String msg = "Unable to create new DataSource!";
-//            logger.log(Level.SEVERE, msg, ex);
-//            throw new IOException(msg, ex);
-//        }
-//    }
-//    
-//    private DataProvider createDataProvider() {
-//        DataType dataType = (DataType) wizardDesc.getProperty(PROP_DATA_TYPE);
-//        DataSourceWizard wizard = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
-//        return wizard.createDataProvider(dataType, wizardDesc);
-//    }
-//    
-//    private DataSource createDataSource(DataProvider provider) throws IOException {
-//        String name = (String) wizardDesc.getProperty(PROP_DATA_NAME);
-//        DataCategory parent = (DataCategory) wizardDesc.getProperty(PROP_DATA_CATEGORY);
-//        return parent.getDataManager().createDataSource(parent, name, provider);
-//    }
     
     private class SourceIteratorListener implements ChangeListener {
         @Override

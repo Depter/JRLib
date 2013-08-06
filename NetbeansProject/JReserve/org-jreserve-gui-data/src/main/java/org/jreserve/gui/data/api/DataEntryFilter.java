@@ -14,23 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
 
-import java.util.List;
-import java.util.Set;
+package org.jreserve.gui.data.api;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
-    
-    public DataType getDataType();
+public interface DataEntryFilter {
 
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
+    public final static DataEntryFilter ALL = new DataEntryFilter() {
+        @Override
+        public boolean acceptsEntry(DataEntry entry) {
+            return true;
+        }
+    };
     
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
-    
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    public boolean acceptsEntry(DataEntry entry);
 }

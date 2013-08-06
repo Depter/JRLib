@@ -103,6 +103,18 @@
         <!-- JReserve MODULES -->
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-jrlib</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-trianglewidget</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-localesettings</artifactId>
             <version>${project.version}</version>
             <type>jar</type>

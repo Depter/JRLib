@@ -17,6 +17,9 @@
 
 package org.jreserve.gui.data.spi;
 
+import org.jreserve.gui.data.api.DataEntry;
+import org.jreserve.gui.data.api.DataEntryFilter;
+import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.data.api.DataType;
 import java.util.ArrayList;
 import java.util.Collections;

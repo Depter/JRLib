@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.spi.DataEntry;
+import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.spi.MonthDate;
 
 /**

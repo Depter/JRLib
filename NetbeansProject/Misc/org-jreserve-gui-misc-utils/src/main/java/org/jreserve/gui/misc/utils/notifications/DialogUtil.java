@@ -100,7 +100,7 @@ public class DialogUtil {
     
     private static void appendThrowable(Throwable t, StringBuilder sb, boolean isFirst) {
         if(!isFirst)
-            sb.append("Caused by: ");
+            sb.append("\nCaused by: ");
         sb.append(t.getClass().getName()).append(": ").append(t.getLocalizedMessage());
         
         for(StackTraceElement e : t.getStackTrace())
