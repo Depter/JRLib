@@ -14,102 +14,52 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.csv.input;
+package org.jreserve.gui.data.csv.input.table;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.MonthDate;
+import org.jreserve.gui.data.csv.input.AbstractCsvReader;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class CsvTableReader {
+class CsvTableReader extends AbstractCsvReader<List<DataEntry>, CsvTableImportWizardPanel.ValidationData>{
     
-    private final static int BUFFER_SIZE = 1024;
-    private final static Logger logger = Logger.getLogger(CsvTableReader.class.getName());
-    
-    private final CsvTableImportWizardPanel.ValidationData config;
     private final List<DataEntry> result = new ArrayList<DataEntry>();
     
-    private BufferedReader reader;
-    private int lineIndex = 0;
     private int columnIndex;
     private SimpleDateFormat sdf;
     private MonthDate.Factory mdf;
     private boolean isTriangle;
     
     CsvTableReader(CsvTableImportWizardPanel.ValidationData config) {
-        this.config = config;
+        super(config);
+        this.sdf = new SimpleDateFormat(config.dateFormat);
+        this.mdf = new MonthDate.Factory();
         isTriangle = (DataType.TRIANGLE == config.dt);
     }
     
-    List<DataEntry> readEntries() throws IOException {
-        try {
-            openReader();
-            this.sdf = new SimpleDateFormat(config.dateFormat);
-            this.mdf = new MonthDate.Factory();
-            
-            String line;
-            while((line = reader.readLine()) != null) {
-                if(shouldReadLine(line))
-                    readLine(line);
-                lineIndex++;
-            }
-            return result;
-        } catch (Exception ex) {
-            String msg = "Unable to read CSV table from file '%s'!";
-            msg = String.format(msg, config.csv.getAbsolutePath());
-            logger.log(Level.WARNING, msg, ex);
-            throw new IOException(msg, ex);
-        } finally {
-            closeReader();
-        }
+
+    @Override
+    protected List<DataEntry> getResult() throws IOException {
+        return result;
     }
-    
-    private boolean shouldReadLine(String line) {
-        if(line.length() == 0)
-            return false;
-        if(lineIndex == 0)
-            return !config.columnHeader;
-        return true;
-    }
-    
-    private void openReader() throws FileNotFoundException {
-        reader = new BufferedReader(new FileReader(config.csv), BUFFER_SIZE);
-    }
-    
-    private void closeReader() {
-        if(reader != null) {
-            try {
-                reader.close();
-            } catch (IOException ex) {
-                String msg = "Unable to close reader for file '%s'!";
-                msg = String.format(msg, config.csv.getAbsolutePath());
-                logger.log(Level.WARNING, msg, ex);
-            }
-        }
-    }
-    
-    private void readLine(String line) throws IOException {
-        String[] cells = line.split(config.cellSep);
-        columnIndex = config.rowHeaders? 0 : 1;
-        
+
+    @Override
+    protected void readRow(String[] cells) throws IOException {
         Date accident = null;
         Date development = null;
         double value;
+        columnIndex = 0;
         
         try {
             accident = getDate(cells[columnIndex]);
@@ -150,29 +100,32 @@ class CsvTableReader {
     
     private IOException accidentException(Exception ex, String cell) {
         String msg = "Unable to parse accident date from '%s' at line '%d', column '%d'!";
-        msg = String.format(msg, cell, lineIndex+1, columnIndex+1);
+        int index = columnIndex + (config.hasRowHeader()? 2 : 1);
+        msg = String.format(msg, cell, lineIndex+1, index);
         return new IOException(msg, ex);
     }
     
     private IOException developmentException(Exception ex, String cell) {
         String msg = "Unable to parse development date from '%s' at line '%d', column '%d'!";
-        msg = String.format(msg, cell, lineIndex+1, columnIndex+1);
+        int index = columnIndex + (config.hasRowHeader()? 2 : 1);
+        msg = String.format(msg, cell, lineIndex+1, index);
         return new IOException(msg, ex);
     }
     
     private double getDouble(String str) {
-        str = str.replace(config.decimalSep, '.');
+        str = str.replace(config.getDecimalSep(), '.');
         return Double.parseDouble(str);
     }
     
     private IOException valueException(Exception ex, String cell) {
         String msg = "Unable to parse value from '%s' at line '%d', column '%d'!";
-        msg = String.format(msg, cell, lineIndex+1, columnIndex+1);
+        int index = columnIndex + (config.hasRowHeader()? 2 : 1);
+        msg = String.format(msg, cell, lineIndex+1, index);
         return new IOException(msg, ex);
     }
     
     private IOException duplicateEntryException(int firstIndex, DataEntry entry) {
-        if(config.columnHeader)
+        if(config.hasColumnHeader())
             firstIndex++;
         String msg = "Record in line '%d' is a duplicate of line '%d'!";
         msg = String.format(msg, lineIndex+1, firstIndex);

@@ -26,17 +26,18 @@ import java.io.IOException;
  * @author Peter Decsi
  * @version 1.0
  */
-class PreviewReader implements Runnable {
+public class PreviewReader implements Runnable {
     
-    private final static int READ_CONT = 5;
     private final static int BUFFER_SIZE = 1024;
     
     private final File file;
+    private final int readCount;
     private BufferedReader reader = null;
     private volatile String[] lines;
     
-    PreviewReader(File file) {
+    public PreviewReader(File file, int readCount) {
         this.file = file;
+        this.readCount = readCount;
     }
     
     @Override
@@ -44,13 +45,13 @@ class PreviewReader implements Runnable {
         lines = readLines();
     }
     
-    String[] readLines() {
+    public String[] readLines() {
         try {
             reader = new BufferedReader(new FileReader(file), BUFFER_SIZE);
-            String[] result = new String[READ_CONT];
+            String[] result = new String[readCount];
             int lineCount = 0;
             String line;
-            while((line = reader.readLine()) != null && lineCount < READ_CONT)
+            while((line = reader.readLine()) != null && lineCount < readCount)
                 result[lineCount++] = line;
             return result;
         } catch(Exception ex) {

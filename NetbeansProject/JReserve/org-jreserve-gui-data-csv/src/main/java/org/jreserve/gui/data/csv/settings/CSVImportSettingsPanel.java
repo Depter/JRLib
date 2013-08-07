@@ -20,6 +20,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JSpinner;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
@@ -60,6 +63,8 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
         cellsQuotedCheck = new javax.swing.JCheckBox();
         cellSeparatorLabel = new javax.swing.JLabel();
         cellSeparatorCombo = new javax.swing.JComboBox();
+        previewLinesLabel = new javax.swing.JLabel();
+        previewLinesSpinner = new javax.swing.JSpinner();
         filler = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         bottomPanel = new javax.swing.JPanel();
         msgLabel = new javax.swing.JLabel();
@@ -147,9 +152,28 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         add(cellSeparatorCombo, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(previewLinesLabel, org.openide.util.NbBundle.getMessage(CSVImportSettingsPanel.class, "CSVImportSettingsPanel.previewLinesLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 6;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(previewLinesLabel, gridBagConstraints);
+
+        previewLinesSpinner.setModel(new javax.swing.SpinnerNumberModel(1, 1, 100, 1));
+        previewLinesSpinner.addChangeListener(inputListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        add(previewLinesSpinner, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 7;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -172,7 +196,7 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 7;
+        gridBagConstraints.gridy = 8;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
@@ -188,6 +212,7 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
         columnHeaderCheck.setSelected(CsvImportSettings.hasColumnHeaders());
         rowHeaderCheck.setSelected(CsvImportSettings.hasRowHeaders());
         cellsQuotedCheck.setSelected(CsvImportSettings.cellsQuoted());
+        previewLinesSpinner.setValue(CsvImportSettings.getPreviewLines());
         
         String sep = CsvImportSettings.getCellSeparator();
         if(sep!=null && sep.length()==1 && sep.charAt(0) == '\t')
@@ -207,6 +232,7 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
         CsvImportSettings.setHasColumnHeaders(columnHeaderCheck.isSelected());
         CsvImportSettings.setHasRowHeaders(rowHeaderCheck.isSelected());
         CsvImportSettings.setCellsQuoted(cellsQuotedCheck.isSelected());
+        CsvImportSettings.setPreviewLines((Integer) previewLinesSpinner.getValue());
         
         String sep = cellSeparatorEditor.getText();
         if(sep != null && "tab".equalsIgnoreCase(sep))
@@ -229,6 +255,8 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
     private javax.swing.JLabel hasColumnHeaderLabel;
     private javax.swing.JLabel hasRowHeaderLabel;
     private javax.swing.JLabel msgLabel;
+    private javax.swing.JLabel previewLinesLabel;
+    private javax.swing.JSpinner previewLinesSpinner;
     private javax.swing.JCheckBox rowHeaderCheck;
     // End of variables declaration//GEN-END:variables
 
@@ -253,7 +281,12 @@ final class CSVImportSettingsPanel extends javax.swing.JPanel {
         return true;
     }
     
-    private class InputListener implements ActionListener, DocumentListener {
+    private class InputListener implements ActionListener, DocumentListener, ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            validateInput();
+        }
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             validateInput();

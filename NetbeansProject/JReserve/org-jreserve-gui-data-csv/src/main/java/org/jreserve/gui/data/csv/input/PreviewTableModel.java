@@ -25,7 +25,7 @@ import javax.swing.table.AbstractTableModel;
  * @author Peter Decsi
  * @version 1.0
  */
-class PreviewTableModel extends AbstractTableModel {
+public class PreviewTableModel extends AbstractTableModel {
     
     private String[] lines;
     private String cellSeparator;
@@ -33,17 +33,17 @@ class PreviewTableModel extends AbstractTableModel {
 
     private List<String[]> rows;
     
-    void setCellSeparator(String cellSeparator) {
+    public void setCellSeparator(String cellSeparator) {
         this.cellSeparator = cellSeparator;
         initRows();
     }
     
-    void setLines(String[] lines) {
+    public void setLines(String[] lines) {
         this.lines = lines;
         initRows();
     }
     
-    void setHasColumnTitles(boolean hasColumnTitles) {
+    public void setHasColumnTitles(boolean hasColumnTitles) {
         this.hasColumnTitles = hasColumnTitles;
         initRows();
     }

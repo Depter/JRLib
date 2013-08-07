@@ -32,6 +32,7 @@ public class CsvImportSettings {
     
     private final static Logger logger = Logger.getLogger(CsvImportSettings.class.getName());
     
+    private final static int DEFAULT_PREVIEW_LINES = 5;
     private final static boolean DEFAULT_HAS_COLUMN_HEADERS = false;
     private final static boolean DEFAULT_HAS_ROW_HEADERS = false;
     private final static boolean DEFAULT_CELL_QUOTES = false;
@@ -44,6 +45,7 @@ public class CsvImportSettings {
     private final static String KEY_ROW_HEADERS = "row.headers";
     private final static String KEY_CELL_QUOTES = "cells.quoted";
     private final static String KEY_CELL_SEPARATOR = "cell.separator";
+    private final static String KEY_PREVIEW_LINES = "preview.lines";
     
     public static boolean hasColumnHeaders() {
         return getBoolean(KEY_COLUMN_HEADERS, DEFAULT_HAS_COLUMN_HEADERS);
@@ -100,11 +102,20 @@ public class CsvImportSettings {
         }
     }
     
+    public static int getPreviewLines() {
+        return getPreferences().getInt(KEY_PREVIEW_LINES, DEFAULT_PREVIEW_LINES);
+    }
+    
+    public static void setPreviewLines(int count) {
+        getPreferences().putInt(KEY_PREVIEW_LINES, count<1? 1 : count);
+    }
+    
     public static void clear() {
         setHasRowHeaders(DEFAULT_HAS_ROW_HEADERS);
         setHasColumnHeaders(DEFAULT_HAS_COLUMN_HEADERS);
         setCellsQuoted(DEFAULT_CELL_QUOTES);
         setCellSeparator(DEFAULT_CELL_SEPARATOR);
+        setPreviewLines(DEFAULT_PREVIEW_LINES);
     }
     
     private CsvImportSettings() {}

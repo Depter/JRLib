@@ -15,7 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.data.csv.input;
+package org.jreserve.gui.data.csv.input.table;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +31,7 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @ImportDataProvider.Registration(
-    id = "org.jreserve.gui.data.csv.input.CsvTableImportDataProvider",
+    id = "org.jreserve.gui.data.csv.input.table.CsvTableImportDataProvider",
     displayName = "#LBL.CsvTableImportDataProvider.Name",
     iconBase = "org/jreserve/gui/data/csv/csv.png",
     position = 5000
