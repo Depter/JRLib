@@ -31,11 +31,10 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.AbstractDataProvider;
 import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.spi.DataProviderFactoryType;
-import org.jreserve.gui.data.spi.MonthDate;
+import org.jreserve.gui.data.api.MonthDate;
+import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -58,8 +57,8 @@ public class CsvDataProvider extends AbstractDataProvider {
     private final Loader loader;
     private FileObject csvFile;
     
-    public CsvDataProvider(DataType dataType) {
-        super(dataType);
+    public CsvDataProvider(DataProvider.Factory factory) {
+        super(factory);
         writer = new Writer();
         loader = new Loader();
     }
@@ -186,16 +185,6 @@ public class CsvDataProvider extends AbstractDataProvider {
             logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         }
-    }
-
-    @Override
-    public DataProviderFactoryType getFactoryType() {
-        return DataProviderFactoryType.INSTANCE;
-    }
-
-    @Override
-    public String getInstancePath() {
-        return CsvDataProvider.class.getName();
     }
     
     private class Loader {

@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
@@ -49,16 +50,30 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
         return FILE_EXT.equalsIgnoreCase(file.getExt());
     }
     
-    private DataProvider dataProvider;
+    private DataProvider dataProvider = EmptyDataProvider.INSTANCE;
+    private DataType dataType = DataType.VECTOR;
     
     DataSourceImpl(FileObject file, DataCategoryImpl parent) {
         super(parent.getDataManager(), file, parent);
-        dataProvider = DataSourceUtil.load(this);
     }
     
-    DataSourceImpl(FileObject file, DataCategoryImpl parent, DataProvider provider) {
-        super(parent.getDataManager(), file, parent);
+    void setDataType(DataType dt) {
+        this.dataType = dt;
+    }
+    
+    @Override
+    public DataType getDataType() {
+        return dataType;
+    }
+    
+    void setProvider(DataProvider provider) {
+        provider.setDataSource(this);
         this.dataProvider = provider;
+    }
+
+    @Override
+    public DataProvider getDataProvider() {
+        return dataProvider;
     }
     
     @Override
@@ -78,7 +93,7 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
         } catch (Exception ex) {
             throw new IOException("Unable to delete DataProvider for: "+getPath(), ex);
         } finally {
-            dataProvider = EmptyDataProvider.getInstance();
+            dataProvider = EmptyDataProvider.FACTORY.createProvider(Collections.EMPTY_MAP);
             super.delete();
         }
     }
@@ -136,15 +151,6 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
     public String toString() {
         return String.format("DataSource [%s]", getPath());
     }    
-
-    @Override
-    public DataType getDataType() {
-        return dataProvider.getDataType();
-    }
-
-    DataProvider getDataProvider() {
-        return dataProvider;
-    }
 
     @Override
     public synchronized List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {

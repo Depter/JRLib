@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.spi.MonthDate;
+import org.jreserve.gui.data.api.MonthDate;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.model.DevelopmentTriangleModel;

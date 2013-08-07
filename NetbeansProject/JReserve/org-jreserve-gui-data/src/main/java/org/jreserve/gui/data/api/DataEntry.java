@@ -17,8 +17,6 @@
 
 package org.jreserve.gui.data.api;
 
-import org.jreserve.gui.data.spi.MonthDate;
-
 /**
  *
  * @author Peter Decsi

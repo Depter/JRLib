@@ -20,7 +20,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Element;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.openide.filesystems.annotations.LayerBuilder;
@@ -53,12 +53,12 @@ public class ImportDataProviderRegistrationProcessor extends AbstractRegistratio
     }
 
     @Override
-    protected String getFileLocation(TypeElement element) throws LayerGenerationException {
-        return LAYER_PATH + getFileName(element);
+    protected String getFolder(Element element) throws LayerGenerationException {
+        return LAYER_PATH;
     }
     
     @Override
-    protected void initAttributes(LayerBuilder.File file, TypeElement element) throws LayerGenerationException {
+    protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
         ImportDataProvider.Registration an = getAnnotation(element);
         
         String id = an.id();

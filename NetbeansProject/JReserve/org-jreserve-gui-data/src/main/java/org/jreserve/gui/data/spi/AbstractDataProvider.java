@@ -20,7 +20,6 @@ package org.jreserve.gui.data.spi;
 import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.DataEntryFilter;
 import org.jreserve.gui.data.api.SaveType;
-import org.jreserve.gui.data.api.DataType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,14 +34,14 @@ import org.jreserve.gui.data.api.DataSource;
  */
 public abstract class AbstractDataProvider implements DataProvider {
     
-    private final DataType dataType;
-    private Set<DataEntry> entries;
+    private final DataProvider.Factory factory;
     private DataSource ds;
+    private Set<DataEntry> entries;
     
-    protected AbstractDataProvider(DataType dataType) {
-        if(dataType == null)
-            throw new NullPointerException("DataType is null!");
-        this.dataType = dataType;
+    protected AbstractDataProvider(DataProvider.Factory factory) {
+        if(factory == null)
+            throw new NullPointerException("Factory is null!");
+        this.factory = factory;
     }
     
     @Override
@@ -51,25 +50,29 @@ public abstract class AbstractDataProvider implements DataProvider {
     }
     
     @Override
-    public synchronized void setProperties(DataSource source, Map<String, String> properties) {
-        this.ds = source;
+    public synchronized void setDataSource(DataSource dataSource) {
+        if(dataSource == null)
+            throw new NullPointerException("DataSource is null!");
+        if(ds != null)
+            throw new IllegalStateException("DataSource already set!");
+        this.ds = dataSource;
     }
     
-    protected DataSource getDataSource() {
+    protected synchronized DataSource getDataSource() {
         return ds;
     }
     
     @Override
-    public final DataType getDataType() {
-        return dataType;
+    public final DataProvider.Factory getFactory() {
+        return factory;
     }
 
     @Override
     public synchronized final List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {
-        if(filter == null)
-            throw new NullPointerException("Filter is null!");
         if(ds == null)
-            throw new NullPointerException("DataSource not set!");
+            throw new IllegalStateException("DataSource not set!");
+        if(filter == null)
+            filter = DataEntryFilter.ALL;
         
         List<DataEntry> result = new ArrayList<DataEntry>();
         for(DataEntry entry : getLoadedEntries())
@@ -92,6 +95,8 @@ public abstract class AbstractDataProvider implements DataProvider {
             throw new NullPointerException("Entries is null!");
         if(saveType == null)
             throw new NullPointerException("SaveType is null!");
+        if(ds == null)
+            throw new IllegalStateException("DataSource not set!");
         
         boolean changed = false;
         for(DataEntry entry : entries)
@@ -138,6 +143,8 @@ public abstract class AbstractDataProvider implements DataProvider {
     public synchronized final void deleteEntries(Set<DataEntry> entries) throws Exception {
         if(entries == null)
             throw new NullPointerException("Entries is null!");
+        if(ds == null)
+            throw new IllegalStateException("DataSource not set!");
         
         getLoadedEntries();
         boolean changed = false;

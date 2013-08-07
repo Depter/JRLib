@@ -103,6 +103,16 @@ public abstract class LayerRegistrationLoader<T> {
         }
     }
     
+    protected <T> T getInstance(FileObject file) throws Exception {
+        try {
+            return (T) loadInstance(file);
+        } catch (Exception ex) {
+            String msg = String.format("Unable to instantiate '%s' from file '%s'!", file.getPath());
+            getLogger().log(Level.SEVERE, msg, ex);
+            throw ex;
+        }
+    }
+    
     protected Object loadInstance(FileObject file) throws DataObjectNotFoundException, IOException, ClassNotFoundException {
         DataObject data = DataObject.find(file);
         InstanceCookie cookie = data.getLookup().lookup(InstanceCookie.class);

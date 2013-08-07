@@ -17,7 +17,9 @@
 package org.jreserve.gui.data.inport;
 
 import java.awt.Component;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.DataEntry;
@@ -33,7 +35,10 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "MSG.ImportDataWizardPanelLast.NoEntries=There is no new data to save!"
+    "MSG.ImportDataWizardPanelLast.NoEntries=There is no new data to save!",
+    "# {0} - accident",
+    "# {1} - development",
+    "MSG.ImportDataWizardPanelLast.DuplicateEntries=Input contains duplicate entries for {0}/{1}!"
 })
 class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescriptor> {
     
@@ -41,6 +46,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     private ImportDataWizardVisualPanelLast component;
     private boolean valid = false;
     private ChangeSupport cs = new ChangeSupport(this);
+    private DataEntry duplicateEntry = null;
     
     @Override
     public Component getComponent() {
@@ -54,7 +60,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     
     private void initComponent() {
         component.setDataSource((DataSource) wiz.getProperty(ImportDataProvider.PROP_DATA_SOURCE));
-        component.setEntries((List< DataEntry>) wiz.getProperty(ImportDataProvider.PROP_IMPORT_DATA));
+        component.setEntries((List<DataEntry>) wiz.getProperty(ImportDataProvider.PROP_IMPORT_DATA));
     }
 
     @Override
@@ -65,13 +71,25 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     @Override
     public void readSettings(WizardDescriptor settings) {
         this.wiz = settings;
+        duplicateEntry = calculateHasDuplicates((List<DataEntry>) wiz.getProperty(ImportDataProvider.PROP_IMPORT_DATA));
         if(component != null)
             initComponent();
+    }
+    
+    private DataEntry calculateHasDuplicates(List<DataEntry> entries) {
+        if(entries == null)
+            return null;
+        Set<DataEntry> singles = new HashSet<DataEntry>();
+        for(DataEntry entry : entries)
+            if(!singles.add(entry))
+                return entry;
+        return null;    
     }
 
     @Override
     public void storeSettings(WizardDescriptor settings) {
         settings.putProperty(ImportDataProvider.PROP_SAVE_TYPE, component.getSaveType());
+        settings.putProperty(ImportDataProvider.PROP_IMPORT_DATA_CUMMULATED, component.isInputCummulated());
     }
 
     @Override
@@ -90,9 +108,25 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     }
     
     void changed() {
-        valid = component.hasEntriesToSave();
-        showError(valid? null : Bundle.MSG_ImportDataWizardPanelLast_NoEntries());
+        valid = isInputValid();
+        if(valid)
+            showError(null);
         cs.fireChange();
+    }
+    
+    private boolean isInputValid() {
+        if(!component.hasEntriesToSave()) {
+            showError(Bundle.MSG_ImportDataWizardPanelLast_NoEntries());
+            return false;
+        }
+        
+        if(duplicateEntry != null) {
+            String accident = duplicateEntry.getAccidentDate().toString();
+            String development = duplicateEntry.getDevelopmentDate().toString();
+            showError(Bundle.MSG_ImportDataWizardPanelLast_DuplicateEntries(accident, development));
+            return false;
+        }
+        return true;
     }
     
     private void showError(String msg) {

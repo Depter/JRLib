@@ -34,7 +34,7 @@ import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.settings.ImportSettings;
 import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.DataEntryFilter;
-import org.jreserve.gui.data.spi.MonthDate;
+import org.jreserve.gui.data.api.MonthDate;
 import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
@@ -112,6 +112,10 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         return (SaveType) saveTypeCombo.getSelectedItem();
     }
     
+    boolean isInputCummulated() {
+        return cummulatedCheck.isSelected();
+    }
+    
     void setDataSource(DataSource ds) {
         if(this.ds != ds) {
             this.ds = ds;
@@ -136,14 +140,6 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         triangleUtil.setRenderer(triangleRenderer);
         triangleWidget.setModel(triangleUtil.getTriangleModel());
         triangleWidget.setLayers(triangleUtil.getLayers());
-    }
-    
-    private void cummulatedChanged() {
-        if(cummulatedCheck.isSelected()) {
-            //TODO decummulateEntries;
-        } else {
-            //TODO cummulateEntries;
-        }
     }
     
     private void decimalSpinnerChanged() {
@@ -261,7 +257,6 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
                 decimalSpinnerChanged();
             }
         });
-        decimalSpinner.setPreferredSize(new java.awt.Dimension(75, 20));
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;

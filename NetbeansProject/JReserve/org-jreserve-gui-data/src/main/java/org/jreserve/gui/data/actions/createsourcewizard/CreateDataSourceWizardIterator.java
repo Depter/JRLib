@@ -201,8 +201,7 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
     
     private DataSource createDataSource() throws IOException {
         try {
-            DataProvider provider = createDataProvider();
-            return createDataSource(provider);
+            return buildDataSource();
         } catch (Exception ex) {
             String msg = "Unable to create new DataSource!";
             logger.log(Level.SEVERE, msg, ex);
@@ -210,16 +209,28 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
         }
     }
     
-    private DataProvider createDataProvider() {
+    private DataSource buildDataSource() throws IOException {
         DataType dataType = (DataType) wizardDesc.getProperty(PROP_DATA_TYPE);
-        DataSourceWizard wizard = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
-        return wizard.createDataProvider(dataType, wizardDesc);
-    }
-    
-    private DataSource createDataSource(DataProvider provider) throws IOException {
+        if(dataType == null)
+            throw new IllegalStateException("DataType not set (property name 'CreateDataSourceWizardIterator.PROP_DATA_TYPE')!");
+        
         String name = (String) wizardDesc.getProperty(PROP_DATA_NAME);
+        if(name == null)
+            throw new IllegalStateException("Name not set (property name 'CreateDataSourceWizardIterator.PROP_DATA_NAME')!");
+            
         DataCategory parent = (DataCategory) wizardDesc.getProperty(PROP_DATA_CATEGORY);
-        return parent.getDataManager().createDataSource(parent, name, provider);
+        if(parent == null)
+            throw new IllegalStateException("DataCategory not set (property name 'CreateDataSourceWizardIterator.PROP_DATA_CATEGORY')!");
+            
+        DataSourceWizard sw = (DataSourceWizard) wizardDesc.getProperty(PROP_SOURCE_WIZARD);
+        if(sw == null)
+            throw new IllegalStateException("DataSourceWizard not set (property name 'CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD')!");
+        
+        DataProvider provider = sw.createDataProvider(wizardDesc);
+        if(provider == null)
+            throw new IllegalStateException(String.format("DataSourceWizard '%s' returned null for provider!", sw));
+        
+        return parent.getDataManager().createDataSource(parent, name, dataType, provider);
     }
     
     private class SourceIteratorListener implements ChangeListener {

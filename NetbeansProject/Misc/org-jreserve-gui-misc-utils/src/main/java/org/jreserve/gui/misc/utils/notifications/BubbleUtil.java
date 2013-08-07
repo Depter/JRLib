@@ -69,6 +69,10 @@ public class BubbleUtil {
         show(title, bubbleMsg, dialogMsg, MessageType.WARNING);
     }
     
+    public static void showError(String msg) {
+        showError(Bundle.CTL_BubbleUtil_ExceptionBubble_Title(), msg);
+    }
+    
     public static void showError(String title, String msg) {
         showError(title, msg, null);
     }

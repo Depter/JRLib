@@ -27,6 +27,7 @@ import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
@@ -144,10 +145,10 @@ public class DataManagerImpl implements DataManager {
     }
     
     @Override
-    public synchronized DataSource createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException {
+    public synchronized DataSource createDataSource(DataCategory parent, String name, DataType dataType, DataProvider dataProvider) throws IOException {
         if(this != parent.getDataManager())
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
-        DataSourceImpl child = ((DataCategoryImpl) parent).createChildSource(name, dataProvider);
+        DataSourceImpl child = ((DataCategoryImpl) parent).createChildSource(name, dataType, dataProvider);
         DataEvent.sourceCreated(child);
         return child;
     }

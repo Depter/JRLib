@@ -37,7 +37,7 @@ public interface DataManager {
     
     public DataSource getDataSource(String path);
     
-    public DataSource createDataSource(DataCategory parent, String name, DataProvider dataProvider) throws IOException;
+    public DataSource createDataSource(DataCategory parent, String name, DataType dataType, DataProvider dataProvider) throws IOException;
     
     public void renameDataItem(DataItem item, String newName) throws IOException;
 

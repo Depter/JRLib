@@ -18,7 +18,6 @@ package org.jreserve.gui.data.spi;
 
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.DataType;
 import org.openide.WizardDescriptor;
 
 /**
@@ -27,15 +26,15 @@ import org.openide.WizardDescriptor;
  * @version 1.0
  */
 public interface DataSourceWizard {
-
+    
     public List<? extends WizardDescriptor.Panel> getPanels();
-
-    public DataProvider createDataProvider(DataType dataType, WizardDescriptor wizard);
+    
+    public DataProvider createDataProvider(WizardDescriptor wizard);
     
     public void addChangeListener(ChangeListener listener);
 
     public void removeChangeListener(ChangeListener listener);
-
+    
     public static @interface Registration {
         public String displayName();
         public String iconBase() default "";

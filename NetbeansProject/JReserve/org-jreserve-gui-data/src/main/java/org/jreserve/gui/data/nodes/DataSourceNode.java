@@ -17,7 +17,6 @@
 package org.jreserve.gui.data.nodes;
 
 import java.awt.datatransfer.Transferable;
-import java.io.IOException;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataSource;
@@ -51,7 +50,7 @@ class DataSourceNode extends AbstractNode {
     private final DataSource source;
     
     DataSourceNode(DataSource source) {
-        super(Children.LEAF, Lookups.singleton(source));
+        super(Children.LEAF, Lookups.fixed(source, source.getDataProvider()));
         this.source = source;
         setDisplayName(source.getName());
         initIconBase();

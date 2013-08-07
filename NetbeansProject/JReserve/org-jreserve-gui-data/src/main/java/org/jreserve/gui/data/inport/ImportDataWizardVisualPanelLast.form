@@ -116,11 +116,6 @@
       </Constraints>
     </Component>
     <Component class="org.jreserve.gui.localesettings.ScaleSpinner" name="decimalSpinner">
-      <Properties>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[75, 20]"/>
-        </Property>
-      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="decimalSpinner.addChangeListener(new ChangeListener() {&#xa;    @Override public void stateChanged(ChangeEvent e) {&#xa;        decimalSpinnerChanged();&#xa;    }&#xa;});"/>
       </AuxValues>

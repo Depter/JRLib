@@ -14,10 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
+package org.jreserve.gui.data.csv;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import org.jreserve.gui.data.spi.DataProvider;
 
 /**
@@ -25,15 +24,29 @@ import org.jreserve.gui.data.spi.DataProvider;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
+public class CsvDataProviderFactory implements DataProvider.Factory {
     
-    public DataType getDataType();
+    private static CsvDataProviderFactory INSTANCE;
+    
+    @DataProvider.FactoryRegistration(
+        id="org.jreserve.gui.data.csv.CsvDataProviderFactory"
+    )
+    public synchronized static DataProvider.Factory getInstance() {
+        if(INSTANCE == null)
+            INSTANCE = new CsvDataProviderFactory();
+        return INSTANCE;
+    }
+    
+    private CsvDataProviderFactory() {
+    }
+    
+    @Override
+    public String getId() {
+        return "org.jreserve.gui.data.csv.CsvDataProviderFactory";
+    }
 
-    public DataProvider getDataProvider();
-    
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
-    
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
-    
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    @Override
+    public DataProvider createProvider(Map<String, String> properties) {
+        return new CsvDataProvider(this);
+    }
 }

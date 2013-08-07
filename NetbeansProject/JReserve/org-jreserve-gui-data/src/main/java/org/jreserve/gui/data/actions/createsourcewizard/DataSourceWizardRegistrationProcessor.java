@@ -20,7 +20,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
-import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.Element;
 import org.jreserve.gui.data.spi.DataSourceWizard;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.openide.filesystems.annotations.LayerBuilder;
@@ -36,11 +36,10 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes("org.jreserve.gui.data.spi.DataSourceWizard.Registration")
 public class DataSourceWizardRegistrationProcessor extends AbstractRegistrationProcessor<DataSourceWizard.Registration, DataSourceWizard> {
-    
     final static String LAYER_PATH = "DataStore/DataSourceWizards/";
     final static String DISPLAY_NAME = "displayName";
     final static String ICON_BASE = "iconBase";
-    
+
     @Override
     protected Class<DataSourceWizard.Registration> getAnnotationClass() {
         return DataSourceWizard.Registration.class;
@@ -52,12 +51,12 @@ public class DataSourceWizardRegistrationProcessor extends AbstractRegistrationP
     }
 
     @Override
-    protected String getFileLocation(TypeElement element) throws LayerGenerationException {
-        return LAYER_PATH + getFileName(element);
+    protected String getFolder(Element element) throws LayerGenerationException {
+        return LAYER_PATH;
     }
     
     @Override
-    protected void initAttributes(LayerBuilder.File file, TypeElement element) throws LayerGenerationException {
+    protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
         DataSourceWizard.Registration an = getAnnotation(element);
         file.position(an.position());
         file.bundlevalue(DISPLAY_NAME, an.displayName(), an, "displayName");

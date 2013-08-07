@@ -23,11 +23,9 @@ import java.util.Set;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.DataEntryFilter;
 import org.jreserve.gui.data.spi.DataProvider;
-import org.jreserve.gui.data.spi.DataProviderFactoryType;
 import org.jreserve.gui.data.api.SaveType;
 
 /**
@@ -37,17 +35,30 @@ import org.jreserve.gui.data.api.SaveType;
  */
 public class EmptyDataProvider implements DataProvider {
     
-    final static String INSTANCE_PATH = "org.jreserve.gui.data.api.impl.EmptyDataProvider.getInstance";
-    private final static DataProvider INSTANCE = new EmptyDataProvider();
+    private final static String ID = "org.jreserve.gui.data.api.impl.EmptyDataProvider";    //NOI18
+    final static DataProvider INSTANCE = new EmptyDataProvider();
     
-    public static DataProvider getInstance() {
-        return INSTANCE;
-    }
+    final static DataProvider.Factory FACTORY = new DataProvider.Factory() {
+        @Override 
+        public String getId() {
+            return ID;
+        }
+
+        @Override
+        public DataProvider createProvider(Map<String, String> properties) {
+            return INSTANCE;
+        }
+    };
     
     private final static Logger logger = Logger.getLogger(EmptyDataProvider.class.getName());
     
     
     private EmptyDataProvider() {
+    }
+    
+    @Override
+    public DataProvider.Factory getFactory() {
+        return FACTORY;
     }
     
     @Override
@@ -67,29 +78,6 @@ public class EmptyDataProvider implements DataProvider {
         logger.warning("Accessing dummy data provider!");
         return Collections.EMPTY_MAP;
     }
-    
-    @Override
-    public void setProperties(DataSource ds, Map<String, String> properties) {
-        logger.warning("Accessing dummy data provider!");
-    }
-    
-    @Override
-    public DataProviderFactoryType getFactoryType() {
-        logger.warning("Accessing dummy data provider!");
-        return DataProviderFactoryType.METHOD;
-    }
-
-    @Override
-    public String getInstancePath() {
-        logger.warning("Accessing dummy data provider!");
-        return INSTANCE_PATH;
-    }
-    
-    @Override
-    public DataType getDataType() {
-        logger.warning("Accessing dummy data provider!");
-        return DataType.VECTOR;
-    }
 
     @Override
     public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {
@@ -104,6 +92,11 @@ public class EmptyDataProvider implements DataProvider {
 
     @Override
     public void deleteEntries(Set<DataEntry> entries) throws Exception {
+        logger.warning("Accessing dummy data provider!");
+    }
+
+    @Override
+    public void setDataSource(DataSource dataSource) {
         logger.warning("Accessing dummy data provider!");
     }
 }

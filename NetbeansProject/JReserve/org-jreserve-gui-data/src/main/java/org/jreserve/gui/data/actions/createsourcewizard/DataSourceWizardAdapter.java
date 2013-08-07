@@ -20,7 +20,6 @@ import java.util.List;
 import javax.swing.Icon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.DataSourceWizard;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
@@ -61,16 +60,6 @@ class DataSourceWizardAdapter implements DataSourceWizard, Displayable {
     public String getDisplayName() {
         return name;
     }
-    
-    @Override
-    public List<? extends WizardDescriptor.Panel> getPanels() {
-        return delegate.getPanels();
-    }
-
-    @Override
-    public DataProvider createDataProvider(DataType dataType, WizardDescriptor wizard) {
-        return delegate.createDataProvider(dataType, wizard);
-    }
 
     @Override
     public void addChangeListener(ChangeListener listener) {
@@ -80,5 +69,15 @@ class DataSourceWizardAdapter implements DataSourceWizard, Displayable {
     @Override
     public void removeChangeListener(ChangeListener listener) {
         cs.removeChangeListener(listener);
+    }
+    
+    @Override
+    public List<? extends WizardDescriptor.Panel> getPanels() {
+        return delegate.getPanels();
+    }
+
+    @Override
+    public DataProvider createDataProvider(WizardDescriptor wizard) {
+        return delegate.createDataProvider(wizard);
     }
 }

@@ -17,6 +17,8 @@
 package org.jreserve.gui.misc.annotations;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.Element;
@@ -24,8 +26,10 @@ import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
+import javax.lang.model.util.ElementFilter;
+import org.openide.filesystems.FileObject;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -52,7 +56,7 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
 
     private void processRoundEnvironment(RoundEnvironment re) throws LayerGenerationException {
         for (Element e : getElements(re))
-            processElement((TypeElement) e);
+            processElement(e);
     }
     
     private Set<? extends Element> getElements(RoundEnvironment roundEnv) {
@@ -60,98 +64,134 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
     }
     
     protected abstract Class<A> getAnnotationClass();
-    
-    protected void processElement(TypeElement element) throws LayerGenerationException {
-        checkImplementsInterface(element);
-        checkConstructor(element);
-        addClass(element);
+
+    protected void processElement(Element element) throws LayerGenerationException {
+        String[] instanceDefinition = findDefinition(element);
+        String className = instanceDefinition[0];
+        String methodName = instanceDefinition[1];
+        createLayerRegistration(element, className, methodName);
+//        
+//        checkImplementsInterface(element);
+//        checkConstructor(element);
+//        addClass(element);
+    }
+
+    private String[] findDefinition(Element e) throws LayerGenerationException {
+        A an = getAnnotation(e);
+        final TypeMirror interfaceMirror = getInterfaceMirror();
+        
+        if (e.getKind() == ElementKind.CLASS) {
+            TypeElement clazz = (TypeElement) e;
+            if (!isAssignable(clazz.asType(), interfaceMirror))
+                throw new LayerGenerationException("Not assignable to " + interfaceMirror, e, processingEnv, an);
+            
+            if (!clazz.getModifiers().contains(Modifier.PUBLIC))
+                throw new LayerGenerationException("Class must be public", e, processingEnv, an);
+            
+            
+            if(!hasGoodConstructor(clazz))
+                throw new LayerGenerationException("No appropriate constructor!", e, processingEnv, an);
+                
+            return new String[] {processingEnv.getElementUtils().getBinaryName(clazz).toString(), null};
+        } else {
+            ExecutableElement method = (ExecutableElement) e;
+            if(!isAssignable(method.getReturnType(), interfaceMirror))
+                throw new LayerGenerationException("Not assignable to " + interfaceMirror, e, processingEnv, an);
+            if(!method.getModifiers().contains(Modifier.PUBLIC))
+                throw new LayerGenerationException("Method must be public", e, processingEnv, an);
+            if(!method.getModifiers().contains(Modifier.STATIC))
+                throw new LayerGenerationException("Method must be static", e, processingEnv, an);
+            if(!method.getEnclosingElement().getModifiers().contains(Modifier.PUBLIC))
+                throw new LayerGenerationException("Class must be public", e, processingEnv, an);
+            if(!goodParameters(method.getParameters()))
+                throw new LayerGenerationException("No appropriate parameters!", e, processingEnv, an);
+                
+            return new String[] {
+                processingEnv.getElementUtils().getBinaryName((TypeElement) method.getEnclosingElement()).toString(),
+                method.getSimpleName().toString()};
+        }
     }
     
-    private void checkImplementsInterface(TypeElement element) throws LayerGenerationException {
-        TypeMirror mirror = getInterfaceMirror();
-        if(processingEnv.getTypeUtils().isAssignable(element.asType(), mirror))
-            return;
-        String msg = String.format(getNoInterfaceMsgFormat(), getClassName(element), annotationName(), interfaceName());
-        throw createException(msg, element);
+    protected A getAnnotation(Element element) {
+        return element.getAnnotation(getAnnotationClass());
     }
     
     private TypeMirror getInterfaceMirror() {
-        Elements utils = processingEnv.getElementUtils();
-        String name = getInterfaceClass().getName();
-        return utils.getTypeElement(name).asType();
+        Class clazz = getInterfaceClass();
+        TypeElement te = getElementFor(clazz);
+        return te.asType();
+    }
+    
+    private TypeElement getElementFor(Class clazz) {
+        String name = clazz.getCanonicalName();
+        return processingEnv.getElementUtils().getTypeElement(name);
     }
     
     protected abstract Class<I> getInterfaceClass();
     
-    protected String getNoInterfaceMsgFormat() {
-        return ERR_NOT_IMPLEMENTS_INTERFACE;
+    private boolean isAssignable(TypeMirror from, TypeMirror to) {
+        return processingEnv.getTypeUtils().isAssignable(from, to);
     }
     
-    protected String getClassName(TypeElement element) {
-        return element.getQualifiedName().toString();
+    private boolean hasGoodConstructor(TypeElement clazz ) {
+        for(ExecutableElement constructor : ElementFilter.constructorsIn(clazz.getEnclosedElements()))
+            if(goodConstructor(constructor))
+                return true;
+        return false;
     }
     
-    protected String annotationName() {
-        return getAnnotationClass().getName();
-    }
-    
-    protected String interfaceName() {
-        return getInterfaceClass().getName();
-    }
-    
-    private void checkConstructor(TypeElement element) throws LayerGenerationException {
-        for(Element e : element.getEnclosedElements())
-            if(isConstructor(e))
-                return;
-        throw noAppropriateConstructor(element);
-    }
-    
-    private boolean isConstructor(Element element) {
-        if(ElementKind.CONSTRUCTOR != element.getKind())
+    private boolean goodConstructor(ExecutableElement constructor) {
+        if(!constructor.getModifiers().contains(Modifier.PUBLIC))
             return false;
-        ExecutableElement constructor = (ExecutableElement) element;
-        return isConstructor(constructor);
+        return goodParameters(constructor.getParameters());
     }
     
-    protected boolean isConstructor(ExecutableElement element) {
-        return isPublic(element) && element.getParameters().isEmpty();
+    private boolean goodParameters(List<? extends VariableElement> params) {
+        return params.isEmpty() ||
+               (params.size()==1 && isFileObjectType(params.get(0)));
     }
     
-    protected boolean isPublic(ExecutableElement element) {
-        return element.getModifiers().contains(Modifier.PUBLIC);
+    private boolean isFileObjectType(VariableElement e) {
+        TypeElement fo = getElementFor(FileObject.class);
+        return isAssignable(e.asType(), fo.asType());
     }
     
-    private LayerGenerationException noAppropriateConstructor(TypeElement element) {
-        String msg = String.format(ERR_NO_COSNTRUCTOR, 
-                getClassName(element), annotationName());
-        return createException(msg, element);
-    }
-    
-    protected LayerGenerationException createException(String msg, TypeElement element) {
-        return new LayerGenerationException(msg, element, processingEnv, getAnnotation(element));
-    }
-    
-    protected String getNoConstructorMsgFormat() {
-        return ERR_NO_COSNTRUCTOR;
-    }
-    
-    protected void addClass(TypeElement element) throws LayerGenerationException {
-        String name = getFileLocation(element);
+    protected void createLayerRegistration(Element element, String className, String methodName) throws LayerGenerationException {
+        String name = getFileLocation(element, className, methodName);
         LayerBuilder.File file = layer(element).file(name);
         initAttributes(file, element);
+        initInstanceAttributes(file, element, className, methodName);
         file.write();
     }
     
-    protected abstract String getFileLocation(TypeElement element) throws LayerGenerationException;
-    
-    protected String getFileName(TypeElement element) {
-        return getClassName(element).replaceAll("\\.", "-")+".instance";
+    protected String getFileLocation(Element element, String className, String methodName) throws LayerGenerationException {
+        String name = getFileBaseName(element, className, methodName);
+        String folder = getFolder(element);
+        if(folder == null || folder.length()==0)
+            return name;
+        
+        if('/' != folder.charAt(folder.length()-1))
+            folder += "/";
+        return folder + name;
     }
     
-    protected void initAttributes(LayerBuilder.File file, TypeElement element) throws LayerGenerationException {
+    protected String getFileBaseName(Element element, String className, String methodName) {
+        String fileBaseName = className.replace('.', '-');
+        if(methodName != null)
+            fileBaseName += "-" + methodName;
+        return fileBaseName+".instance";
     }
     
-    protected A getAnnotation(TypeElement element) {
-        return element.getAnnotation(getAnnotationClass());
+    protected abstract String getFolder(Element element) throws LayerGenerationException;
+    
+    protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
+    }
+    
+    protected void initInstanceAttributes(LayerBuilder.File file, Element element, String className, String methodName) throws LayerGenerationException {
+        if(methodName == null)
+            file.instanceAttribute("instanceCreate", getInterfaceClass());
+        else
+            file.instanceAttribute("instanceCreate", getInterfaceClass(), getAnnotation(element), methodName);
+        file.stringvalue("instanceClass", getInterfaceClass().getName());
     }
 }

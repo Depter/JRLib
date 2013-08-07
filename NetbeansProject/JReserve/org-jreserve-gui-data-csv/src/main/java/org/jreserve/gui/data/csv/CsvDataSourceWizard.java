@@ -19,7 +19,6 @@ package org.jreserve.gui.data.csv;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.DataSourceWizard;
 import org.openide.WizardDescriptor;
@@ -46,8 +45,8 @@ public class CsvDataSourceWizard implements DataSourceWizard {
     }
 
     @Override
-    public DataProvider createDataProvider(DataType dataType, WizardDescriptor wizard) {
-        return new CsvDataProvider(dataType);
+    public DataProvider createDataProvider(WizardDescriptor wizard) {
+        return new CsvDataProvider(CsvDataProviderFactory.getInstance());
     }
     
     @Override

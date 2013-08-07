@@ -24,6 +24,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileObject;
 
@@ -96,7 +97,7 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
             if(fo.isFolder()) {
                 children.add(new DataCategoryImpl(fo, this));
             } else if(DataSourceImpl.isSourceFile(fo)) {
-                children.add(new DataSourceImpl(fo, this));
+                children.add(DataSourceUtil.load(this, fo));
             }
         }
     }
@@ -124,7 +125,9 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
         return child;
     }
     
-    DataSourceImpl createChildSource(String name, DataProvider provider) throws IOException {
+    DataSourceImpl createChildSource(String name, DataType dataType, DataProvider provider) throws IOException {
+        if(dataType == null)
+            throw new NullPointerException("DataType can not be null!");
         if(provider == null)
             throw new NullPointerException("DataProvider can not be null!");
         
@@ -135,7 +138,9 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
             throw new IOException(String.format("DataSource name '%s' contains an illegal character!", name));
         
         FileObject sourceFile = file.createData(name, DataSourceImpl.FILE_EXT);
-        DataSourceImpl impl = new DataSourceImpl(sourceFile, this, provider);
+        DataSourceImpl impl = new DataSourceImpl(sourceFile, this);
+        impl.setDataType(dataType);
+        impl.setProvider(provider);
         DataSourceUtil.save(impl);
         
         if(children != null)

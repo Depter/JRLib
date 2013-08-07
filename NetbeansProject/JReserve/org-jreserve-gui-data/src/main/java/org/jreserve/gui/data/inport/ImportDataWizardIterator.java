@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -36,6 +38,7 @@ import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.api.MonthDate;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
@@ -200,6 +203,8 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
         List<DataEntry> entries = (List<DataEntry>) wizardDesc.getProperty(ImportDataProvider.PROP_IMPORT_DATA);
         if(entries == null)
             return Collections.EMPTY_SET;
+        if((Boolean) wizardDesc.getProperty(ImportDataProvider.PROP_IMPORT_DATA_CUMMULATED))
+            entries = decummulate(entries);
         
         try {
             ds.addEntries(new TreeSet<DataEntry>(entries), st);
@@ -210,6 +215,44 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
         }
         
         return Collections.EMPTY_SET;
+    }
+    
+    private List<DataEntry> decummulate(List<DataEntry> entries) {
+        List<DataEntry> result = new ArrayList<DataEntry>(entries.size());
+        for(List<DataEntry> row : toRows(entries).values())
+            result.addAll(decummulateRow(row));
+        return result;
+    }
+    
+    private Map<MonthDate, List<DataEntry>> toRows(List<DataEntry> entries) {
+        Map<MonthDate, List<DataEntry>> result = new TreeMap<MonthDate, List<DataEntry>>();
+        for(DataEntry entry : entries) {
+            List<DataEntry> row = result.get(entry.getAccidentDate());
+            if(row == null) {
+                row = new ArrayList<DataEntry>();
+                result.put(entry.getAccidentDate(), row);
+            }
+            row.add(entry);
+        }
+        return result;
+    }
+    
+    private List<DataEntry> decummulateRow(List<DataEntry> row) {
+        Collections.sort(row);
+        DataEntry prev = null;
+        List<DataEntry> result = new ArrayList<DataEntry>(row.size());
+        for(DataEntry entry : row) {
+            result.add(prev==null? entry : decummulate(entry, prev));
+            prev = entry;
+        }
+        return result;
+    }
+    
+    private DataEntry decummulate(DataEntry entry, DataEntry prev) {
+        MonthDate accident = entry.getAccidentDate();
+        MonthDate development = entry.getDevelopmentDate();
+        double value = entry.getValue() - prev.getValue();
+        return new DataEntry(accident, development, value);
     }
     
     private class SourceIteratorListener implements ChangeListener {

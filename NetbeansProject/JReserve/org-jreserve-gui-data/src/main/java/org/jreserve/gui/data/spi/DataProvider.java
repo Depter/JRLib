@@ -17,10 +17,13 @@
 
 package org.jreserve.gui.data.spi;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.jreserve.gui.data.api.DataEntry;
 import org.jreserve.gui.data.api.DataEntryFilter;
 import org.jreserve.gui.data.api.SaveType;
-import org.jreserve.gui.data.api.DataType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,8 +38,12 @@ import org.jreserve.gui.data.api.DataSource;
 public interface DataProvider {
     
     public final static String PROP_DATA_TYPE = "data.type";
-    public final static String PROP_FACTORY_TYPE = "instance.factory.type";
-    public final static String PROP_INSTANCE_PATH = "instance.path";
+    public final static String PROP_FACTORY_ID = "factory.id";
+    
+    //DataSystem management
+    public Factory getFactory();
+    
+    public void setDataSource(DataSource dataSource);
     
     public void delete() throws Exception;
     
@@ -44,20 +51,25 @@ public interface DataProvider {
     
     public void move(DataCategory newParent) throws Exception;
     
-    public DataType getDataType();
-    
-    public DataProviderFactoryType getFactoryType();
-    
-    public String getInstancePath();
-    
     public Map<String, String> getProperties();
     
-    public void setProperties(DataSource source, Map<String, String> properties);
-    
+    //Data management
     public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
     
     public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
     
     public void deleteEntries(Set<DataEntry> entries) throws Exception;
-
+    
+    public static interface Factory {
+        
+        public String getId();
+        
+        public DataProvider createProvider(Map<String, String> properties);
+    }
+    
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Retention(RetentionPolicy.SOURCE)
+    public static @interface FactoryRegistration {
+        public String id();
+    }
 }
