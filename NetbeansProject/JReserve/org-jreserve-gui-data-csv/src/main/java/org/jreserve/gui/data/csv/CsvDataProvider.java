@@ -32,8 +32,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.spi.AbstractDataProvider;
-import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.api.MonthDate;
+import org.jreserve.jrlib.gui.data.DataEntry;
+import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
@@ -221,14 +221,21 @@ public class CsvDataProvider extends AbstractDataProvider {
         private DataEntry readEntry(String line) throws IOException {
             try {
                 String[] cells = line.split(CELL_SEPARATOR);
-                MonthDate accident = new MonthDate(cells[ACCIDENT_CELL]);
-                MonthDate development = new MonthDate(cells[DEVELOPMENT_CELL]);
+                MonthDate accident = toDate(cells[ACCIDENT_CELL]);
+                MonthDate development = toDate(cells[DEVELOPMENT_CELL]);
                 double value = Double.valueOf(cells[VALUE_CELL]);
                 return new DataEntry(accident, development, value);
             } catch (Exception ex) {
                 String msg = String.format("Unable to parse line %d", lineNumber);
                 throw new IOException(msg, ex);
             }
+        }
+        
+        private MonthDate toDate(String cell) {
+            int index = cell.indexOf('-');
+            int year = Integer.parseInt(cell.substring(0, index));
+            int month = Integer.parseInt(cell.substring(index+1));
+            return new MonthDate(year, month);
         }
         
         private void close() {

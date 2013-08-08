@@ -20,6 +20,7 @@ package org.jreserve.gui.data.csv.input.triangle;
 import java.util.Arrays;
 import java.util.List;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -40,15 +41,14 @@ import org.openide.util.NbBundle.Messages;
 })
 public class CsvTriangleImportDataProvider implements ImportDataProvider {
     
-    final static String PROP_TRIANGLE_ARRAY = "trinagleArray";
-    
     private WizardDescriptor.Panel[] panels;
     
     @Override
     public List<? extends WizardDescriptor.Panel> getPanels() {
         if(panels == null) {
-            panels = new WizardDescriptor.Panel[1];
+            panels = new WizardDescriptor.Panel[2];
             panels[0] = new CsvTriangleImportWizardPanel1();
+            panels[1] = new ImportDataWizardPanelGeometry();
         }
         return Arrays.asList(panels);
     }

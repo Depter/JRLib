@@ -51,7 +51,7 @@ class CsvTriangleReader extends AbstractCsvReader<double[][], AbstractCsvReader.
         
         for(int i=0; i<size; i++) {
             try {
-            result[i] = getDouble(cells[i]);
+                result[i] = getDouble(cells[i]);
             } catch (Exception ex) {
                 throw valueException(ex, cells[i], i);
             }

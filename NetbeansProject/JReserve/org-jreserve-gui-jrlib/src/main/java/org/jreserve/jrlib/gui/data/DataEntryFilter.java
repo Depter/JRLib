@@ -14,16 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
+
+package org.jreserve.jrlib.gui.data;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public enum DataType {
+public interface DataEntryFilter {
 
-    TRIANGLE,
-    VECTOR;
+    public final static DataEntryFilter ALL = new DataEntryFilter() {
+        @Override
+        public boolean acceptsEntry(DataEntry entry) {
+            return true;
+        }
+    };
     
+    public boolean acceptsEntry(DataEntry entry);
 }

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.openide.filesystems.FileLock;

@@ -23,7 +23,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
 import javax.swing.JList;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.ImageUtilities;

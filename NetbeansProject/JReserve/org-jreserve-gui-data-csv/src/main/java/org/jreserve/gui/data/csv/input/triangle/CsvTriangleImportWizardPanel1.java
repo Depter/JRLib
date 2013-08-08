@@ -21,6 +21,7 @@ import java.awt.Component;
 import java.io.File;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
 import org.jreserve.gui.data.csv.input.AbstractCsvReader;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -38,7 +39,7 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - path",
     "MSG.CsvTriangleImportWizardPanel1.File.NotFound=File ''{0}'' not found!",
     "MSG.CsvTriangleImportWizardPanel1.CellSeparator.Empty=Cell separator not set!",
-    "MSG.CsvTriangleImportWizardPanel1.DecimalSeparator.Empty=Decimal separator not set!",
+    "MSG.CsvTriangleImportWizardPanel1.DecimalSeparator.Empty=Decimal separator not set!"
 })
 public class CsvTriangleImportWizardPanel1 implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
     
@@ -154,7 +155,7 @@ public class CsvTriangleImportWizardPanel1 implements WizardDescriptor.Asynchron
         try {
             CsvTriangleReader reader = new CsvTriangleReader(validationData);
             double[][] values = reader.read();
-            wiz.putProperty(CsvTriangleImportDataProvider.PROP_TRIANGLE_ARRAY, values);
+            wiz.putProperty(ImportDataWizardPanelGeometry.PROP_TRIANGLE_ARRAY, values);
         } catch (Exception ex) {
             throw new WizardValidationException(component, ex.getMessage(), ex.getLocalizedMessage());
         } finally {

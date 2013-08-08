@@ -23,8 +23,8 @@ import java.util.Set;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.api.DataEntryFilter;
+import org.jreserve.jrlib.gui.data.DataEntry;
+import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.api.SaveType;
 

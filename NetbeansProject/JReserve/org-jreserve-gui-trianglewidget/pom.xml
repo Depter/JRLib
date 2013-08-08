@@ -60,6 +60,12 @@
             <artifactId>org-jreserve-gui-jrlib</artifactId>
             <version>${project.version}</version>
         </dependency>
+        
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-localesettings</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -71,6 +77,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.trianglewidget</publicPackage>
+                        <publicPackage>org.jreserve.gui.trianglewidget.geometry</publicPackage>
                         <publicPackage>org.jreserve.gui.trianglewidget.model</publicPackage>
                     </publicPackages>
                 </configuration>

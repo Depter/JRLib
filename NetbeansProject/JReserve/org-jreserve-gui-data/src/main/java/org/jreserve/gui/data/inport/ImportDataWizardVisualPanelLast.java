@@ -32,9 +32,9 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.settings.ImportSettings;
-import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.api.DataEntryFilter;
-import org.jreserve.gui.data.api.MonthDate;
+import org.jreserve.jrlib.gui.data.DataEntry;
+import org.jreserve.jrlib.gui.data.DataEntryFilter;
+import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.gui.data.api.SaveType;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
@@ -170,9 +170,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         tableScroll = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
         triangleScroll = new javax.swing.JScrollPane();
-        widgetPanel = new javax.swing.JPanel();
         triangleWidget = new org.jreserve.gui.trianglewidget.TriangleWidget();
-        triangleFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         pBar = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.GridBagLayout());
@@ -276,22 +274,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
 
         overviewPanel.add(tableScroll, "table");
 
-        widgetPanel.setLayout(new java.awt.GridBagLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        widgetPanel.add(triangleWidget, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        widgetPanel.add(triangleFiller, gridBagConstraints);
-
-        triangleScroll.setViewportView(widgetPanel);
+        triangleScroll.setViewportView(triangleWidget);
 
         overviewPanel.add(triangleScroll, "triangle");
 
@@ -343,10 +326,8 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private javax.swing.JLabel saveTypeLabel;
     private javax.swing.JTable table;
     private javax.swing.JScrollPane tableScroll;
-    private javax.swing.Box.Filler triangleFiller;
     private javax.swing.JScrollPane triangleScroll;
     private org.jreserve.gui.trianglewidget.TriangleWidget triangleWidget;
-    private javax.swing.JPanel widgetPanel;
     // End of variables declaration//GEN-END:variables
     
     private void setProgressRunning(boolean running) {

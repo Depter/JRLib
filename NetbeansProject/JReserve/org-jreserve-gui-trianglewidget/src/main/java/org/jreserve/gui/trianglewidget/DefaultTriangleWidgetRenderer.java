@@ -23,6 +23,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 
 /**
  * Default implementation for the {@link TriangleWidgetRenderer TriangleWidgetRenderer}
@@ -32,9 +34,15 @@ import javax.swing.border.Border;
  * @version 1.0
  */
 public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWidgetRenderer {
-
+    
+    private DecimalFormatter df;
     
     public DefaultTriangleWidgetRenderer() {
+        this(null);
+    }
+    
+    public DefaultTriangleWidgetRenderer(DecimalFormatter df) {
+        this.df = df==null? LocaleSettings.createDecimalFormat() : null;
         setBorder(createBorder());
         setOpaque(true);
         setBackground(Color.WHITE);
@@ -47,10 +55,21 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
                 BorderFactory.createEmptyBorder(0, 2, 0, 2));
     }
     
+    public void setDecimalCount(int decimalcount) {
+        df.setDecimalCount(decimalcount);
+    }
+    
     @Override
     public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
-        setText(""+value);
+        setText(format(value));
         return this;
     }
 
+    private String format(double value) {
+        try  {
+            return df.format(value);
+        } catch (Exception ex) {
+            return ""+value;
+        }
+    }
 }

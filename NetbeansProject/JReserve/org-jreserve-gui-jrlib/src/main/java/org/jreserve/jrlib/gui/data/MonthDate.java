@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
+package org.jreserve.jrlib.gui.data;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -62,13 +62,19 @@ public final class MonthDate implements Comparable<MonthDate> {
     private final int year;
     private final int month;
     
+    public MonthDate() {
+        this(new Date());
+    }
+    
     public MonthDate(String str) {
         int index = str.indexOf('-');
         if(index < 0)
             throw new IllegalArgumentException("Illegal date format: "+str);
         
         year = Integer.parseInt(str.substring(0, index));
-        month = Integer.parseInt(str.substring(index+1));
+        month = Integer.parseInt(str.substring(index+1)) - 1;
+        if(month < 0 || month>11)
+            throw new IllegalArgumentException("Illegal MonthDate literal '"+str+"'! Month falls outside of bounds!");
     }
     
     public MonthDate(Date date) {
@@ -126,6 +132,14 @@ public final class MonthDate implements Comparable<MonthDate> {
         c.set(year, month, 1, 0, 0, 0);
         c.set(Calendar.MILLISECOND, 0);
         return c.getTime();
+    }
+    
+    public boolean after(MonthDate md) {
+        return compareTo(md) > 0;
+    }
+    
+    public boolean before(MonthDate md) {
+        return compareTo(md) < 0;
     }
     
     @Override

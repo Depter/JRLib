@@ -33,7 +33,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.WizardDescriptor;

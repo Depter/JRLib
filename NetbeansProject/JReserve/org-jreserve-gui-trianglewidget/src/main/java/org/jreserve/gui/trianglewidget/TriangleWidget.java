@@ -22,8 +22,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.Box;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.trianglewidget.model.DevelopmentTriangleModel;
@@ -97,27 +99,45 @@ public class TriangleWidget extends JPanel {
         
         setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
+        gc.gridx=0;gc.gridy=0;
+        gc.weightx=1d;gc.weighty=0d;
+        gc.fill=GridBagConstraints.HORIZONTAL;
+        add(creteContentPanel(), gc);
+        
+        gc.gridy=1;
+        gc.weightx=0d;gc.weighty=1d;
+        gc.fill=GridBagConstraints.VERTICAL;
+        add(Box.createVerticalGlue(), gc);
+    }
+    
+    private JPanel creteContentPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints gc = new GridBagConstraints();
         gc.gridx = 0; gc.gridy=0;
         gc.weightx=0d; gc.weighty=0d;
         gc.fill = GridBagConstraints.NONE;
         gc.insets=new Insets(0, 0, 0, 0);
         gc.anchor = GridBagConstraints.NORTHWEST;
-        add(corner, gc);
+        panel.add(corner, gc);
         
         gc.gridx = 1;
         gc.weightx=1d;
         gc.fill = GridBagConstraints.HORIZONTAL;
-        add(xHeader, gc);
+        panel.add(xHeader, gc);
         
         gc.gridx = 0; gc.gridy=1;
         gc.weightx=0d; gc.weighty=1d;
         gc.fill = GridBagConstraints.VERTICAL;
-        add(yHeader, gc);
+        panel.add(yHeader, gc);
         
         gc.gridx = 1;
         gc.weightx=1d;
         gc.fill = GridBagConstraints.BOTH;
-        add(content, gc);
+        panel.add(content, gc);
+        
+        return panel;
+    
     }
     
     /**
@@ -176,6 +196,15 @@ public class TriangleWidget extends JPanel {
         this.layers = new ArrayList<TriangleLayer>(layers);
         this.model.setTriangle(getTriangle());
         resizeAndRepaint();
+    }
+    
+    /**
+     * Sets the layers displayed in the widget.
+     * 
+     * @param layers the data layers to use.
+     */
+    public void setLayers(TriangleLayer... layers) {
+        setLayers(Arrays.asList(layers));
     }
     
     /**

@@ -14,29 +14,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
+package org.jreserve.gui.trianglewidget.model;
 
-import org.jreserve.jrlib.gui.data.DataType;
-import org.jreserve.jrlib.gui.data.DataEntry;
-import org.jreserve.jrlib.gui.data.DataEntryFilter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import org.jreserve.gui.data.spi.DataProvider;
+import org.jreserve.jrlib.gui.data.MonthDate;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
+public class MonthDateTitleModel implements TitleModel {
+        
+    private final MonthDate[] dates;
     
-    public DataType getDataType();
-
-    public DataProvider getDataProvider();
+    public MonthDateTitleModel(Collection<MonthDate> dates) {
+        this.dates = dates.toArray(new MonthDate[dates.size()]);
+    }
     
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
-    
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
-    
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    public MonthDateTitleModel(MonthDate[] dates) {
+        this.dates = Arrays.copyOf(dates, dates.length);
+    }
+        
+    @Override
+    public String getName(int index) {
+        if(index < 0 || index>=dates.length)
+            return null;
+        return dates[index].toString();
+    }
 }

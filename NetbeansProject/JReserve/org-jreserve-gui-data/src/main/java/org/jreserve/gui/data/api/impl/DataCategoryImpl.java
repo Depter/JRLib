@@ -24,7 +24,7 @@ import java.util.TreeSet;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileObject;
 

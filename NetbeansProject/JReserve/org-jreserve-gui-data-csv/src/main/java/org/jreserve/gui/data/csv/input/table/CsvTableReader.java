@@ -22,9 +22,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.api.MonthDate;
+import org.jreserve.jrlib.gui.data.DataType;
+import org.jreserve.jrlib.gui.data.DataEntry;
+import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.gui.data.csv.input.AbstractCsvReader;
 
 /**

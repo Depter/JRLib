@@ -26,6 +26,7 @@ import javax.swing.JSpinner;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.jreserve.gui.data.csv.CsvFileFilter;
@@ -56,6 +57,7 @@ import org.openide.util.TaskListener;
 public class CsvTableImportVisualPanel extends javax.swing.JPanel {
     
     private final static String REFRESH_IMG = "org/jreserve/gui/misc/utils/refresh.png";   //NOI18
+    private final static int MIN_PREVIEW_COLUMN_WIDTH = 65;
     
     private PreviewRenderer renderer;
     private final CsvTableImportWizardPanel panel;
@@ -393,6 +395,7 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         previewScroll.setPreferredSize(new java.awt.Dimension(300, 150));
 
         previewTable.setModel(prevModel);
+        previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         renderer = new PreviewRenderer();
         previewTable.setDefaultRenderer(String.class, renderer);
         previewScroll.setViewportView(previewTable);
@@ -418,8 +421,10 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
 
     private void fileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fileButtonActionPerformed
         File f = FileDialog.openFile(CsvFileFilter.getDefault(), Bundle.LBL_CsvTableImportVisualPanel_FileChooser_Title());
-        if(f != null)
+        if(f != null) {
             fileText.setText(f.getAbsolutePath());
+            refreshButtonActionPerformed(null);
+        }
     }//GEN-LAST:event_fileButtonActionPerformed
 
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
@@ -437,6 +442,7 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
                             prevModel.setHasColumnTitles(columnHeaderCheck.isSelected());
                             prevModel.setCellSeparator(separatorEditor.getText());
                             prevModel.setLines(reader.readLines());
+                            setPreviewColumnWidths();
                         }
                     }
                 });
@@ -444,6 +450,13 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         });
         ImportUtil.getRP().execute(task);
     }//GEN-LAST:event_refreshButtonActionPerformed
+    
+    private void setPreviewColumnWidths() {
+        TableColumnModel columns = previewTable.getColumnModel();
+        int count = columns.getColumnCount();
+        for(int i=0; i<count; i++)
+            columns.getColumn(i).setMinWidth(MIN_PREVIEW_COLUMN_WIDTH );
+    }
     
     private File getCsvFile() {
         String path = fileText.getText();

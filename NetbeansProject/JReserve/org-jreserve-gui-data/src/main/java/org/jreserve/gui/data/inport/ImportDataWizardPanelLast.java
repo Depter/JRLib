@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataEntry;
+import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;

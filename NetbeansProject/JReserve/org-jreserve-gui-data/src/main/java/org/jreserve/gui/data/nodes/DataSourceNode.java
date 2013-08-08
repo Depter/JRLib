@@ -20,7 +20,7 @@ import java.awt.datatransfer.Transferable;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.api.impl.DataEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;

@@ -27,7 +27,7 @@ import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;

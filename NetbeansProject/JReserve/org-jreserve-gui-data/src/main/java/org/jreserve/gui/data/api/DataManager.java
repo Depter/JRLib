@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api;
 
+import org.jreserve.jrlib.gui.data.DataType;
 import java.io.IOException;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.netbeans.api.project.Project;

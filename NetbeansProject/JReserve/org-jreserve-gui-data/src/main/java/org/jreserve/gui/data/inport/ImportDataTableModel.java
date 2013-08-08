@@ -19,9 +19,9 @@ package org.jreserve.gui.data.inport;
 
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.jreserve.gui.data.api.DataType;
-import org.jreserve.gui.data.api.DataEntry;
-import org.jreserve.gui.data.api.MonthDate;
+import org.jreserve.jrlib.gui.data.DataType;
+import org.jreserve.jrlib.gui.data.DataEntry;
+import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.util.NbBundle.Messages;
 
 /**

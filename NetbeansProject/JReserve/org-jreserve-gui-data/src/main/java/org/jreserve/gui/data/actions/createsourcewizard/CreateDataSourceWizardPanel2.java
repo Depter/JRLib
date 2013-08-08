@@ -21,7 +21,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.DataType;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataSourceWizard;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
