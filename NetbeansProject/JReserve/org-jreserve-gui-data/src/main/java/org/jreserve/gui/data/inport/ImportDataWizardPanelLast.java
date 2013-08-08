@@ -22,8 +22,10 @@ import java.util.List;
 import java.util.Set;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
@@ -59,6 +61,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     }
     
     private void initComponent() {
+        component.setTriangleGeometry((TriangleGeometry) wiz.getProperty(ImportDataWizardPanelGeometry.PROP_TRIANGLE_GEOMETRY));
         component.setDataSource((DataSource) wiz.getProperty(ImportDataProvider.PROP_DATA_SOURCE));
         component.setEntries((List<DataEntry>) wiz.getProperty(ImportDataProvider.PROP_IMPORT_DATA));
     }

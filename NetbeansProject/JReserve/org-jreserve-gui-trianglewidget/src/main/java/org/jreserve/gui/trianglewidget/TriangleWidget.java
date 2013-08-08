@@ -34,6 +34,7 @@ import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.triangle.Triangle;
 import javax.swing.JPanel;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 
 /**
  *
@@ -48,6 +49,7 @@ public class TriangleWidget extends JPanel {
     private List<TriangleLayer> layers;
     private TriangleModel model;
     private ModelListener modelListener = new ModelListener();
+    private TriangleGeometry geometry;
     
     //Components
     private LayerTriangleRenderer renderer;
@@ -138,6 +140,19 @@ public class TriangleWidget extends JPanel {
         
         return panel;
     
+    }
+    
+    public TriangleGeometry getTriangleGeometry() {
+        return geometry;
+    }
+    
+    public void setTriangleGeometry(TriangleGeometry geometry) {
+        if(this.geometry != null)
+            this.geometry.removeChangeListener(modelListener);
+        this.geometry = geometry;
+        if(this.geometry != null)
+            this.geometry.addChangeListener(modelListener);
+        resizeAndRepaint();
     }
     
     /**

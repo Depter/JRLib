@@ -43,6 +43,7 @@ import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -114,6 +115,10 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     
     boolean isInputCummulated() {
         return cummulatedCheck.isSelected();
+    }
+    
+    void setTriangleGeometry(TriangleGeometry geometry) {
+        triangleWidget.setTriangleGeometry(geometry);
     }
     
     void setDataSource(DataSource ds) {

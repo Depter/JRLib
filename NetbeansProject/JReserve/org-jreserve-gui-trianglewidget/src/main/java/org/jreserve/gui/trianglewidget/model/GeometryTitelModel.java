@@ -14,35 +14,50 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.jreserve.gui.trianglewidget.model;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.jrlib.gui.data.MonthDate;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class MonthDateTitleModel implements TitleModel {
+public class GeometryTitelModel implements TitleModel {
+
+    public static enum Type {
+        ACCIDENT {
+            @Override
+            MonthDate getDate(TriangleGeometry geometry, int index) {
+                return geometry.getAccidentDate(index);
+            }
+        },
+        CALENDAR {
+            @Override
+            MonthDate getDate(TriangleGeometry geometry, int index) {
+                return geometry.getDevelopmentDate(0, index);
+            }
+        };
         
-    private final MonthDate[] dates;
+        abstract MonthDate getDate(TriangleGeometry geometry, int index);
+    }
+
+    private Type type;
     
-    public MonthDateTitleModel(Collection<MonthDate> dates) {
-        this.dates = dates.toArray(new MonthDate[dates.size()]);
+    public GeometryTitelModel(Type type) {
+        if(type == null)
+            throw new NullPointerException("Type is null!");
+        this.type = type;
     }
     
-    public MonthDateTitleModel(MonthDate[] dates) {
-        this.dates = Arrays.copyOf(dates, dates.length);
-    }
-        
     @Override
     public String getName(TriangleWidget widget, int index) {
-        if(index < 0 || index>=dates.length)
-            return null;
-        return dates[index].toString();
+        TriangleGeometry geometry = widget.getTriangleGeometry();
+        if(geometry == null)
+            return ""+(index+1);
+        return type.getDate(geometry, index).toString();
     }
 }

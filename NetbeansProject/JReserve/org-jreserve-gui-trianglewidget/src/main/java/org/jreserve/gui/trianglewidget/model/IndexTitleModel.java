@@ -17,6 +17,8 @@
 
 package org.jreserve.gui.trianglewidget.model;
 
+import org.jreserve.gui.trianglewidget.TriangleWidget;
+
 /**
  *
  * @author Peter Decsi
@@ -35,7 +37,7 @@ public class IndexTitleModel implements TitleModel {
     }
     
     @Override
-    public String getName(int index) {
+    public String getName(TriangleWidget widget, int index) {
         if(!zeroBased)
             index++;
         return ""+index;

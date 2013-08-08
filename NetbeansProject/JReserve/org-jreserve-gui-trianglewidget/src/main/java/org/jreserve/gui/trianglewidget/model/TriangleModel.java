@@ -17,6 +17,10 @@
 
 package org.jreserve.gui.trianglewidget.model;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import javax.swing.event.ChangeListener;
 import org.jreserve.jrlib.triangle.Triangle;
 
@@ -28,6 +32,15 @@ import org.jreserve.jrlib.triangle.Triangle;
  * @version 1.0
  */
 public interface TriangleModel {
+    
+    @Retention(RetentionPolicy.SOURCE)
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    public static @interface Registration {
+        public String id();
+        public String displayName();
+        public String iconBase();
+        public int position() default Integer.MAX_VALUE;
+    }
     
     /**
      * Returns the triangle, representing the data.

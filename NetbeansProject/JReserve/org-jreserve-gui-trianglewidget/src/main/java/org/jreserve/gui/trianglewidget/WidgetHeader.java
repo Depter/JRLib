@@ -64,7 +64,7 @@ class WidgetHeader extends JComponent {
         
         int pSize = 0;
         for(int i=0; i<cellCount; i++)
-            pSize = Math.max(pSize, getSize(renderer.getComponent(widget, titleModel.getName(i), i, false)));
+            pSize = Math.max(pSize, getSize(renderer.getComponent(widget, titleModel.getName(widget, i), i, false)));
         
         //Dimension wSize = widget.getContentPanel().getPreferredSize();
         Dimension prefSize;
@@ -124,7 +124,7 @@ class WidgetHeader extends JComponent {
         
         initPaint();
         for(int i=0; i<count; i++) {
-            Component c = renderer.getComponent(widget, titles.getName(i), i, false);
+            Component c = renderer.getComponent(widget, titles.getName(widget, i), i, false);
             initCellBounds(i);
             paintCell(c, g);
         }

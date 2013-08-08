@@ -17,6 +17,8 @@
 
 package org.jreserve.gui.trianglewidget.model;
 
+import org.jreserve.gui.trianglewidget.TriangleWidget;
+
 /**
  *
  * @author Peter Decsi
@@ -24,6 +26,6 @@ package org.jreserve.gui.trianglewidget.model;
  */
 public interface TitleModel {
     
-    public String getName(int index);
+    public String getName(TriangleWidget widget, int index);
     
 }

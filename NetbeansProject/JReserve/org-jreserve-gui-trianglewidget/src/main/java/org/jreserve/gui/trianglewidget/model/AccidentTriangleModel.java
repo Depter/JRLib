@@ -26,7 +26,7 @@ import org.jreserve.jrlib.triangle.Triangle;
 public class AccidentTriangleModel extends AbstractTriangleModel {
 
     public AccidentTriangleModel() {
-        super();
+        this(new IndexTitleModel(), new GeometryTitelModel(GeometryTitelModel.Type.ACCIDENT));
     }
 
     public AccidentTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {

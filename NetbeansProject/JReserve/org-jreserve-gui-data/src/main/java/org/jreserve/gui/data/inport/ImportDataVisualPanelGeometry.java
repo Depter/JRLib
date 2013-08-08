@@ -25,12 +25,11 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.model.CalendarTriangleModel;
-import org.jreserve.gui.trianglewidget.model.MonthDateTitleModel;
-import org.jreserve.gui.trianglewidget.model.TitleModel;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.MonthDate;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.AbstractTriangle;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.openide.util.NbBundle.Messages;
@@ -104,31 +103,22 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
     public void setTriangleValues(double[][] values) {
         layer.triangle = new ArrayTriangle(values);
         triangleWidget.setLayers(layer);
-        updateAccidentTitleModel();
-        updateDevelopmentTitleModel();
+    }
+        
+    private void updateGeometry() {
+        TriangleGeometry geometry = createGeometry();
+        triangleWidget.setTriangleGeometry(geometry);
     }
     
-    private void updateAccidentTitleModel() {
+    public TriangleGeometry createGeometry() {
         MonthDate start = startDateSpinner.getMonthDate();
-        int length = layer.triangle==null? 0 : layer.triangle.getAccidentCount();
-        int stepSize = accidentStepSpinner.getMonthCount();
-        triangleModel.setVerticalTitleModel(getDateTitles(start, length, stepSize));
-    }
-    
-    private TitleModel getDateTitles(MonthDate start, int length, int stepSize) {
-        List<MonthDate> dates = new ArrayList<MonthDate>();
-        while(dates.size() < length) {
-            dates.add(start);
-            start = start.addMonth(stepSize);
-        }
-        return new MonthDateTitleModel(dates);
-    }
-    
-    private void updateDevelopmentTitleModel() {
-        MonthDate start = startDateSpinner.getMonthDate();
-        int length = layer.triangle==null? 0 : layer.triangle.getDevelopmentCount();
-        int stepSize = developmentStepSpinner.getMonthCount();
-        triangleModel.setHorizontalTitleModel(getDateTitles(start, length, stepSize));
+        MonthDate end = new MonthDate(Integer.MAX_VALUE, 11);
+        int aLength = accidentStepSpinner.getMonthCount();
+        int dLength = developmentStepSpinner.getMonthCount();
+        
+        if(start==null || aLength<1 || dLength<1)
+            return null;
+        return new TriangleGeometry(start, end, aLength, dLength);
     }
 
     /**
@@ -187,6 +177,8 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 15, 10, 5);
         add(accidentStepLabel, gridBagConstraints);
+
+        accidentStepSpinner.addChangeListener(inputListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -202,6 +194,8 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 15, 40, 5);
         add(developmentStepLabel, gridBagConstraints);
+
+        developmentStepSpinner.addChangeListener(inputListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
@@ -330,18 +324,19 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         @Override
         public void stateChanged(ChangeEvent e) {
             Object source = e.getSource();
-            if(source == startDateSpinner) {
-                updateAccidentTitleModel();
-                updateDevelopmentTitleModel();
-            } else if(source == accidentStepSpinner) {
-                updateAccidentTitleModel();
-            } else if(source == developmentStepSpinner) {
-                updateDevelopmentTitleModel();
+            if(isGeometryChanged(source)) {
+                updateGeometry();
             } else if(source == scaleSpinner) {
                 layer.renderer.setDecimalCount((Integer) scaleSpinner.getValue());
                 triangleWidget.repaint();
                 triangleWidget.revalidate();
             }
+        }
+        
+        private boolean isGeometryChanged(Object source) {
+            return source == startDateSpinner || 
+                   source == accidentStepSpinner || 
+                   source == developmentStepSpinner;
         }
     }
 }

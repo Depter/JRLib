@@ -27,7 +27,10 @@ import org.jreserve.jrlib.triangle.Triangle;
 public class CalendarTriangleModel extends AbstractTriangleModel {
 
     public CalendarTriangleModel() {
-        super();
+        this(
+            new GeometryTitelModel(GeometryTitelModel.Type.ACCIDENT), 
+            new GeometryTitelModel(GeometryTitelModel.Type.CALENDAR)
+        );
     }
 
     public CalendarTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {

@@ -32,6 +32,7 @@ import org.openide.util.HelpCtx;
 public class ImportDataWizardPanelGeometry implements WizardDescriptor.Panel<WizardDescriptor> {
     
     public final static String PROP_TRIANGLE_ARRAY = "triangle.array";
+    public final static String PROP_TRIANGLE_GEOMETRY = "triangle.geometry";
     
     private final ChangeSupport cs = new ChangeSupport(this);
     private ImportDataVisualPanelGeometry component;
@@ -68,6 +69,7 @@ public class ImportDataWizardPanelGeometry implements WizardDescriptor.Panel<Wiz
     @Override
     public void storeSettings(WizardDescriptor settings) {
         settings.putProperty(ImportDataProvider.PROP_IMPORT_DATA, component.createEntries());
+        settings.putProperty(PROP_TRIANGLE_GEOMETRY, component.createGeometry());
         if(component != null)
             component.storePreferences();
     }

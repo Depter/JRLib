@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.trianglewidget.model;
 
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.trianglewidget.TriangleWidgetRenderer;
 import org.jreserve.jrlib.triangle.Triangle;
 
@@ -25,10 +26,8 @@ import org.jreserve.jrlib.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface TriangleLayer {
+public interface TriangleLayer extends Displayable {
 
-    public String getDisplayName();
-    
     public Triangle getTriangle();
     
     public boolean rendersCell(int accident, int development);
