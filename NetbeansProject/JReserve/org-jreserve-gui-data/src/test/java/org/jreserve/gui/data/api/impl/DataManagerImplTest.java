@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api.impl;
 
+import org.jreserve.gui.data.api.DataEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

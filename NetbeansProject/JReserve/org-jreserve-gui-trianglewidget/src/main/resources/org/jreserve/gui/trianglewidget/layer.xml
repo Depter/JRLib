@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="TriangleWidgets">
+        <folder name="TriangleModels">
+            <file name="org-jreserve-gui-trianglewidget-model-DevelopmentTriangleModel.instance">
+                <!--org.jreserve.gui.trianglewidget.model.DevelopmentTriangleModel-->
+                <attr name="instanceOf" stringvalue="org.jreserve.gui.trianglewidget.model.TriangleModel"/>
+                <attr name="id" stringvalue="org.jreserve.gui.trianglewidget.model.DevelopmentTriangleModel"/>
+                <attr name="position" intvalue="100"/>
+                <attr name="displayName" 
+                      bundlevalue="org.jreserve.gui.trianglewidget.model.Bundle#DevelopmentTriangleModel.name"/>
+                <attr name="iconBase" 
+                      stringvalue="org/jreserve/gui/trianglewidget/model/layout_development.png"/>
+            </file>
+            <file name="org-jreserve-gui-trianglewidget-model-CalendarTriangleModel.instance">
+                <!--org.jreserve.gui.trianglewidget.model.CalendarTriangleModel-->
+                <attr name="instanceOf" stringvalue="org.jreserve.gui.trianglewidget.model.TriangleModel"/>
+                <attr name="id" stringvalue="org.jreserve.gui.trianglewidget.model.CalendarTriangleModel"/>
+                <attr name="position" intvalue="200"/>
+                <attr name="displayName" 
+                      bundlevalue="org.jreserve.gui.trianglewidget.model.Bundle#CalendarTriangleModel.name"/>
+                <attr name="iconBase" 
+                      stringvalue="org/jreserve/gui/trianglewidget/model/layout_calendar.png"/>
+            </file>
+            <file name="org-jreserve-gui-trianglewidget-model-AccidentTriangleModel.instance">
+                <!--org.jreserve.gui.trianglewidget.model.AccidentTriangleModel-->
+                <attr name="instanceOf" stringvalue="org.jreserve.gui.trianglewidget.model.TriangleModel"/>
+                <attr name="id" stringvalue="org.jreserve.gui.trianglewidget.model.AccidentTriangleModel"/>
+                <attr name="position" intvalue="300"/>
+                <attr name="displayName" 
+                      bundlevalue="org.jreserve.gui.trianglewidget.model.Bundle#AccidentTriangleModel.name"/>
+                <attr name="iconBase" 
+                      stringvalue="org/jreserve/gui/trianglewidget/model/layout_accident.png"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

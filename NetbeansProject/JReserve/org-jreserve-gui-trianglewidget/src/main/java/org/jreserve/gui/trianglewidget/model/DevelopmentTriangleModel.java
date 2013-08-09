@@ -27,7 +27,7 @@ import org.jreserve.jrlib.triangle.Triangle;
 public class DevelopmentTriangleModel extends AbstractTriangleModel {
 
     public DevelopmentTriangleModel() {
-        this(new GeometryTitelModel(GeometryTitelModel.Type.ACCIDENT), new IndexTitleModel());
+        this(new IndexTitleModel(), new GeometryTitelModel(GeometryTitelModel.Type.ACCIDENT));
     }
 
     public DevelopmentTriangleModel(TitleModel horizontalTitles, TitleModel verticalTitles) {

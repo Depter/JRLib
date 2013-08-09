@@ -18,6 +18,8 @@ package org.jreserve.gui.data.inport;
 
 import java.util.Collections;
 import java.util.List;
+import javax.swing.Icon;
+import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidgetRenderer;
@@ -61,9 +63,7 @@ class TriangleUtil {
         return layer;
     }
     
-    DataEntry getEntry(int row, int column) {
-        int accident = triangleModel.getAccidentIndex(row, column);
-        int development = triangleModel.getDevelopmentIndex(row, column);
+    DataEntry getEntry(int accident, int development) {
         return triangle.getEntry(accident, development);
     }
     
@@ -78,6 +78,11 @@ class TriangleUtil {
         @Override
         public String getDisplayName() {
             return "import data";
+        }
+        
+        @Override
+        public Icon getIcon() {
+            return EmptyIcon.EMPTY_16;
         }
 
         @Override

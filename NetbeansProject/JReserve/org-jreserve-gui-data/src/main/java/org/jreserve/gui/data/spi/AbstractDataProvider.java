@@ -25,13 +25,24 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "# {0} - path",
+    "MSG.AbstractDataProvider.Imported.OnlyNew=Data imported into ''{0}'', keeping old values!",
+    "# {0} - path",
+    "MSG.AbstractDataProvider.Imported.Overwrite=Data imported into ''{0}'', overwriting old values!",
+    "# {0} - path",
+    "MSG.AbstractDataProvider.Deleted=Data deleted from ''{0}''!"
+})
 public abstract class AbstractDataProvider implements DataProvider {
     
     private final DataProvider.Factory factory;
@@ -105,8 +116,17 @@ public abstract class AbstractDataProvider implements DataProvider {
             
         if(changed) {
             saveEntries(entries);
-            //TODO publish change event
+            String path = this.getDataSource().getPath();
+            String msg = SaveType.SAVE_NEW == saveType?
+                    Bundle.MSG_AbstractDataProvider_Imported_OnlyNew(path) :
+                    Bundle.MSG_AbstractDataProvider_Imported_Overwrite(path);
+            publishDataChange(msg);
         }
+    }
+    
+    private void publishDataChange(String msg) {
+        DataEvent.DataChangeEvent evt = new DataEvent.DataChangeEvent(getDataSource(), msg);
+        EventBusManager.getDefault().publish(evt);
     }
     
     private boolean addEntry(DataEntry newEntry, SaveType saveType) throws Exception {
@@ -114,18 +134,12 @@ public abstract class AbstractDataProvider implements DataProvider {
         if(oldEntry != null) {
             if(SaveType.SAVE_NEW == saveType) {
                 entries.remove(oldEntry);
-                //TODO log event
-                //TODO publish audit event
                 entries.add(newEntry);
-                //TODO log event
-                //TODO publish audit event
                 return true;
             }
             return false;
         } else {
             entries.add(newEntry);
-            //TODO log event
-            //TODO publish audit event
             return true;
         }
     }
@@ -151,14 +165,13 @@ public abstract class AbstractDataProvider implements DataProvider {
         for(DataEntry entry : entries) {
             if(this.entries.remove(entry)) {
                 changed = true;
-                //TODO log remove
-                //TODO publish audit event
             }
         }
             
         if(changed) {
             saveEntries(this.entries);
-            //TODO publish change event
+            String path = getDataSource().getPath();
+            publishDataChange(Bundle.MSG_AbstractDataProvider_Deleted(path));
         }
     }
 }

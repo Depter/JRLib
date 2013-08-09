@@ -43,7 +43,7 @@ import org.openide.util.datatransfer.PasteType;
     "# {0} - path",
     "MSG.DataItemFlavor.Move=Moving: {0}",
     "# {0} - path",
-    "MSG.DataItemFlavor.Move.Error=Mave of {0}!"
+    "MSG.DataItemFlavor.Move.Error=Move {0}!"
 })
 class DataItemFlavor<T extends DataItem> extends DataFlavor {
     

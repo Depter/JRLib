@@ -17,7 +17,6 @@
 
 package org.jreserve.gui.localesettings;
 
-import java.awt.Dimension;
 import java.text.ParseException;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFormattedTextField.AbstractFormatter;
@@ -45,9 +44,7 @@ public class ScaleSpinner extends JSpinner {
                 return new ScaleFormatter();
             }
         });
-        text.setColumns(10);
-        //text.setPreferredSize(new Dimension(50, 24));
-
+        text.setColumns(5);
     }
     
     private static class ScaleFormatter extends AbstractFormatter {

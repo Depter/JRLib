@@ -172,13 +172,7 @@ public class LocaleSettings {
     
     public synchronized static DecimalFormatter createDecimalFormat() {
         DecimalFormat df = new DecimalFormat();
-        
-        DecimalFormatSymbols dfs = df.getDecimalFormatSymbols();
-        dfs.setDecimalSeparator(getDecimalSeparator());
-        dfs.setGroupingSeparator(getThousandSeparator());
-        dfs.setExponentSeparator(getExponentSeparator());
-        dfs.setNaN(getNaN());
-        dfs.setInfinity(getInfinity());
+        df.setDecimalFormatSymbols(createDecimalSymbols());
         
         DecimalFormatter formatter = new DecimalFormatter(df);
         formatter.setDecimalCount(getDecimalCount());
@@ -186,6 +180,16 @@ public class LocaleSettings {
         df.setMinimumFractionDigits(formatter.decimals);
         
         return formatter;
+    }
+    
+    private static DecimalFormatSymbols createDecimalSymbols() {
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator(getDecimalSeparator());
+        dfs.setExponentSeparator(getExponentSeparator());
+        dfs.setGroupingSeparator(getThousandSeparator());
+        dfs.setInfinity(getInfinity());
+        dfs.setNaN(getNaN());
+        return dfs;
     }
     
     private LocaleSettings() {}

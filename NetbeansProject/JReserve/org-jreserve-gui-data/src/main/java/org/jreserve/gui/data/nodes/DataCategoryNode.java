@@ -22,7 +22,7 @@ import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
-import org.jreserve.gui.data.api.impl.DataEvent;
+import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;

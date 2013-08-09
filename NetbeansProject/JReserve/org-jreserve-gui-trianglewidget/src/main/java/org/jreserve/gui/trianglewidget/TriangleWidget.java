@@ -21,6 +21,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,6 +35,7 @@ import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.triangle.Triangle;
 import javax.swing.JPanel;
+import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 
 /**
@@ -50,6 +52,7 @@ public class TriangleWidget extends JPanel {
     private TriangleModel model;
     private ModelListener modelListener = new ModelListener();
     private TriangleGeometry geometry;
+    private LocaleSettings.DecimalFormatter df = LocaleSettings.createDecimalFormat();
     
     //Components
     private LayerTriangleRenderer renderer;
@@ -140,6 +143,17 @@ public class TriangleWidget extends JPanel {
         
         return panel;
     
+    }
+    
+    public LocaleSettings.DecimalFormatter getDecimalFormatter() {
+        return df;
+    }
+    
+    public void setDecimalFormatter(LocaleSettings.DecimalFormatter df) {
+        if(df == null)
+            df = LocaleSettings.createDecimalFormat();
+        this.df = df;
+        resizeAndRepaint();
     }
     
     public TriangleGeometry getTriangleGeometry() {

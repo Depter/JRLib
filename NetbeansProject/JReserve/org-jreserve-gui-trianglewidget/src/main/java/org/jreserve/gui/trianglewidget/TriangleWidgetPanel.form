@@ -78,6 +78,9 @@
           </Constraints>
         </Component>
         <Component class="org.jreserve.gui.localesettings.ScaleSpinner" name="scaleSpinner">
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="scaleSpinner.addChangeListener(new ChangeListener() {&#xa;    @Override&#xa;    public void stateChanged(ChangeEvent e) {&#xa;        scaleSpinnerChanged(e);&#xa;    }&#xa;});&#xa;&#xa;scaleSpinner.setValue(LocaleSettings.getDecimalCount());"/>
+          </AuxValues>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
               <GridBagConstraints gridX="-1" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="6" anchor="768" weightX="0.0" weightY="0.0"/>
@@ -140,6 +143,9 @@
               <Connection code="WidgetUtils.displayableListRenderer()" type="code"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="layerComboActionPerformed"/>
+          </Events>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
               <GridBagConstraints gridX="-1" gridY="0" gridWidth="1" gridHeight="1" fill="0" ipadX="0" ipadY="0" insetsTop="0" insetsLeft="0" insetsBottom="0" insetsRight="6" anchor="768" weightX="0.0" weightY="0.0"/>

@@ -16,22 +16,120 @@
  */
 package org.jreserve.gui.trianglewidget;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
+import org.jreserve.gui.trianglewidget.model.TriangleLayer;
+import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelAdapter;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelRegistry;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 
 /**
  *
- * @author Peti
+ * @author Peter Decsi
+ * @version 1.0
  */
 public class TriangleWidgetPanel extends javax.swing.JPanel {
-
+    
+    private List<TriangleLayer> layers = new ArrayList<TriangleLayer>();
+    
     public TriangleWidgetPanel() {
         initComponents();
     }
     
+    public void setCummulated(boolean cummulated) {
+        triangleWidget.setCummulated(cummulated);
+    }
+    
+    public boolean isCummulated() {
+        return triangleWidget.isCummulated();
+    }
+    
+    public Map<String, TriangleModel> getModels() {
+        int size = layoutCombo.getItemCount();
+        Map<String, TriangleModel> result = new TreeMap<String, TriangleModel>();
+        for(int i=0; i<size; i++) {
+            TriangleModelAdapter adapter = (TriangleModelAdapter) layoutCombo.getItemAt(i);
+            result.put(adapter.getId(), adapter.getTriangleModel());
+        }
+        return result;
+    }
+    
+    public TriangleModel getModel() {
+        TriangleModelAdapter adapter = (TriangleModelAdapter) layoutCombo.getSelectedItem();
+        if(adapter == null)
+            return null;
+        return adapter.getTriangleModel();
+    }
+    
+    public String getModelId() {
+        TriangleModelAdapter adapter = (TriangleModelAdapter) layoutCombo.getSelectedItem();
+        return adapter==null? null : adapter.getId();
+    }
+    
+    public void setModelId(String id) {
+        int index = getModelIndex(id);
+        layoutCombo.setSelectedIndex(index);
+    }
+    
+    private int getModelIndex(String layoutId) {
+        int size = layoutCombo.getItemCount();
+        for(int i=0; i<size; i++)
+            if(((TriangleModelAdapter) layoutCombo.getItemAt(i)).getId().equals(layoutId))
+                return i;
+        return -1;
+    }
+    
+    public void setLayers(TriangleLayer... layers) {
+        setLayers(Arrays.asList(layers));
+    }
+    
     public void setLayers(List<TriangleLayer> layers) {
+        setNewLayers(layers);
+        layerCombo.setModel(new DefaultComboBoxModel(this.layers.toArray()));
+        if(layers != null && !layers.isEmpty())
+            layerCombo.setSelectedIndex(layers.size()-1);
+    }
+    
+    private void setNewLayers(List<TriangleLayer> layers) {
+        if(layers == null)
+            layers = Collections.EMPTY_LIST;
+        this.layers.clear();
+        this.layers.addAll(layers);
+    }
+    
+    public void setSelectedLayer(TriangleLayer layer) {
+        int index = this.layers.indexOf(layer);
+        layerCombo.setSelectedIndex(index);
+    }
+    
+    public List<TriangleLayer> getLayers() {
+        return new ArrayList<TriangleLayer>(layers);
+    }
+    
+    public void setDecimalCount(int decimalCount) {
+        scaleSpinner.setValue(decimalCount);
+    }
+    
+    public int getDecimalCount(int decimalCount) {
+        return (Integer) scaleSpinner.getValue();
+    }
+    
+    public void setTriangleGeometry(TriangleGeometry geometry) {
+        triangleWidget.setTriangleGeometry(geometry);
+    }
+    
+    public TriangleGeometry getTriangleGeometry() {
+        return triangleWidget.getTriangleGeometry();
     }
 
     @SuppressWarnings("unchecked")
@@ -81,6 +179,15 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 3);
         toolBarPanel.add(scaleLabel, gridBagConstraints);
+
+        scaleSpinner.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                scaleSpinnerChanged(e);
+            }
+        });
+
+        scaleSpinner.setValue(LocaleSettings.getDecimalCount());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
@@ -116,6 +223,11 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
 
         layerCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         layerCombo.setRenderer(WidgetUtils.displayableListRenderer());
+        layerCombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                layerComboActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
@@ -135,6 +247,29 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
             triangleWidget.setModel(adapter.getTriangleModel());
     }//GEN-LAST:event_layoutComboActionPerformed
 
+    private void layerComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_layerComboActionPerformed
+        int index = layerCombo.getSelectedIndex();
+        List<TriangleLayer> selected = new ArrayList<TriangleLayer>();
+        for(int i=0; i<=index; i++) 
+            selected.add((TriangleLayer)layerCombo.getItemAt(i));
+        triangleWidget.setLayers(selected);
+    }//GEN-LAST:event_layerComboActionPerformed
+
+    private void scaleSpinnerChanged(ChangeEvent evt) {
+        LocaleSettings.DecimalFormatter df = triangleWidget.getDecimalFormatter();
+        df.setDecimalCount((Integer)scaleSpinner.getValue());
+        triangleWidget.setDecimalFormatter(df);
+    }
+    
+    public void setCummulatedControlVisible(boolean visible) {
+        cumulatedLabel.setVisible(visible);
+        cummulatedCheck.setVisible(visible);
+    }
+    
+    public boolean isCummulatedControlVisible() {
+        return cummulatedCheck.isVisible();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cumulatedLabel;
@@ -149,4 +284,5 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
     private org.jreserve.gui.trianglewidget.TriangleWidget triangleWidget;
     private javax.swing.JScrollPane widgetScroll;
     // End of variables declaration//GEN-END:variables
+
 }

@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api.impl;
 
+import org.jreserve.gui.data.api.DataEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -115,7 +116,7 @@ public class DataManagerImpl implements DataManager {
         if(this != parent.getDataManager())
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
         DataCategoryImpl child = ((DataCategoryImpl) parent).createChildCategory(name);
-        DataEvent.categoryCreated(child);
+        DataEventUtil.categoryCreated(child);
         return child;
     }
     
@@ -128,19 +129,19 @@ public class DataManagerImpl implements DataManager {
         
         DataCategory parent = item.getParent();
         ((AbstractDataItem)item).delete();
-        DataEvent.itemDeleted(parent, item, true);
+        DataEventUtil.itemDeleted(parent, item, true);
     }
     
     private void deleteChildren(DataCategory category) throws IOException {
         for(DataCategory child : category.getChildCategories()) {
             deleteChildren(child);
             ((AbstractDataItem) child).delete();
-            DataEvent.itemDeleted(category, child, false);
+            DataEventUtil.itemDeleted(category, child, false);
         }
         
         for(DataSource child : category.getDataSources()) {
             ((AbstractDataItem)child).delete();
-            DataEvent.itemDeleted(category, child, false);
+            DataEventUtil.itemDeleted(category, child, false);
         }
     }
     
@@ -149,7 +150,7 @@ public class DataManagerImpl implements DataManager {
         if(this != parent.getDataManager())
             throw new IllegalArgumentException("DataCategory belongs to another data manager!");
         DataSourceImpl child = ((DataCategoryImpl) parent).createChildSource(name, dataType, dataProvider);
-        DataEvent.sourceCreated(child);
+        DataEventUtil.sourceCreated(child);
         return child;
     }
     
@@ -165,7 +166,7 @@ public class DataManagerImpl implements DataManager {
         impl.rename(newName);
         
         for(Map.Entry<DataItem, String> entry : oldNames.entrySet())
-            DataEvent.itemRenamed(entry.getKey(), entry.getValue());
+            DataEventUtil.itemRenamed(entry.getKey(), entry.getValue());
     }
     
     private void checkValidName(AbstractDataItem item, String name) {
@@ -215,7 +216,7 @@ public class DataManagerImpl implements DataManager {
         ((AbstractDataItem) item).move((DataCategoryImpl)target);
         
         for(Map.Entry<DataItem, String> entry : oldNames.entrySet())
-            DataEvent.itemRenamed(entry.getKey(), entry.getValue());
+            DataEventUtil.itemRenamed(entry.getKey(), entry.getValue());
     }
     
     private void checkMovable(DataCategory target, DataItem item) {

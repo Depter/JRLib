@@ -53,7 +53,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     
     private final static Logger logger = Logger.getLogger(ImportDataWizardIterator.class.getName());
     
-    final static String PROP_INIT_DATA_ITEM = "init.data.item"; //Panel 0
+    final static String PROP_INIT_DATA_ITEM = "init.data.item"; //NOI18
     
     private DataItem dataItem;
     private WizardDescriptor wizardDesc;

@@ -55,6 +55,10 @@ public class TriangleModelAdapter implements Displayable {
         return name;
     }
     
+    public String getId() {
+        return id;
+    }
+    
     public TriangleModel getTriangleModel() {
         return model;
     }

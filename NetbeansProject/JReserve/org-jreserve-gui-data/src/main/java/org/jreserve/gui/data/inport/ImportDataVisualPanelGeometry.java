@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javax.swing.Icon;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.model.CalendarTriangleModel;
@@ -131,6 +133,7 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        triangleWidgetPanel1 = new org.jreserve.gui.trianglewidget.TriangleWidgetPanel();
         startDateLabel = new javax.swing.JLabel();
         startDateSpinner = new org.jreserve.gui.trianglewidget.geometry.MonthDateSpinner();
         stepsLabel = new javax.swing.JLabel();
@@ -138,10 +141,7 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         accidentStepSpinner = new org.jreserve.gui.trianglewidget.geometry.PeriodStepSpinner();
         developmentStepLabel = new javax.swing.JLabel();
         developmentStepSpinner = new org.jreserve.gui.trianglewidget.geometry.PeriodStepSpinner();
-        scaleLabel = new javax.swing.JLabel();
-        scaleSpinner = new org.jreserve.gui.localesettings.ScaleSpinner();
-        triangleScroll = new javax.swing.JScrollPane();
-        triangleWidget = new org.jreserve.gui.trianglewidget.TriangleWidget();
+        triangleWidget = new org.jreserve.gui.trianglewidget.TriangleWidgetPanel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -204,47 +204,26 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 40, 0);
         add(developmentStepSpinner, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(scaleLabel, org.openide.util.NbBundle.getMessage(ImportDataVisualPanelGeometry.class, "ImportDataVisualPanelGeometry.scaleLabel.text")); // NOI18N
+        triangleWidget.setCummulatedControlVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        add(scaleLabel, gridBagConstraints);
-
-        scaleSpinner.addChangeListener(inputListener);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        add(scaleSpinner, gridBagConstraints);
-
-        triangleWidget.setModel(triangleModel);
-        triangleScroll.setViewportView(triangleWidget);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        add(triangleScroll, gridBagConstraints);
+        add(triangleWidget, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel accidentStepLabel;
     private org.jreserve.gui.trianglewidget.geometry.PeriodStepSpinner accidentStepSpinner;
     private javax.swing.JLabel developmentStepLabel;
     private org.jreserve.gui.trianglewidget.geometry.PeriodStepSpinner developmentStepSpinner;
-    private javax.swing.JLabel scaleLabel;
-    private org.jreserve.gui.localesettings.ScaleSpinner scaleSpinner;
     private javax.swing.JLabel startDateLabel;
     private org.jreserve.gui.trianglewidget.geometry.MonthDateSpinner startDateSpinner;
     private javax.swing.JLabel stepsLabel;
-    private javax.swing.JScrollPane triangleScroll;
-    private org.jreserve.gui.trianglewidget.TriangleWidget triangleWidget;
+    private org.jreserve.gui.trianglewidget.TriangleWidgetPanel triangleWidget;
+    private org.jreserve.gui.trianglewidget.TriangleWidgetPanel triangleWidgetPanel1;
     // End of variables declaration//GEN-END:variables
 
     private class Layer implements TriangleLayer {
@@ -255,6 +234,11 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         @Override
         public String getDisplayName() {
             return "Input Data";
+        }
+
+        @Override
+        public Icon getIcon() {
+            return EmptyIcon.EMPTY_16;
         }
 
         @Override
@@ -320,23 +304,9 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
     }
     
     private class InputListener implements ChangeListener {
-
         @Override
         public void stateChanged(ChangeEvent e) {
-            Object source = e.getSource();
-            if(isGeometryChanged(source)) {
-                updateGeometry();
-            } else if(source == scaleSpinner) {
-                layer.renderer.setDecimalCount((Integer) scaleSpinner.getValue());
-                triangleWidget.repaint();
-                triangleWidget.revalidate();
-            }
-        }
-        
-        private boolean isGeometryChanged(Object source) {
-            return source == startDateSpinner || 
-                   source == accidentStepSpinner || 
-                   source == developmentStepSpinner;
+            updateGeometry();
         }
     }
 }

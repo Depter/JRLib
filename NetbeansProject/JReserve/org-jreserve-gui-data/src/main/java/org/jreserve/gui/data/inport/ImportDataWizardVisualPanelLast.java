@@ -43,6 +43,7 @@ import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
+import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.openide.util.NbBundle.Messages;
 
@@ -95,7 +96,6 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private TriangleUtil triangleUtil;
     
     private SaveType saveType = SaveType.SAVE_NEW;
-    private DecimalFormatter df = LocaleSettings.createDecimalFormat();
     
     ImportDataWizardVisualPanelLast(ImportDataWizardPanelLast controller) {
         this.controller = controller;
@@ -143,14 +143,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         
         triangleUtil = new TriangleUtil(entries);
         triangleUtil.setRenderer(triangleRenderer);
-        triangleWidget.setModel(triangleUtil.getTriangleModel());
         triangleWidget.setLayers(triangleUtil.getLayers());
-    }
-    
-    private void decimalSpinnerChanged() {
-        df.setDecimalCount((Integer) decimalSpinner.getValue());
-        table.repaint();
-        triangleWidget.repaint();
     }
     
     /**
@@ -169,13 +162,10 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         overviewTypeCombo = new javax.swing.JComboBox();
         cummulatedLabel = new javax.swing.JLabel();
         cummulatedCheck = new javax.swing.JCheckBox();
-        decimalLabel = new javax.swing.JLabel();
-        decimalSpinner = new org.jreserve.gui.localesettings.ScaleSpinner();
         overviewPanel = new javax.swing.JPanel();
         tableScroll = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
-        triangleScroll = new javax.swing.JScrollPane();
-        triangleWidget = new org.jreserve.gui.trianglewidget.TriangleWidget();
+        triangleWidget = new org.jreserve.gui.trianglewidget.TriangleWidgetPanel();
         pBar = new javax.swing.JProgressBar();
 
         setLayout(new java.awt.GridBagLayout());
@@ -235,7 +225,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(cummulatedLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(cummulatedCheck, null);
@@ -244,29 +234,8 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(cummulatedCheck, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(decimalLabel, org.openide.util.NbBundle.getMessage(ImportDataWizardVisualPanelLast.class, "ImportDataWizardVisualPanelLast.decimalLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
-        add(decimalLabel, gridBagConstraints);
-
-        decimalSpinner.addChangeListener(new ChangeListener() {
-            @Override public void stateChanged(ChangeEvent e) {
-                decimalSpinnerChanged();
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
-        add(decimalSpinner, gridBagConstraints);
 
         overviewPanel.setPreferredSize(new java.awt.Dimension(450, 250));
         overviewPanel.setLayout(new java.awt.CardLayout());
@@ -279,9 +248,8 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
 
         overviewPanel.add(tableScroll, "table");
 
-        triangleScroll.setViewportView(triangleWidget);
-
-        overviewPanel.add(triangleScroll, "triangle");
+        triangleWidget.setCummulatedControlVisible(false);
+        overviewPanel.add(triangleWidget, "triangle");
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
@@ -321,8 +289,6 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cummulatedLabel;
-    private javax.swing.JLabel decimalLabel;
-    private org.jreserve.gui.localesettings.ScaleSpinner decimalSpinner;
     private javax.swing.JPanel overviewPanel;
     private javax.swing.JComboBox overviewTypeCombo;
     private javax.swing.JLabel overviewTypeLabel;
@@ -331,15 +297,13 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private javax.swing.JLabel saveTypeLabel;
     private javax.swing.JTable table;
     private javax.swing.JScrollPane tableScroll;
-    private javax.swing.JScrollPane triangleScroll;
-    private org.jreserve.gui.trianglewidget.TriangleWidget triangleWidget;
+    private org.jreserve.gui.trianglewidget.TriangleWidgetPanel triangleWidget;
     // End of variables declaration//GEN-END:variables
     
     private void setProgressRunning(boolean running) {
         saveTypeCombo.setEnabled(!running);
         overviewTypeCombo.setEnabled(!running);
         cummulatedCheck.setEnabled(!running);
-        decimalSpinner.setEnabled(!running);
         pBar.setIndeterminate(running);
         pBar.setVisible(running);
     }
@@ -391,6 +355,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private class TableRenderer extends DefaultTableCellRenderer {
         
         private final Color alternate = UIManager.getColor("Table.alternateRowColor");
+        private final DecimalFormatter df = LocaleSettings.createDecimalFormat();
         
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -398,7 +363,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
             setHorizontalAlignment(SwingConstants.RIGHT);
             
             if(value instanceof Double)
-                setText(df.format(((Double)value).doubleValue()));
+                setText(df.format((Double) value));
             
             if(!isSelected)
                 setBgColor(row);
@@ -432,15 +397,19 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         @Override
         public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
             super.getComponent(widget, value, row, column, selected);
-            setText(df.format(value));
-            setBackground(getBgColor(row, column));
+            
+            TriangleModel model = widget.getModel();
+            int accident = model.getAccidentIndex(row, column);
+            int development = model.getDevelopmentIndex(row, column);
+            setBackground(getBgColor(accident, development));
+            
             return this;
         }
         
-        private Color getBgColor(int row, int column) {
+        private Color getBgColor(int accident, int development) {
             if(triangleUtil == null || SaveType.SAVE_NEW != saveType)
                 return Color.WHITE;
-            DataEntry entry = triangleUtil.getEntry(row, column);
+            DataEntry entry = triangleUtil.getEntry(accident, development);
             
             if(existingEntries.contains(entry)) {
                 return COLOR_EXISTS;

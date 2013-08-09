@@ -159,23 +159,11 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
     
     @Override
     public synchronized void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception {
-        try {
-            dataProvider.addEntries(entries, saveType);
-            //TODO fire event
-        } catch (Exception ex) {
-            //TODO fire event
-            throw ex;
-        }
+        dataProvider.addEntries(entries, saveType);
     }
     
     @Override
     public synchronized void deleteEntries(Set<DataEntry> entries) throws Exception {
-        try {
-            dataProvider.deleteEntries(entries);
-            //TODO fire event
-        } catch (Exception ex) {
-            //TODO fire event
-            throw ex;
-        }
+        dataProvider.deleteEntries(entries);
     }
 }

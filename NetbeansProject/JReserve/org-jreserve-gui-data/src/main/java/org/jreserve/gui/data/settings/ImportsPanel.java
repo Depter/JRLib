@@ -133,9 +133,9 @@ final class ImportsPanel extends javax.swing.JPanel {
     }
 
     boolean valid() {
-        // TODO check whether form is consistent and complete
         return true;
     }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cummulatedLabel;
