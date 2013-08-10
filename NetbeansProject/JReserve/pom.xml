@@ -76,6 +76,7 @@
     <module>org-jreserve-gui-localesettings</module>
     <module>org-jreserve-gui-jrlib</module>
     <module>org-jreserve-gui-trianglewidget</module>
+    <module>org-jreserve-gui-data-clipboard</module>
   </modules>
 
     <properties>

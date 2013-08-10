@@ -30,7 +30,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.jreserve.gui.data.csv.CsvFileFilter;
-import org.jreserve.gui.data.csv.input.ImportUtil;
+import org.jreserve.gui.data.api.ImportUtil;
 import org.jreserve.gui.data.csv.input.PreviewReader;
 import org.jreserve.gui.data.csv.input.PreviewRenderer;
 import org.jreserve.gui.data.csv.input.PreviewTableModel;
@@ -395,6 +395,7 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         previewScroll.setPreferredSize(new java.awt.Dimension(300, 150));
 
         previewTable.setModel(prevModel);
+        previewTable.setShowGrid(true);
         previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         renderer = new PreviewRenderer();
         previewTable.setDefaultRenderer(String.class, renderer);

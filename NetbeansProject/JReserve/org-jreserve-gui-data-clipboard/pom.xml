@@ -10,11 +10,11 @@
     </parent>
 
     <groupId>org.jreserve</groupId>
-    <artifactId>org-jreserve-gui-excel</artifactId>
+    <artifactId>org-jreserve-gui-data-clipboard</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
-    <name>Excel</name>
+    <name>Data Store - Clipboard</name>
     
     <licenses>
         <license>
@@ -71,19 +71,8 @@
         </dependency>
         
         <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-            <version>3.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-            <version>3.9</version>
-        </dependency>
-        
-        <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-utils</artifactId>
+            <artifactId>org-jreserve-gui-localesettings</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

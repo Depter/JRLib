@@ -52,7 +52,7 @@ public class TriangleWidget extends JPanel {
     private TriangleModel model;
     private ModelListener modelListener = new ModelListener();
     private TriangleGeometry geometry;
-    private LocaleSettings.DecimalFormatter df = LocaleSettings.createDecimalFormat();
+    private LocaleSettings.DecimalFormatter df = LocaleSettings.createDecimalFormatter();
     
     //Components
     private LayerTriangleRenderer renderer;
@@ -151,7 +151,7 @@ public class TriangleWidget extends JPanel {
     
     public void setDecimalFormatter(LocaleSettings.DecimalFormatter df) {
         if(df == null)
-            df = LocaleSettings.createDecimalFormat();
+            df = LocaleSettings.createDecimalFormatter();
         this.df = df;
         resizeAndRepaint();
     }

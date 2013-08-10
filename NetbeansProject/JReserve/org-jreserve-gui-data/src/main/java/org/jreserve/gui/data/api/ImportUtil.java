@@ -15,7 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.data.csv.input;
+package org.jreserve.gui.data.api;
 
 import org.openide.util.RequestProcessor;
 
@@ -26,7 +26,7 @@ import org.openide.util.RequestProcessor;
  */
 public class ImportUtil {
     
-    public static RequestProcessor RP = new RequestProcessor("CSV_IMPORT", 1);
+    public static RequestProcessor RP = new RequestProcessor("DATA_IMPORT", 1);
     
     public synchronized static RequestProcessor getRP() {
         if(RP == null)

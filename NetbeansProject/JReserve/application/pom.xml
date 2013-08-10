@@ -139,6 +139,12 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-data-clipboard</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-excel</artifactId>
             <version>${project.version}</version>
             <type>jar</type>

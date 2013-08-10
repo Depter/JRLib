@@ -170,7 +170,13 @@ public class LocaleSettings {
         setDateFormat(null);
     }
     
-    public synchronized static DecimalFormatter createDecimalFormat() {
+    public synchronized static DecimalFormat createDecimalFormat() {
+        DecimalFormat df = new DecimalFormat();
+        df.setDecimalFormatSymbols(createDecimalSymbols());
+        return df;
+    }
+    
+    public synchronized static DecimalFormatter createDecimalFormatter() {
         DecimalFormat df = new DecimalFormat();
         df.setDecimalFormatSymbols(createDecimalSymbols());
         

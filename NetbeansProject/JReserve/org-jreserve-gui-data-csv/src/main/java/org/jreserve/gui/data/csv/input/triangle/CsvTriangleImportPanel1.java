@@ -28,7 +28,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.jreserve.gui.data.csv.CsvFileFilter;
-import org.jreserve.gui.data.csv.input.ImportUtil;
+import org.jreserve.gui.data.api.ImportUtil;
 import org.jreserve.gui.data.csv.input.PreviewReader;
 import org.jreserve.gui.data.csv.input.PreviewRenderer;
 import org.jreserve.gui.data.csv.input.PreviewTableModel;
@@ -341,6 +341,7 @@ class CsvTriangleImportPanel1 extends javax.swing.JPanel {
 
         previewTable.setModel(prevModel);
         previewTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        previewTable.setShowGrid(true);
         previewTable.setAutoscrolls(false);
         previewRenderer = new PreviewRenderer();
         previewTable.setDefaultRenderer(String.class, previewRenderer);

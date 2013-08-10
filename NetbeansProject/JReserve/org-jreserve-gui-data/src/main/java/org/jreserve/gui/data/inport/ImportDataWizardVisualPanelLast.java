@@ -355,7 +355,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private class TableRenderer extends DefaultTableCellRenderer {
         
         private final Color alternate = UIManager.getColor("Table.alternateRowColor");
-        private final DecimalFormatter df = LocaleSettings.createDecimalFormat();
+        private final DecimalFormatter df = LocaleSettings.createDecimalFormatter();
         
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
