@@ -26,12 +26,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
 import org.jreserve.gui.excel.ExcelUtil;
-import org.jreserve.jrlib.gui.data.DataEntry;
-import org.jreserve.jrlib.gui.data.DataType;
-import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
@@ -44,45 +40,24 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "MSG.ExcelTableImportWizardPanel.Workbook.Empty=Workbook not selected!",
-    "MSG.ExcelTableImportWizardPanel.Reference.Empty=reference is not set!",
-    "# {0} - reference",
-    "MSG.ExcelTableImportWizardPanel.Reference.Invalid=Reference ''{0}'' is invalid!",
-    "MSG.ExcelTableImportWizardPanel.Data.Empty=The specified range is empty!",
-    "# {0} - row",
-    "# {1} - column",
-    "MSG.ExcelTableImportWizardPanel.Data.WrongCell=Illegal cell value in [{0}, {1}]!",
     "# {0} - addres",
-    "MSG.ExcelTableImportWizardPanel.Read.DateError=Unable to read date from cell ''{0}''!",
-    "# {0} - addres",
-    "MSG.ExcelTableImportWizardPanel.Read.NumberError=Unable to read number from cell ''{0}''!",
-    "# {0} - r1",
-    "# {1} - r0",
-    "MSG.ExcelTableImportWizardPanel.Read.Duplicate=Entry in row ''{0}'' is duplicate of row ''{1}''!"
+    "MSG.ExcelTriangleImportWizardPanel.Read.NumberError=Unable to read number form cell ''{0}''!"
 })
-class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
-    
+public class ExcelTriangleImportWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
+
     private final ChangeSupport cs = new ChangeSupport(this);
     private boolean valid = false;
     private WizardDescriptor wiz;
-    private ExcelTableImportVisualPanel component;
+    private ExcelTriangleImportVisualPanel component;
     
     private final Object inputLock = new Object();
     private ValidationInput input;
-    
+
     @Override
     public Component getComponent() {
-        if(component == null) {
-            component = new ExcelTableImportVisualPanel(this);
-            if(wiz != null)
-                initPanel();
-        }
+        if(component == null)
+            component = new ExcelTriangleImportVisualPanel(this);
         return component;
-    }
-    
-    private void initPanel() {
-        DataSource ds = (DataSource) wiz.getProperty(ImportDataProvider.PROP_DATA_SOURCE);
-        component.setVector(DataType.VECTOR == ds.getDataType());
     }
 
     @Override
@@ -93,8 +68,6 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
     @Override
     public void readSettings(WizardDescriptor settings) {
         this.wiz = settings;
-        if(component != null)
-            initPanel();
     }
 
     @Override
@@ -176,79 +149,61 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
             int firstRow = ref.getRow();
             int firstColumn = ref.getCol();
             
-            List<DataEntry> entries = new ArrayList<DataEntry>();
+            List<double[]> values = new ArrayList<double[]>();
             int rCount = 0;
             while(true) {
                 Row row = sheet.getRow(firstRow + rCount++);
                 if(row == null) break;
                 
-                DataEntry entry = input.isVector? getVector(row, firstColumn) : getTriangle(row, firstColumn);
-                if(entry == null) break;
+                double[] rowValues = readRow(row, firstColumn);
+                if(rowValues == null)
+                    break;
                 
-                int index = entries.indexOf(entry);
-                if(index >= 0) {
-                    int r0 = firstRow + index + 1;
-                    int r1 = firstRow + rCount;
-                    String msg = "Duplicate entry in rows: "+r0 + ", "+r1;
-                    String lMsg = Bundle.MSG_ExcelTableImportWizardPanel_Read_Duplicate(r1, r0);
-                    throw new WizardValidationException(component, msg, lMsg);
-                }
-                entries.add(entry);
+                values.add(rowValues);
             }
             
-            if(entries.isEmpty()) {
+            if(values.isEmpty()) {
                 String msg = "No data is imported!";
                 String lMsg = Bundle.MSG_ExcelTableImportWizardPanel_Data_Empty();
                 throw new WizardValidationException(component, msg, lMsg);
             }
             
-            wiz.putProperty(ImportDataProvider.PROP_IMPORT_DATA, entries);
+            wiz.putProperty(ImportDataWizardPanelGeometry.PROP_TRIANGLE_ARRAY, toArray(values));
         }
     }
     
-    private DataEntry getTriangle(Row row, int firstColumn) throws WizardValidationException {
-        Cell ac = row.getCell(firstColumn);
-        Cell dc = row.getCell(firstColumn+1);
-        Cell vc = row.getCell(firstColumn+2);
-        if(isEmpty(ac) && isEmpty(dc) && isEmpty(vc))
-            return null;
-        return new DataEntry(getDate(ac), getDate(dc), getDouble(vc));
+    private double[][] toArray(List<double[]> values) {
+        int size = values.size();
+        double[][] result = new double[size][];
+        for(int i=0; i<size; i++)
+            result[i] = values.get(i);
+        return result;
     }
     
-    private DataEntry getVector(Row row, int firstColumn) throws WizardValidationException {
-        Cell ac = row.getCell(firstColumn);
-        Cell vc = row.getCell(firstColumn+1);
-        if(isEmpty(ac) && isEmpty(vc))
-            return null;
-        return new DataEntry(getDate(ac), getDouble(vc));
-    }
-    
-    private boolean isEmpty(Cell cell) {
-        return cell == null || Cell.CELL_TYPE_BLANK == cell.getCellType();
-    }
-    
-    private MonthDate getDate(Cell cell) throws WizardValidationException {
-        try {
-            return input.mdf.toMonthDate(cell.getDateCellValue());
-        } catch (Exception ex) {
-            String str = ExcelUtil.toString(cell);
-            throw new WizardValidationException(component, "Unable to read date from cell: "+str, Bundle.MSG_ExcelTableImportWizardPanel_Read_DateError(str));
+    private double[] readRow(Row row, int firstColumn) throws WizardValidationException {
+        int cCount = 0;
+        while(!ExcelUtil.isEmpty(row.getCell(firstColumn+cCount)))
+            cCount++;
+        
+        if(cCount == 0) return null;
+        
+        double[] values = new double[cCount];
+        for(int c=0; c<cCount; c++) {
+            Cell cell = row.getCell(firstColumn+c);
+            try {
+                values[c] = cell.getNumericCellValue();
+            } catch (Exception ex) {
+                String sCell = ExcelUtil.toString(cell);
+                String msg = "Unable to read number from: "+sCell;
+                String lMsg = Bundle.MSG_ExcelTriangleImportWizardPanel_Read_NumberError(sCell);
+                throw new WizardValidationException(component, msg, lMsg);
+            }
         }
-    }
-    
-    private double getDouble(Cell cell) throws WizardValidationException {
-        try {
-            return cell.getNumericCellValue();
-        } catch (Exception ex) {
-            String str = ExcelUtil.toString(cell);
-            throw new WizardValidationException(component, "Unable to read number from cell: "+str, Bundle.MSG_ExcelTableImportWizardPanel_Read_NumberError(str));
-        }
+        return values;
     }
     
     private class ValidationInput {
         private final Workbook wb = component.getWorkbook();
-        private final boolean isVector = component.isVector();
         private final String reference = component.getReference();
-        private final MonthDate.Factory mdf = new MonthDate.Factory();
     }
 }

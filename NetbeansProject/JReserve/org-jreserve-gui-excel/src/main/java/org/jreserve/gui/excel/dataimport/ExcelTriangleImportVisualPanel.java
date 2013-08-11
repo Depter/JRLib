@@ -17,7 +17,6 @@
 package org.jreserve.gui.excel.dataimport;
 
 import java.io.File;
-import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -41,42 +40,31 @@ import org.openide.util.TaskListener;
  * @version 1.0
  */
 @Messages({
-    "LBL.ExcelTableImportVisualPanel.Name=Excel Settings",
-    "LBL.ExcelTableImportVisualPanel.FileDialogTitle=Select Excel File",
-    "LBL.ExcelTableImportVisualPanel.PathPrompt=Select input file",
-    "LBL.ExcelTableImportVisualPanel.ReferencePrompt=Select range",
+    "LBL.ExcelTriangleImportVisualPanel.Name=Excel Settings",
+    "LBL.ExcelTriangleImportVisualPanel.FileDialogTitle=Select Excel File",
+    "LBL.ExcelTriangleImportVisualPanel.PathPrompt=Select input file",
+    "LBL.ExcelTriangleImportVisualPanel.ReferencePrompt=Select range",
 })
-class ExcelTableImportVisualPanel extends javax.swing.JPanel {
+class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
     private final static String REFRESH_IMG = "org/jreserve/gui/misc/utils/refresh.png";   //NOI18
     private final static String SEARCH_IMG = "org/jreserve/gui/misc/utils/search.png";   //NOI18
-
-    private final ExcelTableImportWizardPanel controller;
-    private final ReferenceComboModel referenceModel = new ReferenceComboModel();
-    private final ExcelTableModel tableModel = new ExcelTableModel();
-    private Workbook wb;
-    private JTextComponent referenceText;
     
-    ExcelTableImportVisualPanel(ExcelTableImportWizardPanel controller) {
+    private final ExcelTriangleImportWizardPanel controller;
+    private final ReferenceComboModel referenceModel = new ReferenceComboModel();
+    private final ExcelTriangleTableModel tableModel = new ExcelTriangleTableModel();
+    private final InputListener inputListener = new InputListener();
+    private JTextComponent referenceText;
+    private Workbook wb;
+    
+    
+    ExcelTriangleImportVisualPanel(ExcelTriangleImportWizardPanel controller) {
         this.controller = controller;
         initComponents();
-        TextPrompt.createStandard(Bundle.LBL_ExcelTableImportVisualPanel_ReferencePrompt(), referenceText);
     }
     
     @Override
     public String getName() {
-        return Bundle.LBL_ExcelTableImportVisualPanel_Name();
-    }
-    
-    List<ExcelCell[]> getCells() {
-        return tableModel.getRows();
-    }
-    
-    void setVector(boolean isVector) {
-        vectorCheck.setSelected(isVector);
-    }
-    
-    boolean isVector() {
-        return vectorCheck.isSelected();
+        return Bundle.LBL_ExcelTriangleImportVisualPanel_Name();
     }
     
     Workbook getWorkbook() {
@@ -102,8 +90,6 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         browseButton = new javax.swing.JButton();
         referenceLabel = new javax.swing.JLabel();
         referenceCombo = new javax.swing.JComboBox();
-        vectorLabel = new javax.swing.JLabel();
-        vectorCheck = new javax.swing.JCheckBox();
         tableLabel = new javax.swing.JLabel();
         refreshButton = new javax.swing.JButton();
         tableScroll = new javax.swing.JScrollPane();
@@ -112,7 +98,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
 
         setLayout(new java.awt.GridBagLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.pathLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(pathLabel, org.openide.util.NbBundle.getMessage(ExcelTriangleImportVisualPanel.class, "ExcelTriangleImportVisualPanel.pathLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -136,7 +122,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         add(pathText, gridBagConstraints);
 
         browseButton.setIcon(ImageUtilities.loadImageIcon(SEARCH_IMG, false));
-        org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.browseButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(ExcelTriangleImportVisualPanel.class, "ExcelTriangleImportVisualPanel.browseButton.text")); // NOI18N
         browseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 browseButtonActionPerformed(evt);
@@ -150,7 +136,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         add(browseButton, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(referenceLabel, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.referenceLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(referenceLabel, org.openide.util.NbBundle.getMessage(ExcelTriangleImportVisualPanel.class, "ExcelTriangleImportVisualPanel.referenceLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
@@ -174,30 +160,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         add(referenceCombo, gridBagConstraints);
 
-        org.openide.awt.Mnemonics.setLocalizedText(vectorLabel, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.vectorLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
-        add(vectorLabel, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(vectorCheck, null);
-        vectorCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vectorCheckActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 0);
-        add(vectorCheck, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(tableLabel, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.tableLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(tableLabel, org.openide.util.NbBundle.getMessage(ExcelTriangleImportVisualPanel.class, "ExcelTriangleImportVisualPanel.tableLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
@@ -209,7 +172,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         add(tableLabel, gridBagConstraints);
 
         refreshButton.setIcon(ImageUtilities.loadImageIcon(REFRESH_IMG, false));
-        org.openide.awt.Mnemonics.setLocalizedText(refreshButton, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.refreshButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(refreshButton, org.openide.util.NbBundle.getMessage(ExcelTriangleImportVisualPanel.class, "ExcelTriangleImportVisualPanel.refreshButton.text")); // NOI18N
         refreshButton.setEnabled(false);
         refreshButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -249,7 +212,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        File f = FileDialog.openFile(new ExcelFileFilter(), Bundle.LBL_ExcelTableImportVisualPanel_FileDialogTitle());
+        File f = FileDialog.openFile(new ExcelFileFilter(), Bundle.LBL_ExcelTriangleImportVisualPanel_FileDialogTitle());
         referenceCombo.setEnabled(f != null);
         if(f != null) {
             pathText.setText(f.getAbsolutePath());
@@ -261,16 +224,6 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         refreshTable();
     }//GEN-LAST:event_refreshButtonActionPerformed
 
-    private void refreshTable() {
-        String ref = referenceText.getText();
-        if(ref != null && ref.length()>0 && wb != null)
-            tableModel.readData(wb, ref);
-    }
-    
-    private void vectorCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vectorCheckActionPerformed
-        tableModel.setVector(vectorCheck.isSelected());
-    }//GEN-LAST:event_vectorCheckActionPerformed
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JProgressBar pBar;
@@ -282,10 +235,14 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private javax.swing.JTable table;
     private javax.swing.JLabel tableLabel;
     private javax.swing.JScrollPane tableScroll;
-    private javax.swing.JCheckBox vectorCheck;
-    private javax.swing.JLabel vectorLabel;
     // End of variables declaration//GEN-END:variables
-    
+
+    private void refreshTable() {
+        String ref = referenceText.getText();
+        if(ref != null && ref.length()>0 && wb != null)
+            tableModel.readData(wb, ref);
+    }
+
     private void readExcel(File file) {
         setProcessRunning(true);
         final ExcelReader reader = new ExcelReader(file);
@@ -318,7 +275,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         referenceCombo.setEnabled(!running);
         refreshButton.setEnabled(!running);
     }
-    
+
     private class InputListener implements DocumentListener {
 
         @Override
