@@ -30,7 +30,7 @@ import org.openide.util.NbBundle.Messages;
     id = "org.jreserve.gui.excel.template.actions.CreateTemplateAction"
 )
 @ActionRegistration(
-    iconBase = "org/jreserve/gui/excel/create_excel_template.png",
+    iconBase = "org/jreserve/gui/excel/excel_template_add.png",
     displayName = "#CTL_CreateTemplateAction"
 )
 @ActionReferences({

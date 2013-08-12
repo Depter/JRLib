@@ -36,7 +36,7 @@ import org.openide.util.NbBundle.Messages;
     id = "org.jreserve.gui.excel.template.actions.DeleteTemplateAction"
 )
 @ActionRegistration(
-    iconBase = "org/jreserve/gui/excel/delete_excel_template.png",
+    iconBase = "org/jreserve/gui/excel/excel_template_delete.png",
     displayName = "#CTL_DeleteTemplateAction"
 )
 @ActionReferences({
