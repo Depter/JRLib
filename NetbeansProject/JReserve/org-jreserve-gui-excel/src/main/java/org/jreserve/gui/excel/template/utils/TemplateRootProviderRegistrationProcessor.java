@@ -14,40 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package org.jreserve.gui.excel.dataimport.template.gui;
-
-import java.util.Arrays;
-import java.util.List;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.ChildFactory;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
-import org.openide.util.lookup.Lookups;
+package org.jreserve.gui.excel.template.utils;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class RootChildren extends ChildFactory<RootChildren.Type>{
-    
-    static enum Type {
-        INPUT;
-    }
-
-    @Override
-    protected boolean createKeys(List<Type> toPopulate) {
-        toPopulate.addAll(Arrays.asList(Type.values()));
-        return true;
-    }
-
-    @Override
-    protected Node createNodeForKey(Type key) {
-        AbstractNode node = new AbstractNode(Children.LEAF, Lookups.singleton(key));
-        
-        return node;
-    }
-    
+public class TemplateRootProviderRegistrationProcessor {
     
 }

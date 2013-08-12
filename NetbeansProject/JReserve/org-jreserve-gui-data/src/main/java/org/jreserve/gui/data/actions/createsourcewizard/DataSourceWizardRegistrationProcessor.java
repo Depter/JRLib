@@ -36,7 +36,7 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes("org.jreserve.gui.data.spi.DataSourceWizard.Registration")
 public class DataSourceWizardRegistrationProcessor extends AbstractRegistrationProcessor<DataSourceWizard.Registration, DataSourceWizard> {
-    final static String LAYER_PATH = "DataStore/DataSourceWizards/";
+    final static String LAYER_PATH = "JReserve/DataStore/DataSourceWizards/";
     final static String DISPLAY_NAME = "displayName";
     final static String ICON_BASE = "iconBase";
 

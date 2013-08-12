@@ -21,12 +21,19 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@XmlRootElement(name = "date")
+@XmlAccessorType(XmlAccessType.FIELD)
 public final class MonthDate implements Comparable<MonthDate> {
     
     public static class Factory {
@@ -59,8 +66,10 @@ public final class MonthDate implements Comparable<MonthDate> {
         }
     }
     
-    private final int year;
-    private final int month;
+    @XmlAttribute(name = "year", required = true)
+    private int year;
+    @XmlAttribute(name = "month", required = true)
+    private int month;
     
     public MonthDate() {
         this(new Date());
@@ -164,5 +173,10 @@ public final class MonthDate implements Comparable<MonthDate> {
         if(month < 9)
             return ""+year+"-0"+(month+1);
         return ""+year+"-"+(month+1);
+    }
+    
+    void afterUnmarshal(Unmarshaller um, Object parent) {
+        if(month < 0 || 11 < month)
+            throw new IllegalStateException("Month must be within [0;11], but it was: "+month);
     }
 }

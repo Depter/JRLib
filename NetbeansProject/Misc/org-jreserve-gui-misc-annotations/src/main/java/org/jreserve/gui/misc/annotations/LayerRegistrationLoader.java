@@ -18,7 +18,7 @@ package org.jreserve.gui.misc.annotations;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
@@ -79,9 +79,18 @@ public abstract class LayerRegistrationLoader<T> {
         FileObject home = FileUtil.getConfigFile(path);
         if(home == null)
             return new FileObject[0];
-        FileObject[] children = home.getChildren();
-        Arrays.sort(children, getFileComparator());
-        return children;
+        
+        List<FileObject> result = new ArrayList<FileObject>();
+        for(FileObject file : home.getChildren())
+            if(shouldLoadFile(file))
+                result.add(file);
+        Collections.sort(result, getFileComparator());
+        
+        return result.toArray(new FileObject[result.size()]);
+    }
+    
+    protected boolean shouldLoadFile(FileObject file) {
+        return file!=null && file.isData();
     }
     
     protected Comparator<FileObject> getFileComparator() {

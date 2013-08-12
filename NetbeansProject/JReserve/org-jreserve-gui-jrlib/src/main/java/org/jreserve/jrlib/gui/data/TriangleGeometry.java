@@ -21,18 +21,30 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@XmlRootElement(name="geometry")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class TriangleGeometry {
     
+    @XmlElement(name="startDate", required=false)
     private MonthDate start;
+    @XmlElement(name="endDate", required=false, nillable=true)
     private MonthDate end;
+    @XmlElement(name="accidentLength", required=true)
     private int accidentLength;
+    @XmlElement(name="developmentLength", required=true)
     private int developmentLength;
+    @XmlTransient
     private final List<ChangeListener> listeners = new ArrayList<ChangeListener>();
     
     public TriangleGeometry(MonthDate start, MonthDate end, int accidentLength, int developmentLength) {

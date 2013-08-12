@@ -58,7 +58,7 @@ import org.openide.util.NbBundle.Messages;
     "MSG.ImportClipboardTableWizardPanel.Table.VectorDates=Accident and development date is different in row ''{0}''!",
     "# {0} - row2",
     "# {1} - row1",
-    "MSG.ImportClipboardTableWizardPanel.Table.DuplicateRow=Row ''{0}'' is the dupplicate of row ''{1}''!",
+    "MSG.ImportClipboardTableWizardPanel.Table.DuplicateRow=Row ''{0}'' is the dupplicate of row ''{1}''!"
 })
 class ImportClipboardTableWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     

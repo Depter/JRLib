@@ -44,7 +44,7 @@ import org.openide.util.TaskListener;
     "LBL.ExcelTableImportVisualPanel.Name=Excel Settings",
     "LBL.ExcelTableImportVisualPanel.FileDialogTitle=Select Excel File",
     "LBL.ExcelTableImportVisualPanel.PathPrompt=Select input file",
-    "LBL.ExcelTableImportVisualPanel.ReferencePrompt=Select range",
+    "LBL.ExcelTableImportVisualPanel.ReferencePrompt=Select range"
 })
 class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private final static String REFRESH_IMG = "org/jreserve/gui/misc/utils/refresh.png";   //NOI18

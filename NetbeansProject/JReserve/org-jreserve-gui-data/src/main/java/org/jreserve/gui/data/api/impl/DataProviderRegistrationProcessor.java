@@ -37,7 +37,7 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedAnnotationTypes("org.jreserve.gui.data.spi.DataProvider.FactoryRegistration")
 public class DataProviderRegistrationProcessor extends AbstractRegistrationProcessor<DataProvider.FactoryRegistration, DataProvider.Factory> {
 
-    final static String LAYER_PATH = "DataStore/DataProviders/";
+    final static String LAYER_PATH = "JReserve/DataStore/DataProviders/";
     final static String ID = "id";
     
     @Override

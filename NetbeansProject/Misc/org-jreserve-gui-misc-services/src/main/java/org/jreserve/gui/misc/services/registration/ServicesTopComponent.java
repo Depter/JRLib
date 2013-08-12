@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.dataimport.template.gui;
+package org.jreserve.gui.misc.services.registration;
 
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.ActionID;
@@ -24,6 +24,7 @@ import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.nodes.Node;
 import org.openide.windows.TopComponent;
 import org.openide.util.NbBundle.Messages;
 
@@ -31,54 +32,52 @@ import org.openide.util.NbBundle.Messages;
  * Top component which displays something.
  */
 @ConvertAsProperties(
-    dtd = "-//org.jreserve.gui.excel.dataimport.template.gui//ExcelTemplate//EN",
+    dtd = "-//org.jreserve.gui.misc.services.registration//Services//EN",
     autostore = false
 )
 @TopComponent.Description(
-    preferredID = "ExcelTemplateTopComponent",
-    iconBase="org/jreserve/gui/excel/excel.png", 
+    preferredID = "ServicesTopComponent",
+    iconBase = "org/jreserve/gui/misc/services/service_manager.png",
     persistenceType = TopComponent.PERSISTENCE_ONLY_OPENED
 )
 @TopComponent.Registration(
     mode = "explorer", 
-    openAtStartup = false
+    openAtStartup = true, 
+    position = 300
 )
 @ActionID(
     category = "Window", 
-    id = "org.jreserve.gui.excel.dataimport.template.gui.ExcelTemplateTopComponent"
+    id = "org.jreserve.gui.misc.services.registration.ServicesTopComponent"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Window", position = 60),
+    @ActionReference(path = "Menu/Window" /*, position = 333 */),
     @ActionReference(path = "Ribbon/TaskPanes/Windows/Utilities", position = 2000)
 })
 @TopComponent.OpenActionRegistration(
-    displayName = "#CTL_ExcelTemplateAction",
-    preferredID = "ExcelTemplateTopComponent"
+    displayName = "#CTL_ServicesAction",
+    preferredID = "ServicesTopComponent"
 )
 @Messages({
-    "CTL_ExcelTemplateAction=Excel Templates",
-    "CTL_ExcelTemplateTopComponent=Excel Templates"
+    "CTL_ServicesAction=Services",
+    "CTL_ServicesTopComponent=Services"
 })
-public final class ExcelTemplateTopComponent extends TopComponent {
+public final class ServicesTopComponent extends TopComponent implements ExplorerManager.Provider {
     
     private final static ExplorerManager em = new ExplorerManager();
-
-    public ExcelTemplateTopComponent() {
+    
+    public ServicesTopComponent() {
         initComponents();
-        setName(Bundle.CTL_ExcelTemplateTopComponent());
+        setName(Bundle.CTL_ServicesTopComponent());
         
         em.setRootContext(createRootNode());
         associateLookup(ExplorerUtils.createLookup(em, getActionMap()));
     }
     
-    private AbstractNode createRootNode() {
-        AbstractNode root = new AbstractNode(Children.LEAF);
-//        AbstractNode root = new AbstractNode(Children.create(new LayerChildFactory(null), true));
-//        root.setDisplayName("Layer Registration");
-//        root.setIconBaseWithExtension("org/jreserve/gui/misc/layerexplorer/drive.png");
-        return root;
+    private Node createRootNode() {
+        AbstractNode node = new AbstractNode(Children.create(new ServiceRootChildFactory(), true));
+        node.setDisplayName("root");
+        return node;
     }
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -88,20 +87,25 @@ public final class ExcelTemplateTopComponent extends TopComponent {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        beanTreeView1 = new org.openide.explorer.view.BeanTreeView();
+        tree = new org.openide.explorer.view.BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
 
-        beanTreeView1.setRootVisible(false);
-        add(beanTreeView1, java.awt.BorderLayout.CENTER);
+        tree.setRootVisible(false);
+        add(tree, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private org.openide.explorer.view.BeanTreeView beanTreeView1;
+    private org.openide.explorer.view.BeanTreeView tree;
     // End of variables declaration//GEN-END:variables
     
     @Override public void componentOpened() {}
     @Override public void componentClosed() {}
     void writeProperties(java.util.Properties p) {}
     void readProperties(java.util.Properties p) {}
+
+    @Override
+    public ExplorerManager getExplorerManager() {
+        return em;
+    }
 }
