@@ -36,9 +36,8 @@ public class ReferenceComboModel extends AbstractListModel implements ComboBoxMo
     public void update(Workbook wb) {
         removeOldNames();
         addNewNames(wb);
-        if(!names.isEmpty()) {
+        if(!names.isEmpty())
             fireIntervalAdded(this, 0, names.size() - 1);
-        }
     }
 
     private void removeOldNames() {
@@ -48,23 +47,13 @@ public class ReferenceComboModel extends AbstractListModel implements ComboBoxMo
             fireIntervalRemoved(this, 0, size - 1);
         }
     }
-
+    
     private void addNewNames(Workbook wb) {
-        int size = wb == null ? 0 : wb.getNumberOfNames();
-        for(int i = 0; i < size; i++) {
-            Name name = wb.getNameAt(i);
-            if(shouldAddName(wb, name)) {
+        if(wb != null)
+            for(Name name : ExcelUtil.getReferenceNames(wb))
                 names.add(name.getNameName());
-            }
-        }
     }
-
-    private boolean shouldAddName(Workbook wb, Name name) {
-        return !name.isFunctionName()
-                && !name.isDeleted()
-                && wb.getSheetIndex(name.getNameName()) < 0;
-    }
-
+    
     @Override
     public int getSize() {
         return names == null ? 0 : names.size();

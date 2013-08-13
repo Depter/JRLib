@@ -251,12 +251,15 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         File f = FileDialog.openFile(new ExcelFileFilter(), Bundle.LBL_ExcelTableImportVisualPanel_FileDialogTitle());
         referenceCombo.setEnabled(f != null);
-        if(f != null) {
-            pathText.setText(f.getAbsolutePath());
-            readExcel(f);
-        }
+        if(f != null)
+            updateFromFile(f);
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    private void updateFromFile(File f) {
+        pathText.setText(f.getAbsolutePath());
+        readExcel(f);
+    }
+    
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         refreshTable();
     }//GEN-LAST:event_refreshButtonActionPerformed

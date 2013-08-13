@@ -38,10 +38,14 @@ public class PeriodStepSpinner extends JSpinner {
         this(DEFAULT_VALUE);
     }
     
+    private int start;
+    
     public PeriodStepSpinner(int start) {
         super(new SpinnerNumberModel(
                 start<MIN_VALUE? MIN_VALUE : start, 
                 MIN_VALUE, MAX_VALUE, STEP_SIZE));
+        this.start = start<MIN_VALUE? MIN_VALUE : start;
+        
         JFormattedTextField text = ((JSpinner.DefaultEditor)getEditor()).getTextField();
         text.setColumns(COLUMM_COUNT);
         text.setEditable(false);
@@ -52,7 +56,10 @@ public class PeriodStepSpinner extends JSpinner {
         return (Integer) getValue();
     }
     
-    public void setMonthCount(int monthCount) {
-        super.setValue(monthCount);
+    public void setMonthCount(Integer monthCount) {
+        int mc = monthCount==null? 0 : monthCount.intValue();
+        if(mc < start)
+            mc = start;
+        super.setValue(Integer.valueOf(mc));
     }
 }

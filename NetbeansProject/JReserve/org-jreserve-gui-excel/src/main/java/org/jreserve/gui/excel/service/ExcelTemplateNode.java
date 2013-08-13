@@ -22,8 +22,10 @@ import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -38,8 +40,15 @@ class ExcelTemplateNode extends AbstractNode {
     
     private Action[] actions;
     
+    private static Lookup createLookup(ExcelTemplate template) {
+        return new ProxyLookup(
+                Lookups.singleton(template),
+                Lookups.proxy(template.getManager())
+            );
+    }
+    
     ExcelTemplateNode(ExcelTemplate template) {
-        super(Children.LEAF, Lookups.fixed(template, template.getManager()));
+        super(Children.LEAF, createLookup(template));
         setDisplayName(template.getName());
         setIconBaseWithExtension(IMG);
     }

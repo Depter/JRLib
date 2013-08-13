@@ -40,7 +40,9 @@ public class MonthDateSpinner extends JSpinner {
     private final static MonthDate.Factory MDF = new MonthDate.Factory();
     
     private static Date toDate(MonthDate md) {
-        return md==null? null : MDF.toDate(md);
+        if(md == null)
+            return null;
+        return MDF.toDate(md);
     }
     
     private static MonthDate toMonthDate(Date date) {
@@ -55,8 +57,14 @@ public class MonthDateSpinner extends JSpinner {
         this(value, null, null);
     }
     
+    private Date minDate;
+    private Date maxDate;
+    
     public MonthDateSpinner(MonthDate value, MonthDate min, MonthDate max) {
         super(new SpinnerDateModel(MDF.toDate(value), toDate(min), toDate(max), STEP_UNIT));
+        SpinnerDateModel model = (SpinnerDateModel) super.getModel();
+        minDate = (Date) model.getStart();
+        maxDate = (Date) model.getEnd();
         
         JFormattedTextField text = ((JSpinner.DateEditor) getEditor()).getTextField();
         DateFormatter df = new DateFormatter(new SimpleDateFormat(PATTERN));
@@ -74,6 +82,17 @@ public class MonthDateSpinner extends JSpinner {
     }
     
     public void setMonthDate(MonthDate md) {
-        setValue(toDate(md));
+        setValue(convertToDate(md));
+    }
+    
+    private Date convertToDate(MonthDate md) {
+        if(md != null)
+            return toDate(md);
+        Date date = new Date();
+        if(minDate != null && date.before(minDate))
+            date = minDate;
+        if(maxDate != null && date.after(maxDate))
+            date = maxDate;
+        return date;
     }
 }

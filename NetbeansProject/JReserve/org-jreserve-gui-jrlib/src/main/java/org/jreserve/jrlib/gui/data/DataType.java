@@ -16,14 +16,38 @@
  */
 package org.jreserve.jrlib.gui.data;
 
+import javax.swing.Icon;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public enum DataType {
+@Messages({
+    "LBL.DataType.Triangle=Triangle",
+    "LBL.DataType.Vector=Vector"
+})
+public enum DataType implements Displayable {
 
-    TRIANGLE,
-    VECTOR;
+    TRIANGLE(Bundle.LBL_DataType_Triangle(), "org/jreserve/jrlib/gui/data/triangle.png"),   //NOI18
+    VECTOR(Bundle.LBL_DataType_Vector(), "org/jreserve/jrlib/gui/data/vector.png");   //NOI18
     
+    private final String displayName;
+    private final Icon icon;
+    
+    private DataType(String displayName, String iconBase) {
+        this.displayName = displayName;
+        this.icon = ImageUtilities.loadImageIcon(iconBase, false);
+    }
+    
+    public String getDisplayName() {
+        return displayName;
+    }
+    
+    public Icon getIcon() {
+        return icon;
+    }
 }

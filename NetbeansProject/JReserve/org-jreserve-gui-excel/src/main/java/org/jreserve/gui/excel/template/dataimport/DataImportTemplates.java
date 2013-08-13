@@ -21,7 +21,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.gui.excel.template.ExcelTemplateBuilder;
 import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -33,8 +32,7 @@ import org.openide.util.lookup.Lookups;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataImportTemplates 
-    implements ExcelTemplateManager<DataImportTemplate>, ExcelTemplateBuilder {
+public class DataImportTemplates implements ExcelTemplateManager<DataImportTemplate> {
     
     private final static Logger logger = Logger.getLogger(DataImportTemplates.class.getName());
     private final static String PATH = "Excel/Templates/DataImport";    //NOI18
@@ -91,11 +89,7 @@ public class DataImportTemplates
     @Override
     public Lookup getLookup() {
         if(lkp == null)
-            lkp = Lookups.singleton(this);
+            lkp = Lookups.fixed(this, new DataImportTemplateBuilder(this));
         return lkp;
-    }
-
-    @Override
-    public void buildTemplate() {
     }
 }

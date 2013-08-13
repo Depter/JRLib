@@ -26,9 +26,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidgetRenderer;
-import org.jreserve.gui.trianglewidget.model.CalendarTriangleModel;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
-import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
@@ -52,7 +50,6 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
     private final static String KEY_STEP_DEVELOPMENT = "ImportDataVisualPanelGeometry.step.development";
     
     private final InputListener inputListener = new InputListener();
-    private final TriangleModel triangleModel = new CalendarTriangleModel();
     private Layer layer = new Layer();
     
     public ImportDataVisualPanelGeometry() {

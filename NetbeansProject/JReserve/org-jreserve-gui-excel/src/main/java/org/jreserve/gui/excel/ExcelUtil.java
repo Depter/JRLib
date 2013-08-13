@@ -17,6 +17,8 @@
 
 package org.jreserve.gui.excel;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -58,6 +60,25 @@ public class ExcelUtil {
         } else {
             return new CellReference(ref);
         }
+    }
+    
+    public static List<Name> getReferenceNames(Workbook wb) {
+        int size = wb.getNumberOfNames();
+        List<Name> result = new ArrayList<Name>(size);
+        
+        for(int i = 0; i < size; i++) {
+            Name name = wb.getNameAt(i);
+            if(isReferenceName(wb, name))
+                result.add(name);
+        }
+        
+        return result;
+    }
+
+    public static boolean isReferenceName(Workbook wb, Name name) {
+        return !name.isFunctionName()
+                && !name.isDeleted()
+                && wb.getSheetIndex(name.getNameName()) < 0;
     }
     
     private ExcelUtil() {}

@@ -99,6 +99,11 @@
             <artifactId>org-openide-filesystems</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.jreserve</groupId>
@@ -129,6 +134,11 @@
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-data</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-trianglewidget</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

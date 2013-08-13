@@ -16,22 +16,78 @@
  */
 package org.jreserve.gui.excel.template.dataimport.createwizard;
 
+import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.File;
+import java.util.Collections;
+import java.util.List;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import org.jreserve.gui.data.api.ImportUtil;
+import org.jreserve.gui.excel.ExcelFileFilter;
+import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.SourceType;
+import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.TemplateRow;
+import org.jreserve.gui.misc.utils.notifications.FileDialog;
+import org.jreserve.gui.misc.utils.widgets.TextPrompt;
+import org.jreserve.jrlib.gui.data.DataType;
+import org.jreserve.jrlib.gui.data.MonthDate;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
-
-    private final ImportTemplateModel tableModel = new ImportTemplateModel();
+@Messages({
+    "LBL.CreateTempalteWizardVisualPanel.Prompt.File=Select file",
+    "LBL.CreateTempalteWizardVisualPanel.Prompt.Name=Template name",
+    "LBL.CreateTempalteWizardVisualPanel.FileDialog.Title=Select Excel File",
+    "LBL.CreateTempalteWizardVisualPanel.DataType.Triangle=Triangle",
+    "LBL.CreateTempalteWizardVisualPanel.DataType.Vector=Vector",
+    "LBL.CreateTempalteWizardVisualPanel.SoruceType.Table=Table",
+    "LBL.CreateTempalteWizardVisualPanel.SoruceType.Triangle=Triangle"
+})
+class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
+    private final static String IMG_SEARCH = "org/jreserve/gui/misc/utils/search.png";   //NOI18
+    private final static String IMG_ADD = "org/jreserve/gui/misc/utils/add.png";   //NOI18
+    private final static String IMG_EDIT = "org/jreserve/gui/misc/utils/edit.png";   //NOI18
+    private final static String IMG_ARROW_UP = "org/jreserve/gui/misc/utils/arrow_up.png";   //NOI18
+    private final static String IMG_ARROW_DOWN = "org/jreserve/gui/misc/utils/arrow_down.png";   //NOI18
+    private final static String IMG_DELETE = "org/jreserve/gui/misc/utils/delete.png";   //NOI18
+    private final static int ROW_HEIGHT = 24;
     
-    /**
-     * Creates new form CreateTempalteWizardVisualPanel
-     */
-    public CreateTempalteWizardVisualPanel() {
+    final static String PROP_TEMPLATE_NAME = "tempalteName";
+    final static String PROP_TEMPLATE_ROWS = "tempalteItems";
+    
+    private final InputListener inputListener = new InputListener();
+    private final ImportTemplateModel tableModel = new ImportTemplateModel();
+    private List<String> names = Collections.EMPTY_LIST;
+    
+    CreateTempalteWizardVisualPanel() {
         initComponents();
+        checkButtonEnables();
     }
 
+    String getTemplateName() {
+        return nameText.getText();
+    }
+    
+    List<TemplateRow> getTempalteRows() {
+        return tableModel.getRows();
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -42,16 +98,23 @@ public class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        northPanel = new javax.swing.JPanel();
         fileLabel = new javax.swing.JLabel();
         fileText = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
+        nameLabel = new javax.swing.JLabel();
+        nameText = new javax.swing.JTextField();
         tableScroll = new javax.swing.JScrollPane();
         table = new javax.swing.JTable();
+        tableHandlers = new javax.swing.JPanel();
+        addButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
+        upButton = new javax.swing.JButton();
+        downButton = new javax.swing.JButton();
+        deleteButton = new javax.swing.JButton();
+        buttonFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
+        pBar = new javax.swing.JProgressBar();
 
-        setLayout(new java.awt.BorderLayout(0, 20));
-
-        northPanel.setLayout(new java.awt.GridBagLayout());
+        setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(fileLabel, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.fileLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -59,40 +122,408 @@ public class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        northPanel.add(fileLabel, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(fileLabel, gridBagConstraints);
 
+        fileText.setEditable(false);
         fileText.setText(null);
+        TextPrompt.createStandard(Bundle.LBL_CreateTempalteWizardVisualPanel_Prompt_File(), fileText);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
-        northPanel.add(fileText, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(fileText, gridBagConstraints);
 
+        browseButton.setIcon(ImageUtilities.loadImageIcon(IMG_SEARCH, false));
         org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.browseButton.text")); // NOI18N
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        northPanel.add(browseButton, gridBagConstraints);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        add(browseButton, gridBagConstraints);
 
-        add(northPanel, java.awt.BorderLayout.NORTH);
+        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.nameLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
+        add(nameLabel, gridBagConstraints);
+
+        nameText.setText(null);
+        TextPrompt.createStandard(Bundle.LBL_CreateTempalteWizardVisualPanel_Prompt_Name(), nameText);
+        nameText.getDocument().addDocumentListener(inputListener);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
+        add(nameText, gridBagConstraints);
 
         table.setModel(tableModel);
+        tableModel.addTableModelListener(inputListener);
+        table.getSelectionModel().addListSelectionListener(new TableSelectionListener());
+        table.setShowGrid(true);
+        TempalteTableRenderer renderer = new TempalteTableRenderer();
+        table.setDefaultRenderer(String.class, renderer);
+        table.setDefaultRenderer(SourceType.class, renderer);
+        table.setDefaultRenderer(DataType.class, renderer);
+        table.setDefaultRenderer(MonthDate.class, renderer);
+        table.setDefaultRenderer(Integer.class, renderer);
+        table.setColumnSelectionAllowed (false);
+        table.setRowHeight(ROW_HEIGHT);
+        table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        table.addMouseListener (new TableMouseListener());
         tableScroll.setViewportView(table);
 
-        add(tableScroll, java.awt.BorderLayout.CENTER);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
+        add(tableScroll, gridBagConstraints);
+
+        tableHandlers.setLayout(new java.awt.GridBagLayout());
+
+        addButton.setIcon(ImageUtilities.loadImageIcon(IMG_ADD, false));
+        org.openide.awt.Mnemonics.setLocalizedText(addButton, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.addButton.text")); // NOI18N
+        addButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        addButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        tableHandlers.add(addButton, gridBagConstraints);
+
+        editButton.setIcon(ImageUtilities.loadImageIcon(IMG_EDIT, false));
+        org.openide.awt.Mnemonics.setLocalizedText(editButton, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.editButton.text")); // NOI18N
+        editButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        tableHandlers.add(editButton, gridBagConstraints);
+
+        upButton.setIcon(ImageUtilities.loadImageIcon(IMG_ARROW_UP, false));
+        org.openide.awt.Mnemonics.setLocalizedText(upButton, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.upButton.text")); // NOI18N
+        upButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        upButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        tableHandlers.add(upButton, gridBagConstraints);
+
+        downButton.setIcon(ImageUtilities.loadImageIcon(IMG_ARROW_DOWN, false));
+        org.openide.awt.Mnemonics.setLocalizedText(downButton, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.downButton.text")); // NOI18N
+        downButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        downButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        tableHandlers.add(downButton, gridBagConstraints);
+
+        deleteButton.setIcon(ImageUtilities.loadImageIcon(IMG_DELETE, false));
+        org.openide.awt.Mnemonics.setLocalizedText(deleteButton, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.deleteButton.text")); // NOI18N
+        deleteButton.setHorizontalAlignment(javax.swing.SwingConstants.LEADING);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        tableHandlers.add(deleteButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.VERTICAL;
+        gridBagConstraints.weighty = 1.0;
+        tableHandlers.add(buttonFiller, gridBagConstraints);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        add(tableHandlers, gridBagConstraints);
+
+        pBar.setVisible(false);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        add(pBar, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        File f = FileDialog.openFile(new ExcelFileFilter(), Bundle.LBL_CreateTempalteWizardVisualPanel_FileDialog_Title());
+        if(f != null)
+            updateFromFile(f);
+    }//GEN-LAST:event_browseButtonActionPerformed
+
+    private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
+        int[] indices = table.getSelectedRows();
+        tableModel.addRow();
+        for(int i : indices)
+            table.getSelectionModel().addSelectionInterval(i, i);
+        editRow(tableModel.getRowCount()-1);
+    }//GEN-LAST:event_addButtonActionPerformed
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        int[] indices = table.getSelectedRows();
+        if(indices.length > 0) {
+            tableModel.deleteRows(indices);
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
+    private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed
+        int index = table.getSelectedRow();
+        tableModel.moveUp(index--);
+        table.getSelectionModel().setSelectionInterval(index, index);
+    }//GEN-LAST:event_upButtonActionPerformed
+
+    private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
+        int index = table.getSelectedRow();
+        tableModel.moveDown(index++);
+        table.getSelectionModel().setSelectionInterval(index, index);
+    }//GEN-LAST:event_downButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        editRow(table.getSelectedRow());
+    }//GEN-LAST:event_editButtonActionPerformed
+    
+    private void editRow(int index) {
+        if(index >= 0) {
+            TemplateRow row = tableModel.getRows().get(index);
+            if(TemplateItemEditorPanel.editTemplateRow(row, names))
+                tableModel.fireTableRowsUpdated(index, index);
+        }
+    }
+    
+    private void updateFromFile(File file) {
+        fileText.setText(file.getAbsolutePath());
+        if(nameText.getDocument().getLength() == 0)
+            nameText.setText(getFileName(file));
+        readExcel(file);
+    }
+    
+    private String getFileName(File file) {
+        String name = file.getName();
+        int index = name.lastIndexOf('.');
+        if(index >= 0)
+            name = name.substring(0, index);
+        return name;
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addButton;
     private javax.swing.JButton browseButton;
+    private javax.swing.Box.Filler buttonFiller;
+    private javax.swing.JButton deleteButton;
+    private javax.swing.JButton downButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileText;
-    private javax.swing.JPanel northPanel;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JTextField nameText;
+    private javax.swing.JProgressBar pBar;
     private javax.swing.JTable table;
+    private javax.swing.JPanel tableHandlers;
     private javax.swing.JScrollPane tableScroll;
+    private javax.swing.JButton upButton;
     // End of variables declaration//GEN-END:variables
+
+    private void readExcel(File file) {
+        setProcessRunning(true);
+        final ExcelNameReader reader = new ExcelNameReader(file);
+        Task task = ImportUtil.getRP().create(reader);
+        task.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            names = reader.getNames();
+                        } catch (Exception ex) {
+                            //TODO show error
+                            names = Collections.EMPTY_LIST;
+                        } finally {
+                            setProcessRunning(false);
+                        }
+                    }
+                });
+            }
+        });
+        ImportUtil.getRP().execute(task);
+    }
+
+    private void setProcessRunning(boolean running) {
+        pBar.setVisible(running);
+        pBar.setIndeterminate(running);
+        browseButton.setEnabled(!running);
+        fileText.setEnabled(!running);
+        nameText.setEnabled(!running);
+        table.setEnabled(!running);
+        
+        if(running) {
+            addButton.setEnabled(false);
+            deleteButton.setEnabled(false);
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
+            editButton.setEnabled(false);
+        } else {
+            checkButtonEnables();
+        }
+    }
+    
+    private void checkButtonEnables() {
+        int count = table.getSelectedRows().length;
+        addButton.setEnabled(true);
+        deleteButton.setEnabled(count > 0);
+        if(count == 1) {
+            editButton.setEnabled(true);
+            
+            int selected = table.getSelectedRow();
+            upButton.setEnabled(selected != 0);
+            int max = table.getModel().getRowCount()-1;
+            downButton.setEnabled(selected < max);
+        } else {
+            editButton.setEnabled(false);
+            upButton.setEnabled(false);
+            downButton.setEnabled(false);
+        }
+        
+        table.repaint();
+        table.revalidate();
+    }
+    
+    private class InputListener implements DocumentListener, TableModelListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            updateName();
+        }
+        
+        private void updateName() {
+            putClientProperty(PROP_TEMPLATE_NAME, nameText.getText());
+        }
+        
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            updateName();
+        }
+        
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+        }
+
+        @Override
+        public void tableChanged(TableModelEvent e) {
+            checkButtonEnables();
+            putClientProperty(PROP_TEMPLATE_ROWS, tableModel.getRows());
+        }
+    }
+    
+    private class TableSelectionListener implements ListSelectionListener {
+
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            checkButtonEnables();
+        }
+    }
+    
+    private class TempalteTableRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            value = getText(value);
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            return this;
+        }
+        
+        private String getText(Object value) {
+            if(value instanceof String)
+                return (String) value;
+            else if(value instanceof Integer)
+                return ""+((Integer) value).intValue();
+            else if(value instanceof MonthDate)
+                return ((MonthDate)value).toString();
+            else if(value instanceof DataType)
+                return getText((DataType)value);
+            else if(value instanceof SourceType)
+                return getText((SourceType)value);
+            else
+                return null;
+        }
+        
+        private String getText(DataType dt) {
+            switch(dt) {
+                case TRIANGLE: return Bundle.LBL_CreateTempalteWizardVisualPanel_DataType_Triangle();
+                case VECTOR: return Bundle.LBL_CreateTempalteWizardVisualPanel_DataType_Vector();
+                default: throw new IllegalArgumentException("Unknown DataType: "+dt);
+            }
+        }
+        
+        private String getText(SourceType st) {
+            switch(st) {
+                case TABLE: return Bundle.LBL_CreateTempalteWizardVisualPanel_SoruceType_Table();
+                case TRIANGLE: return Bundle.LBL_CreateTempalteWizardVisualPanel_SoruceType_Triangle();
+                default: throw new IllegalArgumentException("Unknown SourceType: "+st);
+            }
+        }
+    }
+    
+    private class TableMouseListener extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() == 2)
+                editRow(table.getSelectedRow());
+        }
+    
+    }
 }

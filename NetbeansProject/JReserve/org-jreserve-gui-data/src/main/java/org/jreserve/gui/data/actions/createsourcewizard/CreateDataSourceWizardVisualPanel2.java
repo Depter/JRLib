@@ -16,17 +16,12 @@
  */
 package org.jreserve.gui.data.actions.createsourcewizard;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
-import javax.swing.JList;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
-import org.netbeans.api.annotations.common.StaticResource;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -40,10 +35,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL.CreateDataSourceWizardVisualPanel2.Triangle=Triangle"
 })
 public class CreateDataSourceWizardVisualPanel2 extends javax.swing.JPanel {
-    
-    @StaticResource private final static String VECTOR_IMG = "org/jreserve/gui/data/icons/vector.png";
-    @StaticResource private final static String TRIANGLE_IMG = "org/jreserve/gui/data/icons/triangle.png";
-    
+
     private ComboListener comboListener = new ComboListener();
     
     public CreateDataSourceWizardVisualPanel2() {
@@ -93,7 +85,7 @@ public class CreateDataSourceWizardVisualPanel2 extends javax.swing.JPanel {
         add(dataTypeLabel, gridBagConstraints);
 
         dataTypeCombo.setModel(new DefaultComboBoxModel(DataType.values()));
-        dataTypeCombo.setRenderer(new DataTypeRenderer());
+        dataTypeCombo.setRenderer(WidgetUtils.displayableListRenderer());
         dataTypeCombo.addActionListener(comboListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -151,31 +143,6 @@ public class CreateDataSourceWizardVisualPanel2 extends javax.swing.JPanel {
             return (dataTypeCombo == combo)?
                 CreateDataSourceWizardIterator.PROP_DATA_TYPE :
                 CreateDataSourceWizardIterator.PROP_SOURCE_WIZARD;
-        }
-    }
-    
-    private static class DataTypeRenderer extends DefaultListCellRenderer {
-        @Override
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus); //To change body of generated methods, choose Tools | Templates.
-            if(value instanceof DataType)
-                render((DataType) value);
-            return this;
-        }
-        
-        private void render(DataType type) {
-            switch(type) {
-                case TRIANGLE:
-                    setIcon(ImageUtilities.loadImageIcon(TRIANGLE_IMG, false));
-                    setText(Bundle.LBL_CreateDataSourceWizardVisualPanel2_Triangle());
-                    break;
-                case VECTOR:
-                    setIcon(ImageUtilities.loadImageIcon(VECTOR_IMG, false));
-                    setText(Bundle.LBL_CreateDataSourceWizardVisualPanel2_Vector());
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknon DataType: "+type);
-            }
         }
     }
 }
