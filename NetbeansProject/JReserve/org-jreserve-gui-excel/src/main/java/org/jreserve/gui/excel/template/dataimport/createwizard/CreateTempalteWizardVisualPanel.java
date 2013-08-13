@@ -25,6 +25,7 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -36,10 +37,12 @@ import org.jreserve.gui.data.api.ImportUtil;
 import org.jreserve.gui.excel.ExcelFileFilter;
 import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.SourceType;
 import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.TemplateRow;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
+import org.openide.util.ChangeSupport;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Task;
@@ -57,7 +60,8 @@ import org.openide.util.TaskListener;
     "LBL.CreateTempalteWizardVisualPanel.DataType.Triangle=Triangle",
     "LBL.CreateTempalteWizardVisualPanel.DataType.Vector=Vector",
     "LBL.CreateTempalteWizardVisualPanel.SoruceType.Table=Table",
-    "LBL.CreateTempalteWizardVisualPanel.SoruceType.Triangle=Triangle"
+    "LBL.CreateTempalteWizardVisualPanel.SoruceType.Triangle=Triangle",
+    "MSG.CreateTempalteWizardVisualPanel.Excel.ReadError=Unable to read Excel file!"
 })
 class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
     private final static String IMG_SEARCH = "org/jreserve/gui/misc/utils/search.png";   //NOI18
@@ -66,11 +70,8 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
     private final static String IMG_ARROW_UP = "org/jreserve/gui/misc/utils/arrow_up.png";   //NOI18
     private final static String IMG_ARROW_DOWN = "org/jreserve/gui/misc/utils/arrow_down.png";   //NOI18
     private final static String IMG_DELETE = "org/jreserve/gui/misc/utils/delete.png";   //NOI18
-    private final static int ROW_HEIGHT = 24;
     
-    final static String PROP_TEMPLATE_NAME = "tempalteName";
-    final static String PROP_TEMPLATE_ROWS = "tempalteItems";
-    
+    private final ChangeSupport cs = new ChangeSupport(this);
     private final InputListener inputListener = new InputListener();
     private final ImportTemplateModel tableModel = new ImportTemplateModel();
     private List<String> names = Collections.EMPTY_LIST;
@@ -86,6 +87,14 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
     
     List<TemplateRow> getTempalteRows() {
         return tableModel.getRows();
+    }
+    
+    void addChangeListener(ChangeListener cl) {
+        cs.addChangeListener(cl);
+    }
+    
+    void removeChangeListener(ChangeListener cl) {
+        cs.removeChangeListener(cl);
     }
     
     /**
@@ -113,6 +122,7 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
         deleteButton = new javax.swing.JButton();
         buttonFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 32767));
         pBar = new javax.swing.JProgressBar();
+        jLabel1 = new javax.swing.JLabel();
 
         setLayout(new java.awt.GridBagLayout());
 
@@ -184,14 +194,13 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
         table.setDefaultRenderer(MonthDate.class, renderer);
         table.setDefaultRenderer(Integer.class, renderer);
         table.setColumnSelectionAllowed (false);
-        table.setRowHeight(ROW_HEIGHT);
         table.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         table.addMouseListener (new TableMouseListener());
         tableScroll.setViewportView(table);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -282,7 +291,7 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
@@ -291,11 +300,20 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
         pBar.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 4;
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         add(pBar, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(CreateTempalteWizardVisualPanel.class, "CreateTempalteWizardVisualPanel.jLabel1.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
+        add(jLabel1, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
@@ -367,6 +385,7 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
     private javax.swing.JButton editButton;
     private javax.swing.JLabel fileLabel;
     private javax.swing.JTextField fileText;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel nameLabel;
     private javax.swing.JTextField nameText;
     private javax.swing.JProgressBar pBar;
@@ -389,7 +408,7 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
                         try {
                             names = reader.getNames();
                         } catch (Exception ex) {
-                            //TODO show error
+                            BubbleUtil.showException(Bundle.MSG_CreateTempalteWizardVisualPanel_Excel_ReadError(), ex);
                             names = Collections.EMPTY_LIST;
                         } finally {
                             setProcessRunning(false);
@@ -445,16 +464,16 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            updateName();
+            fireChange();
         }
         
-        private void updateName() {
-            putClientProperty(PROP_TEMPLATE_NAME, nameText.getText());
+        private void fireChange() {
+            cs.fireChange();
         }
         
         @Override
         public void removeUpdate(DocumentEvent e) {
-            updateName();
+            fireChange();
         }
         
         @Override
@@ -464,7 +483,7 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
         @Override
         public void tableChanged(TableModelEvent e) {
             checkButtonEnables();
-            putClientProperty(PROP_TEMPLATE_ROWS, tableModel.getRows());
+            fireChange();
         }
     }
     

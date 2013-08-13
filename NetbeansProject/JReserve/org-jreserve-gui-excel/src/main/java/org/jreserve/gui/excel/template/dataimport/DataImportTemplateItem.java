@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import org.jreserve.jrlib.gui.data.DataType;
-import org.jreserve.jrlib.gui.data.TriangleGeometry;
+import org.jreserve.jrlib.gui.data.MonthDate;
 
 /**
  *
@@ -29,19 +29,22 @@ import org.jreserve.jrlib.gui.data.TriangleGeometry;
  * @version 1.0
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-abstract class DataImportTemplateItem {
+public abstract class DataImportTemplateItem {
     
     @XmlElement(name="reference", required=true)
     private String reference;
     @XmlElement(name="dataType", required=true)
     private DataType dataType;
+    @XmlElement(name="cummulated", required=true)
+    private boolean cummulated;
     
     public DataImportTemplateItem() {
     }
 
-    public DataImportTemplateItem(String reference, DataType dataType) {
+    public DataImportTemplateItem(String reference, DataType dataType, boolean cummulated) {
         this.reference = reference;
         this.dataType = dataType;
+        this.cummulated = cummulated;
     }
     
     public String getReference() {
@@ -60,40 +63,83 @@ abstract class DataImportTemplateItem {
         this.dataType = dataType;
     }
     
+    public boolean isCummulated() {
+        return cummulated;
+    }
+    
+    public void setCummulated(boolean cummulated) {
+        this.cummulated = cummulated;
+    }
+    
     @XmlRootElement(name="tableSource")
     @XmlAccessorType(XmlAccessType.FIELD)
-    static class TableDataImportTempalteItem extends DataImportTemplateItem {
+    public static class TableDataImportTempalteItem extends DataImportTemplateItem {
         
-        TableDataImportTempalteItem() {
+        public TableDataImportTempalteItem() {
         }
 
-        TableDataImportTempalteItem(String reference, DataType dataType) {
-            super(reference, dataType);
+        public TableDataImportTempalteItem(String reference, DataType dataType, boolean cummulated) {
+            super(reference, dataType, cummulated);
         }
     }
     
     @XmlRootElement(name="triangleSource")
     @XmlAccessorType(XmlAccessType.FIELD)
-    static class TriangleDataImportTempalteItem extends DataImportTemplateItem {
-        @XmlElement(name="geometry",required=true)
-        private TriangleGeometry geometry;
-
+    public static class TriangleDataImportTempalteItem extends DataImportTemplateItem {
+        @XmlElement(name="startDate",required=true)
+        private MonthDate startDate;
+        @XmlElement(name="accidentLength",required=true)
+        private int accidentLength;
+        @XmlElement(name="developmentLength",required=true)
+        private int developmentLength;
+        
         public TriangleDataImportTempalteItem() {
         }
 
-        public TriangleDataImportTempalteItem(String reference, DataType dataType, TriangleGeometry geometry) {
-            super(reference, dataType);
-            if(geometry == null)
-                throw new NullPointerException("Geometry is null!");
-            this.geometry = geometry;
+        public TriangleDataImportTempalteItem(String reference, DataType dataType, boolean cummulated, MonthDate startDate, int accidentLength, int developmentLength) {
+            super(reference, dataType, cummulated);
+            
+            if(startDate == null)
+                throw new NullPointerException("Start date is null!");
+            this.startDate = startDate;
+            
+            if(accidentLength < 1)
+                throw new IllegalArgumentException("Accident length is less then 1! "+accidentLength);
+            this.accidentLength = accidentLength;
+            
+            if(developmentLength < 1)
+                throw new IllegalArgumentException("Development length is less then 1! "+developmentLength);
+            this.developmentLength = developmentLength;
         }
 
-        public TriangleGeometry getGeometry() {
-            return geometry;
+        public MonthDate getStartDate() {
+            return startDate;
         }
 
-        public void setGeometry(TriangleGeometry geometry) {
-            this.geometry = geometry;
+        public void setStartDate(MonthDate startDate) {
+            if(startDate == null)
+                throw new NullPointerException("Start date is null!");
+            this.startDate = startDate;
+        }
+
+        public int getAccidentLength() {
+            return accidentLength;
+        }
+
+        public void setAccidentLength(int accidentLength) {
+            if(accidentLength < 1)
+                throw new IllegalArgumentException("Accident length is less then 1! "+accidentLength);
+            this.accidentLength = accidentLength;
+        }
+
+        public int getDevelopmentLength() {
+            return developmentLength;
+        }
+
+        public void setDevelopmentLength(int developmentLength) {
+            if(developmentLength < 1)
+                throw new IllegalArgumentException("Development length is less then 1! "+developmentLength);
+            this.developmentLength = developmentLength;
         }
     }
     

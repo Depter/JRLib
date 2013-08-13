@@ -120,6 +120,11 @@
             <artifactId>org-jreserve-gui-misc-services</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-misc-eventbus</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.jreserve</groupId>

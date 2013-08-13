@@ -19,12 +19,16 @@ package org.jreserve.gui.excel.template.dataimport.createwizard;
 import java.awt.Component;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.excel.template.ExcelTemplateManager;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplate;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplates;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.netbeans.api.progress.ProgressHandle;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -37,19 +41,23 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "# {0} - index",
     "# {1} - count",
-    "LBL.CreateTemplateWizardIterator.WizardName={0} of {1}"
+    "LBL.CreateTemplateWizardIterator.WizardName={0} of {1}",
+    "# {0} - name",
+    "MSG.CreateTemplateWizardIterator.CreateError=Unable to create template ''{0}''!"
 })
 public class CreateTemplateWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
 
     public final static String PROP_TEMPLATE_MANAGER = "templateManager";   //NOI18
+    public final static String PROP_TEMPLATE_NAME = "templateName";   //NOI18
+    public final static String PROP_TEMPLATE_ITEMS = "templateItems";   //NOI18
     
-    private final ExcelTemplateManager tm;
+    private final DataImportTemplates tm;
     private List<WizardDescriptor.Panel> panels = new ArrayList<WizardDescriptor.Panel>();
     private int panelCount;
     private int index;
     private WizardDescriptor wizardDesc;
     
-    public CreateTemplateWizardIterator(ExcelTemplateManager templateManager) {
+    public CreateTemplateWizardIterator(DataImportTemplates templateManager) {
         this.tm = templateManager;
     }
     
@@ -137,12 +145,25 @@ public class CreateTemplateWizardIterator implements WizardDescriptor.ProgressIn
     }
 
     @Override
-    public Set instantiate(ProgressHandle handle) throws IOException {
+    public Set instantiate() throws IOException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public Set instantiate() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Set instantiate(ProgressHandle handle) throws IOException {
+        handle.start();
+        handle.switchToIndeterminate();
+        String name = null;
+        try {
+            name = (String) wizardDesc.getProperty(PROP_TEMPLATE_NAME);
+            List<DataImportTemplateItem> items = (List<DataImportTemplateItem>) wizardDesc.getProperty(PROP_TEMPLATE_ITEMS);
+            DataImportTemplate template = tm.createTemplate(name, items);
+            return Collections.singleton(template);
+        } catch(IOException ex) {
+            BubbleUtil.showException(Bundle.MSG_CreateTemplateWizardIterator_CreateError(name), ex);
+            return Collections.EMPTY_SET;
+        } finally {
+            handle.finish();
+        }
     }
 }

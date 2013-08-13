@@ -66,7 +66,7 @@
     <Component class="javax.swing.JComboBox" name="sourceTypeCombo">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new EnumComboBox(SourceType.class)"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="sourceTypeCombo.addActionListener(new SourceTypeListener());&#xa;sourceTypeCombo.setSelectedItem (row.getSourceType());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="sourceTypeCombo.addActionListener(new SourceTypeListener());&#xa;sourceTypeCombo.setSelectedItem (row.getSourceType()==null? lastSourceType : row.getSourceType());"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">
@@ -89,7 +89,7 @@
     <Component class="javax.swing.JComboBox" name="dataTypeCombo">
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new EnumComboBox(DataType.class)"/>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dataTypeCombo.addActionListener(new DataTypeListener());&#xa;dataTypeCombo.setSelectedItem (row.getDataType());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="dataTypeCombo.addActionListener(new DataTypeListener());&#xa;dataTypeCombo.setSelectedItem (row.getDataType()==null? lastDataType : row.getDataType());"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

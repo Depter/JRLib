@@ -17,14 +17,18 @@
 package org.jreserve.gui.excel.template.dataimport.createwizard;
 
 import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.jreserve.gui.excel.template.ExcelTemplateManager;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.TableDataImportTempalteItem;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.TriangleDataImportTempalteItem;
 import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.SourceType;
 import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.TemplateRow;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
@@ -39,7 +43,16 @@ import org.openide.util.NbBundle.Messages;
     "LBL.CreateTemplateWizardPanel.ComponentName=Create Template",
     "MSG.CreateTemplateWizardPanel.Name.Empty=Name is not set!",
     "# {0} - name",
-    "MSG.CreateTemplateWizardPanel.Name.Used=Name ''{0}'' is already exists!"
+    "MSG.CreateTemplateWizardPanel.Name.Used=Name ''{0}'' is already exists!",
+    "MSG.CreateTemplateWizardPanel.Data.Empty=Define at least one item!",
+    "# {0} - row",
+    "MSG.CreateTemplateWizardPanel.Data.Empty.Reference=Reference is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.CreateTemplateWizardPanel.Data.Empty.StartDate=Start date is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.CreateTemplateWizardPanel.Data.Empty.ALength=Accident length is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.CreateTemplateWizardPanel.Data.Empty.DLength=Development length is not set in row ''{0}''!"
 })
 class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
     
@@ -54,7 +67,7 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
         if(component == null) {
             component = new CreateTempalteWizardVisualPanel();
             component.setName(Bundle.LBL_CreateTemplateWizardPanel_ComponentName());
-            component.addPropertyChangeListener(new InputListener());
+            component.addChangeListener(new InputListener());
         }
         return component;
     }
@@ -72,6 +85,28 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
 
     @Override
     public void storeSettings(WizardDescriptor settings) {
+        settings.putProperty(CreateTemplateWizardIterator.PROP_TEMPLATE_NAME, component.getTemplateName());
+        settings.putProperty(CreateTemplateWizardIterator.PROP_TEMPLATE_ITEMS, createTemplateItems());
+    }
+    
+    private List<DataImportTemplateItem> createTemplateItems() {
+        List<DataImportTemplateItem> items = new ArrayList<DataImportTemplateItem>();
+        for(TemplateRow row : component.getTempalteRows())
+            items.add(createItem(row));
+        return items;
+    }
+    
+    private DataImportTemplateItem createItem(TemplateRow row) {
+        String ref = row.getReference();
+        DataType dt = row.getDataType();
+        boolean cummulated = row.isCummulated();
+        if(SourceType.TABLE == row.getSourceType()) {
+            return new TableDataImportTempalteItem(ref, dt, cummulated);
+        } else {
+            return new TriangleDataImportTempalteItem(ref, dt, cummulated,
+                    row.getMonthDate(), 
+                    row.getAccidentLength(), row.getDevelopmentLength());
+        }
     }
 
     @Override
@@ -129,7 +164,7 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
         List<TemplateRow> rows = component.getTempalteRows();
         int size = rows.size();
         if(size == 0) {
-            showError("no rows");
+            showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Empty());
             return false;
         }
         
@@ -143,39 +178,31 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
     private boolean isRowValid(TemplateRow row, int index) {
         String ref = row.getReference();
         if(ref == null || ref.length()==0) {
-            showError("Ref empty: "+(index+1));
+            showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Empty_Reference(index+1));
             return false;
         }
         
         if(SourceType.TRIANGLE == row.getSourceType()) {
             if(row.getMonthDate() == null) {
-                showError("Start date empty: "+(index+1));
+                showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Empty_StartDate(index+1));
                 return false;
             }
             if(row.getAccidentLength() == null) {
-                showError("Accident length empty: "+(index+1));
+                showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Empty_ALength(index+1));
                 return false;
             }
             if(row.getDevelopmentLength() == null) {
-                showError("Development length empty: "+(index+1));
+                showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Empty_DLength(index+1));
                 return false;
             }
         }
         return true;
     }
     
-    private class InputListener implements PropertyChangeListener {
-
+    private class InputListener implements ChangeListener {
         @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            if(shouldUpdate(evt.getPropertyName()))
-                inputChanged();
+        public void stateChanged(ChangeEvent e) {
+            inputChanged();
         }
-        
-        private boolean shouldUpdate(String propName) {
-            return CreateTempalteWizardVisualPanel.PROP_TEMPLATE_NAME.equals(propName) ||
-                   CreateTempalteWizardVisualPanel.PROP_TEMPLATE_ROWS.equals(propName);
-        }
-    
     }
 }

@@ -47,6 +47,8 @@ class TemplateItemEditorPanel extends javax.swing.JPanel {
     private final static int OPTION_ALIGN = DialogDescriptor.DEFAULT_ALIGN;
     private final static boolean MODAL = true;
     
+    private static SourceType lastSourceType = SourceType.TABLE;
+    private static DataType lastDataType = DataType.TRIANGLE;
     private static boolean lastCummulated = false;
     private static MonthDate lastDate = new MonthDate();
     private static int lastAccidentLength = 1;
@@ -109,6 +111,8 @@ class TemplateItemEditorPanel extends javax.swing.JPanel {
     }
     
     private void updateTempValues() {
+        lastSourceType = (SourceType) sourceTypeCombo.getSelectedItem();
+        lastDataType = (DataType) dataTypeCombo.getSelectedItem();
         lastDate = startDateSpinner.getMonthDate();
         lastAccidentLength = accidentLengthSpinner.getMonthCount();
         lastDevelopmentLength = developmentLengthSpinner.getMonthCount();
@@ -174,7 +178,7 @@ class TemplateItemEditorPanel extends javax.swing.JPanel {
         add(sourceTypeLabel, gridBagConstraints);
 
         sourceTypeCombo.addActionListener(new SourceTypeListener());
-        sourceTypeCombo.setSelectedItem (row.getSourceType());
+        sourceTypeCombo.setSelectedItem (row.getSourceType()==null? lastSourceType : row.getSourceType());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -193,7 +197,7 @@ class TemplateItemEditorPanel extends javax.swing.JPanel {
         add(dataTypeLabel, gridBagConstraints);
 
         dataTypeCombo.addActionListener(new DataTypeListener());
-        dataTypeCombo.setSelectedItem (row.getDataType());
+        dataTypeCombo.setSelectedItem (row.getDataType()==null? lastDataType : row.getDataType());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;

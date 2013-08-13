@@ -19,7 +19,11 @@ package org.jreserve.gui.excel.service;
 import java.awt.Image;
 import java.util.List;
 import javax.swing.Action;
+import org.jreserve.gui.excel.template.ExcelTemplateManager;
+import org.jreserve.gui.excel.template.TemplateEvent;
 import org.jreserve.gui.excel.template.registry.ExcelTemplateManagerAdapter;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
@@ -34,16 +38,18 @@ import org.openide.util.lookup.Lookups;
 class ExcelTemplateManagerNode extends AbstractNode {
     private final static String ACTION_PATH = "Node/ExcelTemplateManagerNode/Actions";  //NOI18
     
+    private final ExcelTemplateManager manager;
     private Action[] actions;
-
     private final Image img;
 
     ExcelTemplateManagerNode(ExcelTemplateManagerAdapter adapter) {
         super(
                 Children.create(new ExcelTemplateChildren(adapter.getDelegate()), true),
                 Lookups.proxy(adapter.getDelegate()));
+        this.manager = adapter.getDelegate();
         img = ImageUtilities.icon2Image(adapter.getIcon());
         setDisplayName(adapter.getDisplayName());
+        EventBusManager.getDefault().subscribe(this);
     }
 
     @Override
@@ -66,5 +72,14 @@ class ExcelTemplateManagerNode extends AbstractNode {
     private Action[] initActions() {
         List<? extends Action> list = Utilities.actionsForPath(ACTION_PATH);
         return list.toArray(new Action[list.size()]);
+    }
+    
+    @EventBusListener
+    public void tempaltesChanged(TemplateEvent evt) {
+        if(manager == evt.getManager()) {
+            if(evt instanceof TemplateEvent.TemplateCreatedEvent) {
+                setChildren(Children.create(new ExcelTemplateChildren(manager), true));
+            }
+        }
     }
 }

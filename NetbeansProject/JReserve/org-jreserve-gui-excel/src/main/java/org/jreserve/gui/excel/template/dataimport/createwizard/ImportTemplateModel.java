@@ -170,12 +170,12 @@ public class ImportTemplateModel extends AbstractTableModel {
 
     class TemplateRow {
         private String reference;
-        private SourceType sourceType = SourceType.TABLE;
-        private DataType dataType = DataType.TRIANGLE;
+        private SourceType sourceType;
+        private DataType dataType;
         private MonthDate monthDate;
         private Integer accidentLength;
         private Integer developmentLength;
-        private Boolean cummulated = false;
+        private Boolean cummulated;
         
         public String getReference() {
             return reference;
@@ -236,6 +236,39 @@ public class ImportTemplateModel extends AbstractTableModel {
         
         public void setCummulated(Boolean cummulated) {
             this.cummulated = cummulated;
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            if(o == this) return true;
+            if(o == null) return false;
+            if(!(o instanceof TemplateRow)) return false;
+            TemplateRow tr = (TemplateRow) o;
+            return equals(reference, tr.reference) &&
+                   sourceType == tr.sourceType &&
+                   dataType == tr.dataType &&
+                   equals(monthDate, tr.monthDate) &&
+                   equals(cummulated, tr.cummulated) &&
+                   equals(accidentLength, tr.accidentLength) &&
+                   equals(developmentLength, tr.developmentLength);
+        }
+        
+        private boolean equals(Object o1, Object o2) {
+            if(o1==null)
+                return o2==null;
+            return o2==null? false : o1.equals(o2);
+        }
+        
+        @Override
+        public int hashCode() {
+            int hash = 31;
+            hash = 17 * hash + (reference==null? 0 : reference.hashCode());
+            hash = 17 * hash + (sourceType==null? 0 : sourceType.hashCode());
+            hash = 17 * hash + (dataType==null? 0 : dataType.hashCode());
+            hash = 17 * hash + (monthDate==null? 0 : monthDate.hashCode());
+            hash = 17 * hash + (cummulated==null? 0 : cummulated.hashCode());
+            hash = 17 * hash + (accidentLength==null? 0 : accidentLength.hashCode());
+            return 17 * hash + (developmentLength==null? 0 : developmentLength.hashCode());
         }
     }
 }

@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.excel.template.ExcelTemplateManager;
+import org.jreserve.gui.excel.template.TemplateEvent;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
@@ -82,7 +83,7 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
         if(templates == null)
             templates = (root==null)? 
                     Collections.EMPTY_LIST : 
-                    TemplateLoader.loadTemplated(this, root);
+                    TemplateLoader.loadTemplates(this, root);
         return templates;
     }
     
@@ -91,5 +92,22 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
         if(lkp == null)
             lkp = Lookups.fixed(this, new DataImportTemplateBuilder(this));
         return lkp;
+    }
+    
+    public DataImportTemplate createTemplate(String name, List<DataImportTemplateItem> items) throws IOException {
+        FileObject file = getTemplateFile(name);
+        DataImportTemplate template = new DataImportTemplate(file, this, items);
+        TemplateLoader.save(template);
+        templates.add(template);
+        Collections.sort(templates);
+        logger.log(Level.FINE, "Create DataImpotTemplate ''{0}''.", name);
+        TemplateEvent.publishCreated(template);
+        return template;
+    }
+    
+    private FileObject getTemplateFile(String name) throws IOException {
+        if(root == null)
+            throw new IOException("RootFolder not found!");
+        return root.createData(name, "xml");
     }
 }

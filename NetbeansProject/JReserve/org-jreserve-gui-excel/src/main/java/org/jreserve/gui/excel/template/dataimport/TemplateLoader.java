@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlElement;
@@ -36,7 +37,9 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "MSG.TemplateLoader.LoadError=Unable to load template!"
+    "MSG.TemplateLoader.LoadError=Unable to load template!",
+    "# {0} - name",
+    "MSG.TemplateLoader.SaveError=Unable to save template ''{0}''!"
 })
 class TemplateLoader {
     
@@ -44,14 +47,27 @@ class TemplateLoader {
     
     private static JAXBContext JAXB_CTX;
     
-    static List<DataImportTemplate> loadTemplated(DataImportTemplates manager, FileObject root) {
+    static void save(DataImportTemplate template) {
+        FileObject file = template.getFile();
+        try {
+            TemplateContainer container = new TemplateContainer(template.getItems());
+            Marshaller m = getContext().createMarshaller();
+            m.marshal(container, FileUtil.toFile(file));
+        } catch (Exception ex) {
+            String msg = "Unable to save template to file: "+(file==null? null : file.getPath());
+            logger.log(Level.SEVERE, msg, ex);
+            BubbleUtil.showException(Bundle.MSG_TemplateLoader_SaveError(template.getName()), ex);
+        }
+    }
+    
+    static List<DataImportTemplate> loadTemplates(DataImportTemplates manager, FileObject root) {
         Enumeration<? extends FileObject> files = root.getData(false);
         List<DataImportTemplate> result = new ArrayList<DataImportTemplate>();
         
         while(files.hasMoreElements()) {
             FileObject file = files.nextElement();
             if(isTemplate(file))
-                result.add(new DataImportTemplate(file, manager));
+                result.add(new DataImportTemplate(file, manager, loadItems(file)));
         }
         
         return result;
@@ -62,7 +78,7 @@ class TemplateLoader {
         return ext!=null && ext.toLowerCase().equals("xml");
     }
     
-    static List<DataImportTemplateItem> loadItems(FileObject file) {
+    private static List<DataImportTemplateItem> loadItems(FileObject file) {
         try {
             Unmarshaller um = getContext().createUnmarshaller();
             TemplateContainer templates = (TemplateContainer) um.unmarshal(FileUtil.toFile(file));
@@ -71,7 +87,6 @@ class TemplateLoader {
             String path = file==null? null : file.getPath();
             String msg = String.format("Unable to load temaple from file '%s'!", path);
             logger.log(Level.SEVERE, msg, ex);
-            BubbleUtil.showError(Bundle.MSG_TemplateLoader_LoadError(), path, ex);
             return new ArrayList<DataImportTemplateItem>();
         }
     }

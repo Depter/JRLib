@@ -193,19 +193,13 @@ public final class CreateDataSourceWizardIterator implements WizardDescriptor.Pr
         handle.start();
         handle.switchToIndeterminate();
         try {
-            return Collections.singleton(createDataSource());
-        } finally {
-            handle.finish();
-        }
-    }
-    
-    private DataSource createDataSource() throws IOException {
-        try {
-            return buildDataSource();
-        } catch (Exception ex) {
+            return Collections.singleton(buildDataSource());
+        } catch(IOException ex) {
             String msg = "Unable to create new DataSource!";
             logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
+        } finally {
+            handle.finish();
         }
     }
     

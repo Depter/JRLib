@@ -17,6 +17,7 @@
 package org.jreserve.gui.excel.template.dataimport.createwizard;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -45,6 +46,7 @@ class ExcelNameReader implements Runnable {
     public void run() {
         synchronized(lock) {
             try {
+                names = new ArrayList<String>();
                 Workbook wb = WorkbookFactory.create(file);
                 for(Name name : ExcelUtil.getReferenceNames(wb))
                     names.add(name.getNameName());
