@@ -95,6 +95,7 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
     }
     
     public synchronized DataImportTemplate createTemplate(String name, List<DataImportTemplateItem> items) throws IOException {
+        checkNewName(name);
         FileObject file = getTemplateFile(name);
         DataImportTemplate template = new DataImportTemplate(file, this, items);
         TemplateLoader.save(template);
@@ -103,6 +104,16 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
         logger.log(Level.FINE, "Create DataImpotTemplate ''{0}''.", name);
         TemplateEvent.publishCreated(template);
         return template;
+    }
+    
+    private void checkNewName(String name) {
+        if(name == null)
+            throw new NullPointerException("Name is null!");
+        if(name.length() == 0)
+            throw new IllegalArgumentException("Name is empty string!");
+        for(DataImportTemplate template : getTemplates())
+            if(name.equalsIgnoreCase(template.getName()))
+                throw new IllegalArgumentException("Name '"+name+"' already exists!");
     }
     
     private FileObject getTemplateFile(String name) throws IOException {

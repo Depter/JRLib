@@ -19,6 +19,7 @@ package org.jreserve.gui.excel.template.dataimport;
 import java.util.List;
 import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.jreserve.gui.excel.template.ExcelTemplateManager;
+import org.jreserve.gui.excel.template.dataimport.editor.DataImportTemplateEditor;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -52,7 +53,7 @@ public class DataImportTemplate implements ExcelTemplate, ExcelTemplate.Editor, 
     }
 
     @Override
-    public ExcelTemplateManager getManager() {
+    public ExcelTemplateManager<DataImportTemplate> getManager() {
         return manager;
     }
     
@@ -73,5 +74,6 @@ public class DataImportTemplate implements ExcelTemplate, ExcelTemplate.Editor, 
 
     @Override
     public void edit() {
+        DataImportTemplateEditor.editTemplate(this);
     }
 }

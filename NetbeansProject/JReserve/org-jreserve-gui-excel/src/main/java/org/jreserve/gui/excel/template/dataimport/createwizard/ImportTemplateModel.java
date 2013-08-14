@@ -23,22 +23,13 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
-import org.openide.util.NbBundle.Messages;
+import org.openide.util.NbBundle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "LBL.ImportTemplateModel.Reference=Reference",
-    "LBL.ImportTemplateModel.SourceType=Source Type",
-    "LBL.ImportTemplateModel.DataType=Data Type",
-    "LBL.ImportTemplateModel.Cummulated=Cummulated",
-    "LBL.ImportTemplateModel.StartDate=Start Date",
-    "LBL.ImportTemplateModel.AccidentLength=Accident Length",
-    "LBL.ImportTemplateModel.DevelopmentLength=Development Length"
-})
 public class ImportTemplateModel extends AbstractTableModel {
     
     private final static int COL_REFERENCE = 0;
@@ -55,8 +46,8 @@ public class ImportTemplateModel extends AbstractTableModel {
     void setRows(List<TemplateRow> rows) {
         this.rows.clear();
         if(rows!=null)
-            rows.addAll(rows);
-        fireTableDataChanged();
+            this.rows.addAll(rows);
+        fireTableStructureChanged();
     }
     
     List<TemplateRow> getRows() {
@@ -69,7 +60,7 @@ public class ImportTemplateModel extends AbstractTableModel {
         super.fireTableRowsInserted(index, index);
     }
     
-    void deleteRows(int[] indices) {
+    void deleteRows(int... indices) {
         for(int index : toList(indices))
             rows.remove(index);
         fireTableDataChanged();
@@ -110,15 +101,19 @@ public class ImportTemplateModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         switch(column) {
-            case COL_REFERENCE: return Bundle.LBL_ImportTemplateModel_Reference();
-            case COL_SOURCE_TYPE: return Bundle.LBL_ImportTemplateModel_SourceType();
-            case COL_DATA_TYPE: return Bundle.LBL_ImportTemplateModel_DataType();
-            case COL_CUMMULATED: return Bundle.LBL_ImportTemplateModel_Cummulated();
-            case COL_START_DATE: return Bundle.LBL_ImportTemplateModel_StartDate();
-            case COL_ACCIDENT_LENGTH: return Bundle.LBL_ImportTemplateModel_AccidentLength();
-            case COL_DEVELOPMENT_LENGTH: return Bundle.LBL_ImportTemplateModel_DevelopmentLength();
+            case COL_REFERENCE: return getColumnName("Reference");
+            case COL_SOURCE_TYPE: return getColumnName("SourceType");
+            case COL_DATA_TYPE: return getColumnName("DataType");
+            case COL_CUMMULATED: return getColumnName("Cummulated");
+            case COL_START_DATE: return getColumnName("StartDate");
+            case COL_ACCIDENT_LENGTH: return getColumnName("AccidentLength");
+            case COL_DEVELOPMENT_LENGTH: return getColumnName("DevelopmentLength");
             default: throw new IllegalArgumentException("Invalid column index: "+column);
         }
+    }
+    
+    private String getColumnName(String key) {
+        return NbBundle.getMessage(ImportTemplateModel.class, "LBL.ImportTemplateModel."+key);
     }
     
     @Override

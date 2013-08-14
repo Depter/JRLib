@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingWorker;
 import org.jreserve.gui.excel.template.ExcelTemplate;
+import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -215,7 +216,8 @@ class DeleteTemplateDialog extends javax.swing.JPanel {
         
         private void deleteItem(ExcelTemplate item) {
             try {
-                item.getManager().deleteTemplate(item);
+                ExcelTemplateManager etm = item.getManager();
+                etm.deleteTemplate(item);
                 publish(step++);
             } catch (Exception ex) {
                 String msg = Bundle.MSG_DeleteTemplateDialog_Delete_Error(item.getName());

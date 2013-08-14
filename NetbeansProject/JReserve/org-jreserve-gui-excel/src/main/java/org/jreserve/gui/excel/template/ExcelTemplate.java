@@ -25,7 +25,7 @@ public interface ExcelTemplate {
     
     public String getName();
     
-    public ExcelTemplateManager getManager();
+    public ExcelTemplateManager<? extends ExcelTemplate> getManager();
 
     public static interface Editor {
         public void edit();

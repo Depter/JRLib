@@ -118,14 +118,16 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
         table.revalidate();
     }
     
-    private void editRow(int index) {
+    private boolean editRow(int index) {
         if(index >= 0) {
             TemplateRow row = tableModel.getRows().get(index);
             if(TemplateItemEditorPanel.editTemplateRow(row, names)) {
                 tableModel.fireTableRowsUpdated(index, index);
                 cs.fireChange();
+                return true;
             }
         }
+        return false;
     }
     
     /**
@@ -253,10 +255,13 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
     private void addButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButtonActionPerformed
         int[] indices = table.getSelectedRows();
         tableModel.addRow();
+        
+        if(!editRow(tableModel.getRowCount()-1))
+            tableModel.deleteRows(tableModel.getRowCount()-1);
+        
         for(int i : indices)
             table.getSelectionModel().addSelectionInterval(i, i);
         cs.fireChange();
-        editRow(tableModel.getRowCount()-1);
     }//GEN-LAST:event_addButtonActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
