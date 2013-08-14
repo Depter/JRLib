@@ -26,10 +26,11 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DataImportTemplate implements ExcelTemplate, Comparable<ExcelTemplate> {
+public class DataImportTemplate implements ExcelTemplate, ExcelTemplate.Editor, Comparable<ExcelTemplate> {
 
     private final DataImportTemplates manager;
     private final FileObject file;
+    private String name;
     private List<DataImportTemplateItem> items;
 
     public DataImportTemplate(FileObject file, DataImportTemplates manager, List<DataImportTemplateItem> items) {
@@ -39,14 +40,15 @@ public class DataImportTemplate implements ExcelTemplate, Comparable<ExcelTempla
         if(file == null)
             throw new NullPointerException("File can not be null!");
         this.file = file;
+        this.name = file.getName();
         if(items == null)
             throw new NullPointerException("Items can not be null!");
         this.items = items;
     }
     
     @Override
-    public String getName() {
-        return file.getName();
+    public synchronized String getName() {
+        return name;
     }
 
     @Override
@@ -54,7 +56,7 @@ public class DataImportTemplate implements ExcelTemplate, Comparable<ExcelTempla
         return manager;
     }
     
-    List<DataImportTemplateItem> getItems() {
+    public List<DataImportTemplateItem> getItems() {
         return items;
     }
     
@@ -63,9 +65,13 @@ public class DataImportTemplate implements ExcelTemplate, Comparable<ExcelTempla
     }
 
     @Override
-    public int compareTo(ExcelTemplate o) {
+    public synchronized int compareTo(ExcelTemplate o) {
         if(o == null)
             return -1;
         return getName().compareToIgnoreCase(o.getName());
+    }
+
+    @Override
+    public void edit() {
     }
 }

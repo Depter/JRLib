@@ -38,6 +38,7 @@ public class LoggingSetting {
         Properties props = LoggerProperties.getProperties();
         configureGui(props);
         configureHandlers();
+        showNbDialog(props);
         applyLevels(props);
     }
     
@@ -77,6 +78,12 @@ public class LoggingSetting {
     private static boolean showGui(Properties props) {
         String strShow = props.getProperty(LoggerProperties.SHOW_GUI, "false");
         return "true".equalsIgnoreCase(strShow);
+    }
+    
+    private static void showNbDialog(Properties props) {
+        String show = props.getProperty(LoggerProperties.SHOW_DIALOG, "false");
+        int value = show.equals("true")? Level.WARNING.intValue() : 99999;
+        System.setProperty("netbeans.exception.report.min.level", ""+value);
     }
     
     private static void configureHandlers() {

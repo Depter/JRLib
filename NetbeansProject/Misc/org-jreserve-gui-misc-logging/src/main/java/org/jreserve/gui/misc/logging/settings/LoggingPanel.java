@@ -51,6 +51,10 @@ import org.openide.util.NbBundle;
 class LoggingPanel extends javax.swing.JPanel 
     implements ActionListener, ListSelectionListener, TableModelListener {
     
+    private final static Level[] LEVELS = {
+        Level.OFF, Level.SEVERE, Level.WARNING, Level.INFO, Level.CONFIG,
+        Level.FINE, Level.FINER, Level.FINEST, Level.ALL
+    };
     private final static Level DEFAULT_LEVEL = Level.SEVERE;
     private final LoggingOptionsPanelController controller;
     private LogLevelTableModel levelModel;
@@ -65,10 +69,20 @@ class LoggingPanel extends javax.swing.JPanel
         Properties props = LoggerProperties.getProperties();
         props.clear();
         props.put(LoggerProperties.SHOW_GUI, showLogCheck.isSelected()? "true" : "false");
+        
+        boolean showDialog = showDialogCheck.isSelected();
+        props.put(LoggerProperties.SHOW_DIALOG, showDialog? "true" : "false");
+        setShowNbDialog(showDialog);
+        
         props.put(LoggerProperties.MAIN_LEVEL, getSelectedLevel().getName());
         levelModel.storeLevels(props);
         LoggerProperties.save();
         LoggingSetting.initialize();
+    }
+    
+    private void setShowNbDialog(boolean show) {
+        int value = show? Level.WARNING.intValue() : 99999;
+        System.setProperty("netbeans.exception.report.min.level", ""+value);
     }
     
     private Level getSelectedLevel() {
@@ -98,7 +112,9 @@ class LoggingPanel extends javax.swing.JPanel
     
     private void resetDefault() {
         Properties props = LoggerProperties.getProperties();
+        props.setProperty(LoggerProperties.SHOW_DIALOG, "false");
         props.setProperty(LoggerProperties.SHOW_GUI, "false");
+        setShowNbDialog(false);
         props.setProperty(LoggerProperties.MAIN_LEVEL, Level.SEVERE.getName());
         props.setProperty("org.netbeans.level", Level.WARNING.getName());
         props.setProperty("org.openide.level", Level.WARNING.getName());
@@ -111,6 +127,7 @@ class LoggingPanel extends javax.swing.JPanel
         Properties props = LoggerProperties.getProperties();
         setLevelCombo(props.getProperty(LoggerProperties.MAIN_LEVEL));
         setShowGui(props.getProperty(LoggerProperties.SHOW_GUI));
+        setShowNbDialog(props.getProperty(LoggerProperties.SHOW_DIALOG));
         levelModel.loadProperties(props);
     }
     
@@ -122,6 +139,12 @@ class LoggingPanel extends javax.swing.JPanel
     private void setShowGui(String show) {
         boolean checked = show==null? false : "true".equalsIgnoreCase(show);
         showLogCheck.setSelected(checked);
+    }
+    
+    private void setShowNbDialog(String show) {
+        boolean checked = show==null? false : "true".equalsIgnoreCase(show);
+        showDialogCheck.setSelected(checked);
+        
     }
     
     private void delete(int row) {
@@ -164,6 +187,8 @@ class LoggingPanel extends javax.swing.JPanel
         showLogLabel = new javax.swing.JLabel();
         showLogCheck = new javax.swing.JCheckBox();
         northFiller = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
+        showDialogLabel = new javax.swing.JLabel();
+        showDialogCheck = new javax.swing.JCheckBox();
         levelScroll = new javax.swing.JScrollPane();
         levelTable = new javax.swing.JTable();
         southPanel = new javax.swing.JPanel();
@@ -187,7 +212,7 @@ class LoggingPanel extends javax.swing.JPanel
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         northPanel.add(levelLabel, gridBagConstraints);
 
-        levelCombo.setModel(new DefaultComboBoxModel(new Level[]{Level.SEVERE, Level.WARNING, Level.INFO, Level.FINE, Level.FINER, Level.FINEST, Level.ALL}));
+        levelCombo.setModel(new DefaultComboBoxModel(LEVELS));
         levelCombo.setPreferredSize(new java.awt.Dimension(100, 22));
         levelCombo.setRenderer(new LevelComboRenderer());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -204,7 +229,7 @@ class LoggingPanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         northPanel.add(showLogLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(showLogCheck, null);
@@ -214,6 +239,7 @@ class LoggingPanel extends javax.swing.JPanel
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         northPanel.add(showLogCheck, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
@@ -222,6 +248,25 @@ class LoggingPanel extends javax.swing.JPanel
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         northPanel.add(northFiller, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(showDialogLabel, org.openide.util.NbBundle.getMessage(LoggingPanel.class, "LoggingPanel.showDialogLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
+        northPanel.add(showDialogLabel, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(showDialogCheck, null);
+        showDialogCheck.setBorder(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        northPanel.add(showDialogCheck, gridBagConstraints);
 
         add(northPanel, java.awt.BorderLayout.PAGE_START);
 
@@ -271,6 +316,8 @@ class LoggingPanel extends javax.swing.JPanel
     private javax.swing.JTable levelTable;
     private javax.swing.Box.Filler northFiller;
     private javax.swing.JPanel northPanel;
+    private javax.swing.JCheckBox showDialogCheck;
+    private javax.swing.JLabel showDialogLabel;
     private javax.swing.JCheckBox showLogCheck;
     private javax.swing.JLabel showLogLabel;
     private javax.swing.JPanel southPanel;

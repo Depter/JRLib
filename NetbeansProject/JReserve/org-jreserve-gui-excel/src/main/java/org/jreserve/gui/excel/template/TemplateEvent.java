@@ -27,8 +27,15 @@ import org.jreserve.gui.misc.eventbus.EventBusManager;
 public class TemplateEvent {
     
     public static void publishCreated(ExcelTemplate template) {
-        TemplateCreatedEvent evt = new TemplateCreatedEvent(template);
+        publish(new TemplateCreatedEvent(template));
+    }
+    
+    private static void publish(TemplateEvent evt) {
         EventBusManager.getDefault().publish(evt);
+    }
+    
+    public static void publishDeleted(ExcelTemplateManager manager, ExcelTemplate template) {
+        publish(new TemplateDeletedEvent(manager, template));
     }
     
     private final ExcelTemplateManager manager;
@@ -50,6 +57,19 @@ public class TemplateEvent {
     public static class TemplateCreatedEvent extends TemplateEvent {
         private TemplateCreatedEvent(ExcelTemplate template) {
             super(template.getManager(), template);
+        }
+    }
+    
+    public static class TemplateDeletedEvent extends TemplateEvent {
+        private final String name;
+        
+        private TemplateDeletedEvent(ExcelTemplateManager manager, ExcelTemplate template) {
+            super(manager, template);
+            this.name = template.getName();
+        }
+        
+        public String getName() {
+            return name;
         }
     }
 }

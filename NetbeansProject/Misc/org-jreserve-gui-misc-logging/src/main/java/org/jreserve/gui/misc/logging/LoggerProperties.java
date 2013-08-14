@@ -36,6 +36,7 @@ import org.openide.util.Exceptions;
 public class LoggerProperties {
     public final static String SHOW_GUI = "gui.show";
     public final static String MAIN_LEVEL = ".level";
+    public final static String SHOW_DIALOG = "nb.exceptionDialog";
     
     private final static Logger logger = Logger.getLogger(LoggerProperties.class.getName());
     private final static String PACKAGE = "org.jreserve.gui.misc.logging";

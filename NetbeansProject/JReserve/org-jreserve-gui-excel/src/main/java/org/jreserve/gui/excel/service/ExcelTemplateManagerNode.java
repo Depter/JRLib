@@ -77,7 +77,8 @@ class ExcelTemplateManagerNode extends AbstractNode {
     @EventBusListener
     public void tempaltesChanged(TemplateEvent evt) {
         if(manager == evt.getManager()) {
-            if(evt instanceof TemplateEvent.TemplateCreatedEvent) {
+            if((evt instanceof TemplateEvent.TemplateCreatedEvent) ||
+               (evt instanceof TemplateEvent.TemplateDeletedEvent)) {
                 setChildren(Children.create(new ExcelTemplateChildren(manager), true));
             }
         }

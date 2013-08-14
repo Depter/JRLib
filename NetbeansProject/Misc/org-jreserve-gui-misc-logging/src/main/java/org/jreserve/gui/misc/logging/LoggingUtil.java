@@ -62,7 +62,9 @@ public class LoggingUtil {
     
     public static String getUserName(Level level) {
         level = escapeLevel(level);
-        if(Level.SEVERE.equals(level))
+        if(Level.OFF.equals(level))
+            return Bundle.LBL_LoggingUtil_off();
+        else if(Level.SEVERE.equals(level))
             return Bundle.LBL_LoggingUtil_severe();
         else if(Level.WARNING.equals(level))
             return Bundle.LBL_LoggingUtil_warning();
@@ -78,8 +80,6 @@ public class LoggingUtil {
             return Bundle.LBL_LoggingUtil_finest();
         else if(Level.ALL.equals(level))
             return Bundle.LBL_LoggingUtil_all();
-        else if(Level.OFF.equals(level))
-            return Bundle.LBL_LoggingUtil_off();
         else
             return Bundle.LBL_LoggingUtil_unknown();
     }

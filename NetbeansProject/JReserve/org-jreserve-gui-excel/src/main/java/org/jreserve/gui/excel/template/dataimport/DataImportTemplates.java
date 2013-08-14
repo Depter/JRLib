@@ -94,7 +94,7 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
         return lkp;
     }
     
-    public DataImportTemplate createTemplate(String name, List<DataImportTemplateItem> items) throws IOException {
+    public synchronized DataImportTemplate createTemplate(String name, List<DataImportTemplateItem> items) throws IOException {
         FileObject file = getTemplateFile(name);
         DataImportTemplate template = new DataImportTemplate(file, this, items);
         TemplateLoader.save(template);
@@ -109,5 +109,25 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
         if(root == null)
             throw new IOException("RootFolder not found!");
         return root.createData(name, "xml");
+    }
+    
+    @Override
+    public synchronized void deleteTemplate(final DataImportTemplate template) {
+        synchronized(template) {
+            if(template == null)
+                throw new NullPointerException("Template is null!");
+            if(this != template.getManager())
+                throw new IllegalArgumentException("Template belongs to another manager!");
+        
+            String name = template.getName();
+            try {
+                templates.remove(template);
+                template.getFile().delete();
+                logger.log(Level.INFO, "Deleted template ''{0}''.", name);
+            } catch (IOException ex) {
+                logger.log(Level.SEVERE, "Unable to delete template: "+name, ex);
+            }
+        }
+        TemplateEvent.publishDeleted(this, template);
     }
 }

@@ -14,20 +14,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.actions;
+package org.jreserve.gui.excel.template.actions;
 
+import java.awt.Color;
 import java.awt.Dialog;
-import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import javax.swing.SwingWorker;
-import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataItem;
-import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
-import org.jreserve.gui.misc.utils.notifications.DialogUtil;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -35,31 +34,42 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  */
 @Messages({
-    "LBL.DeleteDataCategoryDialog.Title=Delete Data Items",
+    "LBL.DeleteTemplateDialog.Title=Delete Excel Templates",
     "# {0} - path",
-    "MSG.DeleteDataCategoryDialog.Delete.Error=Unable to delete: {0}"
+    "MSG.DeleteTemplateDialog.Delete.Error=Unable to delete: {0}"
 })
-class DeleteDataCategoryDialog extends javax.swing.JPanel {
+class DeleteTemplateDialog extends javax.swing.JPanel {
 
-    static void showDialog(List<DataItem> items) {
-        DeleteDataCategoryDialog content = new DeleteDataCategoryDialog(items);
-        Dialog dialog = DialogUtil.createDialog(content);
+    private final static boolean MODAL = true;
+    
+    static void showDialog(List<ExcelTemplate> items) {
+        DeleteTemplateDialog content = new DeleteTemplateDialog(items);
+        Dialog dialog = createDialog(content);
         content.setDialog(dialog);
         dialog.setVisible(true);
     }
     
+    private static Dialog createDialog(DeleteTemplateDialog content) {
+        Object[] values = new Object[]{content.okButton, content.cancelButton};
+        DialogDescriptor dd = new DialogDescriptor(
+                content, Bundle.LBL_DeleteTemplateDialog_Title(), MODAL,
+                values, content.cancelButton, DialogDescriptor.DEFAULT_ALIGN,
+                HelpCtx.DEFAULT_HELP, null);
+        dd.setClosingOptions(new Object[0]);
+        return DialogDisplayer.getDefault().createDialog(dd);
+    }
+    
     private Dialog dialog;
-    private List<DataItem> items;
-    private Set<String> entries;
+    private List<ExcelTemplate> items;
+    private List<String> entries;
     private DeleteWorker worker;
     
-    private DeleteDataCategoryDialog(List<DataItem> items) {
+    private DeleteTemplateDialog(List<ExcelTemplate> items) {
         initComponents();
-        setName(Bundle.LBL_DeleteDataCategoryDialog_Title());
+        setName(Bundle.LBL_DeleteTemplateDialog_Title());
         
         this.items = items;
         initItemsList();
-        filterRoots();
         pBar.setVisible(false);
     }
     
@@ -70,23 +80,13 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
     }
     
     private void getEntryNames() {
-        entries = new TreeSet<String>();
-        for(DataItem item : items)
-            appendItem(entries, item);
-    }
-    
-    private void appendItem(Set<String> entries, DataItem item) {
-        entries.add(item.getPath());
-        if(item instanceof DataCategory) {
-            DataCategory category = (DataCategory) item;
-            for(DataCategory child : category.getChildCategories())
-                appendItem(entries, child);
-            for(DataSource child : category.getDataSources())
-                entries.add(child.getPath());
-        }
+        entries = new ArrayList<String>();
+        for(ExcelTemplate item : items)
+            entries.add(item.getName());
+        Collections.sort(entries);
     }
 
-    private String toString(Set<String> entries) {
+    private String toString(List<String> entries) {
         StringBuilder sb = new StringBuilder();
         for(String entry : entries) {
             if(sb.length() > 0)
@@ -94,15 +94,6 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
             sb.append(" - ").append(entry);
         }
         return sb.toString();
-    }
-    
-    private void filterRoots() {
-        Iterator<DataItem> it = items.iterator();
-        while(it.hasNext()) {
-            DataItem item = it.next();
-            if(entries.contains(item.getParent().getPath()))
-                it.remove();
-        }
     }
     
     private void setDialog(Dialog dialog) {
@@ -132,13 +123,15 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setLayout(new java.awt.BorderLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(questionLabel, org.openide.util.NbBundle.getMessage(DeleteDataCategoryDialog.class, "DeleteDataCategoryDialog.questionLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(questionLabel, org.openide.util.NbBundle.getMessage(DeleteTemplateDialog.class, "DeleteTemplateDialog.questionLabel.text")); // NOI18N
         add(questionLabel, java.awt.BorderLayout.PAGE_START);
 
+        itemsText.setEditable(false);
+        itemsText.setBackground(javax.swing.UIManager.getDefaults().getColor("FormattedTextField.disabledBackground"));
         itemsText.setColumns(20);
         itemsText.setRows(5);
-        itemsText.setEnabled(false);
         itemsText.setFocusable(false);
+        itemsText.setForeground(Color.BLACK);
         itemsScroll.setViewportView(itemsText);
 
         add(itemsScroll, java.awt.BorderLayout.CENTER);
@@ -159,7 +152,7 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
 
         buttonPanel.setLayout(new java.awt.GridLayout(1, 0, 5, 0));
 
-        org.openide.awt.Mnemonics.setLocalizedText(okButton, org.openide.util.NbBundle.getMessage(DeleteDataCategoryDialog.class, "DeleteDataCategoryDialog.okButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(okButton, org.openide.util.NbBundle.getMessage(DeleteTemplateDialog.class, "DeleteTemplateDialog.okButton.text")); // NOI18N
         okButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 okButtonActionPerformed(evt);
@@ -167,7 +160,7 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
         });
         buttonPanel.add(okButton);
 
-        org.openide.awt.Mnemonics.setLocalizedText(cancelButton, org.openide.util.NbBundle.getMessage(DeleteDataCategoryDialog.class, "DeleteDataCategoryDialog.cancelButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cancelButton, org.openide.util.NbBundle.getMessage(DeleteTemplateDialog.class, "DeleteTemplateDialog.cancelButton.text")); // NOI18N
         cancelButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelButtonActionPerformed(evt);
@@ -206,27 +199,27 @@ class DeleteDataCategoryDialog extends javax.swing.JPanel {
 
     private class DeleteWorker extends SwingWorker<Void, Integer> {
         
-        private final DataItem[] items;
+        private final ExcelTemplate[] items;
         private int step = 0;
         
-        private DeleteWorker(List<DataItem> items) {
-            this.items = items.toArray(new DataItem[items.size()]);
+        private DeleteWorker(List<ExcelTemplate> items) {
+            this.items = items.toArray(new ExcelTemplate[items.size()]);
         }
         
         @Override
         protected Void doInBackground() throws Exception {
-            for(DataItem item : this.items)
+            for(ExcelTemplate item : this.items)
                 deleteItem(item);
             return null;
         }
         
-        private void deleteItem(DataItem item) throws Exception {
+        private void deleteItem(ExcelTemplate item) {
             try {
-                item.getDataManager().deleteDataItem(item);
+                item.getManager().deleteTemplate(item);
                 publish(step++);
             } catch (Exception ex) {
-                String msg = Bundle.MSG_DeleteDataCategoryDialog_Delete_Error(item.getPath());
-                throw new Exception(msg, ex);
+                String msg = Bundle.MSG_DeleteTemplateDialog_Delete_Error(item.getName());
+                BubbleUtil.showException(msg, ex);
             }
         }
 

@@ -25,7 +25,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementRef;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -102,7 +102,7 @@ class TemplateLoader {
     @XmlRootElement(name="dataImportTemplate")
     static class TemplateContainer {
         
-        @XmlElement
+        @XmlElementRef
         private List<DataImportTemplateItem> items;
 
         public TemplateContainer() {

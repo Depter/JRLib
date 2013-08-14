@@ -23,8 +23,6 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.SourceType;
-import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.TemplateRow;
 import org.jreserve.gui.misc.utils.widgets.EnumComboBox;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;

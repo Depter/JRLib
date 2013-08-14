@@ -24,10 +24,8 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
-import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.TableDataImportTempalteItem;
-import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.TriangleDataImportTempalteItem;
-import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.SourceType;
-import org.jreserve.gui.excel.template.dataimport.createwizard.ImportTemplateModel.TemplateRow;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Table;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Triangle;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
@@ -101,9 +99,9 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
         DataType dt = row.getDataType();
         boolean cummulated = row.isCummulated();
         if(SourceType.TABLE == row.getSourceType()) {
-            return new TableDataImportTempalteItem(ref, dt, cummulated);
+            return new Table(ref, dt, cummulated);
         } else {
-            return new TriangleDataImportTempalteItem(ref, dt, cummulated,
+            return new Triangle(ref, dt, cummulated,
                     row.getMonthDate(), 
                     row.getAccidentLength(), row.getDevelopmentLength());
         }

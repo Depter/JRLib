@@ -32,6 +32,8 @@ public interface ExcelTemplateManager<T extends ExcelTemplate> extends Lookup.Pr
     
     public List<T> getTemplates();
     
+    public void deleteTemplate(T template) throws Exception;
+    
     @Retention(RetentionPolicy.SOURCE)
     @Target({ElementType.TYPE, ElementType.METHOD})
     public static @interface Registration {

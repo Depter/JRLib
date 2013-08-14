@@ -48,14 +48,14 @@ import org.openide.util.NbBundle.Messages;
 })
 public class EditTemplateAction implements ActionListener {
 
-    private final ExcelTemplate context;
+    private final ExcelTemplate.Editor context;
 
-    public EditTemplateAction(ExcelTemplate context) {
+    public EditTemplateAction(ExcelTemplate.Editor context) {
         this.context = context;
     }
 
     @Override
     public void actionPerformed(ActionEvent ev) {
-        // TODO use context
+        context.edit();
     }
 }

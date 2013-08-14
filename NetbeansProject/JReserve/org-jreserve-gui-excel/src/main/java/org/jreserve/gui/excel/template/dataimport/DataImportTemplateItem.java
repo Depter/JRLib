@@ -20,6 +20,9 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlSeeAlso;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Table;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Triangle;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
 
@@ -28,6 +31,7 @@ import org.jreserve.jrlib.gui.data.MonthDate;
  * @author Peter Decsi
  * @version 1.0
  */
+@XmlSeeAlso({Table.class, Triangle.class})
 @XmlAccessorType(XmlAccessType.FIELD)
 public abstract class DataImportTemplateItem {
     
@@ -73,19 +77,19 @@ public abstract class DataImportTemplateItem {
     
     @XmlRootElement(name="tableSource")
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class TableDataImportTempalteItem extends DataImportTemplateItem {
+    public static class Table extends DataImportTemplateItem {
         
-        public TableDataImportTempalteItem() {
+        public Table() {
         }
 
-        public TableDataImportTempalteItem(String reference, DataType dataType, boolean cummulated) {
+        public Table(String reference, DataType dataType, boolean cummulated) {
             super(reference, dataType, cummulated);
         }
     }
     
     @XmlRootElement(name="triangleSource")
     @XmlAccessorType(XmlAccessType.FIELD)
-    public static class TriangleDataImportTempalteItem extends DataImportTemplateItem {
+    public static class Triangle extends DataImportTemplateItem {
         @XmlElement(name="startDate",required=true)
         private MonthDate startDate;
         @XmlElement(name="accidentLength",required=true)
@@ -93,10 +97,10 @@ public abstract class DataImportTemplateItem {
         @XmlElement(name="developmentLength",required=true)
         private int developmentLength;
         
-        public TriangleDataImportTempalteItem() {
+        public Triangle() {
         }
 
-        public TriangleDataImportTempalteItem(String reference, DataType dataType, boolean cummulated, MonthDate startDate, int accidentLength, int developmentLength) {
+        public Triangle(String reference, DataType dataType, boolean cummulated, MonthDate startDate, int accidentLength, int developmentLength) {
             super(reference, dataType, cummulated);
             
             if(startDate == null)

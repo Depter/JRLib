@@ -20,12 +20,9 @@ package org.jreserve.gui.excel.template.dataimport.createwizard;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.Icon;
 import javax.swing.table.AbstractTableModel;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -40,9 +37,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL.ImportTemplateModel.Cummulated=Cummulated",
     "LBL.ImportTemplateModel.StartDate=Start Date",
     "LBL.ImportTemplateModel.AccidentLength=Accident Length",
-    "LBL.ImportTemplateModel.DevelopmentLength=Development Length",
-    "LBL.ImportTemplateModel.SourceType.Table=Table",
-    "LBL.ImportTemplateModel.SourceType.Triangle=Triangle"
+    "LBL.ImportTemplateModel.DevelopmentLength=Development Length"
 })
 public class ImportTemplateModel extends AbstractTableModel {
     
@@ -55,27 +50,14 @@ public class ImportTemplateModel extends AbstractTableModel {
     private final static int COL_DEVELOPMENT_LENGTH = 6;
     private final static int COLUMN_COUNT = 7;
     
-    static enum SourceType implements Displayable {
-        TABLE(
-            Bundle.LBL_CreateTempalteWizardVisualPanel_SoruceType_Table(), 
-            "org/jreserve/gui/excel/source_table.png"), //NOI18
-        TRIANGLE(
-            Bundle.LBL_CreateTempalteWizardVisualPanel_SoruceType_Triangle(), 
-            "org/jreserve/gui/excel/source_triangle.png");  //NOI18
-        
-        private final String displayName;
-        private final Icon icon;
-        
-        private SourceType(String displayName, String iconBase) {
-            this.displayName = displayName;
-            this.icon = ImageUtilities.loadImageIcon(iconBase, false);
-        }
-        
-        @Override public String getDisplayName() {return displayName;}
-        @Override public Icon getIcon() {return icon;}
-    }
-    
     private List<TemplateRow> rows = new ArrayList<TemplateRow>();
+    
+    void setRows(List<TemplateRow> rows) {
+        this.rows.clear();
+        if(rows!=null)
+            rows.addAll(rows);
+        fireTableDataChanged();
+    }
     
     List<TemplateRow> getRows() {
         return rows;
@@ -157,118 +139,14 @@ public class ImportTemplateModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         TemplateRow row = rows.get(rowIndex);
         switch(columnIndex) {
-            case COL_REFERENCE: return row.reference;
-            case COL_SOURCE_TYPE: return row.sourceType;
-            case COL_DATA_TYPE: return row.dataType;
-            case COL_CUMMULATED: return row.cummulated;
-            case COL_START_DATE: return row.monthDate;
-            case COL_ACCIDENT_LENGTH: return row.accidentLength;
-            case COL_DEVELOPMENT_LENGTH: return row.developmentLength;
+            case COL_REFERENCE: return row.getReference();
+            case COL_SOURCE_TYPE: return row.getSourceType();
+            case COL_DATA_TYPE: return row.getDataType();
+            case COL_CUMMULATED: return row.isCummulated();
+            case COL_START_DATE: return row.getMonthDate();
+            case COL_ACCIDENT_LENGTH: return row.getAccidentLength();
+            case COL_DEVELOPMENT_LENGTH: return row.getDevelopmentLength();
             default: throw new IllegalArgumentException("Invalid column index: "+columnIndex);
-        }
-    }
-
-    class TemplateRow {
-        private String reference;
-        private SourceType sourceType;
-        private DataType dataType;
-        private MonthDate monthDate;
-        private Integer accidentLength;
-        private Integer developmentLength;
-        private Boolean cummulated;
-        
-        public String getReference() {
-            return reference;
-        }
-
-        public void setReference(String reference) {
-            this.reference = reference;
-        }
-
-        public SourceType getSourceType() {
-            return sourceType;
-        }
-
-        public void setSourceType(SourceType sourceType) {
-            this.sourceType = sourceType;
-            if(SourceType.TRIANGLE != sourceType) {
-                monthDate = null;
-                accidentLength = null;
-                developmentLength = null;
-            }
-        }
-
-        public DataType getDataType() {
-            return dataType;
-        }
-
-        public void setDataType(DataType dataType) {
-            this.dataType = dataType;
-        }
-
-        public MonthDate getMonthDate() {
-            return monthDate;
-        }
-
-        public void setMonthDate(MonthDate monthDate) {
-            this.monthDate = monthDate;
-        }
-
-        public Integer getAccidentLength() {
-            return accidentLength;
-        }
-
-        public void setAccidentLength(Integer accidentLength) {
-            this.accidentLength = accidentLength;
-        }
-
-        public Integer getDevelopmentLength() {
-            return developmentLength;
-        }
-
-        public void setDevelopmentLength(Integer developmentLength) {
-            this.developmentLength = developmentLength;
-        }
-        
-        public Boolean isCummulated() {
-            return cummulated;
-        }
-        
-        public void setCummulated(Boolean cummulated) {
-            this.cummulated = cummulated;
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            if(o == this) return true;
-            if(o == null) return false;
-            if(!(o instanceof TemplateRow)) return false;
-            TemplateRow tr = (TemplateRow) o;
-            return equals(reference, tr.reference) &&
-                   sourceType == tr.sourceType &&
-                   dataType == tr.dataType &&
-                   equals(monthDate, tr.monthDate) &&
-                   equals(cummulated, tr.cummulated) &&
-                   equals(accidentLength, tr.accidentLength) &&
-                   equals(developmentLength, tr.developmentLength);
-        }
-        
-        private boolean equals(Object o1, Object o2) {
-            if(o1==null)
-                return o2==null;
-            return o2==null? false : o1.equals(o2);
-        }
-        
-        @Override
-        public int hashCode() {
-            int hash = 31;
-            hash = 17 * hash + (reference==null? 0 : reference.hashCode());
-            hash = 17 * hash + (sourceType==null? 0 : sourceType.hashCode());
-            hash = 17 * hash + (dataType==null? 0 : dataType.hashCode());
-            hash = 17 * hash + (monthDate==null? 0 : monthDate.hashCode());
-            hash = 17 * hash + (cummulated==null? 0 : cummulated.hashCode());
-            hash = 17 * hash + (accidentLength==null? 0 : accidentLength.hashCode());
-            return 17 * hash + (developmentLength==null? 0 : developmentLength.hashCode());
         }
     }
 }
