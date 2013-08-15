@@ -141,4 +141,27 @@ public class DataImportTemplates implements ExcelTemplateManager<DataImportTempl
         }
         TemplateEvent.publishDeleted(this, template);
     }
+    
+    public synchronized void renameTemplate(DataImportTemplate template, String newName) throws IOException {
+        String oldName = null;
+        try {
+            oldName = template.getName();
+            checkTempalte(template);
+            checkNewName(newName);
+            template.renameFile(newName);
+            TemplateEvent.publishRenamed(template, oldName);
+        } catch (Exception ex) {
+            String msg = String.format("Unable to rename temaplate '%s' to '%s'!", oldName, newName);
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        }
+    }
+    
+    private void checkTempalte(DataImportTemplate template) {
+        if(template == null)
+            throw new NullPointerException("Template is null!");
+        if(this != template.getManager())
+            throw new IllegalArgumentException("Template belongs to another manager!");
+    }
+    
 }

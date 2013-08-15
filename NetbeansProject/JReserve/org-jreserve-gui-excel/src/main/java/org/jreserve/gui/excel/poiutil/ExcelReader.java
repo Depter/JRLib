@@ -14,24 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.template;
+package org.jreserve.gui.excel.poiutil;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExcelTemplate {
+public interface ExcelReader<T> {
     
-    public String getName();
+    public T read(File file) throws IOException;
     
-    public ExcelTemplateManager<? extends ExcelTemplate> getManager();
-
-    public static interface Editor {
-        public void edit();
-    }
-    
-    public static interface Renameable {
-        public void rename(String newName);
+    public static interface Factory<T> {
+        
+        public ExcelReader<T> createReader(File file);
     }
 }

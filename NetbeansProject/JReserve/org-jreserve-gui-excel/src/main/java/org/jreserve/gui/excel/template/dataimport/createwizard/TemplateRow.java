@@ -16,6 +16,9 @@
  */
 package org.jreserve.gui.excel.template.dataimport.createwizard;
 
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Table;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Triangle;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
 
@@ -93,6 +96,16 @@ public class TemplateRow {
 
     public void setCummulated(Boolean cummulated) {
         this.cummulated = cummulated;
+    }
+    
+    public DataImportTemplateItem createTempalteItem() {
+        if(SourceType.TABLE == sourceType) {
+            return new Table(reference, dataType, cummulated);
+        } else {
+            return new Triangle(reference, dataType, cummulated,
+                    monthDate, 
+                    accidentLength , developmentLength);
+        }
     }
 
     @Override

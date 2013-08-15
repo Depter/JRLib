@@ -14,24 +14,39 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.template;
+package org.jreserve.gui.excel.poiutil.xls;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.poi.hssf.record.NameRecord;
+import org.apache.poi.hssf.record.Record;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExcelTemplate {
+public class XlsNameReader extends XlsReader<List<String>>{
     
-    public String getName();
+    private final static short[] RIDS = {
+        NameRecord.sid
+    };
     
-    public ExcelTemplateManager<? extends ExcelTemplate> getManager();
+    private final List<String> names = new ArrayList<String>();
 
-    public static interface Editor {
-        public void edit();
+    @Override
+    protected List<String> getResult() {
+        return names;
     }
     
-    public static interface Renameable {
-        public void rename(String newName);
+    @Override
+    protected short[] getInterestingReqordIds() {
+        return RIDS;
+    }
+
+    @Override
+    public void processRecord(Record record) {
+        NameRecord nr = (NameRecord) record;
+        names.add(nr.getNameText());
     }
 }

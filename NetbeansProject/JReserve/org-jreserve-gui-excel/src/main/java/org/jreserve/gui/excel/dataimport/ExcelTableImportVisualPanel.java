@@ -28,6 +28,8 @@ import org.jreserve.gui.excel.ExcelFileFilter;
 import org.jreserve.gui.excel.ExcelReader;
 import org.jreserve.gui.excel.ReferenceComboModel;
 import org.jreserve.gui.excel.ReferenceComboRenderer;
+import org.jreserve.gui.excel.poiutil.PoiUtil;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.util.ImageUtilities;
@@ -53,7 +55,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private final ExcelTableImportWizardPanel controller;
     private final ReferenceComboModel referenceModel = new ReferenceComboModel();
     private final ExcelTableModel tableModel = new ExcelTableModel();
-    private Workbook wb;
+    private ReferenceUtil refUtil;
     private JTextComponent referenceText;
     
     ExcelTableImportVisualPanel(ExcelTableImportWizardPanel controller) {
@@ -79,8 +81,8 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         return vectorCheck.isSelected();
     }
     
-    Workbook getWorkbook() {
-        return wb;
+    ReferenceUtil getReferenceUtil() {
+        return refUtil;
     }
     
     String getReference() {
@@ -266,8 +268,8 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
 
     private void refreshTable() {
         String ref = referenceText.getText();
-        if(ref != null && ref.length()>0 && wb != null)
-            tableModel.readData(wb, ref);
+//        if(ref != null && ref.length()>0 && wb != null)
+//            tableModel.readData(wb, ref);
     }
     
     private void vectorCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vectorCheckActionPerformed
@@ -291,7 +293,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     
     private void readExcel(File file) {
         setProcessRunning(true);
-        final ExcelReader reader = new ExcelReader(file);
+        final PoiUtil.Task<ReferenceUtil> reader = PoiUtil.getReferenceUtilTask(file);
         Task task = ImportUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
@@ -300,11 +302,12 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         try {
-                            wb = reader.getWorkbook();
+                            refUtil = null;
+                            refUtil = reader.get();
                         } catch (Exception ex) {
                             //TODO show error
                         } finally {
-                            referenceModel.update(wb);
+                            referenceModel.update(refUtil);
                             setProcessRunning(false);
                         }
                     }

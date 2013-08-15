@@ -75,6 +75,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.apache.poi.*</publicPackage>
+                        <publicPackage>org.xml.sax.*</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

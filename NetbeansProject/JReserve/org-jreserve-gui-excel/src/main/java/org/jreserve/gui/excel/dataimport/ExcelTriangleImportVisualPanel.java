@@ -21,12 +21,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.jreserve.gui.data.api.ImportUtil;
 import org.jreserve.gui.excel.ExcelFileFilter;
-import org.jreserve.gui.excel.ExcelReader;
 import org.jreserve.gui.excel.ReferenceComboModel;
 import org.jreserve.gui.excel.ReferenceComboRenderer;
+import org.jreserve.gui.excel.poiutil.PoiUtil;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.util.ImageUtilities;
@@ -41,6 +42,7 @@ import org.openide.util.TaskListener;
  */
 @Messages({
     "LBL.ExcelTriangleImportVisualPanel.Name=Excel Settings",
+    "MSG.ExcelTriangleImportVisualPanel.ReadError=Unable to read Excel file!",
     "LBL.ExcelTriangleImportVisualPanel.FileDialogTitle=Select Excel File",
     "LBL.ExcelTriangleImportVisualPanel.PathPrompt=Select input file",
     "LBL.ExcelTriangleImportVisualPanel.ReferencePrompt=Select range"
@@ -54,7 +56,7 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
     private final ExcelTriangleTableModel tableModel = new ExcelTriangleTableModel();
     private final InputListener inputListener = new InputListener();
     private JTextComponent referenceText;
-    private Workbook wb;
+    private ReferenceUtil refUtil;
     
     
     ExcelTriangleImportVisualPanel(ExcelTriangleImportWizardPanel controller) {
@@ -67,8 +69,12 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
         return Bundle.LBL_ExcelTriangleImportVisualPanel_Name();
     }
     
-    Workbook getWorkbook() {
-        return wb;
+    public String getFilePath() {
+        return pathText.getText();
+    }
+    
+    ReferenceUtil getReferenceUtil() {
+        return refUtil;
     }
     
     String getReference() {
@@ -239,13 +245,13 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
 
     private void refreshTable() {
         String ref = referenceText.getText();
-        if(ref != null && ref.length()>0 && wb != null)
-            tableModel.readData(wb, ref);
+//        if(ref != null && ref.length()>0 && wb != null)
+//            tableModel.readData(wb, ref);
     }
 
     private void readExcel(File file) {
         setProcessRunning(true);
-        final ExcelReader reader = new ExcelReader(file);
+        final PoiUtil.Task<ReferenceUtil> reader = PoiUtil.getReferenceUtilTask(file);
         Task task = ImportUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
@@ -254,11 +260,11 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         try {
-                            wb = reader.getWorkbook();
+                            refUtil = reader.get();
                         } catch (Exception ex) {
-                            //TODO show error
+                            BubbleUtil.showException(Bundle.MSG_ExcelTriangleImportVisualPanel_ReadError(), ex);
                         } finally {
-                            referenceModel.update(wb);
+                            referenceModel.update(refUtil);
                             setProcessRunning(false);
                         }
                     }

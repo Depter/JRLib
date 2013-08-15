@@ -14,24 +14,38 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.template;
+package org.jreserve.gui.excel.poiutil.xlsx;
+
+import java.io.IOException;
+import java.io.InputStream;
+import org.apache.poi.xssf.eventusermodel.XSSFReader;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExcelTemplate {
+abstract class XlsxWorkbookReader<T> extends XlsxReader<T> {
     
-    public String getName();
+    private InputStream wb;
     
-    public ExcelTemplateManager<? extends ExcelTemplate> getManager();
+    @Override
+    protected void readReader(XSSFReader reader) throws Exception {
+        try {
+            wb = reader.getWorkbookData();
+            InputSource is = new InputSource(wb);
+            XMLReader parser = super.createParser();
+            parser.parse(is);
+        } finally {
+            close();
+        }
+    }
+    
+    private void close() {
+        if(wb != null)
+            try{wb.close();} catch(IOException ex) {}
+    }
 
-    public static interface Editor {
-        public void edit();
-    }
-    
-    public static interface Renameable {
-        public void rename(String newName);
-    }
 }

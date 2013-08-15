@@ -20,13 +20,14 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.JTable;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.util.ChangeSupport;
@@ -46,7 +47,7 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
     
     private final ChangeSupport cs = new ChangeSupport(this);
     private final ImportTemplateModel tableModel = new ImportTemplateModel();
-    private List<String> names = new ArrayList<String>();
+    private ReferenceUtil refUtil;
     
     public ImportTemplateItemTable() {
         initComponents();
@@ -71,10 +72,14 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
         return tableModel.getRows();
     }
     
-    public void setNames(List<String> names) {
-        this.names.clear();
-        if(names != null)
-            this.names.addAll(names);
+    public void setReferenceUtil(ReferenceUtil refUtil) {
+        this.refUtil = refUtil;
+        table.repaint();
+        table.revalidate();
+    }
+    
+    public ReferenceUtil getReferenceUtil() {
+        return refUtil;
     }
     
     @Override
@@ -121,13 +126,19 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
     private boolean editRow(int index) {
         if(index >= 0) {
             TemplateRow row = tableModel.getRows().get(index);
-            if(TemplateItemEditorPanel.editTemplateRow(row, names)) {
+            if(TemplateItemEditorPanel.editTemplateRow(row, getDefiendNames())) {
                 tableModel.fireTableRowsUpdated(index, index);
                 cs.fireChange();
                 return true;
             }
         }
         return false;
+    }
+    
+    private List<String> getDefiendNames() {
+        if(refUtil == null)
+            return Collections.EMPTY_LIST;
+        return refUtil.getNames();
     }
     
     /**
@@ -316,8 +327,14 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             value = getText(value);
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if(!isSelected)
+            if(!isSelected) {
                 super.setBackground(Color.WHITE);
+                if(refUtil != null && column==0 && !isReferenceValid(value)) {
+                    setForeground(Color.RED);
+                } else {
+                    setForeground(Color.BLACK);
+                }
+            }
             return this;
         }
         
@@ -350,6 +367,10 @@ public class ImportTemplateItemTable extends javax.swing.JPanel {
                 case TRIANGLE: return Bundle.LBL_CreateTempalteWizardVisualPanel_SoruceType_Triangle();
                 default: throw new IllegalArgumentException("Unknown SourceType: "+st);
             }
+        }
+        
+        private boolean isReferenceValid(Object value) {
+            return value==null || refUtil.isReferenceValid((String)value);
         }
     }
     

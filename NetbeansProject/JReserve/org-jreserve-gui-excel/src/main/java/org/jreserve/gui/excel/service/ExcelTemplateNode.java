@@ -19,6 +19,9 @@ package org.jreserve.gui.excel.service;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.excel.template.ExcelTemplate;
+import org.jreserve.gui.excel.template.TemplateEvent;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -39,6 +42,7 @@ class ExcelTemplateNode extends AbstractNode {
     private final static String ACTION_PATH = "Node/ExcelTemplateNode/Actions";  //NOI18
     
     private Action[] actions;
+    private final ExcelTemplate template;
     
     private static Lookup createLookup(ExcelTemplate template) {
         return new ProxyLookup(
@@ -49,8 +53,10 @@ class ExcelTemplateNode extends AbstractNode {
     
     ExcelTemplateNode(ExcelTemplate template) {
         super(Children.LEAF, createLookup(template));
+        this.template = template;
         setDisplayName(template.getName());
         setIconBaseWithExtension(IMG);
+        EventBusManager.getDefault().subscribe(this);
     }
 
     @Override
@@ -64,4 +70,25 @@ class ExcelTemplateNode extends AbstractNode {
         List<? extends Action> list = Utilities.actionsForPath(ACTION_PATH);
         return list.toArray(new Action[list.size()]);
     }
+    
+    @EventBusListener
+    public void renameEvent(TemplateEvent.TemplateRenamedEvent evt) {
+        if(template == evt.getTemplate())
+            setDisplayName(template.getName());
+    }
+
+    @Override
+    public void setName(String s) {
+        ExcelTemplate.Renameable cookie = getLookup().lookup(ExcelTemplate.Renameable.class);
+        if(cookie != null) {
+            cookie.rename(s);
+        }
+    }
+
+    @Override
+    public boolean canRename() {
+        return getLookup().lookup(ExcelTemplate.Renameable.class) != null;
+    }
+    
+    
 }

@@ -20,7 +20,7 @@ package org.jreserve.gui.trianglewidget.model.registration;
 import java.util.List;
 import java.util.logging.Logger;
 import org.jreserve.gui.misc.annotations.AnnotationUtils;
-import org.jreserve.gui.misc.annotations.LayerRegistrationLoader;
+import org.jreserve.gui.misc.annotations.CachedLayerRegistrationLoader;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.openide.filesystems.FileObject;
 
@@ -29,7 +29,7 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public class TriangleModelRegistry extends LayerRegistrationLoader<TriangleModelAdapter> {
+public class TriangleModelRegistry extends CachedLayerRegistrationLoader<TriangleModelAdapter> {
     
     private static TriangleModelRegistry INSTANCE;
     

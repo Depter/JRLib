@@ -19,20 +19,34 @@ package org.jreserve.gui.excel.template.dataimport.editor;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.jreserve.gui.data.api.ImportUtil;
+import org.jreserve.gui.excel.ExcelFileFilter;
+import org.jreserve.gui.excel.poiutil.PoiUtil;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplate;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
+import org.jreserve.gui.excel.template.dataimport.DataImportTemplates;
 import org.jreserve.gui.excel.template.dataimport.createwizard.SourceType;
 import org.jreserve.gui.excel.template.dataimport.createwizard.TemplateRow;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.notifications.FileDialog;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
+import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
 
 /**
  *
@@ -41,11 +55,25 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "LBL.DataImportTemplateEditor.Title=Edit Template",
+    "LBL.DataImportTemplateEditor.File.Prompt=Select tempalte",
+    "LBL.DataImportTemplateEditor.File.DialogTitle=Select tempalte",
+    "MSG.DataImportTemplateEditor.Excel.ReadError=Unable to read Excel file!",
     "MSG.DataImportTemplateEditor.Name.Empty=Name is not set!",
     "# {0} - name",
     "MSG.DataImportTemplateEditor.Name.Exists=Name ''{0}'' already exists!",
     "MSG.DataImportTemplateEditor.Rows.Empty=Tempalte must contain at least one item!",
-    "MSG.DataImportTemplateEditor.Template.Same=Template does not changed!"
+    "MSG.DataImportTemplateEditor.Template.Same=Template does not changed!",
+    "# {0} - row",
+    "MSG.DataImportTemplateEditor.Data.Empty.Reference=Reference is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.DataImportTemplateEditor.Data.Invalid.Reference=Reference is invalid in row ''{0}''!",
+    "# {0} - row",
+    "MSG.DataImportTemplateEditor.Data.Empty.StartDate=Start date is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.DataImportTemplateEditor.Data.Empty.ALength=Accident length is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.DataImportTemplateEditor.Data.Empty.DLength=Development length is not set in row ''{0}''!",
+    "MSG.DataImportTemplateEditor.Rename.Error=Template can not be renamed!"
 })
 public class DataImportTemplateEditor extends javax.swing.JPanel {
 
@@ -119,6 +147,9 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
+        fileLabel = new javax.swing.JLabel();
+        fileText = new javax.swing.JTextField();
+        browseButton = new javax.swing.JButton();
         nameLabel = new javax.swing.JLabel();
         nameText = new javax.swing.JTextField();
         itemsLabel = new javax.swing.JLabel();
@@ -133,10 +164,44 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
         setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.GridBagLayout());
 
-        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(DataImportTemplateEditor.class, "DataImportTemplateEditor.nameLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(fileLabel, org.openide.util.NbBundle.getMessage(DataImportTemplateEditor.class, "DataImportTemplateEditor.fileLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(fileLabel, gridBagConstraints);
+
+        fileText.setEditable(false);
+        TextPrompt.createStandard(Bundle.LBL_DataImportTemplateEditor_File_Prompt(), fileText);
+        fileText.setText(null);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        add(fileText, gridBagConstraints);
+
+        browseButton.setIcon(CommonIcons.search());
+        org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(DataImportTemplateEditor.class, "DataImportTemplateEditor.browseButton.text")); // NOI18N
+        browseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                browseButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        add(browseButton, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(nameLabel, org.openide.util.NbBundle.getMessage(DataImportTemplateEditor.class, "DataImportTemplateEditor.nameLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
@@ -146,18 +211,18 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
         nameText.getDocument().addDocumentListener(inputListenr);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(nameText, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(itemsLabel, org.openide.util.NbBundle.getMessage(DataImportTemplateEditor.class, "DataImportTemplateEditor.itemsLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.weightx = 1.0;
@@ -167,8 +232,8 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
         table.setRows(originalRows);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -178,8 +243,8 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(msgLabel, null);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
@@ -225,16 +290,67 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.gridy = 5;
+        gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         add(bottomPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
+        File f = FileDialog.openFile(new ExcelFileFilter(), Bundle.LBL_DataImportTemplateEditor_File_DialogTitle());
+        if(f != null) {
+            fileText.setText(f.getAbsolutePath());
+            readExcel(f);
+        }
+    }//GEN-LAST:event_browseButtonActionPerformed
+    
+    private void readExcel(File file) {
+        setProcessRunning(true);
+        final PoiUtil.Task<ReferenceUtil> reader = PoiUtil.getReferenceUtilTask(file);
+        Task task = ImportUtil.getRP().create(reader);
+        task.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            table.setReferenceUtil(reader.get());
+                        } catch (Exception ex) {
+                            BubbleUtil.showException(Bundle.MSG_DataImportTemplateEditor_Excel_ReadError(), ex);
+                            table.setReferenceUtil(null);
+                        } finally {
+                            setProcessRunning(false);
+                        }
+                    }
+                });
+            }
+        });
+        ImportUtil.getRP().execute(task);
+    }
+    
+    private void setProcessRunning(boolean running) {
+        pBar.setVisible(running);
+        pBar.setIndeterminate(running);
+        browseButton.setEnabled(!running);
+        fileText.setEnabled(!running);
+        nameText.setEnabled(!running);
+        table.setEnabled(!running);
+        
+        if(running)
+            okButton.setEnabled(false);
+        else
+            validateInput();
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel bottomPanel;
+    private javax.swing.JButton browseButton;
     private javax.swing.Box.Filler buttonFiller;
     private javax.swing.JButton cancelButton;
+    private javax.swing.JLabel fileLabel;
+    private javax.swing.JTextField fileText;
     private javax.swing.JLabel itemsLabel;
     private org.jreserve.gui.misc.utils.widgets.MessageLabel msgLabel;
     private javax.swing.JLabel nameLabel;
@@ -274,7 +390,44 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
             return false;
         }
         
-        //TODO control rows
+        int rowIndex = 1;
+        for(TemplateRow row : newRows)
+            if(!isRowValid(row, rowIndex++))
+                return false;
+        
+        return true;
+    }
+    
+    private boolean isRowValid(TemplateRow row, int rowIndex) {
+        String ref = row.getReference();
+        if(ref==null || ref.length()==0) {
+            msgLabel.setErrorMessage(Bundle.MSG_DataImportTemplateEditor_Data_Empty_Reference(rowIndex));
+            return false;
+        }
+        
+        ReferenceUtil refUtil = table.getReferenceUtil();
+        if(refUtil!=null && !refUtil.isReferenceValid(ref)) {
+            msgLabel.setErrorMessage(Bundle.MSG_DataImportTemplateEditor_Data_Invalid_Reference(rowIndex));
+            return false;
+        }
+        
+        if(SourceType.TRIANGLE == row.getSourceType()) {
+            if(row.getMonthDate() == null) {
+                msgLabel.setErrorMessage(Bundle.MSG_DataImportTemplateEditor_Data_Empty_StartDate(rowIndex));
+                return false;
+            }
+        
+            if(row.getAccidentLength()==null || row.getAccidentLength()==0 || row.getAccidentLength() < 1) {
+                msgLabel.setErrorMessage(Bundle.MSG_DataImportTemplateEditor_Data_Empty_ALength(rowIndex));
+                return false;
+            }
+        
+            if(row.getDevelopmentLength()==null || row.getDevelopmentLength()==0 || row.getDevelopmentLength() < 1) {
+                msgLabel.setErrorMessage(Bundle.MSG_DataImportTemplateEditor_Data_Empty_DLength(rowIndex));
+                return false;
+            }
+        }
+        
         return true;
     }
     
@@ -315,7 +468,61 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
         public void actionPerformed(ActionEvent e) {
             if(cancelButton == e.getSource()) {
                 closeDialog();
+            } else {
+                String newName = nameText.getText();
+                List<TemplateRow> newRows = table.getRows();
+                if(originalRows.equals(newRows))
+                    newRows = null;
+                EditWorker worker = new EditWorker(template, newName, newRows);
+                setProcessRunning(true);
+                worker.execute();
             }
         }
+    }
+    
+    private class EditWorker extends SwingWorker<Void, Void> {
+        private final DataImportTemplate template;
+        private final String newName;
+        private final List<TemplateRow> newRows;
+
+        EditWorker(DataImportTemplate template, String newName, List<TemplateRow> newRows) {
+            this.template = template;
+            this.newName = newName;
+            this.newRows = newRows;
+        }
+        
+        @Override
+        protected Void doInBackground() throws Exception {
+            if(newRows != null)
+                template.setItmes(createTemplateItems());
+        
+            if(!newName.equals(template.getName()))
+                rename();
+            
+            return null;
+        }
+    
+        private List<DataImportTemplateItem> createTemplateItems() {
+            List<DataImportTemplateItem> items = new ArrayList<DataImportTemplateItem>();
+            for(TemplateRow row : newRows)
+                items.add(row.createTempalteItem());
+            return items;
+        }
+    
+        private void rename() {
+            try {
+                DataImportTemplates m = (DataImportTemplates) template.getManager();
+                m.renameTemplate(template, newName);
+            } catch (IOException ex) {
+                BubbleUtil.showException(Bundle.MSG_DataImportTemplateEditor_Rename_Error(), ex);
+            }
+        }
+
+        @Override
+        protected void done() {
+            setProcessRunning(false);
+            closeDialog();
+        }
+    
     }
 }

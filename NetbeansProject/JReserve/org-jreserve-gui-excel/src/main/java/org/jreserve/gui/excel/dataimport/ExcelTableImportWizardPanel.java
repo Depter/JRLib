@@ -29,6 +29,7 @@ import org.apache.poi.ss.util.CellReference;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.gui.excel.ExcelUtil;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
@@ -135,7 +136,7 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
     }
     
     private boolean isWorkbookSelected() {
-        if(component.getWorkbook() == null) {
+        if(component.getReferenceUtil() == null) {
             showError(Bundle.MSG_ExcelTableImportWizardPanel_Workbook_Empty());
             return false;
         }
@@ -149,8 +150,8 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
             return false;
         }
         
-        CellReference cr = ExcelUtil.getValidCellReference(component.getWorkbook(), ref);
-        if(cr == null) {
+        ReferenceUtil refUtil = component.getReferenceUtil();
+        if(!refUtil.isReferenceValid(ref)) {
             showError(Bundle.MSG_ExcelTableImportWizardPanel_Reference_Invalid(ref));
             return false;
         }
@@ -246,7 +247,7 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
     }
     
     private class ValidationInput {
-        private final Workbook wb = component.getWorkbook();
+        private final Workbook wb = null;//component.getWorkbook();
         private final boolean isVector = component.isVector();
         private final String reference = component.getReference();
         private final MonthDate.Factory mdf = new MonthDate.Factory();

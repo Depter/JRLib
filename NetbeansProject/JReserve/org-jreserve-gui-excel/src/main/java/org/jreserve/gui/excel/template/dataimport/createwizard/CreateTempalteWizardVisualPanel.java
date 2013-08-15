@@ -17,7 +17,6 @@
 package org.jreserve.gui.excel.template.dataimport.createwizard;
 
 import java.io.File;
-import java.util.Collections;
 import java.util.List;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
@@ -26,6 +25,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.gui.data.api.ImportUtil;
 import org.jreserve.gui.excel.ExcelFileFilter;
+import org.jreserve.gui.excel.poiutil.PoiUtil;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
@@ -63,6 +64,10 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
 
     String getTemplateName() {
         return nameText.getText();
+    }
+    
+    ReferenceUtil getReferenceUtil() {
+        return table.getReferenceUtil();
     }
     
     List<TemplateRow> getTempalteRows() {
@@ -216,7 +221,7 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
 
     private void readExcel(File file) {
         setProcessRunning(true);
-        final ExcelNameReader reader = new ExcelNameReader(file);
+        final PoiUtil.Task<ReferenceUtil> reader = PoiUtil.getReferenceUtilTask(file);
         Task task = ImportUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
@@ -225,10 +230,10 @@ class CreateTempalteWizardVisualPanel extends javax.swing.JPanel {
                     @Override
                     public void run() {
                         try {
-                            table.setNames(reader.getNames());
+                            table.setReferenceUtil(reader.get());
                         } catch (Exception ex) {
                             BubbleUtil.showException(Bundle.MSG_CreateTempalteWizardVisualPanel_Excel_ReadError(), ex);
-                            table.setNames(Collections.EMPTY_LIST);
+                            table.setReferenceUtil(null);
                         } finally {
                             setProcessRunning(false);
                         }

@@ -21,12 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
-import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Table;
-import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem.Triangle;
-import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
@@ -45,6 +43,8 @@ import org.openide.util.NbBundle.Messages;
     "MSG.CreateTemplateWizardPanel.Data.Empty=Define at least one item!",
     "# {0} - row",
     "MSG.CreateTemplateWizardPanel.Data.Empty.Reference=Reference is not set in row ''{0}''!",
+    "# {0} - row",
+    "MSG.CreateTemplateWizardPanel.Data.Reference.Invalid=Reference is invalid in row ''{0}''!",
     "# {0} - row",
     "MSG.CreateTemplateWizardPanel.Data.Empty.StartDate=Start date is not set in row ''{0}''!",
     "# {0} - row",
@@ -90,21 +90,8 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
     private List<DataImportTemplateItem> createTemplateItems() {
         List<DataImportTemplateItem> items = new ArrayList<DataImportTemplateItem>();
         for(TemplateRow row : component.getTempalteRows())
-            items.add(createItem(row));
+            items.add(row.createTempalteItem());
         return items;
-    }
-    
-    private DataImportTemplateItem createItem(TemplateRow row) {
-        String ref = row.getReference();
-        DataType dt = row.getDataType();
-        boolean cummulated = row.isCummulated();
-        if(SourceType.TABLE == row.getSourceType()) {
-            return new Table(ref, dt, cummulated);
-        } else {
-            return new Triangle(ref, dt, cummulated,
-                    row.getMonthDate(), 
-                    row.getAccidentLength(), row.getDevelopmentLength());
-        }
     }
 
     @Override
@@ -177,6 +164,12 @@ class CreateTemplateWizardPanel implements WizardDescriptor.Panel<WizardDescript
         String ref = row.getReference();
         if(ref == null || ref.length()==0) {
             showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Empty_Reference(index+1));
+            return false;
+        }
+        
+        ReferenceUtil refUtil = component.getReferenceUtil();
+        if(refUtil != null && !refUtil.isReferenceValid(ref)) {
+            showError(Bundle.MSG_CreateTemplateWizardPanel_Data_Reference_Invalid(index+1));
             return false;
         }
         

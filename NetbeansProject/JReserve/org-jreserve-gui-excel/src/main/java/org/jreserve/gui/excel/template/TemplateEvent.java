@@ -34,6 +34,10 @@ public class TemplateEvent {
         EventBusManager.getDefault().publish(evt);
     }
     
+    public static void publishRenamed(ExcelTemplate template, String oldName) {
+        publish(new TemplateRenamedEvent(template, oldName));
+    }
+    
     public static void publishDeleted(ExcelTemplateManager manager, ExcelTemplate template) {
         publish(new TemplateDeletedEvent(manager, template));
     }
@@ -72,4 +76,18 @@ public class TemplateEvent {
             return name;
         }
     }
+    
+    public static class TemplateRenamedEvent extends TemplateEvent {
+        private final String oldName;
+        
+        private TemplateRenamedEvent(ExcelTemplate template, String oldName) {
+            super(template.getManager(), template);
+            this.oldName = oldName;
+        }
+        
+        public String getOldName() {
+            return oldName;
+        }
+    }
+    
 }

@@ -20,8 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import org.apache.poi.ss.usermodel.Name;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 
 /**
  *
@@ -33,9 +32,9 @@ public class ReferenceComboModel extends AbstractListModel implements ComboBoxMo
     private List<String> names = new ArrayList<String>();
     private Object selected;
 
-    public void update(Workbook wb) {
+    public void update(ReferenceUtil refUtil) {
         removeOldNames();
-        addNewNames(wb);
+        addNewNames(refUtil);
         if(!names.isEmpty())
             fireIntervalAdded(this, 0, names.size() - 1);
     }
@@ -48,10 +47,11 @@ public class ReferenceComboModel extends AbstractListModel implements ComboBoxMo
         }
     }
     
-    private void addNewNames(Workbook wb) {
-        if(wb != null)
-            for(Name name : ExcelUtil.getReferenceNames(wb))
-                names.add(name.getNameName());
+    private void addNewNames(ReferenceUtil refUtil) {
+        if(refUtil != null) {
+            for(String name : refUtil.getNames())
+                names.add(name);
+        }
     }
     
     @Override

@@ -18,6 +18,7 @@
 package org.jreserve.gui.excel.dataimport;
 
 import java.awt.Component;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
@@ -28,6 +29,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
 import org.jreserve.gui.excel.ExcelUtil;
+import org.jreserve.gui.excel.poiutil.ReferenceUtil;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
@@ -108,7 +110,7 @@ public class ExcelTriangleImportWizardPanel implements WizardDescriptor.Asynchro
     }
     
     private boolean isWorkbookSelected() {
-        if(component.getWorkbook() == null) {
+        if(component.getReferenceUtil() == null) {
             showError(Bundle.MSG_ExcelTableImportWizardPanel_Workbook_Empty());
             return false;
         }
@@ -122,8 +124,8 @@ public class ExcelTriangleImportWizardPanel implements WizardDescriptor.Asynchro
             return false;
         }
         
-        CellReference cr = ExcelUtil.getValidCellReference(component.getWorkbook(), ref);
-        if(cr == null) {
+        ReferenceUtil refUtil = component.getReferenceUtil();
+        if(!refUtil.isReferenceValid(ref)) {
             showError(Bundle.MSG_ExcelTableImportWizardPanel_Reference_Invalid(ref));
             return false;
         }
@@ -203,7 +205,15 @@ public class ExcelTriangleImportWizardPanel implements WizardDescriptor.Asynchro
     }
     
     private class ValidationInput {
-        private final Workbook wb = component.getWorkbook();
-        private final String reference = component.getReference();
+        private final File file;
+        private final CellReference reference;
+    
+        private ValidationInput() {
+            file = new File(component.getFilePath());
+            
+            String rString = component.getReference();
+            ReferenceUtil util = component.getReferenceUtil();
+            reference = util.toCellReference(rString);
+        }
     }
 }
