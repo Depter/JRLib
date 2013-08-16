@@ -22,7 +22,7 @@ import java.util.List;
 import org.apache.poi.ss.usermodel.Name;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.jreserve.gui.excel.ExcelUtil;
+import org.jreserve.gui.poi.ExcelUtil;
 
 /**
  *

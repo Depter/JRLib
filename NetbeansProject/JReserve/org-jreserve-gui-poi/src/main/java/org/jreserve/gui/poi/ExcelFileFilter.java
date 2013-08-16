@@ -14,22 +14,34 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.poiutil;
+
+package org.jreserve.gui.poi;
 
 import java.io.File;
-import java.io.IOException;
+import javax.swing.filechooser.FileFilter;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ExcelReader<T> {
-    
-    public T read(File file) throws IOException;
-    
-    public static interface Factory<T> {
-        
-        public ExcelReader<T> createReader(File file);
+@Messages({
+    "LBL.ExcelFileFilter.Name=Excel Files (*.xls, *.xlsx)"
+})
+public class ExcelFileFilter extends FileFilter {
+
+    @Override
+    public boolean accept(File f) {
+        if(f.isDirectory())
+            return true;
+        String name = f.getName().toLowerCase();
+        return name.endsWith(".xls") || name.endsWith(".xlsx");
     }
+
+    @Override
+    public String getDescription() {
+        return Bundle.LBL_ExcelFileFilter_Name();
+    }
+
 }

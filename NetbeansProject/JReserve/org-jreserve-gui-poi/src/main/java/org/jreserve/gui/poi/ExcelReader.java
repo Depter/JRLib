@@ -14,39 +14,46 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.poiutil.xls;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.apache.poi.hssf.record.NameRecord;
-import org.apache.poi.hssf.record.Record;
+package org.jreserve.gui.poi;
+
+import java.io.File;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class XlsNameReader extends XlsReader<List<String>>{
+public class ExcelReader implements Runnable {
     
-    private final static short[] RIDS = {
-        NameRecord.sid
-    };
+    private final File file;
     
-    private final List<String> names = new ArrayList<String>();
-
-    @Override
-    protected List<String> getResult() {
-        return names;
-    }
+    private final Object lock = new Object();
+    private Workbook wb;
+    private Exception ex;
     
-    @Override
-    protected short[] getInterestingReqordIds() {
-        return RIDS;
+    public ExcelReader(File file) {
+        this.file = file;
     }
 
     @Override
-    public void processRecord(Record record) {
-        NameRecord nr = (NameRecord) record;
-        names.add(nr.getNameText());
+    public void run() {
+        synchronized(lock) {
+            try {
+                wb = WorkbookFactory.create(file);
+            } catch (Exception ex2) {
+                this.ex = ex2;
+            }
+        }
+    }
+    
+    public Workbook getWorkbook() throws Exception {
+        synchronized(lock) {
+            if(ex != null)
+                throw ex;
+            return wb;
+        }
     }
 }

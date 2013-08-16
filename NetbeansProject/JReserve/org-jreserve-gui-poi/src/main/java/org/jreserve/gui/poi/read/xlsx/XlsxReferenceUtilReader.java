@@ -14,13 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.poiutil.xlsx;
+package org.jreserve.gui.poi.read.xlsx;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import org.jreserve.gui.excel.poiutil.ReferenceUtil;
+import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

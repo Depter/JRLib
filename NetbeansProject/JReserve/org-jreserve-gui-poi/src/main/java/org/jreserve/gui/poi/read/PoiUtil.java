@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.poiutil;
+package org.jreserve.gui.poi.read;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import org.jreserve.gui.excel.poiutil.xls.XlsNameReader;
-import org.jreserve.gui.excel.poiutil.xls.XlsReferenceUtilReader;
-import org.jreserve.gui.excel.poiutil.xlsx.XlsxNameReader;
-import org.jreserve.gui.excel.poiutil.xlsx.XlsxReferenceUtilReader;
+import org.jreserve.gui.poi.read.xls.XlsNameReader;
+import org.jreserve.gui.poi.read.xls.XlsReferenceUtilReader;
+import org.jreserve.gui.poi.read.xlsx.XlsxNameReader;
+import org.jreserve.gui.poi.read.xlsx.XlsxReferenceUtilReader;
 
 /**
  *
@@ -69,6 +69,34 @@ public class PoiUtil {
                 return getReferenceUtil(file);
             }
         };
+    }
+    
+    public static <T> T read(File file, ExcelReader.Factory<T> factory) throws IOException {
+        ExcelReader<T> reader;
+        reader = isXlsx(file)? factory.createXlsxReader(file) : factory.createXlsReader(file);
+        return reader.read(file);
+    }
+    
+    public static <T> Task<T> createTask(File file, ExcelReader.Factory factory) {
+        ExcelReader<T> reader;
+        reader = isXlsx(file)? factory.createXlsxReader(file) : factory.createXlsReader(file);
+        return new ReaderTask<T>(file, reader);
+    }
+    
+    private static class ReaderTask<T> extends Task<T> {
+        
+        private final File file;
+        private final ExcelReader<T> reader;
+
+        private ReaderTask(File file, ExcelReader<T> reader) {
+            this.file = file;
+            this.reader = reader;
+        }
+        
+        @Override
+        T calculate() throws Exception {
+            return reader.read(file);
+        }
     }
     
     public static abstract class Task<T> implements Runnable {

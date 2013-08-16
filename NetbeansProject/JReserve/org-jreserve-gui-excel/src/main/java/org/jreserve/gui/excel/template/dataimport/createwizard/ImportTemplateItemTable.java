@@ -27,7 +27,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import org.jreserve.gui.excel.poiutil.ReferenceUtil;
+import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.util.ChangeSupport;

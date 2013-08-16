@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.poiutil.xlsx;
+package org.jreserve.gui.poi.read.xlsx;
 
 import java.io.IOException;
 import java.io.InputStream;

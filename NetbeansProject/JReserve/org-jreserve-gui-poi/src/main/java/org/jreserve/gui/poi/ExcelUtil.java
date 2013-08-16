@@ -15,7 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.excel;
+package org.jreserve.gui.poi;
 
 import java.util.ArrayList;
 import java.util.List;

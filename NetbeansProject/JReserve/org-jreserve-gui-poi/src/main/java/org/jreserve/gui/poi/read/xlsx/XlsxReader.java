@@ -14,13 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.excel.poiutil.xlsx;
+package org.jreserve.gui.poi.read.xlsx;
 
 import java.io.File;
 import java.io.IOException;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
-import org.jreserve.gui.excel.poiutil.ExcelReader;
+import org.jreserve.gui.poi.read.ExcelReader;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
