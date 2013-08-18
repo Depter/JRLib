@@ -21,10 +21,9 @@ import java.awt.event.ActionListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.gui.data.api.DataItem;
-import org.jreserve.gui.data.api.DataItemChooser;
+import org.jreserve.gui.data.api.util.DataItemChooser;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.netbeans.api.project.ProjectUtils;
 import org.openide.util.NbBundle.Messages;
@@ -40,8 +39,10 @@ import org.openide.util.NbBundle.Messages;
 class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     
     private DataManager dm;
+    private final ImportDataWizardPanel1 controller;
     
-    ImportDataWizardVisualPanel1() {
+    ImportDataWizardVisualPanel1(ImportDataWizardPanel1 controller) {
+        this.controller = controller;
         initComponents();
     }
     
@@ -60,6 +61,21 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     
     void setImportProvider(ImportDataProviderAdapter importProvider) {
         providerCombo.setSelectedItem(importProvider);
+    }
+        
+    String getDataSourcePath() {
+        return storageText.getText();
+    }
+    
+    DataSource getSelectedDataSource() {
+        String path = storageText.getText();
+        if(path==null || path.length() == 0 || dm == null)
+            return null;
+        return dm.getDataSource(path);
+    }
+    
+    ImportDataProviderAdapter getImportDataProvider() {
+        return (ImportDataProviderAdapter) providerCombo.getSelectedItem();
     }
     
     /**
@@ -196,16 +212,7 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
         }
 
         private void updateStorage() {
-            DataSource ds = getSelectedDataSource();
-            putClientProperty(ImportDataWizardPanel1.PROP_DATA_SOURCE_PATH, storageText.getText());
-            putClientProperty(ImportDataProvider.PROP_DATA_SOURCE, ds);
-        }
-        
-        private DataSource getSelectedDataSource() {
-            String path = storageText.getText();
-            if(path==null || path.length() == 0 || dm == null)
-                return null;
-            return dm.getDataSource(path);
+            controller.changed();
         }
     }
     
@@ -213,13 +220,13 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             ImportDataProviderAdapter adapter = (ImportDataProviderAdapter) providerCombo.getSelectedItem();
-            if(adapter == null) {
-                putClientProperty(ImportDataWizardPanel1.PROP_IMPORT_DATA_PROVIDER_ADAPTER, null);
-                putClientProperty(ImportDataProvider.PROP_IMPORT_WIZARD, null);
-            } else {
-                putClientProperty(ImportDataWizardPanel1.PROP_IMPORT_DATA_PROVIDER_ADAPTER, adapter);
-                putClientProperty(ImportDataProvider.PROP_IMPORT_WIZARD, adapter.getImportDataProvider());
-            }
+            setStorageEnabled(adapter==null? true : adapter.isDSRequired());
+            controller.changed();
+        }
+        
+        private void setStorageEnabled(boolean enabled) {
+            storageText.setEnabled(enabled);
+            storageButton.setEnabled(enabled);
         }
     }
 }

@@ -100,7 +100,7 @@
     </Component>
     <Component class="org.jreserve.gui.trianglewidget.TriangleWidgetPanel" name="triangleWidget">
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="triangleWidget.setCummulatedControlVisible(false);"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePre" type="java.lang.String" value="triangleWidget.setCummulatedControlVisible(false);&#xa;triangleWidget.setLayerControlVisible(false);"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

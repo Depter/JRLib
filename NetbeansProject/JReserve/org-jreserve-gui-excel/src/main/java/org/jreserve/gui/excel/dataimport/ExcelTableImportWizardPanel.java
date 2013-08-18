@@ -18,21 +18,16 @@
 package org.jreserve.gui.excel.dataimport;
 
 import java.awt.Component;
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.spi.ImportDataProvider;
-import org.jreserve.gui.poi.ExcelUtil;
+import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataType;
-import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
 import org.openide.util.ChangeSupport;
@@ -46,7 +41,7 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "MSG.ExcelTableImportWizardPanel.Workbook.Empty=Workbook not selected!",
-    "MSG.ExcelTableImportWizardPanel.Reference.Empty=reference is not set!",
+    "MSG.ExcelTableImportWizardPanel.Reference.Empty=Reference is not set!",
     "# {0} - reference",
     "MSG.ExcelTableImportWizardPanel.Reference.Invalid=Reference ''{0}'' is invalid!",
     "MSG.ExcelTableImportWizardPanel.Data.Empty=The specified range is empty!",
@@ -59,7 +54,8 @@ import org.openide.util.NbBundle.Messages;
     "MSG.ExcelTableImportWizardPanel.Read.NumberError=Unable to read number from cell ''{0}''!",
     "# {0} - r1",
     "# {1} - r0",
-    "MSG.ExcelTableImportWizardPanel.Read.Duplicate=Entry in row ''{0}'' is duplicate of row ''{1}''!"
+    "MSG.ExcelTableImportWizardPanel.Read.Duplicate=Entry in row ''{0}'' is duplicate of row ''{1}''!",
+    "MSG.ExcelTableImportWizardPanel.Read.Error=Unable to read file!"
 })
 class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
     
@@ -169,32 +165,14 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
     @Override
     public void validate() throws WizardValidationException {
         synchronized(inputLock) {
-            CellReference ref = ExcelUtil.getValidCellReference(input.wb, input.reference);
-            if(ref == null)
-                throw new WizardValidationException(component, "Invalid reference: "+input.reference, Bundle.MSG_ExcelTableImportWizardPanel_Reference_Invalid(input.reference));
-            
-            Sheet sheet = input.wb.getSheet(ref.getSheetName());
-            int firstRow = ref.getRow();
-            int firstColumn = ref.getCol();
-            
-            List<DataEntry> entries = new ArrayList<DataEntry>();
-            int rCount = 0;
-            while(true) {
-                Row row = sheet.getRow(firstRow + rCount++);
-                if(row == null) break;
-                
-                DataEntry entry = input.isVector? getVector(row, firstColumn) : getTriangle(row, firstColumn);
-                if(entry == null) break;
-                
-                int index = entries.indexOf(entry);
-                if(index >= 0) {
-                    int r0 = firstRow + index + 1;
-                    int r1 = firstRow + rCount;
-                    String msg = "Duplicate entry in rows: "+r0 + ", "+r1;
-                    String lMsg = Bundle.MSG_ExcelTableImportWizardPanel_Read_Duplicate(r1, r0);
-                    throw new WizardValidationException(component, msg, lMsg);
-                }
-                entries.add(entry);
+            List<DataEntry> entries;
+            try {
+                entries = PoiUtil.read(input.file, input.reference, 
+                        input.isVector? new VectorDataEntryTableReader() : new TriangleDataEntryTableReader());
+            } catch (Exception ex) {
+                String msg = "Unable to read data!";
+                String lMsg = Bundle.MSG_ExcelTableImportWizardPanel_Read_Error();
+                throw new WizardValidationException(component, msg, lMsg);
             }
             
             if(entries.isEmpty()) {
@@ -207,49 +185,18 @@ class ExcelTableImportWizardPanel implements WizardDescriptor.AsynchronousValida
         }
     }
     
-    private DataEntry getTriangle(Row row, int firstColumn) throws WizardValidationException {
-        Cell ac = row.getCell(firstColumn);
-        Cell dc = row.getCell(firstColumn+1);
-        Cell vc = row.getCell(firstColumn+2);
-        if(isEmpty(ac) && isEmpty(dc) && isEmpty(vc))
-            return null;
-        return new DataEntry(getDate(ac), getDate(dc), getDouble(vc));
-    }
-    
-    private DataEntry getVector(Row row, int firstColumn) throws WizardValidationException {
-        Cell ac = row.getCell(firstColumn);
-        Cell vc = row.getCell(firstColumn+1);
-        if(isEmpty(ac) && isEmpty(vc))
-            return null;
-        return new DataEntry(getDate(ac), getDouble(vc));
-    }
-    
-    private boolean isEmpty(Cell cell) {
-        return cell == null || Cell.CELL_TYPE_BLANK == cell.getCellType();
-    }
-    
-    private MonthDate getDate(Cell cell) throws WizardValidationException {
-        try {
-            return input.mdf.toMonthDate(cell.getDateCellValue());
-        } catch (Exception ex) {
-            String str = ExcelUtil.toString(cell);
-            throw new WizardValidationException(component, "Unable to read date from cell: "+str, Bundle.MSG_ExcelTableImportWizardPanel_Read_DateError(str));
-        }
-    }
-    
-    private double getDouble(Cell cell) throws WizardValidationException {
-        try {
-            return cell.getNumericCellValue();
-        } catch (Exception ex) {
-            String str = ExcelUtil.toString(cell);
-            throw new WizardValidationException(component, "Unable to read number from cell: "+str, Bundle.MSG_ExcelTableImportWizardPanel_Read_NumberError(str));
-        }
-    }
-    
     private class ValidationInput {
-        private final Workbook wb = null;//component.getWorkbook();
-        private final boolean isVector = component.isVector();
-        private final String reference = component.getReference();
-        private final MonthDate.Factory mdf = new MonthDate.Factory();
+        private final File file;
+        private final CellReference reference;
+        private final boolean isVector;
+        
+        private ValidationInput() {
+            isVector = component.isVector();
+            file = new File(component.getFilePath());
+            
+            String rString = component.getReference();
+            ReferenceUtil util = component.getReferenceUtil();
+            reference = util.toCellReference(rString);
+        }
     }
 }

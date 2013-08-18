@@ -87,6 +87,8 @@
                     <publicPackages>
                         <publicPackage>org.apache.poi.*</publicPackage>
                         <publicPackage>org.xml.sax.*</publicPackage>
+                        <publicPackage>org.jreserve.gui.poi</publicPackage>
+                        <publicPackage>org.jreserve.gui.poi.read</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

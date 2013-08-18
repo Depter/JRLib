@@ -22,16 +22,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.jreserve.gui.data.api.ImportUtil;
+import org.apache.poi.ss.util.CellReference;
+import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.poi.ExcelFileFilter;
-import org.jreserve.gui.poi.ExcelReader;
 import org.jreserve.gui.excel.ReferenceComboModel;
 import org.jreserve.gui.excel.ReferenceComboRenderer;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
+import org.jreserve.gui.poi.read.TableFactory;
+import org.jreserve.jrlib.gui.data.DataEntry;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Task;
@@ -57,6 +59,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private final ExcelTableModel tableModel = new ExcelTableModel();
     private ReferenceUtil refUtil;
     private JTextComponent referenceText;
+    private boolean isVector = false;
     
     ExcelTableImportVisualPanel(ExcelTableImportWizardPanel controller) {
         this.controller = controller;
@@ -69,16 +72,17 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         return Bundle.LBL_ExcelTableImportVisualPanel_Name();
     }
     
-    List<ExcelCell[]> getCells() {
-        return tableModel.getRows();
+    String getFilePath() {
+        return pathText.getText();
     }
     
     void setVector(boolean isVector) {
-        vectorCheck.setSelected(isVector);
+        this.isVector = isVector;
+        tableModel.setVector(isVector);
     }
     
     boolean isVector() {
-        return vectorCheck.isSelected();
+        return isVector;
     }
     
     ReferenceUtil getReferenceUtil() {
@@ -104,8 +108,6 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         browseButton = new javax.swing.JButton();
         referenceLabel = new javax.swing.JLabel();
         referenceCombo = new javax.swing.JComboBox();
-        vectorLabel = new javax.swing.JLabel();
-        vectorCheck = new javax.swing.JCheckBox();
         tableLabel = new javax.swing.JLabel();
         refreshButton = new javax.swing.JButton();
         tableScroll = new javax.swing.JScrollPane();
@@ -158,7 +160,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(referenceLabel, gridBagConstraints);
 
         referenceCombo.setEditable(true);
@@ -173,31 +175,8 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
-        add(referenceCombo, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(vectorLabel, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.vectorLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
-        add(vectorLabel, gridBagConstraints);
-
-        org.openide.awt.Mnemonics.setLocalizedText(vectorCheck, null);
-        vectorCheck.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                vectorCheckActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 0);
-        add(vectorCheck, gridBagConstraints);
+        add(referenceCombo, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(tableLabel, org.openide.util.NbBundle.getMessage(ExcelTableImportVisualPanel.class, "ExcelTableImportVisualPanel.tableLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -265,17 +244,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         refreshTable();
     }//GEN-LAST:event_refreshButtonActionPerformed
-
-    private void refreshTable() {
-        String ref = referenceText.getText();
-//        if(ref != null && ref.length()>0 && wb != null)
-//            tableModel.readData(wb, ref);
-    }
-    
-    private void vectorCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vectorCheckActionPerformed
-        tableModel.setVector(vectorCheck.isSelected());
-    }//GEN-LAST:event_vectorCheckActionPerformed
-    
+        
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JProgressBar pBar;
@@ -287,9 +256,37 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private javax.swing.JTable table;
     private javax.swing.JLabel tableLabel;
     private javax.swing.JScrollPane tableScroll;
-    private javax.swing.JCheckBox vectorCheck;
-    private javax.swing.JLabel vectorLabel;
     // End of variables declaration//GEN-END:variables
+
+    private void refreshTable() {
+        setProcessRunning(true);
+        CellReference ref = refUtil.toCellReference(referenceText.getText());
+        File file = new File(pathText.getText());
+        final PoiUtil.Task<List<DataEntry>> reader = PoiUtil.createTask(file, ref, createTableFactory());
+        Task task = ImportUtil.getRP().create(reader);
+        task.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                List<DataEntry> entries = null;
+                try {
+                    entries = reader.get();
+                } catch (Exception ex) {
+                    BubbleUtil.showException(ex);
+                } finally {
+                    tableModel.setEntries(entries);
+                    setProcessRunning(false);
+                }
+            }
+        });
+        ImportUtil.getRP().execute(task);
+    }
+    
+    private TableFactory<List<DataEntry>> createTableFactory() {
+        return isVector?
+                new VectorDataEntryTableReader() :
+                new TriangleDataEntryTableReader();
+    }
+
     
     private void readExcel(File file) {
         setProcessRunning(true);
@@ -322,28 +319,50 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         pBar.setIndeterminate(running);
         browseButton.setEnabled(!running);
         referenceCombo.setEnabled(!running);
-        refreshButton.setEnabled(!running);
+        checkRefreshEnabled();
+    }
+    
+    private void checkRefreshEnabled() {
+        refreshButton.setEnabled(isRefreshable());
+    }
+        
+    private boolean isRefreshable() {
+        if(refUtil == null)
+            return false;
+        String ref = referenceText.getText();
+        if(ref == null || ref.length() == 0)
+            return false;
+        return refUtil.isReferenceValid(ref);
     }
     
     private class InputListener implements DocumentListener {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            update();
+            update(e);
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            update();
+            update(e);
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
         }
         
-        private void update() {
-            refreshTable();
+        private void update(DocumentEvent e) {
+            checkRefreshEnabled();
             controller.changed();
+
+            if(shouldRefreshTable(e))
+                refreshTable();
+        }
+        
+        private boolean shouldRefreshTable(DocumentEvent e) {
+            return refUtil != null &&
+                   referenceText.getDocument() == e.getDocument() &&
+                   refUtil.getNames().contains(referenceText.getText());
         }
     }
 }

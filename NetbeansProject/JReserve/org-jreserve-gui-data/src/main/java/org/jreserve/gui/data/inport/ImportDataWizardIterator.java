@@ -36,7 +36,7 @@ import javax.swing.event.ChangeListener;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.data.api.inport.SaveType;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.netbeans.api.progress.ProgressHandle;
@@ -52,8 +52,6 @@ import org.openide.util.WeakListeners;
 public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
     
     private final static Logger logger = Logger.getLogger(ImportDataWizardIterator.class.getName());
-    
-    final static String PROP_INIT_DATA_ITEM = "init.data.item"; //NOI18
     
     private DataItem dataItem;
     private WizardDescriptor wizardDesc;
@@ -72,10 +70,10 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     @Override
     public void initialize(WizardDescriptor wizard) {
         panels.add(new ImportDataWizardPanel1());
-        panels.add(new ImportDataWizardPanelLast());
+//        panels.add(new ImportDataWizardPanelLast());
         
         this.wizardDesc = wizard;
-        wizard.putProperty(PROP_INIT_DATA_ITEM, dataItem);
+        wizard.putProperty(ImportDataProvider.PROP_INIT_DATA_ITEM, dataItem);
 
         wizard.putProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.TRUE);
         wizard.putProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
@@ -95,7 +93,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     private void releaseOldWizard() {
         if(importWizard != null) {
             importWizard.removeChangeListener(sourceItListener);
-            while(panels.size() > 2)
+            while(panels.size() > 1)
                 panels.remove(1);
         }
     }
@@ -194,6 +192,10 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     
     @Override
     public Set instantiate(ProgressHandle handle) throws IOException {
+        Boolean shouldImportData = (Boolean) wizardDesc.getProperty(ImportDataProvider.PROP_SHOULD_IMPORT_DATA);
+        if(Boolean.FALSE == shouldImportData)
+            return Collections.EMPTY_SET;
+        
         DataSource ds = (DataSource) wizardDesc.getProperty(ImportDataProvider.PROP_DATA_SOURCE);
         if(ds == null)
             throw new IOException("DataSource not set!");

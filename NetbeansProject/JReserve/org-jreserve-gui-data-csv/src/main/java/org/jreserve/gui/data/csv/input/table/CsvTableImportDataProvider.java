@@ -17,9 +17,10 @@
 
 package org.jreserve.gui.data.csv.input.table;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelLast;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
@@ -42,12 +43,15 @@ import org.openide.util.NbBundle.Messages;
 public class CsvTableImportDataProvider implements ImportDataProvider {
 
     private final ChangeSupport cs = new ChangeSupport(this);
-    private List<? extends WizardDescriptor.Panel> panels;
+    private List<WizardDescriptor.Panel> panels;
     
     @Override
     public List<? extends WizardDescriptor.Panel> getPanels() {
-        if(panels == null)
-            panels = Collections.singletonList(new CsvTableImportWizardPanel());
+        if(panels == null) {
+            panels = new ArrayList<WizardDescriptor.Panel>(2);
+            panels.add(new CsvTableImportWizardPanel());
+            panels.add(new ImportDataWizardPanelLast());
+        }
         return panels;
     }
 

@@ -17,9 +17,6 @@
 
 package org.jreserve.gui.excel.dataimport;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.jreserve.jrlib.gui.data.MonthDate;
-
 /**
  *
  * @author Peter Decsi
@@ -34,62 +31,10 @@ class ExcelCell<T> {
         STRING;
     }
     
-    private static MonthDate.Factory MDF = new MonthDate.Factory();
-    
-    static ExcelCell createCell(Type type, Cell cell) {
-        if(cell == null || Cell.CELL_TYPE_BLANK == cell.getCellType())
-            return new ExcelCell(Type.BLANK, null);
-        
-        if(Type.DATE == type) {
-            return getDateCell(cell);
-        } else {
-            return getNumberCell(cell);
-        }
-    }
-    
-    private static ExcelCell getNumberCell(Cell cell) {
-        try {
-            return new ExcelCell(Type.DOUBLE, cell.getNumericCellValue());
-        } catch (Exception ex) {
-            return new ExcelCell(Type.STRING, getValueAsString(cell));
-        }
-    }
-    
-    private static ExcelCell getDateCell(Cell cell) {
-        try {
-            MonthDate md = MDF.toMonthDate(cell.getDateCellValue());
-            return new ExcelCell(Type.DATE, md);
-        } catch (Exception ex) {
-            return new ExcelCell(Type.STRING, getValueAsString(cell));
-        }
-    }
-    
-    private static String getValueAsString(Cell cell) {
-        switch(cell.getCellType()) {
-            case Cell.CELL_TYPE_BLANK: return null;
-            case Cell.CELL_TYPE_BOOLEAN:
-                return (cell.getBooleanCellValue())? "True" : "False";
-            case Cell.CELL_TYPE_ERROR:
-                return "Error #"+cell.getErrorCellValue();
-            case Cell.CELL_TYPE_FORMULA:
-                try {
-                    return ""+cell.getNumericCellValue();
-                } catch (Exception ex) {
-                    return cell.getStringCellValue();
-                }
-            case Cell.CELL_TYPE_NUMERIC:
-                return ""+cell.getNumericCellValue();
-            case Cell.CELL_TYPE_STRING:
-                return cell.getStringCellValue();
-            default:
-                return "Unkonw cell type: "+cell.getCellType();
-        }
-    }
-    
     private Type type;
     private T value;
     
-    private ExcelCell(Type type, T value) {
+    ExcelCell(Type type, T value) {
         this.type = type;
         this.value = value;
     }

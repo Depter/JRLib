@@ -26,11 +26,13 @@ import org.openide.WizardDescriptor;
  * @version 1.0
  */
 public interface ImportDataProvider {
+    public final static String PROP_INIT_DATA_ITEM = "init.data.item"; //NOI18
     public final static String PROP_DATA_SOURCE = "data.source";    //NOI18
     public final static String PROP_IMPORT_WIZARD = "import.wizard";    //NOI18
     public final static String PROP_IMPORT_DATA = "import.data";    //NOI18
     public final static String PROP_IMPORT_DATA_CUMMULATED = "import.data.cummulated";    //NOI18
     public final static String PROP_SAVE_TYPE = "save.type";    //NOI18
+    public final static String PROP_SHOULD_IMPORT_DATA = "shouldImportData";    //NOI18
 
     public List<? extends WizardDescriptor.Panel> getPanels();
 
@@ -42,6 +44,7 @@ public interface ImportDataProvider {
         public String id();
         public String displayName();
         public String iconBase() default "";
+        public boolean requiresDataSource() default true;
         public int position() default Integer.MAX_VALUE;
     }
     

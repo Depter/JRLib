@@ -18,9 +18,12 @@ package org.jreserve.gui.poi.read.xlsx;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.jreserve.gui.poi.read.ExcelReader;
+import org.xml.sax.ContentHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
@@ -32,8 +35,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  * @version 1.0
  */
 abstract class XlsxReader<T> extends DefaultHandler implements ExcelReader<T> {
-    
-    private final static String SAX_PARSER = "org.apache.xerces.parsers.SAXParser"; //NOI18
+    private final static Logger logger = Logger.getLogger(XlsxReader.class.getName());
     
     private OPCPackage pkg;
     
@@ -47,6 +49,7 @@ abstract class XlsxReader<T> extends DefaultHandler implements ExcelReader<T> {
         } catch (Exception ex) {
             String path = file==null? null : file.getAbsolutePath();
             String msg = String.format("Unabel to read file '%s'!", path);
+            logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         } finally {
             close();
@@ -55,7 +58,7 @@ abstract class XlsxReader<T> extends DefaultHandler implements ExcelReader<T> {
     
     protected abstract void readReader(XSSFReader reader) throws Exception;
     
-    protected abstract T getResult();
+    protected abstract T getResult() throws Exception;
     
     private void close() {
         if(pkg != null)
@@ -63,8 +66,12 @@ abstract class XlsxReader<T> extends DefaultHandler implements ExcelReader<T> {
     }
     
     protected XMLReader createParser() throws SAXException {
+        return createParser(this);
+    }
+    
+    protected static XMLReader createParser(ContentHandler contentHandler) throws SAXException {
         XMLReader parser = XMLReaderFactory.createXMLReader();
-        parser.setContentHandler(this);
+        parser.setContentHandler(contentHandler);
         return parser;
     }
 }

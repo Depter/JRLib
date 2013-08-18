@@ -21,7 +21,7 @@ import java.awt.Component;
 import java.io.File;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelGeometry;
 import org.jreserve.gui.data.csv.input.AbstractCsvReader;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;

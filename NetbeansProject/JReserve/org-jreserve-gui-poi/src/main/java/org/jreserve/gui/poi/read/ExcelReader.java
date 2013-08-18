@@ -30,8 +30,8 @@ public interface ExcelReader<T> {
     
     public static interface Factory<T> {
         
-        public ExcelReader<T> createXlsReader(File file);
+        public ExcelReader<T> createXlsReader();
         
-        public ExcelReader<T> createXlsxReader(File file);
+        public ExcelReader<T> createXlsxReader();
     }
 }

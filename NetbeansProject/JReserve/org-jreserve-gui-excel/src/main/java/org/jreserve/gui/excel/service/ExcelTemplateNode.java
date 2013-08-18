@@ -16,7 +16,9 @@
  */
 package org.jreserve.gui.excel.service;
 
+import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.jreserve.gui.excel.template.ExcelTemplate;
 import org.jreserve.gui.excel.template.TemplateEvent;
@@ -43,6 +45,7 @@ class ExcelTemplateNode extends AbstractNode {
     
     private Action[] actions;
     private final ExcelTemplate template;
+    private final EditAction editAction = new EditAction();
     
     private static Lookup createLookup(ExcelTemplate template) {
         return new ProxyLookup(
@@ -57,6 +60,11 @@ class ExcelTemplateNode extends AbstractNode {
         setDisplayName(template.getName());
         setIconBaseWithExtension(IMG);
         EventBusManager.getDefault().subscribe(this);
+    }
+
+    @Override
+    public Action getPreferredAction() {
+        return editAction;
     }
 
     @Override
@@ -90,5 +98,12 @@ class ExcelTemplateNode extends AbstractNode {
         return getLookup().lookup(ExcelTemplate.Renameable.class) != null;
     }
     
-    
+    private class EditAction extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ExcelTemplate.Editor editor = getLookup().lookup(ExcelTemplate.Editor.class);
+            if(editor != null)
+                editor.edit();
+        }
+    }
 }

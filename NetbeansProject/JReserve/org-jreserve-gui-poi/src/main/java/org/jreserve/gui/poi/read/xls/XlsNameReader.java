@@ -45,7 +45,7 @@ public class XlsNameReader extends XlsReader<List<String>>{
     }
 
     @Override
-    public void processRecord(Record record) {
+    protected void recordFound(Record record) {
         NameRecord nr = (NameRecord) record;
         names.add(nr.getNameText());
     }

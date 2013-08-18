@@ -15,23 +15,37 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.data.api;
+package org.jreserve.gui.data.binaryprovider;
 
-import org.openide.util.RequestProcessor;
+import java.util.Map;
+import org.jreserve.gui.data.spi.DataProvider;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class ImportUtil {
+public class BinaryDataProviderFactory implements DataProvider.Factory {
     
-    public static RequestProcessor RP = new RequestProcessor("DATA_IMPORT", 1);
+    private final static String ID = BinaryDataProviderFactory.class.getName();
+    private static BinaryDataProviderFactory INSTANCE;
     
-    public synchronized static RequestProcessor getRP() {
-        if(RP == null)
-            RP = new RequestProcessor(ImportUtil.class.getName(), 1);
-        return RP;
+    public synchronized static DataProvider.Factory getInstance() {
+        if(INSTANCE == null)
+            INSTANCE = new BinaryDataProviderFactory();
+        return INSTANCE;
     }
     
+    private BinaryDataProviderFactory() {
+    }
+    
+    @Override
+    public String getId() {
+        return ID;
+    }
+
+    @Override
+    public DataProvider createProvider(Map<String, String> properties) {
+        return new BinaryDataProvider(this);
+    }
 }

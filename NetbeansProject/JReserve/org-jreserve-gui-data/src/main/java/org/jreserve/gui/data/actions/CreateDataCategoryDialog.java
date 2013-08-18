@@ -19,7 +19,7 @@ package org.jreserve.gui.data.actions;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataItemChooser;
+import org.jreserve.gui.data.api.util.DataItemChooser;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;

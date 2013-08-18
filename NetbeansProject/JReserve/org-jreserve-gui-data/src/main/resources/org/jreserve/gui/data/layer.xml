@@ -10,4 +10,30 @@
             </folder>
         </folder>
     </folder>
+
+    <folder name="JReserve">
+        <folder name="DataStore">
+            <folder name="DataSourceWizards">
+                <file name="org-jreserve-gui-data-binaryprovider-BinaryDataSourceWizard.instance">
+                    <!--org.jreserve.gui.data.binaryprovider.BinaryDataSourceWizard-->
+                    <attr intvalue="100" name="position"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.data.binaryprovider.Bundle#LBL.BinaryDataSourceWizard.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/binaryprovider/binary.png"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.binaryprovider.BinaryDataSourceWizard"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.DataSourceWizard"/>
+                </file>
+            </folder>
+            <folder name="DataProviders">
+                <file name="org-jreserve-gui-data-binaryprovider-BinaryDataProviderFactory-getInstance.instance">
+                    <!--org.jreserve.gui.data.binaryprovider.BinaryDataProviderFactory.getInstance()-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.binaryprovider.BinaryDataProviderFactory"/>
+                    <attr
+                        methodvalue="org.jreserve.gui.data.binaryprovider.BinaryDataProviderFactory.getInstance" name="instanceCreate"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.DataProvider$Factory"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+        
 </filesystem>

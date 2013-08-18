@@ -20,11 +20,6 @@ package org.jreserve.gui.excel.dataimport;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.poi.ExcelUtil;
 
 /**
  *
@@ -35,48 +30,28 @@ class ExcelTriangleTableModel extends AbstractTableModel {
     private List<ExcelCell[]> rows = new ArrayList<ExcelCell[]>();
     private int columnCount;
     
-    void readData(Workbook wb, String reference) {
+    void setValues(double[][] values) {
         rows.clear();
-        calculateTriangle(wb, reference);
+        columnCount = 0;
+        if(values != null)
+            calculateTriangle(values);
         fireTableStructureChanged();
     }
-
-    private void calculateTriangle(Workbook wb, String reference) {
-        if(wb == null || reference==null || reference.length()==0) return;
-        CellReference ref = ExcelUtil.getValidCellReference(wb, reference);
-        if(ref == null) return;
-        
-        Sheet sheet = wb.getSheet(ref.getSheetName());
-        int firstRow = ref.getRow();
-        int firstColumn = ref.getCol();
-        
-        Row row = sheet.getRow(firstRow);
-        if(row == null) return;
-        columnCount = 0;
-        while(!ExcelUtil.isEmpty(row.getCell(firstColumn+columnCount)))
-            columnCount++;
-        
-        int rCount = 0;
-        while(true) {
-            row = sheet.getRow(firstRow + rCount++);
-            if(row == null || isEmptyRow(row, firstColumn))
-                break;
-            rows.add(readRow(row, firstColumn));
+    
+    private void calculateTriangle(double[][] values) {
+        for(double[] row : values) {
+            ExcelCell[] cells = createRow(row);
+            if(cells.length > columnCount)
+                columnCount = cells.length;
+            rows.add(cells);
         }
-        
     }
     
-    private boolean isEmptyRow(Row row, int firstColumn) {
-        for(int c=0; c<columnCount; c++)
-            if(row.getCell(firstColumn+c) != null)
-                return false;
-        return true;
-    }
-    
-    private ExcelCell[] readRow(Row row, int firstColumn) {
-        ExcelCell[] result = new ExcelCell[columnCount];
-        for(int c=0; c<columnCount; c++)
-            result[c] = ExcelCell.createCell(ExcelCell.Type.DOUBLE, row.getCell(firstColumn+c));
+    private ExcelCell[] createRow(double[] row) {
+        int size = row.length;
+        ExcelCell[] result = new ExcelCell[size];
+        for(int c=0; c<size; c++)
+            result[c] = new ExcelCell(ExcelCell.Type.DOUBLE, row[c]);
         return result;
     }
 
@@ -102,6 +77,9 @@ class ExcelTriangleTableModel extends AbstractTableModel {
     
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return rows.get(rowIndex)[columnIndex];
+        ExcelCell[] row = rows.get(rowIndex);
+        if(columnIndex >= row.length)
+            return null;
+        return row[columnIndex];
     }
 }

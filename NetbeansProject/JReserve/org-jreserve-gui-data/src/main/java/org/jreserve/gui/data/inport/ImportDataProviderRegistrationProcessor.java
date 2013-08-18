@@ -41,6 +41,7 @@ public class ImportDataProviderRegistrationProcessor extends AbstractRegistratio
     final static String DISPLAY_NAME = "displayName";
     final static String ICON_BASE = "iconBase";
     final static String ID = "id";
+    final static String REQUIRES_DATA_SOURCE = "requiresDataSource";
     
     @Override
     protected Class<ImportDataProvider.Registration> getAnnotationClass() {
@@ -60,18 +61,25 @@ public class ImportDataProviderRegistrationProcessor extends AbstractRegistratio
     @Override
     protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
         ImportDataProvider.Registration an = getAnnotation(element);
-        
+        //ID
         String id = an.id();
         if(id == null || id.length()==0)
             throw new LayerGenerationException("ID not set!", element);
         file.stringvalue(ID, id);
         
-        file.position(an.position());
+        //Display Name
         file.bundlevalue(DISPLAY_NAME, an.displayName(), an, "displayName");
         
+        //Icon
         if(an.iconBase().length() > 0) {
             layer(element).validateResource(an.iconBase(), element, an, "iconBase", true);
             file.stringvalue(ICON_BASE, an.iconBase());
         }
+        
+        //Requires DataSource
+        file.boolvalue(REQUIRES_DATA_SOURCE, an.requiresDataSource());
+        
+        //Position
+        file.position(an.position());
     }
 }

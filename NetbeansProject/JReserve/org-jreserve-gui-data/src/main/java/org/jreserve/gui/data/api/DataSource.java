@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.api;
 
+import org.jreserve.gui.data.api.inport.SaveType;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;

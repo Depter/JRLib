@@ -17,12 +17,10 @@
 package org.jreserve.gui.data.inport;
 
 import java.awt.Component;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.settings.ImportSettings;
+import org.jreserve.gui.data.api.inport.ImportSettings;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
@@ -50,14 +48,10 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
     private ChangeSupport cs = new ChangeSupport(this);
     private WizardDescriptor wizard;
     
-    private DataSource dataSource;
-    private ImportDataProvider dataProvider;
-    
     @Override
     public Component getComponent() {
         if(component == null) {
-            component = new ImportDataWizardVisualPanel1();
-            component.addPropertyChangeListener(new PanelListener());
+            component = new ImportDataWizardVisualPanel1(this);
             if(wizard != null)
                 initComponent();
         }
@@ -81,7 +75,7 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
         DataItem item = (DataItem) wizard.getProperty(ImportDataProvider.PROP_DATA_SOURCE);
         if(item != null)
             return item;
-        return (DataItem) wizard.getProperty(ImportDataWizardIterator.PROP_INIT_DATA_ITEM);
+        return (DataItem) wizard.getProperty(ImportDataProvider.PROP_INIT_DATA_ITEM);
     }
 
     @Override
@@ -98,6 +92,12 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
 
     @Override
     public void storeSettings(WizardDescriptor settings) {
+        ImportDataProviderAdapter adapter = component.getImportDataProvider();
+        settings.putProperty(ImportDataProvider.PROP_IMPORT_WIZARD, adapter.getImportDataProvider());
+        if(adapter.isDSRequired()) {
+            DataSource ds = component.getSelectedDataSource();
+            settings.putProperty(ImportDataProvider.PROP_DATA_SOURCE, ds);
+        }
     }
 
     @Override
@@ -115,10 +115,8 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
         cs.removeChangeListener(l);
     }
     
-    private void validateInput() {
-        dataSource = (DataSource) component.getClientProperty(ImportDataProvider.PROP_DATA_SOURCE);
-        dataProvider = (ImportDataProvider) component.getClientProperty(ImportDataProvider.PROP_IMPORT_WIZARD);
-        isValid = checkValid();
+    void changed() {
+        isValid = isInputValid();
         if(isValid)
             showError(null);
         cs.fireChange();
@@ -129,40 +127,39 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
             wizard.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, msg);
     }
     
-    private boolean checkValid() {
-        return sourceSelected() && providerSelected();
-    }
-    
-    private boolean sourceSelected() {
-        if(dataSource == null) {
-            String path = (String) component.getClientProperty(PROP_DATA_SOURCE_PATH);
-            if(path == null || path.length()==0) {
-                showError(Bundle.MSG_ImportDataWizardPanel1_DataSource_NotSelected());
-            } else {
-                showError(Bundle.MSG_ImportDataWizardPanel1_DataSource_InvalidPath(path));
-            }
-            return false;
-        }
-        return true;
+    private boolean isInputValid() {
+        return providerSelected() && sourceSelected();
     }
     
     private boolean providerSelected() {
-        if(dataProvider == null) {
+        ImportDataProviderAdapter adapter = component.getImportDataProvider();
+        ImportDataProvider provider = adapter==null? null : adapter.getImportDataProvider();
+        wizard.putProperty(ImportDataProvider.PROP_IMPORT_WIZARD, provider);
+        
+        if(adapter == null) {
             showError(Bundle.MSG_ImportDataWizardPanel1_DataProvider_NotSelected());
             return false;
         }
         return true;
     }
     
-    private class PanelListener implements PropertyChangeListener {
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            String propName = evt.getPropertyName();
-            if(ImportDataProvider.PROP_DATA_SOURCE.equals(propName) ||
-               ImportDataProvider.PROP_IMPORT_WIZARD.equals(propName)) {
-                wizard.putProperty(propName, evt.getNewValue());
-                validateInput();
-            }
+    private boolean sourceSelected() {
+        ImportDataProviderAdapter dataProvider = component.getImportDataProvider();
+        if(!dataProvider.isDSRequired())
+            return true;
+        
+        String path = component.getDataSourcePath();
+        if(path == null || path.length() == 0) {
+            showError(Bundle.MSG_ImportDataWizardPanel1_DataSource_NotSelected());
+            return false;
         }
+        
+        
+        if(component.getSelectedDataSource() == null) {
+            showError(Bundle.MSG_ImportDataWizardPanel1_DataSource_InvalidPath(path));
+            return false;
+        }
+
+        return true;
     }
 }

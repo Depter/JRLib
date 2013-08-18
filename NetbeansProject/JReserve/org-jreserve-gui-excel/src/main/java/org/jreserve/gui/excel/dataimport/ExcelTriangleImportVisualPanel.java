@@ -21,7 +21,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
-import org.jreserve.gui.data.api.ImportUtil;
+import org.apache.poi.ss.util.CellReference;
+import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.poi.ExcelFileFilter;
 import org.jreserve.gui.excel.ReferenceComboModel;
 import org.jreserve.gui.excel.ReferenceComboRenderer;
@@ -115,6 +116,7 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
 
         pathText.setEditable(false);
         pathText.setText(null);
+        pathText.getDocument().addDocumentListener(inputListener);
         pathText.setFocusable(false);
         TextPrompt.createStandard(Bundle.LBL_ExcelTableImportVisualPanel_PathPrompt(), pathText);
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -148,7 +150,7 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(referenceLabel, gridBagConstraints);
 
         referenceCombo.setEditable(true);
@@ -156,14 +158,14 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
         referenceCombo.setEnabled(false);
         referenceCombo.setRenderer(new ReferenceComboRenderer());
         referenceText = (JTextComponent) referenceCombo.getEditor().getEditorComponent();
-        referenceText.getDocument().addDocumentListener(new InputListener());
+        referenceText.getDocument().addDocumentListener(inputListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(referenceCombo, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(tableLabel, org.openide.util.NbBundle.getMessage(ExcelTriangleImportVisualPanel.class, "ExcelTriangleImportVisualPanel.tableLabel.text")); // NOI18N
@@ -208,6 +210,8 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.weighty = 1.0;
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         add(tableScroll, gridBagConstraints);
+
+        pBar.setVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 5;
@@ -244,9 +248,26 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void refreshTable() {
-        String ref = referenceText.getText();
-//        if(ref != null && ref.length()>0 && wb != null)
-//            tableModel.readData(wb, ref);
+        setProcessRunning(true);
+        CellReference ref = refUtil.toCellReference(referenceText.getText());
+        File file = new File(pathText.getText());
+        final PoiUtil.Task<double[][]> reader = PoiUtil.createTask(file, ref, new TriangleTableReader());
+        Task task = ImportUtil.getRP().create(reader);
+        task.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                double[][] values = null;
+                try {
+                    values = reader.get();
+                } catch (Exception ex) {
+                    BubbleUtil.showException(ex);
+                } finally {
+                    tableModel.setValues(values);
+                    setProcessRunning(false);
+                }
+            }
+        });
+        ImportUtil.getRP().execute(task);
     }
 
     private void readExcel(File file) {
@@ -266,6 +287,7 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
                         } finally {
                             referenceModel.update(refUtil);
                             setProcessRunning(false);
+                            controller.changed();
                         }
                     }
                 });
@@ -279,28 +301,50 @@ class ExcelTriangleImportVisualPanel extends javax.swing.JPanel {
         pBar.setIndeterminate(running);
         browseButton.setEnabled(!running);
         referenceCombo.setEnabled(!running);
-        refreshButton.setEnabled(!running);
+        checkRefreshEnabled();
+    }
+    
+    private void checkRefreshEnabled() {
+        refreshButton.setEnabled(isRefreshable());
+    }
+        
+    private boolean isRefreshable() {
+        if(refUtil == null)
+            return false;
+        String ref = referenceText.getText();
+        if(ref == null || ref.length() == 0)
+            return false;
+        return refUtil.isReferenceValid(ref);
     }
 
     private class InputListener implements DocumentListener {
 
         @Override
         public void insertUpdate(DocumentEvent e) {
-            update();
+            update(e);
         }
 
         @Override
         public void removeUpdate(DocumentEvent e) {
-            update();
+            update(e);
         }
 
         @Override
         public void changedUpdate(DocumentEvent e) {
         }
         
-        private void update() {
-            refreshTable();
+        private void update(DocumentEvent e) {
+            checkRefreshEnabled();
             controller.changed();
+
+            if(shouldRefreshTable(e))
+                refreshTable();
+        }
+        
+        private boolean shouldRefreshTable(DocumentEvent e) {
+            return refUtil != null &&
+                   referenceText.getDocument() == e.getDocument() &&
+                   refUtil.getNames().contains(referenceText.getText());
         }
     }
 }

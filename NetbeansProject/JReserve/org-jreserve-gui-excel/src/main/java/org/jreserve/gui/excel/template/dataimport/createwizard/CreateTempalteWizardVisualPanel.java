@@ -23,7 +23,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.gui.data.api.ImportUtil;
+import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.poi.ExcelFileFilter;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;

@@ -30,15 +30,17 @@ import org.apache.poi.hssf.record.Record;
 import org.apache.poi.hssf.record.RowRecord;
 import org.apache.poi.hssf.record.SSTRecord;
 import org.apache.poi.hssf.record.StringRecord;
+import org.apache.poi.ss.usermodel.ErrorConstants;
 import org.apache.poi.ss.util.CellReference;
-import org.apache.poi.util.LittleEndianOutput;
+import org.jreserve.gui.poi.read.ExcelReadException;
+import org.jreserve.gui.poi.read.TableFactory;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class XlsTableReader extends XlsReader<Void>{
+public class XlsTableReader<T> extends XlsReader<T>{
     
     private final static short[] RIDS = {
         BOFRecord.sid,
@@ -54,6 +56,7 @@ public class XlsTableReader extends XlsReader<Void>{
     };
     
     private final List<String> sheets = new ArrayList<String>();
+    private final TableFactory<T> factory;
     private final String sheetName;
     private final int firstRow;
     private final short firstColumn;
@@ -69,7 +72,8 @@ public class XlsTableReader extends XlsReader<Void>{
     
     private short lastColumn = 0;
     
-    public XlsTableReader(CellReference ref) {
+    public XlsTableReader(CellReference ref, TableFactory<T> factory) {
+        this.factory = factory;
         sheetName = ref.getSheetName();
         firstRow = ref.getRow();
         firstColumn = ref.getCol();
@@ -78,8 +82,8 @@ public class XlsTableReader extends XlsReader<Void>{
     }
     
     @Override
-    protected Void getResult() {
-        return null;
+    protected T getResult() throws Exception {
+        return factory.getTable();
     }
     
     @Override
@@ -88,7 +92,7 @@ public class XlsTableReader extends XlsReader<Void>{
     }
 
     @Override
-    public void processRecord(Record record) {
+    protected void recordFound(Record record) throws Exception {
         if(tableEnded)
             return;
         
@@ -142,79 +146,87 @@ public class XlsTableReader extends XlsReader<Void>{
         }
     }
     
-    private void cellRecord(CellRecord cr) {
+    private void cellRecord(CellRecord cr) throws Exception {
         cellRecord(cr.getRow(), cr.getColumn(), cr);
     }
     
-    private void cellRecord(int row, short column, Record record) {
-        //Not on the good sheet, before first row/column
-        if(!onReferencedSheet || firstRow > row || firstColumn > column)
-            return;
+    private void cellRecord(int row, short column, Record record) throws Exception {
+        try {
+            //Not on the good sheet, before first row/column
+            if(!onReferencedSheet || firstRow > row || firstColumn > column)
+                return;
         
-        //The cell is empty, do not read it
-        boolean isEmptyCell = isEmpty(record);
-        if(isEmptyCell) {
-            //If first cell is empty, whole table is empty
-            if(firstRow==row && firstColumn == column)
-                lastColumn = (short)(firstColumn - 1);
-            return;
+            //The cell is empty, do not read it
+            boolean isEmptyCell = isEmpty(record);
+            if(isEmptyCell) {
+                //If first cell is empty, whole table is empty
+                if(firstRow==row && firstColumn == column)
+                    lastColumn = (short)(firstColumn - 1);
+                return;
+            }
+
+            //Calculate the last column, based on the first row
+            if(firstRow == row) {
+                //If we missed a cell, do not read other columns
+                if((column - lastColumn) < 2)
+                    lastColumn = column;
+            }
+
+            //after the last column
+            if(column > lastColumn)
+                return;
+
+            if(column == firstColumn)
+                prevColumn = firstColumn;
+
+            //missed a row, do not read further
+            if((row - prevRow)> 1 || (column-prevColumn)>1)
+                return;
+
+            short sid = record.getSid();
+            switch(sid) {
+                case NumberRecord.sid:
+                    factory.numberFound(row, column, ((NumberRecord)record).getValue());
+                    break;
+                case LabelSSTRecord.sid:
+                    if(sstRecord == null)
+                        throw new IllegalArgumentException("SSTRecord is null");
+                    int stringId = ((LabelSSTRecord)record).getSSTIndex();
+                    String str = sstRecord.getString(stringId).getString();
+                    factory.stringFound(row, column, str);
+                    break;
+                case LabelRecord.sid:
+                    factory.stringFound(row, column, ((LabelRecord)record).getValue());
+                    break;
+                case StringRecord.sid:
+                    factory.stringFound(row, column, ((StringRecord)record).getString());
+                    break;
+                case FormulaRecord.sid:
+                    FormulaRecord fr = (FormulaRecord) record;
+                    if(fr.hasCachedResultString()) {
+                        outputNextString = true;
+                    } else {
+                        factory.numberFound(row, column, fr.getValue());
+                    }
+                    break;
+                case BoolErrRecord.sid:
+                    BoolErrRecord ber = (BoolErrRecord) record;
+                    if(ber.isBoolean()) {
+                        factory.booleanFound(row, column, ber.getBooleanValue());
+                    } else {
+                        factory.errorFound(row, column, getErrorMsg(ber.getErrorValue()));
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            prevRow = row;
+            prevColumn = column;
+        } catch (Exception ex) {
+            CellReference ref = new CellReference(sheetName, row, column, false, false);
+            throw new ExcelReadException(ref, ex);
         }
-        
-        //Calculate the last column, based on the first row
-        if(firstRow == row) {
-            //If we missed a cell, do not read other columns
-            if((column - lastColumn) < 2)
-                lastColumn = column;
-        }
-        
-        //after the last column
-        if(column > lastColumn)
-            return;
-        
-        //missed a row, do not read further
-        if(row - prevRow > 1)
-            return;
-        
-        short sid = record.getSid();
-        switch(sid) {
-            case NumberRecord.sid:
-                numberFound(row, column, ((NumberRecord)record).getValue());
-                break;
-            case LabelSSTRecord.sid:
-                if(sstRecord == null)
-                    throw new IllegalArgumentException("SSTRecord is null");
-                int stringId = ((LabelSSTRecord)record).getSSTIndex();
-                String str = sstRecord.getString(stringId).getString();
-                stringFound(row, column, str);
-                break;
-            case LabelRecord.sid:
-                stringFound(row, column, ((LabelRecord)record).getValue());
-                break;
-            case StringRecord.sid:
-                stringFound(row, column, ((StringRecord)record).getString());
-                break;
-            case FormulaRecord.sid:
-                FormulaRecord fr = (FormulaRecord) record;
-                if(fr.hasCachedResultString()) {
-                    outputNextString = true;
-                } else {
-                    numberFound(row, column, fr.getValue());
-                }
-                break;
-            case BoolErrRecord.sid:
-                BoolErrRecord ber = (BoolErrRecord) record;
-                if(ber.isBoolean()) {
-                    booleanFound(row, column, ber.getBooleanValue());
-                } else {
-                    errorFound(row, column, ber.getErrorValue());
-                }
-                break;
-            default:
-                break;
-        }
-        
-        prevRow = row;
-        prevColumn = column;
     }
     
     private boolean isEmpty(Record record) {
@@ -235,104 +247,18 @@ public class XlsTableReader extends XlsReader<Void>{
                 false, false).formatAsString();
     }
     
-    protected void numberFound(int row, short column, double value) {
-        String ref = getCellReference(row, column);
-        System.out.println("[NUMBER ] "+ref +" = "+value);
-    }
-    
-    protected void stringFound(int row, short column, String value) {
-        String ref = getCellReference(row, column);
-        System.out.println("[STRING ] "+ref +" = "+value);
-    }
-    
-    protected void booleanFound(int row, short column, boolean value) {
-        String ref = getCellReference(row, column);
-        System.out.println("[BOOLEAN] "+ref +" = "+value);
-    }
-    
-    protected void errorFound(int row, short column, byte value) {
-        String ref = getCellReference(row, column);
-        System.out.println("[ERROR  ] "+ref +" = "+value);
-    }
-    
-    
-//    protected final Date getDate(CellRecord record) {
-//        try {
-//            double value = getDoubleValue(record);
-//            return DateUtil.getJavaDate(value);
-//        } catch (Exception ex) {
-//            String ref = getCellReference(record);
-//            throw new IllegalArgumentException(String.format("Unable to read date value from cell '%s'!", ref));
-//        }
-//    }
-//    
-//    protected final double getDoubleValue(CellRecord record) {
-//        short sid = record.getSid();
-//        if(NumberRecord.sid == sid)
-//            return ((NumberRecord) record).getValue();
-//        if(FormulaRecord.sid == sid)
-//            return getDoubleValue((FormulaRecord)record);
-//        
-//        String ref = getCellReference(record);
-//        throw new IllegalArgumentException(String.format("Unable to read numeric value from cell '%s'!", ref));
-//    }
-//    
-//    protected final double getDoubleValue(FormulaRecord record) {
-//        if(HSSFCell.CELL_TYPE_NUMERIC == record.getCachedResultType())
-//                return record.getValue();
-//        String ref = getCellReference(record);
-//        throw new IllegalArgumentException(String.format("Unable to read numeric value from cell '%s'!", ref));
-//    }
-//    
-//    protected final String getStringValue(CellRecord record) {
-//        short sid = record.getSid();
-//        if(LabelSSTRecord.sid == record.getSid()) {
-//            if(sstRecord == null)
-//                throw new IllegalStateException("SSTRecord was never set!");
-//            return sstRecord.getString(((LabelSSTRecord)record).getSSTIndex()).getString();
-//        }
-//        
-//        if(FormulaRecord.sid == sid)
-//            return getString((FormulaRecord) record);
-//    }
-//    
-//    protected final String getStringValue(FormulaRecord record) {
-//        if(HSSFCell.CELL_TYPE_STRING == record.getCachedResultType())
-//            return record.get;
-//    }
-    
-    private static class LabelCellRecord extends CellRecord {
-        private final LabelRecord lr;
-
-        public LabelCellRecord(LabelRecord lr) {
-            this.lr = lr;
-        }
-
-        
-        
-        @Override
-        protected void appendValueText(StringBuilder sb) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        protected String getRecordName() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        protected void serializeValue(LittleEndianOutput out) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        protected int getValueDataSize() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
-
-        @Override
-        public short getSid() {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private String getErrorMsg(int code) {
+        switch(code) {
+            case ErrorConstants.ERROR_DIV_0:
+            case ErrorConstants.ERROR_NA:
+            case ErrorConstants.ERROR_NAME:
+            case ErrorConstants.ERROR_NULL:
+            case ErrorConstants.ERROR_NUM:
+            case ErrorConstants.ERROR_REF:
+            case ErrorConstants.ERROR_VALUE:
+                return ErrorConstants.getText(code);
+            default:
+                return "Error code "+code;
         }
     }
 }

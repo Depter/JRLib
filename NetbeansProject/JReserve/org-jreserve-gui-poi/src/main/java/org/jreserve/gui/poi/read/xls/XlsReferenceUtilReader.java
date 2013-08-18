@@ -67,7 +67,7 @@ public class XlsReferenceUtilReader extends XlsReader<ReferenceUtil>{
     }
 
     @Override
-    public void processRecord(Record record) {
+    protected void recordFound(Record record) {
         switch(record.getSid()) {
             case BoundSheetRecord.sid:
                 sheets.add(((BoundSheetRecord)record).getSheetname());

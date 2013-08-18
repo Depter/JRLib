@@ -20,9 +20,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.hssf.eventusermodel.HSSFEventFactory;
 import org.apache.poi.hssf.eventusermodel.HSSFListener;
 import org.apache.poi.hssf.eventusermodel.HSSFRequest;
+import org.apache.poi.hssf.record.Record;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.jreserve.gui.poi.read.ExcelReader;
 
@@ -32,20 +35,23 @@ import org.jreserve.gui.poi.read.ExcelReader;
  * @version 1.0
  */
 abstract class XlsReader<T> implements HSSFListener, ExcelReader<T> {
+    private final static Logger logger = Logger.getLogger(XlsReader.class.getName());
     private final static String DOCUMENT_NAME = "Workbook"; //NOI18
-    
+
     private FileInputStream fin;
     private InputStream din;
+    private Exception processException;
     
     @Override
     public T read(File file) throws IOException {
         try {
             openFile(file);
             processFile();
-            return getResult();
+            return getProcessedResult();
         } catch (Exception ex) {
             String path = file==null? null : file.getAbsolutePath();
             String msg = String.format("Unabel to read file '%s'!", path);
+            logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         } finally {
             closeFile();
@@ -78,5 +84,25 @@ abstract class XlsReader<T> implements HSSFListener, ExcelReader<T> {
     
     protected abstract short[] getInterestingReqordIds();
     
-    protected abstract T getResult();
+    private T getProcessedResult() throws Exception {
+        if(processException != null)
+            throw processException;
+        return getResult();
+    }
+    
+    protected abstract T getResult() throws Exception;
+    
+    @Override
+    public final void processRecord(Record record) {
+        if(processException != null)
+            return;
+        try {
+            recordFound(record);
+        } catch (Exception ex) {
+            processException = ex;
+        }
+    }
+    
+    protected abstract void recordFound(Record record) throws Exception;
+    
 }

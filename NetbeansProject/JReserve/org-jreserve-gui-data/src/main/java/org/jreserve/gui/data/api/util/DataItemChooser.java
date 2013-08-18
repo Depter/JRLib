@@ -14,12 +14,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
+package org.jreserve.gui.data.api.util;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.tree.TreePath;
-import org.jreserve.gui.data.api.DataItemChooserForm.Controller;
+import org.jreserve.gui.data.api.DataCategory;
+import org.jreserve.gui.data.api.DataItem;
+import org.jreserve.gui.data.api.util.DataItemChooserForm.Controller;
+import org.jreserve.gui.data.api.DataManager;
+import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -39,7 +44,11 @@ public class DataItemChooser {
     private DataItemChooser() {}
     
     public static DataSource chooseSource(DataManager dm) {
-        Controller<DataSource> controller = new SourceController(false);
+        return chooseSource(dm, null);
+    }
+    
+    public static DataSource chooseSource(DataManager dm, DataType dataType) {
+        Controller<DataSource> controller = new SourceController(false, dataType);
         return chooseOne(dm, controller);
     }
     
@@ -53,7 +62,11 @@ public class DataItemChooser {
     }
     
     public static List<DataSource> chooseSoruces(DataManager dm) {
-        Controller<DataSource> controller = new SourceController(true);
+        return chooseSources(dm, null);
+    }
+    
+    public static List<DataSource> chooseSources(DataManager dm, DataType dataType) {
+        Controller<DataSource> controller = new SourceController(true, dataType);
         return choose(dm, controller);
     }
 
@@ -120,13 +133,20 @@ public class DataItemChooser {
                 return (DataCategory) lastElement;
             return null;
         }
+
+        @Override
+        public DataType getDataType() {
+            return null;
+        }
     }
     
     private static class SourceController extends AbstractController<DataSource> {
-        private SourceController(boolean multipleSelection) {
+        private final DataType dataType;
+        private SourceController(boolean multipleSelection, DataType dataType) {
             super(multipleSelection, true,
                     multipleSelection? Bundle.LBL_DataItemChooser_Title_Sources() :
                     Bundle.LBL_DataItemChooser_Title_Source());
+            this.dataType = dataType;
         }
 
         @Override
@@ -134,6 +154,11 @@ public class DataItemChooser {
             if(lastElement instanceof DataSource)
                 return (DataSource) lastElement;
             return null;
+        }
+
+        @Override
+        public DataType getDataType() {
+            return dataType;
         }
     }
 }

@@ -14,39 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
 
-import javax.swing.Icon;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.openide.util.NbBundle.Messages;
+package org.jreserve.gui.poi.read;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "LBL.SaveType.Override=Override existing values",
-    "LBL.SaveType.SaveNew=Keep existing values"
-})
-public enum SaveType implements Displayable {
+public interface TableFactory<T> {
+
+    public void numberFound(int row, short column, double value) throws Exception;
     
-    OVERRIDE_EXISTING(Bundle.LBL_SaveType_Override()),
-    SAVE_NEW(Bundle.LBL_SaveType_SaveNew());
-
-    private final String displayName;
-
-    private SaveType(String displayName) {
-        this.displayName = displayName;
-    }
+    public void stringFound(int row, short column, String value) throws Exception;
     
-    @Override
-    public Icon getIcon() {
-        return null;
-    }
-
-    @Override
-    public String getDisplayName() {
-        return displayName;
-    }
+    public void booleanFound(int row, short column, boolean value) throws Exception;
+    
+    public void errorFound(int row, short column, String value) throws Exception;
+    
+    public T getTable() throws Exception;
 }

@@ -14,15 +14,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.inport;
+package org.jreserve.gui.data.api.inport;
 
 import java.awt.Component;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.inport.ImportDataWizardVisualPanelLast;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
@@ -42,7 +43,7 @@ import org.openide.util.NbBundle.Messages;
     "# {1} - development",
     "MSG.ImportDataWizardPanelLast.DuplicateEntries=Input contains duplicate entries for {0}/{1}!"
 })
-class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescriptor> {
+public class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescriptor> {
     
     private WizardDescriptor wiz;
     private ImportDataWizardVisualPanelLast component;
@@ -54,6 +55,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     public Component getComponent() {
         if(component == null) {
             component = new ImportDataWizardVisualPanelLast(this);
+            component.addChangeListener(new ComponentListener());
             if(wiz != null)
                 initComponent();
         }
@@ -110,7 +112,7 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
         cs.removeChangeListener(l);
     }
     
-    void changed() {
+    private void changed() {
         valid = isInputValid();
         if(valid)
             showError(null);
@@ -135,5 +137,12 @@ class ImportDataWizardPanelLast implements WizardDescriptor.Panel<WizardDescript
     private void showError(String msg) {
         if(wiz != null) 
             wiz.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, msg);
+    }
+    
+    private class ComponentListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            changed();
+        }
     }
 }

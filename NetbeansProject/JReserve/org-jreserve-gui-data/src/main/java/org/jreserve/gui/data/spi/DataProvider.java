@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
-import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.data.api.inport.SaveType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;

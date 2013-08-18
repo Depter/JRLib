@@ -28,7 +28,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.jreserve.gui.data.csv.CsvFileFilter;
-import org.jreserve.gui.data.api.ImportUtil;
+import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.data.csv.input.PreviewReader;
 import org.jreserve.gui.data.csv.input.PreviewRenderer;
 import org.jreserve.gui.data.csv.input.PreviewTableModel;

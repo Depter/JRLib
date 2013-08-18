@@ -19,16 +19,10 @@ package org.jreserve.gui.excel.dataimport;
 
 import java.awt.Component;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
-import org.jreserve.gui.poi.ExcelUtil;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.openide.WizardDescriptor;
 import org.openide.WizardValidationException;
@@ -43,10 +37,11 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "# {0} - addres",
-    "MSG.ExcelTriangleImportWizardPanel.Read.NumberError=Unable to read number form cell ''{0}''!"
+    "MSG.ExcelTriangleImportWizardPanel.Read.NumberError=Unable to read number form cell ''{0}''!",
+    "MSG.ExcelTriangleImportWizardPanel.Read.Error=Unable to read file!"
 })
 public class ExcelTriangleImportWizardPanel implements WizardDescriptor.AsynchronousValidatingPanel<WizardDescriptor> {
-
+    
     private final ChangeSupport cs = new ChangeSupport(this);
     private boolean valid = false;
     private WizardDescriptor wiz;
@@ -143,65 +138,23 @@ public class ExcelTriangleImportWizardPanel implements WizardDescriptor.Asynchro
     @Override
     public void validate() throws WizardValidationException {
         synchronized(inputLock) {
-            CellReference ref = ExcelUtil.getValidCellReference(input.wb, input.reference);
-            if(ref == null)
-                throw new WizardValidationException(component, "Invalid reference: "+input.reference, Bundle.MSG_ExcelTableImportWizardPanel_Reference_Invalid(input.reference));
-            
-            Sheet sheet = input.wb.getSheet(ref.getSheetName());
-            int firstRow = ref.getRow();
-            int firstColumn = ref.getCol();
-            
-            List<double[]> values = new ArrayList<double[]>();
-            int rCount = 0;
-            while(true) {
-                Row row = sheet.getRow(firstRow + rCount++);
-                if(row == null) break;
-                
-                double[] rowValues = readRow(row, firstColumn);
-                if(rowValues == null)
-                    break;
-                
-                values.add(rowValues);
+            double[][] values = null;
+            try {
+                values = PoiUtil.read(input.file, input.reference, new TriangleTableReader());
+            } catch (Exception ex) {
+                String msg = "Unable to read data!";
+                String lMsg = Bundle.MSG_ExcelTriangleImportWizardPanel_Read_Error();
+                throw new WizardValidationException(component, msg, lMsg);
             }
             
-            if(values.isEmpty()) {
+            if(values.length == 0) {
                 String msg = "No data is imported!";
                 String lMsg = Bundle.MSG_ExcelTableImportWizardPanel_Data_Empty();
                 throw new WizardValidationException(component, msg, lMsg);
             }
             
-            wiz.putProperty(ImportDataWizardPanelGeometry.PROP_TRIANGLE_ARRAY, toArray(values));
+            wiz.putProperty(ImportDataWizardPanelGeometry.PROP_TRIANGLE_ARRAY, values);
         }
-    }
-    
-    private double[][] toArray(List<double[]> values) {
-        int size = values.size();
-        double[][] result = new double[size][];
-        for(int i=0; i<size; i++)
-            result[i] = values.get(i);
-        return result;
-    }
-    
-    private double[] readRow(Row row, int firstColumn) throws WizardValidationException {
-        int cCount = 0;
-        while(!ExcelUtil.isEmpty(row.getCell(firstColumn+cCount)))
-            cCount++;
-        
-        if(cCount == 0) return null;
-        
-        double[] values = new double[cCount];
-        for(int c=0; c<cCount; c++) {
-            Cell cell = row.getCell(firstColumn+c);
-            try {
-                values[c] = cell.getNumericCellValue();
-            } catch (Exception ex) {
-                String sCell = ExcelUtil.toString(cell);
-                String msg = "Unable to read number from: "+sCell;
-                String lMsg = Bundle.MSG_ExcelTriangleImportWizardPanel_Read_NumberError(sCell);
-                throw new WizardValidationException(component, msg, lMsg);
-            }
-        }
-        return values;
     }
     
     private class ValidationInput {

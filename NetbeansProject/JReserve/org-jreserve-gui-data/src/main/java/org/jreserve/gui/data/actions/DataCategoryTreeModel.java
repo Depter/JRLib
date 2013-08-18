@@ -27,6 +27,7 @@ import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.jrlib.gui.data.DataType;
 
 /**
  *
@@ -37,6 +38,7 @@ public class DataCategoryTreeModel implements TreeModel {
 
     private DataManager manager;
     private boolean showSources;
+    private DataType dataType;
     private List<TreeModelListener> listeners = new ArrayList<TreeModelListener>();
     
     public DataCategoryTreeModel() {
@@ -48,12 +50,22 @@ public class DataCategoryTreeModel implements TreeModel {
     }
     
     public DataCategoryTreeModel(DataManager manager, boolean showSources) {
+        this(manager, showSources, null);
+    }
+    
+    public DataCategoryTreeModel(DataManager manager, boolean showSources, DataType dataType) {
         this.manager = manager;
         this.showSources = showSources;
+        this.dataType = dataType;
     }
     
     public void setShowSources(boolean showSources) {
         this.showSources = showSources;
+        fireChange();
+    }
+    
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
         fireChange();
     }
     
@@ -87,8 +99,15 @@ public class DataCategoryTreeModel implements TreeModel {
     private List<DataItem> getChildren(DataCategory category) {
         List<DataItem> result = new ArrayList<DataItem>();
         result.addAll(category.getChildCategories());
-        if(showSources)
-            result.addAll(category.getDataSources());
+        if(showSources) {
+            if(dataType == null) {
+                result.addAll(category.getDataSources());
+            } else {
+                for(DataSource ds : category.getDataSources())
+                    if(dataType == ds.getDataType())
+                        result.add(ds);
+            }
+        }
         return result;
     }
 

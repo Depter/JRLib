@@ -19,12 +19,13 @@ package org.jreserve.gui.data.spi;
 
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
-import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.data.api.inport.SaveType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
@@ -94,7 +95,7 @@ public abstract class AbstractDataProvider implements DataProvider {
     
     private Set<DataEntry> getLoadedEntries() throws Exception {
         if(entries == null)
-            entries = loadEntries();
+            entries = new TreeSet<DataEntry>(loadEntries());
         return entries;
     }
     

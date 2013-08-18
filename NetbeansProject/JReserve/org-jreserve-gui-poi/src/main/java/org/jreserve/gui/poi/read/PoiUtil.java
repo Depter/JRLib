@@ -19,10 +19,13 @@ package org.jreserve.gui.poi.read;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.apache.poi.ss.util.CellReference;
 import org.jreserve.gui.poi.read.xls.XlsNameReader;
 import org.jreserve.gui.poi.read.xls.XlsReferenceUtilReader;
+import org.jreserve.gui.poi.read.xls.XlsTableReader;
 import org.jreserve.gui.poi.read.xlsx.XlsxNameReader;
 import org.jreserve.gui.poi.read.xlsx.XlsxReferenceUtilReader;
+import org.jreserve.gui.poi.read.xlsx.XlsxTableReader;
 
 /**
  *
@@ -73,14 +76,44 @@ public class PoiUtil {
     
     public static <T> T read(File file, ExcelReader.Factory<T> factory) throws IOException {
         ExcelReader<T> reader;
-        reader = isXlsx(file)? factory.createXlsxReader(file) : factory.createXlsReader(file);
+        reader = isXlsx(file)? factory.createXlsxReader() : factory.createXlsReader();
         return reader.read(file);
     }
     
     public static <T> Task<T> createTask(File file, ExcelReader.Factory factory) {
         ExcelReader<T> reader;
-        reader = isXlsx(file)? factory.createXlsxReader(file) : factory.createXlsReader(file);
+        reader = isXlsx(file)? factory.createXlsxReader() : factory.createXlsReader();
         return new ReaderTask<T>(file, reader);
+    }
+    
+    public static <T> T read(File file, CellReference reference, TableFactory<T> factory) throws IOException {
+        TableReaderFactory<T> readerFactory = new TableReaderFactory<T>(reference, factory);
+        return read(file, readerFactory);
+    }
+    
+    public static <T> Task<T> createTask(File file, CellReference reference, TableFactory<T> factory) {
+        return createTask(file, new TableReaderFactory<T>(reference, factory));
+    }
+    
+    private static class TableReaderFactory<T> implements ExcelReader.Factory<T> {
+        
+        private final CellReference reference;
+        private final TableFactory<T> factory;
+        
+        private TableReaderFactory(CellReference reference, TableFactory<T> factory) {
+            this.reference = reference;
+            this.factory = factory;
+        }
+        
+        @Override
+        public ExcelReader<T> createXlsReader() {
+            return new XlsTableReader<T>(reference, factory);
+        }
+
+        @Override
+        public ExcelReader<T> createXlsxReader() {
+            return new XlsxTableReader<T>(reference, factory);
+        }
     }
     
     private static class ReaderTask<T> extends Task<T> {

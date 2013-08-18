@@ -270,6 +270,33 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
         return cummulatedCheck.isVisible();
     }
     
+    public void setScaleControlVisible(boolean visible) {
+        scaleLabel.setVisible(visible);
+        scaleSpinner.setVisible(visible);
+    }
+    
+    public boolean isScaleControlVisible() {
+        return scaleSpinner.isVisible();
+    }
+    
+    public void setLayerControlVisible(boolean visible) {
+        layerLabel.setVisible(visible);
+        layerCombo.setVisible(visible);
+    }
+    
+    public boolean isLayerControlVisible() {
+        return layerCombo.isVisible();
+    }
+    
+    public void setLayoutControlVisible(boolean visible) {
+        layoutLabel.setVisible(visible);
+        layoutCombo.setVisible(visible);
+    }
+    
+    public boolean isLayoutControlVisible() {
+        return layoutCombo.isVisible();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cumulatedLabel;

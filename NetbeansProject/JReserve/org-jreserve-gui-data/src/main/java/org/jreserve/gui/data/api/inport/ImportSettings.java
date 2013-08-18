@@ -15,12 +15,12 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.data.settings;
+package org.jreserve.gui.data.api.inport;
 
 import java.util.prefs.Preferences;
 import org.jreserve.gui.data.inport.ImportDataProviderAdapter;
 import org.jreserve.gui.data.inport.ImportDataProviderRegistry;
-import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.data.api.inport.SaveType;
 import org.openide.util.NbPreferences;
 
 /**

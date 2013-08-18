@@ -20,12 +20,7 @@ package org.jreserve.gui.excel.dataimport;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.poi.ExcelUtil;
+import org.jreserve.jrlib.gui.data.DataEntry;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -41,9 +36,6 @@ import org.openide.util.NbBundle.Messages;
 class ExcelTableModel extends AbstractTableModel {
     
     private boolean isVector = false;
-    
-    private int firstRow;
-    private int firstColumn;
     private List<ExcelCell[]> rows = new ArrayList<ExcelCell[]>();
     
     void setVector(boolean vector) {
@@ -51,61 +43,31 @@ class ExcelTableModel extends AbstractTableModel {
         fireTableStructureChanged();
     }
     
-    void readData(Workbook wb, String reference) {
-        releaseWorkbook();
-        calculateSize(wb, reference);
+    void setEntries(List<DataEntry> entries) {
+        rows.clear();
+        if(entries != null)
+            fillRows(entries);
         fireTableStructureChanged();
     }
     
-    private void releaseWorkbook() {
-        rows.clear();
-        firstRow = 0;
-        firstColumn = 0;
+    private void fillRows(List<DataEntry> entries) {
+        for(DataEntry entry : entries)
+            rows.add(isVector? createVectorRow(entry) : createTriangleRow(entry));
     }
     
-    private void calculateSize(Workbook wb, String reference) {
-        CellReference ref = ExcelUtil.getValidCellReference(wb, reference);
-        if(ref == null)
-            return;
-        Sheet sheet = wb.getSheet(ref.getSheetName());
-        firstRow = ref.getRow();
-        firstColumn = ref.getCol();
-        
-        int rCount = 0;
-        while(true) {
-            Row row = sheet.getRow(firstRow + rCount++);
-            if(row == null)
-                break;
-            
-            ExcelCell[] r = isVector? getVectorRow(row) : getTriangleRow(row);
-            if(r == null)
-                break;
-            rows.add(r);
-        }
+    private ExcelCell[] createVectorRow(DataEntry entry) {
+        ExcelCell[] row = new ExcelCell[2];
+        row[0] = new ExcelCell(ExcelCell.Type.DATE, entry.getAccidentDate());
+        row[1] = new ExcelCell(ExcelCell.Type.DOUBLE, entry.getValue());
+        return row;
     }
     
-    private ExcelCell[] getVectorRow(Row row) {
-        Cell ac = row.getCell(firstColumn);
-        Cell vc = row.getCell(firstColumn+1);
-        if(ac==null && vc==null)
-            return null;
-        return new ExcelCell[]{
-            ExcelCell.createCell(ExcelCell.Type.DATE, ac),
-            ExcelCell.createCell(ExcelCell.Type.DOUBLE, vc)
-        };
-    }
-    
-    private ExcelCell[] getTriangleRow(Row row) {
-        Cell ac = row.getCell(firstColumn);
-        Cell dc = row.getCell(firstColumn+1);
-        Cell vc = row.getCell(firstColumn+2);
-        if(ac==null && dc==null && vc==null)
-            return null;
-        return new ExcelCell[]{
-            ExcelCell.createCell(ExcelCell.Type.DATE, ac),
-            ExcelCell.createCell(ExcelCell.Type.DATE, dc),
-            ExcelCell.createCell(ExcelCell.Type.DOUBLE, vc)
-        };
+    private ExcelCell[] createTriangleRow(DataEntry entry) {
+        ExcelCell[] row = new ExcelCell[3];
+        row[0] = new ExcelCell(ExcelCell.Type.DATE, entry.getAccidentDate());
+        row[1] = new ExcelCell(ExcelCell.Type.DATE, entry.getDevelopmentDate());
+        row[2] = new ExcelCell(ExcelCell.Type.DOUBLE, entry.getValue());
+        return row;
     }
 
     @Override

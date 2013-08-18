@@ -55,6 +55,7 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
     public ImportDataVisualPanelGeometry() {
         initComponents();
         loadPreferences();
+        updateGeometry();
     }
     
     private void loadPreferences() {
@@ -202,6 +203,7 @@ public class ImportDataVisualPanelGeometry extends javax.swing.JPanel {
         add(developmentStepSpinner, gridBagConstraints);
 
         triangleWidget.setCummulatedControlVisible(false);
+        triangleWidget.setLayerControlVisible(false);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 4;

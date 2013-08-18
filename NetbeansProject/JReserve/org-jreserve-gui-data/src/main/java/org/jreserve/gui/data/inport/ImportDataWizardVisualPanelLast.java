@@ -27,15 +27,15 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.settings.ImportSettings;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelLast;
+import org.jreserve.gui.data.api.inport.ImportSettings;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.jrlib.gui.data.MonthDate;
-import org.jreserve.gui.data.api.SaveType;
+import org.jreserve.gui.data.api.inport.SaveType;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
@@ -45,6 +45,7 @@ import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
+import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -59,7 +60,7 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - path",
     "MSG.ImportDataWizardVisualPanelLast.LoadError=Unable to load data for ''{0}''!"
 })
-class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
+public class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     
     private final static Color COLOR_NEW = new Color(175, 246, 68);
     private final static Color COLOR_EXISTS = new Color(190, 190, 190);
@@ -87,6 +88,8 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     
     private final ImportDataWizardPanelLast controller;
     private final ImportDataTableModel tableModel = new ImportDataTableModel();
+    private final ChangeSupport cs = new ChangeSupport(this);
+    
     private DataSource ds;
     private List<DataEntry> entries;
     private EntryLoader loader;
@@ -97,7 +100,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     
     private SaveType saveType = SaveType.SAVE_NEW;
     
-    ImportDataWizardVisualPanelLast(ImportDataWizardPanelLast controller) {
+    public ImportDataWizardVisualPanelLast(ImportDataWizardPanelLast controller) {
         this.controller = controller;
         initComponents();
         CardLayout layout = (CardLayout) overviewPanel.getLayout();
@@ -109,19 +112,27 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         return Bundle.LBL_ImportDataWizardVisualPanelLast_Name();
     }
     
-    SaveType getSaveType() {
+    public void addChangeListener(ChangeListener listener) {
+        cs.addChangeListener(listener);
+    }
+    
+    public void removeChangeListener(ChangeListener listener) {
+        cs.removeChangeListener(listener);
+    }
+    
+    public SaveType getSaveType() {
         return (SaveType) saveTypeCombo.getSelectedItem();
     }
     
-    boolean isInputCummulated() {
+    public boolean isInputCummulated() {
         return cummulatedCheck.isSelected();
     }
     
-    void setTriangleGeometry(TriangleGeometry geometry) {
+    public void setTriangleGeometry(TriangleGeometry geometry) {
         triangleWidget.setTriangleGeometry(geometry);
     }
     
-    void setDataSource(DataSource ds) {
+    public void setDataSource(DataSource ds) {
         if(this.ds != ds) {
             this.ds = ds;
             tableModel.setDataType(ds.getDataType());
@@ -137,7 +148,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         loader.execute();
     }
     
-    void setEntries(List<DataEntry> entries) {
+    public void setEntries(List<DataEntry> entries) {
         this.entries = entries;
         tableModel.setEntries(entries);
         
@@ -279,11 +290,9 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
 
     private void saveTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveTypeComboActionPerformed
         saveType = (SaveType) saveTypeCombo.getSelectedItem();
-        
         table.repaint();
         triangleWidget.repaint();
-        
-        controller.changed();
+        cs.fireChange();
     }//GEN-LAST:event_saveTypeComboActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -308,7 +317,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         pBar.setVisible(running);
     }
     
-    boolean hasEntriesToSave() {
+    public boolean hasEntriesToSave() {
         if(entries==null || entries.isEmpty())
             return false;
         if(SaveType.OVERRIDE_EXISTING == saveTypeCombo.getSelectedItem())
@@ -347,7 +356,7 @@ class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
             } finally {
                 setProgressRunning(false);
                 tableModel.fireTableDataChanged();
-                controller.changed();
+                cs.fireChange();
             }
         }
     }

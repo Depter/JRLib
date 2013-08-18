@@ -32,13 +32,15 @@ public class ImportDataProviderAdapter implements Displayable {
     
     private final String id;
     private final String name;
+    private final boolean dsRequired;
     private final Icon icon;
     private final ImportDataProvider delegate;
     private final ChangeSupport cs;
     
-    ImportDataProviderAdapter(String id, String name, Icon icon, ImportDataProvider delegate) {
+    ImportDataProviderAdapter(String id, String name, boolean dsRequired, Icon icon, ImportDataProvider delegate) {
         this.id = id;
         this.name = name;
+        this.dsRequired = dsRequired;
         this.icon = icon;
         this.delegate = delegate;
         cs = new ChangeSupport(this);
@@ -62,6 +64,10 @@ public class ImportDataProviderAdapter implements Displayable {
     @Override
     public String getDisplayName() {
         return name;
+    }
+    
+    public boolean isDSRequired() {
+        return dsRequired;
     }
     
     public ImportDataProvider getImportDataProvider() {

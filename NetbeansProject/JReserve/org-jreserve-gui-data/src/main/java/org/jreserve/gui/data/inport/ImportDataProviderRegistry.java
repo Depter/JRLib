@@ -60,7 +60,8 @@ public class ImportDataProviderRegistry extends LayerRegistrationLoader<ImportDa
         Icon icon = getIcon(file);
         ImportDataProvider provider = super.getInstance(file, ImportDataProvider.class);
         String id = getId(file, provider);
-        return new ImportDataProviderAdapter(id, name, icon, provider);
+        boolean dsRequired = isDSRequired(file);
+        return new ImportDataProviderAdapter(id, name, dsRequired, icon, provider);
     }
     
     private String getId(FileObject file, ImportDataProvider provider) {
@@ -81,5 +82,11 @@ public class ImportDataProviderRegistry extends LayerRegistrationLoader<ImportDa
         return iconBase.length() > 0?
                 ImageUtilities.loadImageIcon(iconBase, false) :
                 NO_ICON;
+    }
+    
+    private boolean isDSRequired(FileObject file) {
+        return AnnotationUtils.booleanAttribute(
+                ImportDataProviderRegistrationProcessor.REQUIRES_DATA_SOURCE, 
+                file, true);
     }
 }

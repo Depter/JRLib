@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.flamingo">
-    <module_version install_time="1375693782995" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1376831156439" last="true" origin="installer" specification_version="1.0">
         <file crc="3557500066" name="config/Modules/org-jreserve-flamingo.xml"/>
         <file crc="1178867850" name="modules/ext/batik/batik-awt-util-1.6.jar"/>
         <file crc="298560504" name="modules/ext/batik/batik-bridge-1.6.jar"/>
@@ -27,6 +27,6 @@
         <file crc="72982457" name="modules/ext/org.pushingpixels/trident-1.3.jar"/>
         <file crc="1221800559" name="modules/ext/xerces/xmlParserAPIs-2.6.2.jar"/>
         <file crc="838389737" name="modules/ext/xpp3/xpp3-1.1.4c.jar"/>
-        <file crc="3427062869" name="modules/org-jreserve-flamingo.jar"/>
+        <file crc="1062277021" name="modules/org-jreserve-flamingo.jar"/>
     </module_version>
 </module>

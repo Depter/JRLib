@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.api;
+package org.jreserve.gui.data.api.util;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +25,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 import org.jreserve.gui.data.actions.DataCategoryTreeModel;
 import org.jreserve.gui.data.actions.DataCategoryTreeRenderer;
+import org.jreserve.gui.data.api.DataManager;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
@@ -48,6 +50,7 @@ class DataItemChooserForm<T> extends javax.swing.JPanel {
         String getTitle();
         boolean multipleSelection();
         boolean showSources();
+        DataType getDataType();
         List<T> getResults(TreePath[] pathes);
     }
     
@@ -72,7 +75,7 @@ class DataItemChooserForm<T> extends javax.swing.JPanel {
     
     DataItemChooserForm(DataManager dm, Controller<T> controller) {
         this.controller = controller;
-        treeModel = new DataCategoryTreeModel(dm, controller.showSources());
+        treeModel = new DataCategoryTreeModel(dm, controller.showSources(), controller.getDataType());
         initComponents();
         okButton.setEnabled(false);
     }

@@ -75,6 +75,17 @@ public abstract class DataImportTemplateItem {
         this.cummulated = cummulated;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof DataImportTemplateItem) &&
+               reference.equalsIgnoreCase(((DataImportTemplateItem)o).reference);
+    }
+    
+    @Override
+    public int hashCode() {
+        return reference.toLowerCase().hashCode();
+    }
+    
     @XmlRootElement(name="tableSource")
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Table extends DataImportTemplateItem {

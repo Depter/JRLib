@@ -20,7 +20,8 @@ package org.jreserve.gui.excel.dataimport;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelLast;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -46,9 +47,10 @@ public class ExcelTriangleImportDataProvider implements ImportDataProvider {
     @Override
     public List<? extends WizardDescriptor.Panel> getPanels() {
         if(panels == null) {
-            panels = new ArrayList<WizardDescriptor.Panel>();
+            panels = new ArrayList<WizardDescriptor.Panel>(3);
             panels.add(new ExcelTriangleImportWizardPanel());
             panels.add(new ImportDataWizardPanelGeometry());
+            panels.add(new ImportDataWizardPanelLast());
         }
         return panels;
     }

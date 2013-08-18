@@ -37,6 +37,7 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import org.jreserve.gui.misc.flamingo.spi.RibbonComponentProvider;
 import org.openide.modules.ModuleInstall;
@@ -51,6 +52,7 @@ public class Installer extends ModuleInstall {
     
     @Override
     public void restored() {
+        ToolTipManager.sharedInstance().setInitialDelay(500);
         System.setProperty("netbeans.winsys.no_toolbars", "true");
         //This would be too late:
         //WindowManager.getDefault().invokeWhenUIReady(new Runnable() {});

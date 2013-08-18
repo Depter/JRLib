@@ -17,9 +17,10 @@
 
 package org.jreserve.gui.data.clipboard;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.inport.ImportDataWizardPanelLast;
 import org.jreserve.gui.data.spi.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
@@ -44,8 +45,11 @@ public class ClipboardTableImportDataProvider implements ImportDataProvider {
     
     @Override
     public List<? extends WizardDescriptor.Panel> getPanels() {
-        if(panels == null)
-            panels = Collections.singletonList((WizardDescriptor.Panel) new ImportClipboardTableWizardPanel());
+        if(panels == null) {
+            panels = new ArrayList<WizardDescriptor.Panel>(2);
+            panels.add(new ImportClipboardTableWizardPanel());
+            panels.add(new ImportDataWizardPanelLast());
+        }
         return panels;
     }
 
