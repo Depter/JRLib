@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/officelaf/Installer.class
+OpenIDE-Module-Layer: org/officelaf/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/officelaf/Bundle.properties

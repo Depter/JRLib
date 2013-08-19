@@ -43,13 +43,17 @@ public class FileRibbonApplicationMenuButtonUI extends BasicRibbonApplicationMen
 {
     private Color buttonColor = Color.blue;
     
-    public static ComponentUI createUI(JComponent c)
-    {
-        return new FileRibbonApplicationMenuButtonUI();
+    public static ComponentUI createUI(JComponent c) {
+        if(c instanceof JRibbon)
+            return new FileRibbonApplicationMenuButtonUI((JRibbon) c);
+        throw new IllegalArgumentException("Illegal component. Expected JRibbon, found: "+c);
     }
     
     // TODO: Add custom layout manager to produce the proper sized rectangle for the button
 
+    private FileRibbonApplicationMenuButtonUI(JRibbon ribbon) {
+        super(ribbon);
+    }
 
     @Override
     protected void installComponents()

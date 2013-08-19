@@ -33,7 +33,7 @@ package org.jreserve.gui.misc.flamingo.modules;
  *
  * @author Chris
  */
-class LAFConfiguration {
+public class LAFConfiguration {
     
     private final static String PKG = "org.jreserve.gui.misc.flamingo.modules.";
     

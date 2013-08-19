@@ -1,32 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.flamingo">
-    <module_version install_time="1376831156439" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1376920205846" last="true" origin="installer" specification_version="1.0">
         <file crc="3557500066" name="config/Modules/org-jreserve-flamingo.xml"/>
-        <file crc="1178867850" name="modules/ext/batik/batik-awt-util-1.6.jar"/>
-        <file crc="298560504" name="modules/ext/batik/batik-bridge-1.6.jar"/>
-        <file crc="4290569424" name="modules/ext/batik/batik-ext-1.6.jar"/>
-        <file crc="1071975254" name="modules/ext/batik/batik-extension-1.6.jar"/>
-        <file crc="1581191207" name="modules/ext/batik/batik-gvt-1.6.jar"/>
-        <file crc="2925391447" name="modules/ext/batik/batik-script-1.6.jar"/>
-        <file crc="4235807019" name="modules/ext/batik/batik-swing-1.6.jar"/>
-        <file crc="3217077689" name="modules/ext/batik/batik-transcoder-1.6.jar"/>
-        <file crc="4119387745" name="modules/ext/batik/batik-util-1.6.jar"/>
-        <file crc="604912845" name="modules/ext/ch.ethz.ganymed/ganymed-ssh2-build210.jar"/>
-        <file crc="3042540215" name="modules/ext/com.google.android/android-2.3.3.jar"/>
-        <file crc="1656106031" name="modules/ext/com.jgoodies/forms-1.2.1.jar"/>
-        <file crc="4290372369" name="modules/ext/com.svnkit/svnkit-1.1.0.jar"/>
-        <file crc="1856893722" name="modules/ext/commons-codec/commons-codec-1.3.jar"/>
-        <file crc="3077296198" name="modules/ext/commons-logging/commons-logging-1.1.1.jar"/>
-        <file crc="2165241327" name="modules/ext/org.apache.httpcomponents/httpclient-4.0.1.jar"/>
-        <file crc="145561483" name="modules/ext/org.apache.httpcomponents/httpcore-4.0.1.jar"/>
-        <file crc="196565136" name="modules/ext/org.eclipse.swt.gtk.linux/x86-3.3.0-v3346.jar"/>
-        <file crc="2968536310" name="modules/ext/org.eclipse.swt.gtk.linux/x86_64-3.3.0-v3346.jar"/>
-        <file crc="2853118225" name="modules/ext/org.json/json-20080701.jar"/>
-        <file crc="450546967" name="modules/ext/org.khronos/opengl-api-gl1.1-android-2.1_r1.jar"/>
-        <file crc="3459071207" name="modules/ext/org.pushingpixels/flamengo-5.0.jar"/>
-        <file crc="72982457" name="modules/ext/org.pushingpixels/trident-1.3.jar"/>
-        <file crc="1221800559" name="modules/ext/xerces/xmlParserAPIs-2.6.2.jar"/>
-        <file crc="838389737" name="modules/ext/xpp3/xpp3-1.1.4c.jar"/>
-        <file crc="1062277021" name="modules/org-jreserve-flamingo.jar"/>
+        <file crc="2270642787" name="modules/ext/com.github.insubstantial/flamingo-7.2.1.jar"/>
+        <file crc="3375861840" name="modules/ext/com.github.insubstantial/laf-plugin-7.2.1.jar"/>
+        <file crc="2641324100" name="modules/ext/com.github.insubstantial/laf-widget-7.2.1.jar"/>
+        <file crc="2100504060" name="modules/ext/com.github.insubstantial/substance-7.2.1.jar"/>
+        <file crc="3533688983" name="modules/ext/com.github.insubstantial/trident-7.2.1-swing.jar"/>
+        <file crc="1719338805" name="modules/org-jreserve-flamingo.jar"/>
     </module_version>
 </module>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.officelaf.Office_LAF">
+    <module_version install_time="1376929242729" last="true" origin="installer" specification_version="1.0">
+        <file crc="3407475830" name="config/Modules/org-officelaf-Office_LAF.xml"/>
+        <file crc="2270642787" name="modules/ext/com.github.insubstantial/flamingo-7.2.1.jar"/>
+        <file crc="3533688983" name="modules/ext/com.github.insubstantial/trident-7.2.1-swing.jar"/>
+        <file crc="1040527798" name="modules/ext/org.pushingpixels/AppleCompileTime-1.0.jar"/>
+        <file crc="4143165132" name="modules/org-officelaf-Office_LAF.jar"/>
+    </module_version>
+</module>

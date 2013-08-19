@@ -29,73 +29,100 @@
  */
 package org.jreserve.gui.misc.flamingo.modules;
 
-import java.awt.Frame;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
-import javax.swing.LookAndFeel;
 import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
+import org.jreserve.gui.misc.flamingo.settings.GuiSettings;
 import org.jreserve.gui.misc.flamingo.spi.RibbonComponentProvider;
 import org.openide.modules.ModuleInstall;
 import org.openide.windows.WindowManager;
+import org.pushingpixels.substance.api.SubstanceLookAndFeel;
 
 public class Installer extends ModuleInstall {
 
-    private final static Logger logger = Logger.getLogger(Installer.class.getName());
-    private final static String NIMBUS = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
-    private final static String SUBSTANCE = "org.pushingpixels.substance.api.skin.OfficeBlack2007Skin";
-    private final static String L_F = NIMBUS;
+    private final static String PROP_NO_NB_TOOLBAR = "netbeans.winsys.no_toolbars"; //NOI18
+    private final static String PROP_IS_CHECK_EDT = "insubstantial.checkEDT"; //NOI18
+    private final static String PROP_IS_LOG_EDT = "insubstantial.logEDT"; //NOI18
+    private final static String TRUE = "true"; //NOI18
+    private final static String FALSE = "false"; //NOI18
+
+//    private final static String NIMBUS = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
+//    private final static String SUBSTANCE = "org.pushingpixels.substance.api.skin.OfficeBlack2007Skin";
+//    private final static String L_F = NIMBUS;
     
     @Override
     public void restored() {
         ToolTipManager.sharedInstance().setInitialDelay(500);
-        System.setProperty("netbeans.winsys.no_toolbars", "true");
-        //This would be too late:
-        //WindowManager.getDefault().invokeWhenUIReady(new Runnable() {});
-        //Therefore use this:
+        System.setProperty(PROP_NO_NB_TOOLBAR, TRUE);
+        System.setProperty(PROP_IS_CHECK_EDT, FALSE);
+        System.setProperty(PROP_IS_LOG_EDT, FALSE);
+        
+//        SwingUtilities.invokeLater(new RibbonInstaller());
+        
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                initLAF();
+//                initLAF();
                 UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
                 installRibbonBar();
 //                SubstanceLookAndFeel.setSkin(SUBSTANCE);
             }
         });
     }
-
-    private static void initLAF() {
-        LookAndFeel laf = getNimbus();
-        if (laf != null) {
-            setLookAndFeel(laf);
-        }
-    }
-
-    private static LookAndFeel getNimbus() {
-        try {
-            Class clazz = Class.forName(L_F);
-            return (LookAndFeel) clazz.newInstance();
-        } catch (Exception ex) {
-            logger.log(Level.WARNING, String.format("Unable to load L&F instnce: %s", L_F), ex);
-            return null;
-        }
-    }
     
-    private static void setLookAndFeel(LookAndFeel laf) {
-        try {
-            UIManager.setLookAndFeel(laf);
-            Frame[] frames = Frame.getFrames();
-            for (Frame frame : frames)
-                SwingUtilities.updateComponentTreeUI(frame);
-        } catch (Exception ex) {
-            logger.log(Level.WARNING, String.format("Unble to apply L&F: ", laf), ex);
+    private static class RibbonInstaller implements Runnable {
+        @Override
+        public void run() {
+            installRibbon();
+//            installLF();
+        }
+            
+        private void installLF() {
+            String skin = GuiSettings.getSkinClass();
+            SubstanceLookAndFeel.setSkin(skin);
+        }
+            
+        private void installRibbon() {
+            UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
+            JFrame frame = (JFrame) WindowManager.getDefault().getMainWindow();
+            JComponent toolbar = RibbonComponentProvider.getDefault().createRibbon();
+            frame.getRootPane().setLayout(new RibbonRootPaneLayout(toolbar));
+            toolbar.putClientProperty(JLayeredPane.LAYER_PROPERTY, 0);
+            frame.getRootPane().getLayeredPane().add(toolbar, 0);
         }
     }
-    
+
+//    private static void initLAF() {
+//        LookAndFeel laf = getNimbus();
+//        if (laf != null) {
+//            setLookAndFeel(laf);
+//        }
+//    }
+//
+//    private static LookAndFeel getNimbus() {
+//        try {
+//            Class clazz = Class.forName(L_F);
+//            return (LookAndFeel) clazz.newInstance();
+//        } catch (Exception ex) {
+//            logger.log(Level.WARNING, String.format("Unable to load L&F instnce: %s", L_F), ex);
+//            return null;
+//        }
+//    }
+//    
+//    private static void setLookAndFeel(LookAndFeel laf) {
+//        try {
+//            UIManager.setLookAndFeel(laf);
+//            Frame[] frames = Frame.getFrames();
+//            for (Frame frame : frames)
+//                SwingUtilities.updateComponentTreeUI(frame);
+//        } catch (Exception ex) {
+//            logger.log(Level.WARNING, String.format("Unble to apply L&F: ", laf), ex);
+//        }
+//    }
+//    
     private static void installRibbonBar() {
         JFrame frame = (JFrame) WindowManager.getDefault().getMainWindow();
         JComponent toolbar = RibbonComponentProvider.getDefault().createRibbon();
