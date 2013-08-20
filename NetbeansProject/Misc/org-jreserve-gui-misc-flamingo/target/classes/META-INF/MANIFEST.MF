@@ -6,7 +6,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/flamingo/Bundl
  e.properties
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20130820
-OpenIDE-Module-Build-Version: 201308201530
+OpenIDE-Module-Build-Version: 201308201824
 OpenIDE-Module: org.jreserve.org.jreserve.gui.misc.flamingo
 OpenIDE-Module-Public-Packages: com.jgoodies.**, org.pushingpixels.fla
  mingo.**, org.pushingpixels.trident.**, org.jreserve.gui.misc.flaming
@@ -16,15 +16,15 @@ OpenIDE-Module-Display-Category: org.jreserve
 OpenIDE-Module-Name: Flamingo
 OpenIDE-Module-Short-Description: <undefined>
 OpenIDE-Module-Long-Description: <undefined>
-X-Class-Path: ext/com.github.insubstantial/flamingo-7.2.1.jar ext/com.
- github.insubstantial/trident-7.2.1-swing.jar ext/com.github.insubstan
- tial/substance-7.2.1.jar ext/com.github.insubstantial/laf-widget-7.2.
- 1.jar ext/com.github.insubstantial/laf-plugin-7.2.1.jar ext/com.githu
- b.insubstantial/substance-flamingo-7.2.1.jar
-Maven-Class-Path: com.github.insubstantial:flamingo:7.2.1 com.github.i
- nsubstantial:trident:7.2.1:swing com.github.insubstantial:substance:7
- .2.1 com.github.insubstantial:laf-widget:7.2.1 com.github.insubstanti
- al:laf-plugin:7.2.1 com.github.insubstantial:substance-flamingo:7.2.1
+X-Class-Path: ext/org.jreserve/flamingo-1.0-SNAPSHOT.jar ext/com.githu
+ b.insubstantial/trident-7.2.1.jar ext/com.github.insubstantial/substa
+ nce-7.2.1.jar ext/com.github.insubstantial/laf-widget-7.2.1.jar ext/c
+ om.github.insubstantial/trident-7.2.1-swing.jar ext/com.github.insubs
+ tantial/laf-plugin-7.2.1.jar
+Maven-Class-Path: org.jreserve:flamingo:1.0-SNAPSHOT com.github.insubs
+ tantial:trident:7.2.1 com.github.insubstantial:substance:7.2.1 com.gi
+ thub.insubstantial:laf-widget:7.2.1 com.github.insubstantial:trident:
+ 7.2.1:swing com.github.insubstantial:laf-plugin:7.2.1
 OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  n/1 > 1.14.1, org.openide.util > 8.25.1, org.openide.filesystems > 7.
  62.1, org.openide.modules > 7.32.1, org.openide.windows > 6.55.1, org
