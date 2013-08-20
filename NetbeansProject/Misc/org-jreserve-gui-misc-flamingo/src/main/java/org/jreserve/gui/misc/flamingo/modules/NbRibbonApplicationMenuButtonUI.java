@@ -54,9 +54,16 @@ import org.pushingpixels.flamingo.internal.ui.ribbon.appmenu.JRibbonApplicationM
 public class NbRibbonApplicationMenuButtonUI extends BasicRibbonApplicationMenuButtonUI {
 
     public static ComponentUI createUI(JComponent c) {
+        JRibbon ribbon = getRibbonFromcomponent(c);
+        return new NbRibbonApplicationMenuButtonUI(ribbon);
+    }
+    
+    private static JRibbon getRibbonFromcomponent(JComponent c) {
         if(c instanceof JRibbon)
-            return new NbRibbonApplicationMenuButtonUI((JRibbon) c);
-        throw new IllegalArgumentException("Illegal component. Expected JRibbon, found: "+c);
+            return (JRibbon) c;
+        if(c instanceof JRibbonApplicationMenuButton)
+            return ((JRibbonApplicationMenuButton)c).getRibbon();
+        throw new IllegalArgumentException("Únable to obtain JRibbon from: "+c);
     }
     
     private NbRibbonApplicationMenuButtonUI(JRibbon ribbon) {

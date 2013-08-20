@@ -60,24 +60,24 @@ public class Installer extends ModuleInstall {
         System.setProperty(PROP_IS_CHECK_EDT, FALSE);
         System.setProperty(PROP_IS_LOG_EDT, FALSE);
         
-//        SwingUtilities.invokeLater(new RibbonInstaller());
+        SwingUtilities.invokeLater(new RibbonInstaller());
         
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
 //                initLAF();
-                UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
-                installRibbonBar();
+//                UIManager.getDefaults().putDefaults(LAFConfiguration.getClassDefaults());
+//                installRibbonBar();
 //                SubstanceLookAndFeel.setSkin(SUBSTANCE);
-            }
-        });
+//            }
+//        });
     }
     
     private static class RibbonInstaller implements Runnable {
         @Override
         public void run() {
             installRibbon();
-//            installLF();
+            installLF();
         }
             
         private void installLF() {

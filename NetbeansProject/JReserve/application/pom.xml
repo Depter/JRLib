@@ -45,17 +45,6 @@
             <type>pom</type>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>JReserve-branding</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jreserve</groupId>
-            <artifactId>flamingo</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.netbeans.modules</groupId>
             <artifactId>org-netbeans-modules-projectui</artifactId>
             <version>${netbeans.version}</version>
@@ -69,6 +58,19 @@
         </dependency>
 
         <!-- JReserve MISC MODULES -->
+<!--        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-misc-officelaf</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>-->
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>org-jreserve-gui-misc-flamingo</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <type>jar</type>
+        </dependency>
+        
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-misc-logging</artifactId>
@@ -115,6 +117,11 @@
         </dependency>
         
         <!-- JReserve Modules -->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>JReserve-branding</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>org-jreserve-gui-trianglewidget</artifactId>

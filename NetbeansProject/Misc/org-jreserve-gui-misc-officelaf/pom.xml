@@ -93,6 +93,11 @@
         </dependency>
         <dependency>
             <groupId>org.netbeans.api</groupId>
+            <artifactId>org-openide-filesystems</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
             <artifactId>org-netbeans-modules-options-api</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
@@ -107,11 +112,10 @@
             <version>${netbeans.version}</version>
         </dependency>
         
-        <!-- Flamingo -->
         <dependency>
-            <groupId>org.pushingpixels</groupId>
-            <artifactId>flamengo</artifactId>
-            <version>5.0</version>
+            <groupId>com.github.insubstantial</groupId>
+            <artifactId>flamingo</artifactId>
+            <version>7.2.1</version>
             <type>jar</type>
         </dependency>
         <!-- Not in any repos, have to manually install from lib dir.-->
@@ -120,6 +124,7 @@
             <artifactId>AppleCompileTime</artifactId>
             <version>1.0</version>
             <type>jar</type>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

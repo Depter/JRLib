@@ -55,7 +55,6 @@ public class LayerRibbonComponentProvider extends RibbonComponentProvider {
         return ribbon;
     }
 
-
     private static void addAppMenu(JRibbon ribbon) {
         RibbonAppMenuProvider appMenuProvider = RibbonAppMenuProvider.getDefault();
         RibbonApplicationMenu appMenu = appMenuProvider.createApplicationMenu();
