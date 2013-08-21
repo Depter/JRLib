@@ -4,6 +4,12 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Edit">
+            <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance">
+                <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.excel.template.actions.Bundle#CTL_DeleteTemplateAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.template.actions.DeleteTemplateAction"/>
+            </file>
             <file name="org-jreserve-gui-excel-template-actions-EditTemplateAction.instance">
                 <!--org.jreserve.gui.excel.template.actions.EditTemplateAction-->
                 <attr
@@ -28,18 +34,17 @@
                 <attr name="iconBase" stringvalue="org/jreserve/gui/excel/excel_template_add.png"/>
                 <attr boolvalue="false" name="noIconInMenu"/>
             </file>
-            <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance">
-                <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.excel.template.actions.Bundle#CTL_DeleteTemplateAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.template.actions.DeleteTemplateAction"/>
-            </file>
         </folder>
     </folder>
     <folder name="Ribbon">
         <folder name="TaskPanes">
             <folder name="Edit">
                 <folder name="Excel Templates">
+                    <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.shadow">
+                        <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance"/>
+                        <attr intvalue="300" name="position"/>
+                    </file>
                     <file name="org-jreserve-gui-excel-template-actions-EditTemplateAction.shadow">
                         <!--org.jreserve.gui.excel.template.actions.EditTemplateAction-->
                         <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-EditTemplateAction.instance"/>
@@ -50,11 +55,6 @@
                         <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-CreateTemplateAction.instance"/>
                         <attr intvalue="100" name="position"/>
                     </file>
-                    <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.shadow">
-                        <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance"/>
-                        <attr intvalue="300" name="position"/>
-                    </file>
                 </folder>
             </folder>
         </folder>
@@ -62,16 +62,6 @@
     <folder name="Node">
         <folder name="ExcelTemplateNode">
             <folder name="Actions">
-                <file name="org-jreserve-gui-excel-template-actions-EditTemplateAction.shadow">
-                    <!--org.jreserve.gui.excel.template.actions.EditTemplateAction-->
-                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-EditTemplateAction.instance"/>
-                    <attr intvalue="200" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-excel-template-actions-CreateTemplateAction.shadow">
-                    <!--org.jreserve.gui.excel.template.actions.CreateTemplateAction-->
-                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-CreateTemplateAction.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
                 <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.shadow">
                     <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance"/>
@@ -81,6 +71,16 @@
                     <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                     <attr intvalue="290" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-excel-template-actions-EditTemplateAction.shadow">
+                    <!--org.jreserve.gui.excel.template.actions.EditTemplateAction-->
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-EditTemplateAction.instance"/>
+                    <attr intvalue="200" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-excel-template-actions-CreateTemplateAction.shadow">
+                    <!--org.jreserve.gui.excel.template.actions.CreateTemplateAction-->
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-CreateTemplateAction.instance"/>
+                    <attr intvalue="100" name="position"/>
                 </file>
             </folder>
         </folder>
@@ -96,6 +96,11 @@
     </folder>
     <folder name="Menu">
         <folder name="File">
+            <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.shadow">
+                <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
+                <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance"/>
+                <attr intvalue="333" name="position"/>
+            </file>
             <file name="org-jreserve-gui-excel-template-actions-EditTemplateAction.shadow">
                 <!--org.jreserve.gui.excel.template.actions.EditTemplateAction-->
                 <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-EditTemplateAction.instance"/>
@@ -104,11 +109,6 @@
             <file name="org-jreserve-gui-excel-template-actions-CreateTemplateAction.shadow">
                 <!--org.jreserve.gui.excel.template.actions.CreateTemplateAction-->
                 <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-CreateTemplateAction.instance"/>
-                <attr intvalue="333" name="position"/>
-            </file>
-            <file name="org-jreserve-gui-excel-template-actions-DeleteTemplateAction.shadow">
-                <!--org.jreserve.gui.excel.template.actions.DeleteTemplateAction-->
-                <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-excel-template-actions-DeleteTemplateAction.instance"/>
                 <attr intvalue="333" name="position"/>
             </file>
         </folder>
@@ -124,6 +124,17 @@
         </folder>
         <folder name="DataStore">
             <folder name="ImportDataProviders">
+                <file name="org-jreserve-gui-excel-dataimport-ExcelTemplateImportDataProvider.instance">
+                    <!--org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider-->
+                    <attr name="id" stringvalue="org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.excel.dataimport.Bundle#LBL.ExcelTemplateImportDataProvider.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/excel/excel.png"/>
+                    <attr boolvalue="false" name="requiresDataSource"/>
+                    <attr intvalue="4500" name="position"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                </file>
                 <file name="org-jreserve-gui-excel-dataimport-ExcelTriangleImportDataProvider.instance">
                     <!--org.jreserve.gui.excel.dataimport.ExcelTriangleImportDataProvider-->
                     <attr name="id" stringvalue="org.jreserve.gui.excel.dataimport.ExcelTriangleImportDataProvider"/>
@@ -144,17 +155,6 @@
                     <attr boolvalue="true" name="requiresDataSource"/>
                     <attr intvalue="4000" name="position"/>
                     <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.dataimport.ExcelTableImportDataProvider"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
-                </file>
-                <file name="org-jreserve-gui-excel-dataimport-ExcelTemplateImportDataProvider.instance">
-                    <!--org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider-->
-                    <attr name="id" stringvalue="org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider"/>
-                    <attr
-                        bundlevalue="org.jreserve.gui.excel.dataimport.Bundle#LBL.ExcelTemplateImportDataProvider.Name" name="displayName"/>
-                    <attr name="iconBase" stringvalue="org/jreserve/gui/excel/excel.png"/>
-                    <attr boolvalue="false" name="requiresDataSource"/>
-                    <attr intvalue="4500" name="position"/>
-                    <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider"/>
                     <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
                 </file>
             </folder>

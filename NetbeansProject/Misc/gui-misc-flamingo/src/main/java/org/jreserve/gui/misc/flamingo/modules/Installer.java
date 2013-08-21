@@ -62,8 +62,8 @@ public class Installer extends ModuleInstall {
     private static class RibbonInstaller implements Runnable {
         @Override
         public void run() {
-            installRibbon();
             installLF();
+            installRibbon();
         }
             
         private void installLF() {

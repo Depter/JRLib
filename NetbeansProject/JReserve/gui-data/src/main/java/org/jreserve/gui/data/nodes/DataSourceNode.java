@@ -17,11 +17,14 @@
 package org.jreserve.gui.data.nodes;
 
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.api.DataEvent;
+import org.jreserve.gui.data.editor.EditorUtil;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
@@ -48,6 +51,7 @@ class DataSourceNode extends AbstractNode {
     private final static String ACTION_PATH = "Node/DataSource/Actions";  //NOI18
     
     private final DataSource source;
+    private Action preferredAction;
     
     DataSourceNode(DataSource source) {
         super(Children.LEAF, Lookups.fixed(source, source.getDataProvider()));
@@ -100,5 +104,19 @@ class DataSourceNode extends AbstractNode {
     @Override
     public Transferable drag() {
         return DataItemFlavor.createTransferable(source);
+    }
+    
+    @Override
+    public Action getPreferredAction() {
+        if(preferredAction == null)
+            preferredAction = new PreferredAction();
+        return preferredAction;
+    }
+    
+    private class PreferredAction extends AbstractAction {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            EditorUtil.openEditor(source);
+        }
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.data.clipboard">
-    <module_version install_time="1377088905875" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1377108605812" last="true" origin="installer" specification_version="1.0">
         <file crc="54272453" name="config/Modules/org-jreserve-gui-data-clipboard.xml"/>
-        <file crc="3020335794" name="modules/org-jreserve-gui-data-clipboard.jar"/>
+        <file crc="2731151761" name="modules/org-jreserve-gui-data-clipboard.jar"/>
     </module_version>
 </module>
