@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="JReserve">
+        <folder name="DataStore">
+            <folder name="ImportDataProviders">
+                <file name="org-jreserve-gui-data-clipboard-ClipboardTableImportDataProvider.instance">
+                    <!--org.jreserve.gui.data.clipboard.ClipboardTableImportDataProvider-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.clipboard.ClipboardTableImportDataProvider"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.data.clipboard.Bundle#LBL.ClipboardTableImportDataProvider.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/clipboard/clipboard.png"/>
+                    <attr boolvalue="true" name="requiresDataSource"/>
+                    <attr intvalue="7000" name="position"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.clipboard.ClipboardTableImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                </file>
+                <file name="org-jreserve-gui-data-clipboard-ClipboardTriangleImportDataProvider.instance">
+                    <!--org.jreserve.gui.data.clipboard.ClipboardTriangleImportDataProvider-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.clipboard.ClipboardTriangleImportDataProvider"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.data.clipboard.Bundle#LBL.ClipboardTriangleImportDataProvider.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/clipboard/clipboard.png"/>
+                    <attr boolvalue="true" name="requiresDataSource"/>
+                    <attr intvalue="8000" name="position"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.clipboard.ClipboardTriangleImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

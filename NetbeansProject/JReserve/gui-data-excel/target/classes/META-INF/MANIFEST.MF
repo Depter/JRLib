@@ -1,0 +1,26 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/gui/excel/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/excel/Bundle.proper
+ ties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130821
+OpenIDE-Module-Build-Version: 201308211241
+OpenIDE-Module: org.jreserve.gui.data.excel
+OpenIDE-Module-Public-Packages: org.jreserve.gui.excel.template.*
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: org-jreserve-gui-data-excel
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.openide.awt > 7.46.1, org.openide.dialogs > 7.25.1,
+  org.openide.util > 8.25.1, org.openide.windows > 6.55.1, org.openide
+ .util.lookup > 8.15.1, org.netbeans.modules.settings/1 > 1.35.1, org.
+ openide.nodes > 7.28.1, org.openide.explorer > 6.45.1, org.openide.fi
+ lesystems > 7.62.1, org.netbeans.api.progress/1 > 1.28.1, org.jreserv
+ e.gui.misc.annotations > 1.0, org.jreserve.gui.misc.utils > 1.0, org.
+ jreserve.gui.misc.services > 1.0, org.jreserve.gui.misc.eventbus > 1.
+ 0, org.jreserve.gui.wrapper.poi > 1.0, org.jreserve.gui.wrapper.jrlib
+  > 1.0, org.jreserve.gui.data > 1.0, org.jreserve.gui.trianglewidget 
+ > 1.0
+

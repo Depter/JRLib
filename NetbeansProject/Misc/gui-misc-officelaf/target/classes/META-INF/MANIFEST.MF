@@ -1,0 +1,30 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/officelaf/Installer.class
+OpenIDE-Module-Layer: org/officelaf/layer.xml
+OpenIDE-Module-Localizing-Bundle: org/officelaf/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130821
+OpenIDE-Module-Build-Version: 201308210951
+OpenIDE-Module: org.jreserve.gui.misc.officelaf
+OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.officelaf.**, or
+ g.pushingpixels.**
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: org-jreserve-gui-misc-officelaf
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+X-Class-Path: ext/org.jreserve.gui-misc-officelaf/com-github-insubstan
+ tial/flamingo.jar ext/org.jreserve.gui-misc-officelaf/com-github-insu
+ bstantial/trident-swing.jar ext/org.jreserve.gui-misc-officelaf/org-p
+ ushingpixels/AppleCompileTime.jar
+Maven-Class-Path: com.github.insubstantial:flamingo:7.2.1 com.github.i
+ nsubstantial:trident:7.2.1:swing org.pushingpixels:AppleCompileTime:1
+ .0
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.netbeans.swing.plaf = 201207171143, org.openide.act
+ ions > 6.26.1, org.openide.awt > 7.46.1, org.openide.modules > 7.32.1
+ , org.openide.nodes > 7.28.1, org.openide.util > 8.25.1, org.openide.
+ windows > 6.55.1, org.openide.filesystems > 7.62.1, org.netbeans.modu
+ les.options.api/1 > 1.26.1, org.netbeans.swing.tabcontrol > 1.36.1, o
+ rg.openide.util.lookup > 8.15.1
+

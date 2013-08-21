@@ -66,38 +66,38 @@
         </dependency>-->
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-flamingo</artifactId>
+            <artifactId>gui-misc-flamingo</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-logging</artifactId>
+            <artifactId>gui-misc-logging</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-utils</artifactId>
+            <artifactId>gui-misc-utils</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-eventbus</artifactId>
+            <artifactId>gui-misc-eventbus</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-audit</artifactId>
+            <artifactId>gui-misc-audit</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-services</artifactId>
+            <artifactId>gui-misc-services</artifactId>
             <version>1.0-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
@@ -105,13 +105,13 @@
         <!-- JReserve Wrapper Modules -->
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-jrlib</artifactId>
+            <artifactId>gui-wrapper-jrlib</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-poi</artifactId>
+            <artifactId>gui-wrapper-poi</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
@@ -124,43 +124,43 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-trianglewidget</artifactId>
+            <artifactId>gui-trianglewidget</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-localesettings</artifactId>
+            <artifactId>gui-localesettings</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-project</artifactId>
+            <artifactId>gui-project</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-data</artifactId>
+            <artifactId>gui-data</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-data-csv</artifactId>
+            <artifactId>gui-data-csv</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-data-clipboard</artifactId>
+            <artifactId>gui-data-clipboard</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-excel</artifactId>
+            <artifactId>gui-data-excel</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
@@ -168,17 +168,17 @@
         <!-- FOR DEVELOPMENT -->
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-layerexplorer</artifactId>
+            <artifactId>gui-misc-layerexplorer</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-lookupexplorer</artifactId>
+            <artifactId>gui-misc-lookupexplorer</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-systemproperties</artifactId>
+            <artifactId>gui-misc-systemproperties</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         

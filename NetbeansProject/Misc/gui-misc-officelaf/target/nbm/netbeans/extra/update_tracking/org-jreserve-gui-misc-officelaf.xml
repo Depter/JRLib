@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.gui.misc.officelaf">
+    <module_version install_time="1377078674474" last="true" origin="installer" specification_version="1.0">
+        <file crc="1353429188" name="config/Modules/org-jreserve-gui-misc-officelaf.xml"/>
+        <file crc="2270642787" name="modules/ext/org.jreserve.gui-misc-officelaf/com-github-insubstantial/flamingo.jar"/>
+        <file crc="3533688983" name="modules/ext/org.jreserve.gui-misc-officelaf/com-github-insubstantial/trident-swing.jar"/>
+        <file crc="1040527798" name="modules/ext/org.jreserve.gui-misc-officelaf/org-pushingpixels/AppleCompileTime.jar"/>
+        <file crc="789372401" name="modules/org-jreserve-gui-misc-officelaf.jar"/>
+    </module_version>
+</module>

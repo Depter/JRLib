@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/audit/Bundle.p
+ roperties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130821
+OpenIDE-Module-Build-Version: 201308210950
+OpenIDE-Module: org.jreserve.gui.misc.audit
+OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.audit.db.*, org.
+ jreserve.gui.misc.audit.event.*
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: org-jreserve-gui-misc-audit
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.jreserve.org.jreserve.gui.misc.eventbus > 1.0, org.
+ openide.modules > 7.32.1, org.openide.util > 8.25.1, org.openide.file
+ systems > 7.62.1, org.netbeans.modules.projectapi/1 > 1.46.1, org.ope
+ nide.util.lookup > 8.15.1, org.jreserve.org.jreserve.gui.misc.utils >
+  1.0
+

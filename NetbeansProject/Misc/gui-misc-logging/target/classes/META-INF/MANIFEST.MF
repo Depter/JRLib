@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Install: org/jreserve/gui/misc/logging/Installer.class
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/logging/Bundle
+ .properties
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130821
+OpenIDE-Module-Build-Version: 201308210951
+OpenIDE-Module: org.jreserve.gui.misc.logging
+OpenIDE-Module-Public-Packages: -
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: org-jreserve-gui-misc-logging
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.openide.modules > 7.32.1, org.openide.util > 8.25.1
+ , org.openide.windows > 6.55.1, org.netbeans.modules.settings/1 > 1.3
+ 5.1, org.netbeans.modules.options.api/1 > 1.26.1, org.openide.util.lo
+ okup > 8.15.1, org.openide.awt > 7.46.1, org.openide.actions > 6.26.1
+ , org.openide.dialogs > 7.25.1, org.jreserve.org.jreserve.gui.misc.ut
+ ils > 1.0
+

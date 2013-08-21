@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="LookupExplorerTopComponent.settings">
+                <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE settings PUBLIC "-//NetBeans//DTD Session settings 1.0//EN" "http://www.netbeans.org/dtds/sessionsettings-1_0.dtd">
+<settings version="1.0">
+  <instance class="org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent"/>
+</settings>
+]]></file>
+        </folder>
+        <folder name="Modes">
+            <folder name="rightSlidingSide">
+                <file name="LookupExplorerTopComponent.wstcref">
+                    <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent--><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tc-ref PUBLIC "-//NetBeans//DTD Top Component in Mode Properties 2.0//EN" "http://www.netbeans.org/dtds/tc-ref2_0.dtd">
+<tc-ref version="2.0">
+  <tc-id id="LookupExplorerTopComponent"/>
+  <state opened="false"/>
+</tc-ref>
+]]></file>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="org-jreserve-gui-misc-lookupexplorer-LookupExplorerTopComponent.instance">
+                <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent"/>
+                <attr name="preferredID" stringvalue="LookupExplorerTopComponent"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.lookupexplorer.Bundle#CTL_LookupExplorerAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="org/jreserve/gui/misc/lookupexplorer/global.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="org-jreserve-gui-misc-lookupexplorer-LookupExplorerTopComponent.shadow">
+                <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-gui-misc-lookupexplorer-LookupExplorerTopComponent.instance"/>
+                <attr intvalue="80" name="position"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Ribbon">
+        <folder name="TaskPanes">
+            <folder name="Windows">
+                <folder name="Development">
+                    <file name="org-jreserve-gui-misc-lookupexplorer-LookupExplorerTopComponent.shadow">
+                        <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent-->
+                        <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-gui-misc-lookupexplorer-LookupExplorerTopComponent.instance"/>
+                        <attr intvalue="200" name="position"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+    <folder name="xml">
+        <folder name="entities">
+            <folder name="org_jreserve_gui_misc_lookupexplorer">
+                <file name="LookupExplorer" url="nbres:/org/netbeans/modules/settings/resources/properties-1_0.dtd">
+                    <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent-->
+                    <attr name="hint.originalPublicID" stringvalue="-//org.jreserve.gui.misc.lookupexplorer//LookupExplorer//EN"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="memory">
+            <folder name="org">
+                <folder name="jreserve">
+                    <folder name="gui">
+                        <folder name="misc">
+                            <folder name="lookupexplorer">
+                                <file name="LookupExplorerTopComponent">
+                                    <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent-->
+                                    <attr name="settings.providerPath" stringvalue="xml/lookups//org_jreserve_gui_misc_lookupexplorer/LookupExplorer.instance"/>
+                                </file>
+                            </folder>
+                        </folder>
+                    </folder>
+                </folder>
+            </folder>
+        </folder>
+        <folder name="lookups">
+            <folder name="org_jreserve_gui_misc_lookupexplorer">
+                <file name="LookupExplorer.instance">
+                    <!--org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent-->
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.create" name="instanceCreate"/>
+                    <attr
+                        methodvalue="org.netbeans.api.settings.Factory.properties" name="settings.convertor"/>
+                    <attr name="settings.instanceClass" stringvalue="org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent"/>
+                    <attr name="settings.instanceOf" stringvalue="org.jreserve.gui.misc.lookupexplorer.LookupExplorerTopComponent"/>
+                    <attr boolvalue="true" name="xmlproperties.preventStoring"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

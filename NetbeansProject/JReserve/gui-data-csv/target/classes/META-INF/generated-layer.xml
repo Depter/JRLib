@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="OptionsDialog">
+        <folder name="ImportDataSettings">
+            <file name="org-jreserve-gui-data-csv-settings-CSVImportSettingsOptionsPanelController.instance">
+                <!--org.jreserve.gui.data.csv.settings.CSVImportSettingsOptionsPanelController-->
+                <attr
+                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
+                <attr name="controller" newvalue="org.jreserve.gui.data.csv.settings.CSVImportSettingsOptionsPanelController"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.data.csv.settings.Bundle#AdvancedOption_DisplayName_CSVImportSettings" name="displayName"/>
+                <attr intvalue="200" name="position"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.data.csv.settings.Bundle#AdvancedOption_Keywords_CSVImportSettings" name="keywords"/>
+                <attr name="keywordsCategory" stringvalue="Advanced/CSVImportSettings"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="JReserve">
+        <folder name="DataStore">
+            <folder name="DataSourceWizards">
+                <file name="org-jreserve-gui-data-csv-CsvDataSourceWizard.instance">
+                    <!--org.jreserve.gui.data.csv.CsvDataSourceWizard-->
+                    <attr intvalue="1000" name="position"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.data.csv.Bundle#LBL.CsvDataSourceWizard.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/csv/csv.png"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.csv.CsvDataSourceWizard"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.DataSourceWizard"/>
+                </file>
+            </folder>
+            <folder name="DataProviders">
+                <file name="org-jreserve-gui-data-csv-CsvDataProviderFactory-getInstance.instance">
+                    <!--org.jreserve.gui.data.csv.CsvDataProviderFactory.getInstance()-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.csv.CsvDataProviderFactory"/>
+                    <attr
+                        methodvalue="org.jreserve.gui.data.csv.CsvDataProviderFactory.getInstance" name="instanceCreate"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.DataProvider$Factory"/>
+                </file>
+            </folder>
+            <folder name="ImportDataProviders">
+                <file name="org-jreserve-gui-data-csv-input-triangle-CsvTriangleImportDataProvider.instance">
+                    <!--org.jreserve.gui.data.csv.input.triangle.CsvTriangleImportDataProvider-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.csv.input.triangle.CsvTableImportDataProvider"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.data.csv.input.triangle.Bundle#LBL.CsvTriangleImportDataProvider.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/csv/csv.png"/>
+                    <attr boolvalue="true" name="requiresDataSource"/>
+                    <attr intvalue="6000" name="position"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.csv.input.triangle.CsvTriangleImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                </file>
+                <file name="org-jreserve-gui-data-csv-input-table-CsvTableImportDataProvider.instance">
+                    <!--org.jreserve.gui.data.csv.input.table.CsvTableImportDataProvider-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.csv.input.table.CsvTableImportDataProvider"/>
+                    <attr
+                        bundlevalue="org.jreserve.gui.data.csv.input.table.Bundle#LBL.CsvTableImportDataProvider.Name" name="displayName"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/csv/csv.png"/>
+                    <attr boolvalue="true" name="requiresDataSource"/>
+                    <attr intvalue="5000" name="position"/>
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.csv.input.table.CsvTableImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

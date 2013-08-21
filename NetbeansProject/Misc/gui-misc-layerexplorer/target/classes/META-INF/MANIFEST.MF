@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/layerexplorer/
+ Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130821
+OpenIDE-Module-Build-Version: 201308210950
+OpenIDE-Module: org.jreserve.gui.misc.layerexplorer
+OpenIDE-Module-Public-Packages: -
+OpenIDE-Module-Display-Category: org.jreserve
+OpenIDE-Module-Name: org-jreserve-gui-misc-layerexplorer
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1, org.openide.windows > 6.55.1, org.openide.util > 8.25.1
+ , org.openide.util.lookup > 8.15.1, org.openide.awt > 7.46.1, org.net
+ beans.modules.settings/1 > 1.35.1, org.openide.nodes > 7.28.1, org.op
+ enide.filesystems > 7.62.1, org.openide.explorer > 6.45.1
+
