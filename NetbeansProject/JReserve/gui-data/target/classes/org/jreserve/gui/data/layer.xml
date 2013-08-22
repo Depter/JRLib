@@ -36,4 +36,33 @@
         </folder>
     </folder>
         
+    <folder name="Node">
+        <folder name="DataCategory">
+            <folder name="Actions">
+                <file name="Separator1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="99990"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
+                    <attr name="priority" stringvalue="top"/>
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
+                    <attr name="position" intvalue="100000"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="DataSource">
+            <folder name="Actions">
+                <file name="Separator1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="99990"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
+                    <attr name="priority" stringvalue="top"/>
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
+                    <attr name="position" intvalue="100000"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+
 </filesystem>

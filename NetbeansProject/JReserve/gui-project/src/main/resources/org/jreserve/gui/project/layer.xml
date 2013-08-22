@@ -46,6 +46,21 @@
         </folder>
         
         <folder name="TaskPanes">
+            <folder name="Edit">
+                <folder name="Edit">
+                    <folder name="New">
+                        <file name="org-netbeans-modules-project-ui-NewProject.shadow">
+                            <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewProject.instance"/>
+                            <attr name="position" intvalue="100"/>
+                            <attr name="iconBase" stringvalue="org/jreserve/gui/project/new.png"/>
+                        </file>
+                        <file name="Separator1.instance">
+                            <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                            <attr name="position" intvalue="110"/>
+                        </file>
+                    </folder>
+                </folder>
+            </folder>
             <folder name="Windows">
                 <folder name="Utilities">
                     <file name="org-netbeans-modules-project-ui-logical-tab-action.shadow">

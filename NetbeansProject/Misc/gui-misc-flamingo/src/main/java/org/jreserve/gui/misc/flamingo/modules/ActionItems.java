@@ -31,10 +31,11 @@
 package org.jreserve.gui.misc.flamingo.modules;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,10 +43,10 @@ import java.util.TreeMap;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JSeparator;
+import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -61,10 +62,10 @@ class ActionItems {
         Map<String, FileObject> foMap = createFileObjectMap(path);
         Map<String, ActionItem> actionMap = new TreeMap<String, ActionItem>();
         
-        Set<Lookup.Item<Object>> items = getItemsForPath(foMap.values());
+        Set<Item> items = getItemsForPath(foMap.values());
 //        Collection<? extends Lookup.Item<Object>> items =
 //                Lookups.forPath(path).lookupResult(Object.class).allItems();
-        for (Lookup.Item<Object> item : items) {
+        for (Item item : items) {
             connectToParent(item, path, actionMap, foMap);
             String rootItem = getRootName(makeRelative(item.getId(), path));
             ActionItem actionItem = actionMap.get(rootItem);
@@ -76,30 +77,41 @@ class ActionItems {
         return actions;
     }
     
-    private static Set<Lookup.Item<Object>> getItemsForPath(Collection<FileObject> files) {
-        Set<Lookup.Item<Object>> result = new HashSet<Lookup.Item<Object>>();
+    private static Set<Item> getItemsForPath(Collection<FileObject> files) {
+        Set<Item> result = new LinkedHashSet<Item>();
         for(FileObject file : files) {
-            if(file.isFolder()) {
-                Collection<? extends Lookup.Item<Object>> fItems = getItems(file);
-                result.addAll(fItems);
-            }
+            Object o = loadObject(file);
+            if(o != null)
+                result.add(new Item(o, getId(file)));
         }
         return result;
     }
     
-    private static Collection<? extends Lookup.Item<Object>> getItems(FileObject folder) {
-        if(!folder.isFolder())
-            return Collections.EMPTY_SET;
-        Lookup lkp = Lookups.forPath(folder.getPath());
-        return lkp.lookupResult(Object.class).allItems();
+    private static Object loadObject(FileObject file) {
+        if(file.isFolder())
+            return null;
+        try {
+            DataObject dobj = DataObject.find(file);
+            InstanceCookie ic = dobj.getLookup().lookup(InstanceCookie.class);
+            return ic==null? null : ic.instanceCreate();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+    
+    private static String getId(FileObject file) {
+        FileObject parent = file.getParent();
+        if(parent == null)
+            return file.getName();
+        return parent.getPath()+"/"+file.getName();
     }
 
     private static Map<String, FileObject> createFileObjectMap(String rootPath) {
         FileObject root = FileUtil.getConfigRoot();
         FileObject folder = root.getFileObject(rootPath);
-        Map<String, FileObject> map = new TreeMap<String, FileObject>();
+        Map<String, FileObject> map = new LinkedHashMap<String, FileObject>();
         if (folder != null) {
-            for (FileObject fo : folder.getChildren()) {
+            for (FileObject fo : FileUtil.getOrder(Arrays.asList(folder.getChildren()), true)) {
                 addToMap("", fo, map);
             }
         }
@@ -113,13 +125,13 @@ class ActionItems {
         }
         absolutePath += folder.getName();
         map.put(absolutePath, folder);
-        for (FileObject fo : folder.getChildren()) {
+        for (FileObject fo : FileUtil.getOrder(Arrays.asList(folder.getChildren()), true)) {
             addToMap(absolutePath, fo, map);
         }
     }
 
     private static void connectToParent(
-            Lookup.Item<Object> item, 
+            Item item, 
             String rootPath,
             Map<String, ActionItem> actionMap, 
             Map<String, FileObject> foMap) {
@@ -174,7 +186,7 @@ class ActionItems {
     }
 
     private static ActionItem getOrCreateActionItem(
-            Lookup.Item<Object> item, 
+            Item item, 
             String name,
             Map<String, ActionItem> actionMap,
             Map<String, FileObject> foMap) {
@@ -221,5 +233,44 @@ class ActionItems {
             result = result.substring(1, result.length());
         }
         return result;
+    }
+    
+    private static class Item {
+        
+        private final String id;
+        private final Object obj;
+        
+        private Item(Object obj, String id) {
+            this.id = id;
+            this.obj = obj;
+        }
+        
+        String getId() {
+            return id;
+        }
+        
+        Object getInstance() {
+            return obj;
+        }
+        
+        Class<?> getType() {
+            return obj.getClass();
+        }
+        
+        @Override
+        public boolean equals(Object o) {
+            return (o instanceof Item) &&
+                   id.equals(((Item)o).id);
+        }
+        
+        @Override
+        public int hashCode() {
+            return id.hashCode();
+        }
+        
+        @Override
+        public String toString() {
+            return id;
+        }
     }
 }

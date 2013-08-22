@@ -66,8 +66,8 @@
                     <folder name="New">
                         <attr name="priority" stringvalue="top"/>
                         <attr name="menuText" stringvalue="Bela"/>
-<!--                        <attr name="position" intvalue="1000"/>
-                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/new.png"/>-->
+                        <attr name="position" intvalue="1000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/new.png"/>
                     </folder>
                        
                     <file name="org-openide-actions-EditAction.shadow">

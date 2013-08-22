@@ -60,7 +60,7 @@ class DataSourceNode extends AbstractNode {
     DataSourceNode(DataSource source) {
         super(Children.LEAF, 
               Lookups.fixed(
-                source, source.getDataProvider(), 
+                source, source.getParent(), source.getDataProvider(), 
                 new ActionsCookie(source)
               )
         );
