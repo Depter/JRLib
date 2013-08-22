@@ -29,7 +29,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.poi.ExcelFileFilter;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
@@ -40,6 +39,7 @@ import org.jreserve.gui.excel.template.dataimport.createwizard.SourceType;
 import org.jreserve.gui.excel.template.dataimport.createwizard.TemplateRow;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.DialogDescriptor;
@@ -308,7 +308,7 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
     private void readExcel(File file) {
         setProcessRunning(true);
         final PoiUtil.Task<ReferenceUtil> reader = PoiUtil.getReferenceUtilTask(file);
-        Task task = ImportUtil.getRP().create(reader);
+        Task task = TaskUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(Task task) {
@@ -327,7 +327,7 @@ public class DataImportTemplateEditor extends javax.swing.JPanel {
                 });
             }
         });
-        ImportUtil.getRP().execute(task);
+        TaskUtil.getRP().execute(task);
     }
     
     private void setProcessRunning(boolean running) {

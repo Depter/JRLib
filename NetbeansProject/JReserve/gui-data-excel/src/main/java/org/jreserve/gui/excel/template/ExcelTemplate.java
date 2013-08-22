@@ -26,12 +26,13 @@ public interface ExcelTemplate {
     public String getName();
     
     public ExcelTemplateManager<? extends ExcelTemplate> getManager();
-
-    public static interface Editor {
-        public void edit();
-    }
+//
+//    public static interface Editor {
+//        public void edit();
+//    }
     
     public static interface Renameable {
         public void rename(String newName);
     }
+    
 }

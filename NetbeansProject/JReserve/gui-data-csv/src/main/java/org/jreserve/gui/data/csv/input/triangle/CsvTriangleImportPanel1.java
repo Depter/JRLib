@@ -28,13 +28,13 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 import org.jreserve.gui.data.csv.CsvFileFilter;
-import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.data.csv.input.PreviewReader;
 import org.jreserve.gui.data.csv.input.PreviewRenderer;
 import org.jreserve.gui.data.csv.input.PreviewTableModel;
 import org.jreserve.gui.data.csv.settings.CsvImportSettings;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.openide.util.ImageUtilities;
@@ -377,7 +377,7 @@ class CsvTriangleImportPanel1 extends javax.swing.JPanel {
     private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
         refreshButton.setEnabled(false);
         final PreviewReader reader = new PreviewReader(getCsvFile(), (Integer)lineSpinner.getValue());
-        Task task = ImportUtil.getRP().create(reader);
+        Task task = TaskUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(Task task) {
@@ -395,7 +395,7 @@ class CsvTriangleImportPanel1 extends javax.swing.JPanel {
                 });
             }
         });
-        ImportUtil.getRP().execute(task);
+        TaskUtil.getRP().execute(task);
     }//GEN-LAST:event_refreshButtonActionPerformed
     
     private void setPreviewColumnWidths() {

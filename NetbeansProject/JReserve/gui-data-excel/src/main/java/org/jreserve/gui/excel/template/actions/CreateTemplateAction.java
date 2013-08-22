@@ -35,6 +35,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionReferences({
     @ActionReference(path = "Ribbon/TaskPanes/Edit/Excel Templates", position = 100),
+    @ActionReference(path = "Ribbon/TaskPanes/Edit/Edit/New", position = 300),
     @ActionReference(path = "Node/ExcelTemplateManagerNode/Actions", position = 100),
     @ActionReference(path = "Node/ExcelTemplateNode/Actions", position = 100),
     @ActionReference(path = "Menu/File", position = 333)

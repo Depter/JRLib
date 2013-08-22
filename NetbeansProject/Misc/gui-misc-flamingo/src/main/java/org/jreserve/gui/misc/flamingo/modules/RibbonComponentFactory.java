@@ -37,6 +37,8 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import org.jreserve.gui.misc.flamingo.api.ResizableIcons;
@@ -65,7 +67,9 @@ import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
  * @author Chris
  */
 class RibbonComponentFactory {
-
+    
+    private final static Logger logger = Logger.getLogger(RibbonComponentFactory.class.getName());
+    
     public RibbonApplicationMenuEntryPrimary createAppMenuPresenter(ActionItem item) {
         Action action = item.getAction();
         if (action != null && RibbonPresenter.AppMenu.class.isAssignableFrom(action.getClass())) {
@@ -128,6 +132,7 @@ class RibbonComponentFactory {
 
     public AbstractCommandButton createButtonPresenter(ActionItem item) {
         Action action = item.getAction();
+        logger.log(Level.FINER, "Create RibbonButton {0}", item.getText());
         if (action != null && RibbonPresenter.Button.class.isAssignableFrom(action.getClass())) {
             return ((RibbonPresenter.Button) action).getRibbonButtonPresenter();
         } else {
@@ -192,6 +197,7 @@ class RibbonComponentFactory {
 
     public RibbonTask createRibbonTask(ActionItem item) {
         String text = item.getText();
+        logger.log(Level.FINER, "Create ribbon task for: {0}", text);
         RibbonTask task = new RibbonTask(item.getText(), createRibbonBands(item.getChildren()));
         //TODO sequencing policy
         return task;
@@ -202,6 +208,7 @@ class RibbonComponentFactory {
         for (ActionItem item : items) {
             JComponent component = item.getComponent();
             if (component instanceof AbstractRibbonBand) {
+                logger.log(Level.FINER, "Create component ribbon band for: {0}", item.getText());
                 bands.add((AbstractRibbonBand) component);
             } else {
                 bands.add(createRibbonBand(item));
@@ -211,10 +218,12 @@ class RibbonComponentFactory {
     }
 
     public AbstractRibbonBand createRibbonBand(ActionItem item) {
+        logger.log(Level.FINER, "Create JRibbonBand for: {0}", item.getText());
         //TODO icon
         JRibbonBand band = new JRibbonBand(item.getText(), ResizableIcons.empty(), getDefaultAction(item));
         for (ActionItem child : item.getChildren()) {
             if (child.isSeparator()) {
+                logger.log(Level.FINER, "Create JRibbonBand separator");
                 band.startGroup();
             } else if (child.getValue(ActionItem.DEFAULT_ACTION) != Boolean.TRUE) {
                 addRibbonBandAction(band, child);
@@ -236,6 +245,7 @@ class RibbonComponentFactory {
     }
 
     private void addRibbonBandAction(JRibbonBand band, ActionItem item) {
+        logger.log(Level.FINER, "Create RibbonBandAction {0}", item.getText());
         Action action = item.getAction();
         if (action != null && RibbonPresenter.Component.class.isAssignableFrom(action.getClass())) {
             //TODO calculate height

@@ -17,17 +17,18 @@
 package org.jreserve.gui.data.nodes;
 
 import java.awt.datatransfer.Transferable;
-import java.io.IOException;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.Icon;
 import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.datatransfer.PasteType;
@@ -52,7 +53,7 @@ class DataCategoryNode extends AbstractNode {
     DataCategoryNode(DataCategory category) {
         super(
             Children.create(new DataCategoryChildren(category),true),
-            Lookups.singleton(category)
+            Lookups.fixed(category, new ActionCookies(category))
         );
         this.category = category;
         setDisplayName(category.getName());
@@ -142,5 +143,27 @@ class DataCategoryNode extends AbstractNode {
         return DataItemFlavor.getDropType(category, t);
     }
     
-    
+    private static class ActionCookies implements Deletable {
+
+        private final DataCategory category;
+
+        private ActionCookies(DataCategory category) {
+            this.category = category;
+        }
+        
+        @Override
+        public void delete() throws Exception {
+            category.getDataManager().deleteDataItem(category);
+        }
+
+        @Override
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(ICON, false);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return category.getPath();
+        }
+    }
 }

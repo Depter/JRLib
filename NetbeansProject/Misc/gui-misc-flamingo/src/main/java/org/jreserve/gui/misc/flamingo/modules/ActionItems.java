@@ -32,9 +32,12 @@ package org.jreserve.gui.misc.flamingo.modules;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -57,9 +60,10 @@ class ActionItems {
         List<ActionItem> actions = new ArrayList<ActionItem>();
         Map<String, FileObject> foMap = createFileObjectMap(path);
         Map<String, ActionItem> actionMap = new TreeMap<String, ActionItem>();
-
-        Collection<? extends Lookup.Item<Object>> items =
-                Lookups.forPath(path).lookupResult(Object.class).allItems();
+        
+        Set<Lookup.Item<Object>> items = getItemsForPath(foMap.values());
+//        Collection<? extends Lookup.Item<Object>> items =
+//                Lookups.forPath(path).lookupResult(Object.class).allItems();
         for (Lookup.Item<Object> item : items) {
             connectToParent(item, path, actionMap, foMap);
             String rootItem = getRootName(makeRelative(item.getId(), path));
@@ -70,6 +74,24 @@ class ActionItems {
         }
 
         return actions;
+    }
+    
+    private static Set<Lookup.Item<Object>> getItemsForPath(Collection<FileObject> files) {
+        Set<Lookup.Item<Object>> result = new HashSet<Lookup.Item<Object>>();
+        for(FileObject file : files) {
+            if(file.isFolder()) {
+                Collection<? extends Lookup.Item<Object>> fItems = getItems(file);
+                result.addAll(fItems);
+            }
+        }
+        return result;
+    }
+    
+    private static Collection<? extends Lookup.Item<Object>> getItems(FileObject folder) {
+        if(!folder.isFolder())
+            return Collections.EMPTY_SET;
+        Lookup lkp = Lookups.forPath(folder.getPath());
+        return lkp.lookupResult(Object.class).allItems();
     }
 
     private static Map<String, FileObject> createFileObjectMap(String rootPath) {
@@ -96,8 +118,12 @@ class ActionItems {
         }
     }
 
-    private static void connectToParent(Lookup.Item<Object> item, String rootPath,
-            Map<String, ActionItem> actionMap, Map<String, FileObject> foMap) {
+    private static void connectToParent(
+            Lookup.Item<Object> item, 
+            String rootPath,
+            Map<String, ActionItem> actionMap, 
+            Map<String, FileObject> foMap) {
+        
         String name = makeRelative(item.getId(), rootPath);
         ActionItem action = getOrCreateActionItem(item, name, actionMap, foMap);
         if (action != null) {
@@ -147,7 +173,9 @@ class ActionItems {
         return item;
     }
 
-    private static ActionItem getOrCreateActionItem(Lookup.Item<Object> item, String name,
+    private static ActionItem getOrCreateActionItem(
+            Lookup.Item<Object> item, 
+            String name,
             Map<String, ActionItem> actionMap,
             Map<String, FileObject> foMap) {
         ActionItem actionItem = actionMap.get(name);

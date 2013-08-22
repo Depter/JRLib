@@ -66,7 +66,7 @@ public class DataSourceTableMultiviewElement implements MultiViewElement {
     private DataSourceListener dsListener;
     private Lookup lkp;
     
-    private JPanel panel;
+    private DataSourceTablePanel panel;
     private JPanel toolBar;
     
     public DataSourceTableMultiviewElement(Lookup ctx) {
@@ -79,7 +79,7 @@ public class DataSourceTableMultiviewElement implements MultiViewElement {
     @Override
     public JComponent getVisualRepresentation() {
         if(panel == null)
-            panel = new JPanel();
+            panel = new DataSourceTablePanel(ds);
         return panel;
     }
 

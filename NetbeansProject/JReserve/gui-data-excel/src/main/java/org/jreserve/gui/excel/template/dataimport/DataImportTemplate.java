@@ -23,6 +23,7 @@ import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.jreserve.gui.excel.template.dataimport.editor.DataImportTemplateEditor;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
+import org.netbeans.api.actions.Editable;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
@@ -38,8 +39,9 @@ import org.openide.util.NbBundle.Messages;
     "MSG.DataImportTemplate.Rename.Error=Can not rename template!"
 })
 public class DataImportTemplate implements 
-        ExcelTemplate, ExcelTemplate.Editor, 
-        ExcelTemplate.Renameable, Comparable<ExcelTemplate> {
+        ExcelTemplate, Editable, 
+        ExcelTemplate.Renameable, 
+        Comparable<ExcelTemplate> {
 
     private final DataImportTemplates manager;
     private final FileObject file;
@@ -59,6 +61,7 @@ public class DataImportTemplate implements
         this.items = items;
     }
     
+    @Override
     public synchronized void rename(String newName) {
         try {
             if(isNewName(newName))  {

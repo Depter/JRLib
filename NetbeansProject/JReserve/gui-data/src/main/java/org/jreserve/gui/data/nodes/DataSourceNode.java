@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.api.DataEvent;
@@ -28,9 +29,12 @@ import org.jreserve.gui.data.editor.EditorUtil;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.actions.Deletable;
+import org.netbeans.api.actions.Editable;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
@@ -54,7 +58,12 @@ class DataSourceNode extends AbstractNode {
     private Action preferredAction;
     
     DataSourceNode(DataSource source) {
-        super(Children.LEAF, Lookups.fixed(source, source.getDataProvider()));
+        super(Children.LEAF, 
+              Lookups.fixed(
+                source, source.getDataProvider(), 
+                new ActionsCookie(source)
+              )
+        );
         this.source = source;
         setDisplayName(source.getName());
         initIconBase();
@@ -117,6 +126,38 @@ class DataSourceNode extends AbstractNode {
         @Override
         public void actionPerformed(ActionEvent e) {
             EditorUtil.openEditor(source);
+        }
+    }
+    
+    
+    private static class ActionsCookie implements Editable, Deletable {
+        
+        private final DataSource ds;
+
+        private ActionsCookie(DataSource ds) {
+            this.ds = ds;
+        }
+        
+        @Override
+        public void edit() {
+            EditorUtil.openEditor(ds);
+        }
+
+        @Override
+        public void delete() throws Exception {
+            ds.getDataManager().deleteDataItem(ds);
+        }
+
+        @Override
+        public Icon getIcon() {
+            if(DataType.TRIANGLE == ds.getDataType())
+                return ImageUtilities.loadImageIcon(TRIANGLE_IMG, false);
+            return ImageUtilities.loadImageIcon(VECTOR_IMG, false);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return ds.getPath();
         }
     }
 }

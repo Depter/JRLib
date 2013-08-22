@@ -51,6 +51,7 @@ import org.openide.util.Utilities;
 )
 @ActionReferences({
     @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 200),
+    @ActionReference(path = "Ribbon/TaskPanes/Edit/Edit/New", position = 200),
     @ActionReference(path = "Node/DataCategory/Actions", position = 200, separatorAfter = 250)
 })
 @Messages({

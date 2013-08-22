@@ -20,13 +20,18 @@ import java.awt.event.ActionEvent;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import org.jreserve.gui.excel.template.ExcelTemplate;
+import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.jreserve.gui.excel.template.TemplateEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
+import org.jreserve.gui.misc.utils.actions.Deletable;
+import org.netbeans.api.actions.Editable;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
@@ -49,7 +54,7 @@ class ExcelTemplateNode extends AbstractNode {
     
     private static Lookup createLookup(ExcelTemplate template) {
         return new ProxyLookup(
-                Lookups.singleton(template),
+                Lookups.fixed(template, new ActionCookies(template)),
                 Lookups.proxy(template.getManager())
             );
     }
@@ -101,9 +106,34 @@ class ExcelTemplateNode extends AbstractNode {
     private class EditAction extends AbstractAction {
         @Override
         public void actionPerformed(ActionEvent e) {
-            ExcelTemplate.Editor editor = getLookup().lookup(ExcelTemplate.Editor.class);
+            Editable editor = getLookup().lookup(Editable.class);
             if(editor != null)
                 editor.edit();
+        }
+    }
+    
+    private static class ActionCookies implements Deletable {
+
+        private final ExcelTemplate template;
+
+        private ActionCookies(ExcelTemplate template) {
+            this.template = template;
+        }
+        
+        @Override
+        public void delete() throws Exception {
+            ExcelTemplateManager manager = template.getManager();
+            manager.deleteTemplate(template);
+        }
+
+        @Override
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(IMG, false);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return template.getName();
         }
     }
 }

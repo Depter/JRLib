@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance">
+                <!--org.jreserve.gui.misc.utils.actions.DeleteAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.utils.actions.Bundle#CTL.DeleteAction" name="displayName"/>
+                <attr methodvalue="org.openide.awt.Actions.context" name="instanceCreate"/>
+                <attr name="type" stringvalue="org.jreserve.gui.misc.utils.actions.Deletable"/>
+                <attr methodvalue="org.openide.awt.Actions.inject" name="delegate"/>
+                <attr name="injectable" stringvalue="org.jreserve.gui.misc.utils.actions.DeleteAction"/>
+                <attr name="selectionType" stringvalue="ANY"/>
+                <attr name="iconBase" stringvalue="org/jreserve/gui/misc/utils/delete.png"/>
+                <attr boolvalue="false" name="noIconInMenu"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

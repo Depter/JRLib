@@ -23,7 +23,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.data.api.inport.ImportUtil;
 import org.jreserve.gui.poi.ExcelFileFilter;
 import org.jreserve.gui.excel.ReferenceComboModel;
 import org.jreserve.gui.excel.ReferenceComboRenderer;
@@ -31,6 +30,7 @@ import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.jreserve.gui.misc.utils.notifications.FileDialog;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.jreserve.gui.poi.read.TableFactory;
 import org.jreserve.jrlib.gui.data.DataEntry;
@@ -263,7 +263,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
         CellReference ref = refUtil.toCellReference(referenceText.getText());
         File file = new File(pathText.getText());
         final PoiUtil.Task<List<DataEntry>> reader = PoiUtil.createTask(file, ref, createTableFactory());
-        Task task = ImportUtil.getRP().create(reader);
+        Task task = TaskUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(Task task) {
@@ -278,7 +278,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
                 }
             }
         });
-        ImportUtil.getRP().execute(task);
+        TaskUtil.getRP().execute(task);
     }
     
     private TableFactory<List<DataEntry>> createTableFactory() {
@@ -291,7 +291,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
     private void readExcel(File file) {
         setProcessRunning(true);
         final PoiUtil.Task<ReferenceUtil> reader = PoiUtil.getReferenceUtilTask(file);
-        Task task = ImportUtil.getRP().create(reader);
+        Task task = TaskUtil.getRP().create(reader);
         task.addTaskListener(new TaskListener() {
             @Override
             public void taskFinished(Task task) {
@@ -311,7 +311,7 @@ class ExcelTableImportVisualPanel extends javax.swing.JPanel {
                 });
             }
         });
-        ImportUtil.getRP().execute(task);
+        TaskUtil.getRP().execute(task);
     }
     
     private void setProcessRunning(boolean running) {

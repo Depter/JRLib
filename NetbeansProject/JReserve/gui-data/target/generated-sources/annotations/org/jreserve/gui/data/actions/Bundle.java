@@ -17,13 +17,6 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_CreateDataSourceAction");
     }
     /**
-     * @return <i>Delete Items</i>
-     * @see DeleteDataCategoryAction
-     */
-    static String CTL_DeleteDataCategoryAction() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL_DeleteDataCategoryAction");
-    }
-    /**
      * @return <i>Import Data</i>
      * @see ImportDataAction
      */
@@ -50,13 +43,6 @@ class Bundle {
      */
     static String LBL_CreateDataSourceAction_Wizard_Title() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.CreateDataSourceAction.Wizard.Title");
-    }
-    /**
-     * @return <i>Delete Data Items</i>
-     * @see DeleteDataCategoryDialog
-     */
-    static String LBL_DeleteDataCategoryDialog_Title() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DeleteDataCategoryDialog.Title");
     }
     /**
      * @return <i>Import Data</i>
@@ -101,21 +87,6 @@ class Bundle {
      */
     static String MSG_CreateDataCategoryDialog_Parent_Empty() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.CreateDataCategoryDialog.Parent.Empty");
-    }
-    /**
-     * @return <i>Can not delete "Data" category!</i>
-     * @see DeleteDataCategoryAction
-     */
-    static String MSG_DeleteDataCategoryAction_ContainsRoot() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DeleteDataCategoryAction.ContainsRoot");
-    }
-    /**
-     * @param path path
-     * @return <i>Unable to delete: </i>{@code path}
-     * @see DeleteDataCategoryDialog
-     */
-    static String MSG_DeleteDataCategoryDialog_Delete_Error(Object path) {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DeleteDataCategoryDialog.Delete.Error", path);
     }
     private void Bundle() {}
 }

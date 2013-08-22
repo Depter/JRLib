@@ -82,6 +82,12 @@
             <version>${netbeans.version}</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-api-progress</artifactId>
+            <version>${netbeans.version}</version>
+            <type>jar</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -94,8 +100,10 @@
                 <configuration>
                     <cluster>jreserve-misc</cluster>
                     <publicPackages>
+                        <publicPackage>org.jreserve.gui.misc.utils.actions</publicPackage>
                         <publicPackage>org.jreserve.gui.misc.utils.notifications</publicPackage>
                         <publicPackage>org.jreserve.gui.misc.utils.widgets</publicPackage>
+                        <publicPackage>org.jreserve.gui.misc.utils.tasks</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

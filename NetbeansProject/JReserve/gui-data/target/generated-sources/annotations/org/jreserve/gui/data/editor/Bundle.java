@@ -9,5 +9,42 @@ class Bundle {
     static String LBL_DataSourceTableMultiviewElement_Title() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceTableMultiviewElement.Title");
     }
+    /**
+     * @return <i>Accident</i>
+     * @see EditorTableModel
+     */
+    static String LBL_EditorTableModel_Accident() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorTableModel.Accident");
+    }
+    /**
+     * @return <i>Accident</i>
+     * @see EditorTableModel
+     */
+    static String LBL_EditorTableModel_Development() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorTableModel.Development");
+    }
+    /**
+     * @return <i>Value</i>
+     * @see EditorTableModel
+     */
+    static String LBL_EditorTableModel_Value() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorTableModel.Value");
+    }
+    /**
+     * @param path path
+     * @return <i>Loading data from ''</i>{@code path}<i>'' failed!</i>
+     * @see DataSourceTablePanel
+     */
+    static String MSG_DataSourceTablePanel_LoadError(Object path) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataSourceTablePanel.LoadError", path);
+    }
+    /**
+     * @param path path
+     * @return <i>Loading data from ''</i>{@code path}<i>''.</i>
+     * @see DataSourceTablePanel
+     */
+    static String MSG_DataSourceTablePanel_ProgressTitle(Object path) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataSourceTablePanel.ProgressTitle", path);
+    }
     private void Bundle() {}
 }

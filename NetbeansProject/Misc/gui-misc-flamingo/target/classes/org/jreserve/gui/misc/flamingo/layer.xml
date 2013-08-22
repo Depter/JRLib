@@ -33,14 +33,18 @@
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAllAction.instance"/>
                 <attr name="position" intvalue="200"/>
             </file>
+            <file name="Separator1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="300"/>
+            </file>
             <file name="org-openide-actions-UndoAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-UndoAction.instance"/>
-                <attr name="position" intvalue="300"/>
+                <attr name="position" intvalue="400"/>
                 <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/undo.png"/>
             </file>
             <file name="org-openide-actions-RedoAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-RedoAction.instance"/>
-                <attr name="position" intvalue="400"/>
+                <attr name="position" intvalue="500"/>
                 <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/redo.png"/>
             </file>
         </folder>
@@ -55,7 +59,50 @@
         <folder name="TaskPanes">
             <folder name="Edit">
                 <attr name="position" intvalue="1000"/>
+                
+                <folder name="Edit">
+                    <attr name="position" intvalue="10"/>
+                    
+                    <folder name="New">
+                        <attr name="priority" stringvalue="top"/>
+                        <attr name="menuText" stringvalue="Bela"/>
+<!--                        <attr name="position" intvalue="1000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/new.png"/>-->
+                    </folder>
+                       
+                    <file name="org-openide-actions-EditAction.shadow">
+                        <attr name="priority" stringvalue="top"/>
+                        <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-EditAction.instance"/>
+                        <attr name="position" intvalue="2000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/edit.png"/>
+                    </file>
+                    <file name="org-openide-actions-CopyAction.shadow">
+                        <attr name="priority" stringvalue="medium"/>
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                        <attr name="position" intvalue="3000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/copy.png"/>
+                    </file>
+                    <file name="org-openide-actions-CutAction.shadow">
+                        <attr name="priority" stringvalue="medium"/>
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
+                        <attr name="position" intvalue="4000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/cut.png"/>
+                    </file>
+                    <file name="org-openide-actions-PasteAction.shadow">
+                        <attr name="priority" stringvalue="medium"/>
+                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
+                        <attr name="position" intvalue="5000"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/paste.png"/>
+                    </file>
+                    <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
+                        <attr name="priority" stringvalue="top"/>
+                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
+                        <attr name="position" intvalue="6000"/>
+                    </file>
+                    
+                </folder>
             </folder>
+            
             <folder name="Windows">
                 <attr name="position" intvalue="10000"/>
                 <folder name="Utilities">

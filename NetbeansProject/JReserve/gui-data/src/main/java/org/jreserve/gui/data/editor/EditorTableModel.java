@@ -19,9 +19,9 @@ package org.jreserve.gui.data.editor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.table.AbstractTableModel;
-import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.jrlib.gui.data.DataType;
@@ -36,20 +36,24 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.EditorTableModel.Accident=Accident",
     "LBL.EditorTableModel.Development=Accident",
-    "LBL.EditorTableModel.Value=Value",
-    "# {0} - path",
-    "MSG.EditorTableModel.LoadError=Unable to load claims from storage ''{0}''!"
+    "LBL.EditorTableModel.Value=Value"
 })
 class EditorTableModel extends AbstractTableModel {
     
-    private List<DataEntry> entries = new ArrayList<DataEntry>();
-    private DataSource ds;
-    private boolean isTriangle;
+    private Set<DataEntry> entries = new TreeSet<DataEntry>();
+    private List<DataEntry> filteredEntries = new ArrayList<DataEntry>();
+    private final boolean isTriangle;
     private DataEntryFilter filter = DataEntryFilter.ALL;
     
-    public EditorTableModel(DataSource ds) {
-        this.ds = ds;
-        this.isTriangle = DataType.TRIANGLE == ds.getDataType();
+    public EditorTableModel(DataType dt) {
+        this.isTriangle = DataType.TRIANGLE == dt;
+    }
+    
+    void setEntries(List<DataEntry> entries) {
+        this.entries.clear();
+        if(entries != null)
+            this.entries.addAll(entries);
+        refresh();
     }
     
     void setFilter(DataEntryFilter filter) {
@@ -57,20 +61,21 @@ class EditorTableModel extends AbstractTableModel {
         refresh();
     }
     
-    void refresh() {
-        this.entries.clear();
-        try {
-            this.entries.addAll(ds.getDataProvider().getEntries(filter));
-        } catch (Exception ex) {
-            String msg = Bundle.MSG_EditorTableModel_LoadError(ds.getPath());
-            BubbleUtil.showException(msg, ex);
-        }
+    private void refresh() {
+        this.filteredEntries.clear();
+        filterEntries();
         fireTableDataChanged();
+    }
+    
+    private void filterEntries() {
+        for(DataEntry entry : entries)
+            if(filter.acceptsEntry(entry))
+                filteredEntries.add(entry);
     }
     
     @Override
     public int getRowCount() {
-        return entries==null? 0 : entries.size();
+        return filteredEntries==null? 0 : filteredEntries.size();
     }
 
     @Override
@@ -100,7 +105,7 @@ class EditorTableModel extends AbstractTableModel {
     
     @Override
     public Object getValueAt(int row, int column) {
-        DataEntry entry = entries.get(row);
+        DataEntry entry = filteredEntries.get(row);
         if(column == 0)
             return entry.getAccidentDate();
         if(column == 2)
