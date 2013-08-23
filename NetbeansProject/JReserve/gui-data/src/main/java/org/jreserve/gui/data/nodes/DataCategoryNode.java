@@ -29,6 +29,7 @@ import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.datatransfer.PasteType;
@@ -49,16 +50,22 @@ class DataCategoryNode extends AbstractNode {
     private final static String ACTION_PATH = "Node/DataCategory/Actions";  //NOI18
     
     private final DataCategory category;
-    
     DataCategoryNode(DataCategory category) {
         super(
             Children.create(new DataCategoryChildren(category),true),
-            Lookups.fixed(category, new ActionCookies(category))
+            createLookup(category)
         );
         this.category = category;
         setDisplayName(category.getName());
         setIconBaseWithExtension(ICON);
         EventBusManager.getDefault().subscribe(this);
+    }
+    
+    private static Lookup createLookup(DataCategory category) {
+        if(category.getParent() == null)
+            return Lookups.singleton(category);
+        else
+            return Lookups.fixed(category, new ActionCookies(category));
     }
     
     @Override

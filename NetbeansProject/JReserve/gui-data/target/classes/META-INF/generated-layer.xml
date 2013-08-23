@@ -31,12 +31,6 @@
     </folder>
     <folder name="Actions">
         <folder name="File">
-            <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.instance">
-                <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL_CreateDataCategoryAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.CreateDataCategoryAction"/>
-            </file>
             <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.instance">
                 <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                 <attr
@@ -49,6 +43,12 @@
                     bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL.ImportDataAction" name="displayName"/>
                 <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.ImportDataAction"/>
             </file>
+            <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.instance">
+                <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL_CreateDataCategoryAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.CreateDataCategoryAction"/>
+            </file>
         </folder>
     </folder>
     <folder name="Ribbon">
@@ -56,11 +56,6 @@
             <folder name="Edit">
                 <folder name="Edit">
                     <folder name="New">
-                        <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                            <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                            <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                            <attr intvalue="200" name="position"/>
-                        </file>
                         <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
                             <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                             <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
@@ -71,13 +66,30 @@
                             <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                             <attr intvalue="310" name="position"/>
                         </file>
+                        <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
+                            <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                            <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
+                            <attr intvalue="200" name="position"/>
+                        </file>
                     </folder>
                 </folder>
                 <folder name="Data">
+                    <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
+                        <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
+                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
+                        <attr intvalue="300" name="position"/>
+                        <attr name="priority" stringvalue="medium"/>
+                    </file>
                     <file name="org-jreserve-gui-data-actions-ImportDataAction.shadow">
                         <!--org.jreserve.gui.data.actions.ImportDataAction-->
                         <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-ImportDataAction.instance"/>
-                        <attr intvalue="300" name="position"/>
+                        <attr intvalue="100" name="position"/>
+                    </file>
+                    <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
+                        <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
+                        <attr intvalue="200" name="position"/>
+                        <attr name="priority" stringvalue="medium"/>
                     </file>
                 </folder>
             </folder>
@@ -86,11 +98,6 @@
     <folder name="Node">
         <folder name="DataCategory">
             <folder name="Actions">
-                <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                    <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
                 <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
                     <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                     <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
@@ -110,6 +117,11 @@
                     <!--org.jreserve.gui.data.actions.ImportDataAction-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                     <attr intvalue="350" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
+                    <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
+                    <attr intvalue="100" name="position"/>
                 </file>
             </folder>
         </folder>

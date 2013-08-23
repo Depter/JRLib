@@ -22,6 +22,7 @@ import javax.swing.Action;
 import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.inport.ImportDataWizardIterator;
+import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
 import org.jreserve.gui.misc.utils.widgets.AbstractContextAwareAction;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
@@ -50,10 +51,10 @@ import org.openide.util.Utilities;
     lazy = false
 )
 @ActionReferences({
-    @ActionReference(path = "Ribbon/TaskPanes/Edit/Data", position = 300),
     @ActionReference(path = "Node/DataCategory/Actions", position = 300, separatorAfter = 350),
     @ActionReference(path = "Node/DataSource/Actions", position = 300, separatorAfter = 350)
 })
+@RibbonRegistration(path="Ribbon/TaskPanes/Edit/Data", position=100)
 @Messages({
     "CTL.ImportDataAction=Import Data",
     "LBL.ImportDataAction.WizardTitle=Import Data"

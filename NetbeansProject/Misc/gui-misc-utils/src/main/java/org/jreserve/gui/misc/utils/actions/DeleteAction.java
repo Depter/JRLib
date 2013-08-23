@@ -19,8 +19,15 @@ package org.jreserve.gui.misc.utils.actions;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Action;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
+import org.openide.cookies.InstanceCookie;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -40,6 +47,30 @@ import org.openide.util.NbBundle.Messages;
     "CTL.DeleteAction=Delete"
 })
 public class DeleteAction implements ActionListener {
+    private final static Logger logger = Logger.getLogger(DeleteAction.class.getName());
+    
+    private final static String PATH = 
+        "Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"; //NOI18
+    private static Action ACTION;
+    
+    public synchronized static Action getAction() {
+        if(ACTION == null)
+            ACTION = loadAction();
+        return ACTION;
+    }
+    
+    private static Action loadAction() {
+        try {
+            FileObject file = FileUtil.getConfigFile(PATH);
+            DataObject dObj = DataObject.find(file);
+            InstanceCookie ic = dObj.getLookup().lookup(InstanceCookie.class);
+            if(ic != null)
+                return (Action) ic.instanceCreate();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Unable to load Action from: "+PATH, ex);
+        }
+        return null;
+    }
     
     private List<Deletable> context;
     

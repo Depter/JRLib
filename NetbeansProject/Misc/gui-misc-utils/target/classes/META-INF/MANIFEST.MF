@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/utils/Bundle.p
  roperties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130822
-OpenIDE-Module-Build-Version: 201308221806
+OpenIDE-Module-Implementation-Version: 1.0-20130823
+OpenIDE-Module-Build-Version: 201308231231
 OpenIDE-Module: org.jreserve.gui.misc.utils
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.utils.actions.*,
   org.jreserve.gui.misc.utils.notifications.*, org.jreserve.gui.misc.u
@@ -17,5 +17,6 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  n/1 > 1.14.1, org.openide.util > 8.25.1, org.openide.util.lookup > 8.
  15.1, org.openide.dialogs > 7.25.1, org.openide.awt > 7.46.1, org.ope
  nide.windows > 6.55.1, org.openide.filesystems > 7.62.1, org.netbeans
- .api.progress/1 > 1.28.1
+ .api.progress/1 > 1.28.1, org.openide.loaders > 7.37.1, org.openide.n
+ odes > 7.28.1
 

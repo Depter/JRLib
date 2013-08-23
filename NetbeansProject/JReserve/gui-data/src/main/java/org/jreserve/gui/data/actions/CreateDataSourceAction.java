@@ -22,6 +22,8 @@ import javax.swing.Action;
 import org.jreserve.gui.data.actions.createsourcewizard.CreateDataSourceWizardIterator;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataManager;
+import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
+import org.jreserve.gui.misc.utils.actions.RibbonRegistrations;
 import org.jreserve.gui.misc.utils.widgets.AbstractContextAwareAction;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
@@ -52,6 +54,10 @@ import org.openide.util.Utilities;
 @ActionReferences({
     @ActionReference(path = "Ribbon/TaskPanes/Edit/Edit/New", position = 300, separatorAfter = 310),
     @ActionReference(path = "Node/DataCategory/Actions", position = 200, separatorAfter = 250)
+})
+@RibbonRegistrations({
+    @RibbonRegistration(path="Ribbon/TaskPanes/Edit/Edit/New", position = 300, separatorAfter = 310),
+    @RibbonRegistration(path="Ribbon/TaskPanes/Edit/Data", position=300, priority=RibbonRegistration.Priority.MEDIUM)
 })
 @Messages({
     "CTL_CreateDataSourceAction=New Storage",

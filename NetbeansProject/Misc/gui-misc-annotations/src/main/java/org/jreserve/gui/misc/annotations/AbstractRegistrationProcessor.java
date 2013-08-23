@@ -17,7 +17,6 @@
 package org.jreserve.gui.misc.annotations;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
@@ -40,10 +39,7 @@ import org.openide.filesystems.annotations.LayerGenerationException;
  * @version 1.0
  */
 public abstract class AbstractRegistrationProcessor<A extends Annotation, I> extends LayerGeneratingProcessor {
-    private final static String ERR_NOT_IMPLEMENTS_INTERFACE = 
-        "Class '%s' annotated with '%s', but does not implements interface '%s'!";
-    private final static String ERR_NO_COSNTRUCTOR = 
-        "Class '%s' annotated with '%s', but it does not have a no arg public constructor!";
+
     public final static String POSITION = "position";
     
     @Override

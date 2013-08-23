@@ -15,7 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.misc.flamingo.api;
+package org.jreserve.gui.misc.utils.actions;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -29,7 +29,27 @@ import java.lang.annotation.Target;
  */
 @Retention(value = RetentionPolicy.SOURCE)
 @Target(value = {ElementType.TYPE})
-public @interface RibbonRegistrations {
+public @interface RibbonRegistration {
     
-    public RibbonRegistration[] value();
+    public String path();
+    public String menuText() default "";
+    public String description() default "";
+    public String iconBase() default "";
+    public String tooltipBody() default "";
+    public String tooltipTitle() default "";
+    public String tooltipIcon() default "";
+    public String tooltipFooter() default "";
+    public String tooltipFooterIcon() default "";
+    
+    public Priority priority() default Priority.NONE;
+    public int separatorBefore() default Integer.MAX_VALUE;
+    public int separatorAfter() default Integer.MAX_VALUE;
+    public int position() default Integer.MAX_VALUE;
+    
+    public static enum Priority {
+        TOP,
+        MEDIUM,
+        LOW,
+        NONE
+    }
 }

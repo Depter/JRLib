@@ -18,22 +18,36 @@ package org.jreserve.gui.data.editor;
 
 import java.awt.CardLayout;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.util.DataEntryLoader;
 import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.localesettings.ScaleSpinner;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.tasks.SwingCallback;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.MonthDate;
+import org.openide.actions.CopyAction;
+import org.openide.actions.DeleteAction;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.actions.SystemAction;
 
 /**
  *
@@ -48,30 +62,35 @@ import org.openide.util.NbBundle.Messages;
 })
 class DataSourceTablePanel extends JPanel {
     
-    private final static String LOADING_CARD = "loadingCard";
-    private final static String TABLE_CARD = "tableCard";
+    private final static String FILTER_IMG = "org/jreserve/gui/data/icons/filter.png";  //NOI18
+    private final static String LOADING_CARD = "loadingCard";  //NOI18
+    private final static String TABLE_CARD = "tableCard";  //NOI18
     
     private CardLayout layout;
     private EditorTableModel tableModel;
+    private JTable table;
     private JLabel loadLabel;
     private DataSource ds;
+    private DataEntryRenderer renderer;
+    private JToolBar toolBar;
     
     DataSourceTablePanel(DataSource ds) {
         this.ds = ds;
         tableModel = new EditorTableModel(ds.getDataType());
         initComponents();
+        initToolbar();
         loadEntries();
     }
     
     private void initComponents() {
         layout = new CardLayout();
         setLayout(layout);
-        JTable table = new JTable(tableModel);
+        table = new JTable(tableModel);
         table.setShowGrid(true);
         table.setColumnSelectionAllowed(false);
         table.setFillsViewportHeight(true);
         
-        DataEntryRenderer renderer = new DataEntryRenderer();
+        renderer = new DataEntryRenderer();
         table.setDefaultRenderer(Double.class, renderer);
         table.setDefaultRenderer(MonthDate.class, renderer);
         
@@ -107,9 +126,54 @@ class DataSourceTablePanel extends JPanel {
     
     }
     
+    private void initToolbar() {
+        toolBar = new JToolBar();
+        toolBar.add(Box.createHorizontalStrut(5));
+        toolBar.add(new JLabel("Scale:"));
+        final ScaleSpinner scale = new ScaleSpinner();
+        scale.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                renderer.df.setDecimalCount((Integer)scale.getValue());
+                table.repaint();
+                table.revalidate();
+            }
+        });
+        scale.setMaximumSize(new Dimension(scale.getMaximumSize().width, 20));
+        scale.setPreferredSize(new Dimension(scale.getPreferredSize().width, 20));
+        toolBar.add(scale);
+        
+        toolBar.addSeparator();
+        toolBar.add(new FilterAction());
+        toolBar.add(Box.createHorizontalStrut(5));
+        toolBar.add(SystemAction.get(CopyAction.class));
+        toolBar.add(Box.createHorizontalStrut(5));
+        toolBar.add(SystemAction.get(DeleteAction.class));
+        
+        toolBar.setBorderPainted(false);
+        toolBar.setRollover(true);
+        toolBar.setFloatable(false);
+    }
+    
+//    private void registerDeleteAction() {
+//        KeyStroke stroke = KeyStroke.getKeyStroke(DELETE_KEY);
+//        getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(stroke, DELETE_ACTION_KEY);
+//        table.getInputMap().put(stroke, DELETE_ACTION_KEY);
+//        getActionMap().put(DELETE_ACTION_KEY, new DeleteDataAction());
+//    }
+    
+    
+    JComponent getToolBar() {
+        return toolBar;
+    }
+    
     private static class DataEntryRenderer extends DefaultTableCellRenderer {
         
         LocaleSettings.DecimalFormatter df =  LocaleSettings.createDecimalFormatter();
+        
+        private DataEntryRenderer() {
+            super.setHorizontalAlignment(SwingConstants.RIGHT);
+        }
         
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean seleced, boolean hasFocus, int row, int column) {
@@ -124,5 +188,17 @@ class DataSourceTablePanel extends JPanel {
                 return df.format((Double)value);
             return value.toString();
         }
+    }
+    
+    private class FilterAction extends AbstractAction {
+        
+        private FilterAction() {
+            putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(FILTER_IMG, false));
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        }
+    
     }
 }

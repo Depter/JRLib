@@ -24,6 +24,8 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataManager;
+import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
+import org.jreserve.gui.misc.utils.actions.RibbonRegistrations;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
 import org.jreserve.gui.misc.utils.widgets.AbstractContextAwareAction;
@@ -49,6 +51,9 @@ import org.openide.util.Utilities;
 @ActionReferences({
     @ActionReference(path = "Ribbon/TaskPanes/Edit/Edit/New", position = 200),
     @ActionReference(path = "Node/DataCategory/Actions", position = 100)
+})
+@RibbonRegistrations({
+    @RibbonRegistration(path = "Ribbon/TaskPanes/Edit/Data", position=200, priority = RibbonRegistration.Priority.MEDIUM)
 })
 @Messages({
     "CTL_CreateDataCategoryAction=New Category",
