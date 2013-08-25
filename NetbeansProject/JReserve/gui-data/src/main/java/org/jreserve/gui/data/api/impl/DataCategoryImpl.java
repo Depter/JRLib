@@ -22,11 +22,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
+import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.openide.filesystems.FileObject;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -35,16 +41,20 @@ import org.openide.filesystems.FileObject;
  */
 public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
     
+    private final static String ICON = "org/jreserve/gui/data/icons/folder_db.png";
     private final static Logger logger = Logger.getLogger(DataCategoryImpl.class.getName());
     
     private Set<AbstractDataItem> children;
-
+    private final Lookup lkp;
+    
     DataCategoryImpl(FileObject folder, DataCategoryImpl parent) {
         super(parent.getDataManager(), folder, parent);
+        lkp = Lookups.fixed(this, new CategoryDeletable());
     }
 
     DataCategoryImpl(DataManagerImpl manager, FileObject folder, DataCategoryImpl parent) {
         super(manager, folder, parent);
+        lkp = Lookups.singleton(this);
     }
 
     AbstractDataItem getDataItem(String path) {
@@ -97,7 +107,9 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
             if(fo.isFolder()) {
                 children.add(new DataCategoryImpl(fo, this));
             } else if(DataSourceImpl.isSourceFile(fo)) {
-                children.add(DataSourceUtil.load(this, fo));
+                try {
+                    children.add(DataSourceUtil.load(this, fo));
+                } catch (Exception ex) {}
             }
         }
     }
@@ -138,7 +150,8 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
             throw new IOException(String.format("DataSource name '%s' contains an illegal character!", name));
         
         FileObject sourceFile = file.createData(name, DataSourceImpl.FILE_EXT);
-        DataSourceImpl impl = new DataSourceImpl(sourceFile, this);
+        long auditId = AuditDbManager.getInstance().getNextObjectId(getDataManager().getProject());
+        DataSourceImpl impl = new DataSourceImpl(sourceFile, this, auditId);
         impl.setDataType(dataType);
         impl.setProvider(provider);
         DataSourceUtil.save(impl);
@@ -176,7 +189,30 @@ public class DataCategoryImpl extends AbstractDataItem implements DataCategory {
     }
     
     @Override
+    public Lookup getLookup() {
+        return lkp;
+    }
+    
+    @Override
     public String toString() {
         return String.format("DataCategory [%s]", getPath());
+    }
+    
+    private class CategoryDeletable implements Deletable {
+
+        @Override
+        public void delete() throws Exception {
+            getDataManager().deleteDataItem(DataCategoryImpl.this);
+        }
+
+        @Override
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(ICON, false);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return getPath();
+        }
     }
 }

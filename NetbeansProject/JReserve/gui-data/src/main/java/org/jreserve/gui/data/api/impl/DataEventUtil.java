@@ -35,10 +35,10 @@ import org.openide.util.NbBundle.Messages;
     "MSG.DataEvent.DataSource.Deleted=Data storage deleted.",
     "# {0} - oldPath",
     "# {1} - newPath",
-    "MSG.DataEvent.DataCategory.Renamed=Data category renamed '{0}' -> '{1}'.",
+    "MSG.DataEvent.DataCategory.Renamed=Data category renamed ''{0}'' -> ''{1}''.",
     "# {0} - oldPath",
     "# {1} - newPath",
-    "MSG.DataEvent.DataSource.Renamed=Data storage renamed '{0}' -> '{1}'."
+    "MSG.DataEvent.DataSource.Renamed=Data storage renamed ''{0}'' -> ''{1}''."
 })
 public class DataEventUtil {
     

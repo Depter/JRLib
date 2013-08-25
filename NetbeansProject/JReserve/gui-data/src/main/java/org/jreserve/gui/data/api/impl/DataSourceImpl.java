@@ -33,8 +33,13 @@ import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.api.inport.SaveType;
 import org.jreserve.gui.data.spi.DataProvider;
+import org.jreserve.gui.misc.audit.api.AuditableObject;
+import org.jreserve.gui.misc.audit.event.AuditedObject;
+import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Lookup;
+import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -52,9 +57,13 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
     
     private DataProvider dataProvider = EmptyDataProvider.INSTANCE;
     private DataType dataType = DataType.VECTOR;
+    private long auditId;
+    private final Lookup lkp;
     
-    DataSourceImpl(FileObject file, DataCategoryImpl parent) {
+    DataSourceImpl(FileObject file, DataCategoryImpl parent, long auditId) {
         super(parent.getDataManager(), file, parent);
+        this.auditId = auditId;
+        this.lkp = Lookups.fixed(this, new DataSourceAuditable());
     }
     
     void setDataType(DataType dt) {
@@ -147,6 +156,15 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
         }
     }
     
+    long getAuditId() {
+        return auditId;
+    }
+    
+    @Override
+    public Lookup getLookup() {
+        return lkp;
+    }
+    
     @Override
     public String toString() {
         return String.format("DataSource [%s]", getPath());
@@ -165,5 +183,24 @@ public class DataSourceImpl extends AbstractDataItem implements DataSource {
     @Override
     public synchronized void deleteEntries(Set<DataEntry> entries) throws Exception {
         dataProvider.deleteEntries(entries);
+    }
+
+    private class DataSourceAuditable extends AuditableObject {
+
+        @Override
+        public Project getAuditedProject() {
+            return getDataManager().getProject();
+        }
+
+        @Override
+        public long getAuditId() {
+            return auditId;
+        }
+
+        @Override
+        public String getAuditName() {
+            return getPath();
+        }
+    
     }
 }

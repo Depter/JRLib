@@ -3,8 +3,8 @@ OpenIDE-Module-Layer: org/jreserve/gui/data/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/data/Bundle.propert
  ies
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130823
-OpenIDE-Module-Build-Version: 201308231313
+OpenIDE-Module-Implementation-Version: 1.0-20130825
+OpenIDE-Module-Build-Version: 201308251755
 OpenIDE-Module: org.jreserve.gui.data
 OpenIDE-Module-Public-Packages: org.jreserve.gui.data.api.*, org.jrese
  rve.gui.data.api.inport.*, org.jreserve.gui.data.api.util.*, org.jres

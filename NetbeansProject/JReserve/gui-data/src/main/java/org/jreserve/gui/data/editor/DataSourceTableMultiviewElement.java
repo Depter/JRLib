@@ -17,21 +17,16 @@
 
 package org.jreserve.gui.data.editor;
 
-import java.awt.Image;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JPanel;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.jreserve.jrlib.gui.data.DataType;
-import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
 import org.openide.awt.UndoRedo;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.windows.TopComponent;
@@ -45,52 +40,41 @@ import org.openide.windows.TopComponent;
     displayName = "#LBL.DataSourceTableMultiviewElement.Title",
     mimeType = DataSource.MIME_TYPE,
     persistenceType = TopComponent.PERSISTENCE_NEVER,
-    preferredID = "org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"
+    preferredID = "org.jreserve.gui.data.editor.DataSourceTableMultiviewElement",
+    iconBase = "org/jreserve/gui/data/icons/database.png",
+    position = 100
 )
 @Messages({
     "LBL.DataSourceTableMultiviewElement.Title=Data"
 })
 public class DataSourceTableMultiviewElement implements MultiViewElement {
-//GUI
-//  TOOLBAR
-//      Refresh, copy, Delete, Show/Hide filter, scale
-//  PANEL
-//      TABLE
-//      FILTER
-    
-    @StaticResource private final static String IMG_TRIANGLE = "org/jreserve/gui/data/icons/database_triangle.png";
-    @StaticResource private final static String IMG_VECTOR = "org/jreserve/gui/data/icons/database_vector.png";
     
     private MultiViewElementCallback callBack;
     private DataSource ds;
     private DataSourceListener dsListener;
-    private Lookup lkp;
     
     private DataSourceTablePanel panel;
     
     public DataSourceTableMultiviewElement(Lookup ctx) {
         this.ds = ctx.lookup(DataSource.class);
-        this.lkp = ctx;
         dsListener = new DataSourceListener();
         EventBusManager.getDefault().subscribe(dsListener);
     }
     
     @Override
     public JComponent getVisualRepresentation() {
-        if(panel == null)
-            createPanel();
-        return panel;
+        return getPanel();
     }
-
-    private void createPanel() {
-        panel = new DataSourceTablePanel(ds);
+    
+    private DataSourceTablePanel getPanel() {
+        if(panel == null)
+            panel = new DataSourceTablePanel(ds);
+        return panel;
     }
     
     @Override
     public JComponent getToolbarRepresentation() {
-        if(panel == null)
-            createPanel();
-        return panel.getToolBar();
+        return getPanel().getToolBar();
     }
 
     @Override
@@ -100,7 +84,7 @@ public class DataSourceTableMultiviewElement implements MultiViewElement {
 
     @Override
     public Lookup getLookup() {
-        return lkp;
+        return getPanel().getLookup();
     }
 
     @Override
@@ -112,7 +96,6 @@ public class DataSourceTableMultiviewElement implements MultiViewElement {
         EventBusManager.getDefault().unsubscribe(dsListener);
         dsListener = null;
         ds = null;
-        lkp = Lookup.EMPTY;
     }
 
     @Override
@@ -142,12 +125,6 @@ public class DataSourceTableMultiviewElement implements MultiViewElement {
         TopComponent tc = callback.getTopComponent();
         tc.setDisplayName(ds.getName());
         tc.setToolTipText(ds.getPath());
-        tc.setIcon(getImage());
-    }
-    
-    private Image getImage() {
-        String path = (DataType.TRIANGLE == ds.getDataType())? IMG_TRIANGLE : IMG_VECTOR;
-        return ImageUtilities.loadImage(path);
     }
 
     @Override
@@ -157,13 +134,26 @@ public class DataSourceTableMultiviewElement implements MultiViewElement {
 
     private class DataSourceListener {
         
-        @EventBusListener
+        @EventBusListener(forceEDT = true)
         public void renameEvent(DataEvent.DataItemRenamed evt) {
             if(ds == evt.getDataItem() && callBack != null) {
                 TopComponent tc = callBack.getTopComponent();
                 tc.setDisplayName(ds.getName());
                 tc.setToolTipText(ds.getPath());
             }
+        }
+        
+        @EventBusListener(forceEDT = true)
+        public void dataEvent(DataEvent.DataChangeEvent evt) {
+            if(ds == evt.getDataItem() && panel != null) {
+                panel.loadEntries();
+            }
+        }
+        
+        @EventBusListener(forceEDT = true)
+        public void deleteEvent(DataEvent.DataSourceDeleteEvent evt) {
+            if(ds == evt.getDataItem() && callBack != null)
+                callBack.getTopComponent().close();
         }
     }
 }

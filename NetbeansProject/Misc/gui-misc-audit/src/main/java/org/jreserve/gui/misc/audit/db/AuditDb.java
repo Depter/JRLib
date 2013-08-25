@@ -19,7 +19,6 @@ package org.jreserve.gui.misc.audit.db;
 import java.util.List;
 import org.jreserve.gui.misc.audit.event.AuditEvent;
 import org.jreserve.gui.misc.audit.event.AuditRecord;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -28,13 +27,15 @@ import org.openide.filesystems.FileObject;
  */
 public interface AuditDb {
     
-    public FileObject getProjectDir();
-    
-    public FileObject getDbFile();
+//    public FileObject getProjectDir();
+//    
+//    public FileObject getDbFile();
     
     public void storeEvent(AuditEvent event);
     
     public List<AuditRecord> getAuditRecords();
+    
+    public long getNextObjectId();
     
     public void close();
 }

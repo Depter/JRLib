@@ -72,7 +72,7 @@ public abstract class ProjectEvent {
         
         private ProjectCreatedEvent(Project project) {
             super(project);
-            auditEvent = new AbstractAuditEvent(project, "", Bundle.MSG_ProjectEvent_ProjectCreated());
+            auditEvent = new AbstractAuditEvent(project, AuditEvent.UNKOWN_ID, "", Bundle.MSG_ProjectEvent_ProjectCreated());
         }
 
         @Override
@@ -95,7 +95,7 @@ public abstract class ProjectEvent {
             this.property = property;
             this.oldValue = oldValue;
             this.newValue = newValue;
-            auditEvent = new AbstractAuditEvent(project, "", Bundle.MSG_ProjectEvent_ProjectPropertyChanged(userProperty, oldValue, newValue));
+            auditEvent = new AbstractAuditEvent(project, AuditEvent.UNKOWN_ID, "", Bundle.MSG_ProjectEvent_ProjectPropertyChanged(userProperty, oldValue, newValue));
         }
 
         public String getConfigName() {

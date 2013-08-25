@@ -31,6 +31,34 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorTableModel.Value");
     }
     /**
+     * @return <i>Audit</i>
+     * @see EditorUtil
+     */
+    static String LBL_EditorUtil_DataSourceAudit() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorUtil.DataSourceAudit");
+    }
+    /**
+     * @return <i>Cancel</i>
+     * @see FilterPanel
+     */
+    static String LBL_FilterPanel_Cancel() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.FilterPanel.Cancel");
+    }
+    /**
+     * @return <i>Ok</i>
+     * @see FilterPanel
+     */
+    static String LBL_FilterPanel_Ok() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.FilterPanel.Ok");
+    }
+    /**
+     * @return <i>Select Filter</i>
+     * @see FilterPanel
+     */
+    static String LBL_FilterPanel_Title() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.FilterPanel.Title");
+    }
+    /**
      * @param path path
      * @return <i>Loading data from ''</i>{@code path}<i>'' failed!</i>
      * @see DataSourceTablePanel

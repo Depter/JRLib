@@ -55,24 +55,26 @@ public abstract class AuditDbManager {
     private boolean closed = false;
     
     private synchronized AuditDb getAuditDb(Project project) {
+        if(project == null)
+            throw new NullPointerException("Project is null!");
         if(closed)
             throw new IllegalStateException("AuditDbManager is closed!");
         
         AuditDb db = dbs.get(project);
         if(db == null) {
-            FileObject projectDir = project.getProjectDirectory();
             try {
-                db = createAuitDb(projectDir);
+                db = createAuitDb(project);
             } catch (Exception ex) {
+                FileObject projectDir = project.getProjectDirectory();
                 logger.log(Level.SEVERE, "Unable to create audit db within project: "+projectDir.getPath(), ex);
-                db = new DummyDb(projectDir);
+                db = new DummyDb();
             }
             dbs.put(project, db);
         }
         return db;
     }
     
-    protected abstract AuditDb createAuitDb(FileObject projectFolder) throws Exception;
+    protected abstract AuditDb createAuitDb(Project project) throws Exception;
     
     public List<AuditRecord> getAuditRecords(Project project) {
         AuditDb db = getAuditDb(project);
@@ -88,6 +90,13 @@ public abstract class AuditDbManager {
         }
     }
     
+    public long getNextObjectId(Project project) {
+        AuditDb db = getAuditDb(project);
+        synchronized(db) {
+            return db.getNextObjectId();
+        }
+    }
+    
     public synchronized void close() {
         if(!closed) {
             for(AuditDb db : dbs.values())
@@ -99,20 +108,8 @@ public abstract class AuditDbManager {
     private final static class DummyDb implements AuditDb {
         
         private final static Logger logger = Logger.getLogger(DummyDb.class.getName());
-        private final FileObject projectDir;
         
-        private DummyDb(FileObject projectDir) {
-            this.projectDir = projectDir;
-        }
-        
-        @Override
-        public FileObject getProjectDir() {
-            return projectDir;
-        }
-
-        @Override
-        public FileObject getDbFile() {
-            return null;
+        private DummyDb() {
         }
 
         @Override
@@ -129,12 +126,17 @@ public abstract class AuditDbManager {
         @Override
         public void close() {
         }
+
+        @Override
+        public long getNextObjectId() {
+            return -1;
+        }
     }
     
     private final static class DummyDbManager extends AuditDbManager {
 
         @Override
-        protected AuditDb createAuitDb(FileObject projectFolder) throws Exception {
+        protected AuditDb createAuitDb(Project project) throws Exception {
             throw new UnsupportedOperationException("DummyDbManager is used!");
         }
     }

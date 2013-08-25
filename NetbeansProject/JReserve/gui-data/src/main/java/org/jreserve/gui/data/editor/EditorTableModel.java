@@ -61,6 +61,10 @@ class EditorTableModel extends AbstractTableModel {
         refresh();
     }
     
+    DataEntry getEntryAt(int row) {
+        return filteredEntries.get(row);
+    }
+    
     private void refresh() {
         this.filteredEntries.clear();
         filterEntries();

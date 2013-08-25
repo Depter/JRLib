@@ -17,18 +17,14 @@
 package org.jreserve.gui.misc.utils.actions;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Action;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
-import org.openide.cookies.InstanceCookie;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileUtil;
-import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -41,45 +37,45 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionRegistration(
     displayName = "#CTL.DeleteAction",
-    iconBase = "org/jreserve/gui/misc/utils/delete.png"
+    lazy = false
 )
 @Messages({
     "CTL.DeleteAction=Delete"
 })
-public class DeleteAction implements ActionListener {
-    private final static Logger logger = Logger.getLogger(DeleteAction.class.getName());
-    
-    private final static String PATH = 
-        "Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"; //NOI18
-    private static Action ACTION;
-    
-    public synchronized static Action getAction() {
-        if(ACTION == null)
-            ACTION = loadAction();
-        return ACTION;
+public class DeleteAction extends AbstractContextAwareAction {
+
+    public static DeleteAction createSmall(Lookup context) {
+        DeleteAction action = new DeleteAction();
+        action.putValue(Action.LARGE_ICON_KEY, null);
+        return action;
     }
     
-    private static Action loadAction() {
-        try {
-            FileObject file = FileUtil.getConfigFile(PATH);
-            DataObject dObj = DataObject.find(file);
-            InstanceCookie ic = dObj.getLookup().lookup(InstanceCookie.class);
-            if(ic != null)
-                return (Action) ic.instanceCreate();
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, "Unable to load Action from: "+PATH, ex);
-        }
-        return null;
+    @StaticResource private final static String SMALL_ICON = "org/jreserve/gui/misc/utils/delete.png";   //NOI18
+    @StaticResource private final static String LARGE_ICON = "org/jreserve/gui/misc/utils/delete32.png"; //NOI18
+    
+    public DeleteAction() {
+        this(Utilities.actionsGlobalContext());
     }
     
-    private List<Deletable> context;
-    
-    public DeleteAction(List<Deletable> context) {
-        this.context = context;
+    public DeleteAction(Lookup ctx) {
+        super(ctx);
+        putValue(Action.NAME, Bundle.CTL_DeleteAction());
+        putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(LARGE_ICON, false));
+        putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(SMALL_ICON, false));
     }
     
     @Override
-    public void actionPerformed(ActionEvent e) {
-        new DeleteDialog(context).showDialog();
+    protected boolean shouldEnable(Lookup context) {
+        return !context.lookupAll(Deletable.class).isEmpty();
+    }
+
+    @Override
+    protected void performAction(ActionEvent evt) {
+        new DeleteDialog(getAll(Deletable.class)).showDialog();
+    }
+
+    @Override
+    public Action createContextAwareInstance(Lookup actionContext) {
+        return new DeleteAction(actionContext);
     }
 }

@@ -18,6 +18,8 @@
 package org.jreserve.gui.data.api;
 
 import org.jreserve.gui.misc.audit.event.AbstractAuditEvent;
+import org.jreserve.gui.misc.audit.event.AuditEvent;
+import org.jreserve.gui.misc.audit.event.AuditedObject;
 
 /**
  *
@@ -26,10 +28,15 @@ import org.jreserve.gui.misc.audit.event.AbstractAuditEvent;
  */
 public abstract class DataEvent<T extends DataItem> extends AbstractAuditEvent {
     
+    private static long getId(DataItem item) {
+        AuditedObject o = item.getLookup().lookup(AuditedObject.class);
+        return o==null? AuditEvent.UNKOWN_ID : o.getAuditId();
+    }
+    
     private T item;
     
     protected DataEvent(T item, String change) {
-        super(item.getDataManager().getProject(), item.getPath(), change);
+        super(item.getDataManager().getProject(), getId(item), item.getPath(), change);
         this.item = item;
     }
     

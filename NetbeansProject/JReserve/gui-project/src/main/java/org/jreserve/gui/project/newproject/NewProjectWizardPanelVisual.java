@@ -25,6 +25,7 @@ import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -42,6 +43,8 @@ import org.openide.util.NbBundle.Messages;
 })
 class NewProjectWizardPanelVisual extends javax.swing.JPanel {
     
+    private final static String PROP_FOLDER = "new.project.folder";
+    
     private final NewProjectWizardPanel panel;
     private TextListener textListener = new TextListener();
     
@@ -58,7 +61,11 @@ class NewProjectWizardPanelVisual extends javax.swing.JPanel {
     private void readFolder(WizardDescriptor wizard) {
         File folder = (File) wizard.getProperty(NewProjectWizardIterator.PROP_PROJECT_FOLDER);
         if(folder == null || folder.getParentFile() == null || !folder.getParentFile().isDirectory()) {
-            folder = ProjectChooser.getProjectsFolder();
+            String prev = NbPreferences.forModule(NewProjectWizardPanelVisual.class).get(PROP_FOLDER, null);
+            if(prev != null)
+                folder = new File(prev);
+            else
+                folder = ProjectChooser.getProjectsFolder();
         } else {
             folder = folder.getParentFile();
         }
@@ -79,6 +86,7 @@ class NewProjectWizardPanelVisual extends javax.swing.JPanel {
 
         String folder = folderText.getText().trim();
         wizard.putProperty(NewProjectWizardIterator.PROP_PROJECT_FOLDER, new File(folder));
+        NbPreferences.forModule(NewProjectWizardPanelVisual.class).put(PROP_FOLDER, folder);
     }
     
     boolean isValide(WizardDescriptor wizard) {

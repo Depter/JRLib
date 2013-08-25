@@ -8,13 +8,7 @@
                 <!--org.jreserve.gui.misc.utils.actions.DeleteAction-->
                 <attr
                     bundlevalue="org.jreserve.gui.misc.utils.actions.Bundle#CTL.DeleteAction" name="displayName"/>
-                <attr methodvalue="org.openide.awt.Actions.context" name="instanceCreate"/>
-                <attr name="type" stringvalue="org.jreserve.gui.misc.utils.actions.Deletable"/>
-                <attr methodvalue="org.openide.awt.Actions.inject" name="delegate"/>
-                <attr name="injectable" stringvalue="org.jreserve.gui.misc.utils.actions.DeleteAction"/>
-                <attr name="selectionType" stringvalue="ANY"/>
-                <attr name="iconBase" stringvalue="org/jreserve/gui/misc/utils/delete.png"/>
-                <attr boolvalue="false" name="noIconInMenu"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.misc.utils.actions.DeleteAction"/>
             </file>
         </folder>
     </folder>

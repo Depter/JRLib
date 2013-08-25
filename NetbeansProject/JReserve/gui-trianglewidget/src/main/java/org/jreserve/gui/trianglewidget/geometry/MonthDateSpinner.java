@@ -23,6 +23,7 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SpinnerModel;
 import javax.swing.text.DateFormatter;
 import javax.swing.text.DefaultFormatterFactory;
 import org.jreserve.jrlib.gui.data.MonthDate;
@@ -94,5 +95,23 @@ public class MonthDateSpinner extends JSpinner {
         if(maxDate != null && date.after(maxDate))
             date = maxDate;
         return date;
+    }
+    
+    public void setStartMonthDate(MonthDate md) {
+        SpinnerModel model = getModel();
+        if(model instanceof SpinnerDateModel) {
+            ((SpinnerDateModel)model).setStart(convertToDate(md));
+        } else {
+            throw new IllegalStateException("Expected to have SpinnerDateModel, found: "+model);
+        }
+    }
+    
+    public void setEndMonthDate(MonthDate md) {
+        SpinnerModel model = getModel();
+        if(model instanceof SpinnerDateModel) {
+            ((SpinnerDateModel)model).setEnd(convertToDate(md));
+        } else {
+            throw new IllegalStateException("Expected to have SpinnerDateModel, found: "+model);
+        }
     }
 }

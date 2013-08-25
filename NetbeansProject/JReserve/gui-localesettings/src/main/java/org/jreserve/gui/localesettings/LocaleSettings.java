@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.localesettings;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
@@ -133,11 +134,11 @@ public class LocaleSettings {
         setString(KEY_INFINITY, infinity);
     }
     
-    public synchronized static String[] getDateFormats() {
+    public synchronized static String[] getDateFormatPatterns() {
         return Arrays.copyOfRange(DEFAULT_DATE_FORMATS, 0, DEFAULT_DATE_FORMATS.length);
     }
     
-    public synchronized static String getDateFormat() {
+    public synchronized static String getDateFormatPattern() {
         String format = getString(KEY_DATE_FORMAT, null);
         if(format != null && format.length() > 0)
             return format;
@@ -153,11 +154,10 @@ public class LocaleSettings {
         }
     }
     
-    public synchronized static void setDateFormat(SimpleDateFormat df) {
-        if(df == null)
-            setString(KEY_DATE_FORMAT, null);
-        else
-            setString(KEY_DATE_FORMAT, df.toPattern());
+    public synchronized static void setDateFormatPattern(SimpleDateFormat df) {
+        String pattern = df==null? null : df.toPattern();
+        System.setProperty("default.date.format", pattern);
+        setString(KEY_DATE_FORMAT, pattern);
     }
     
     public synchronized static void clear() {
@@ -167,7 +167,7 @@ public class LocaleSettings {
         setNaN(null);
         setExponentSeparator(null);
         setInfinity(null);
-        setDateFormat(null);
+        setDateFormatPattern(null);
     }
     
     public synchronized static DecimalFormat createDecimalFormat() {
@@ -196,6 +196,15 @@ public class LocaleSettings {
         dfs.setInfinity(getInfinity());
         dfs.setNaN(getNaN());
         return dfs;
+    }
+    
+    public static DateFormat createDateFormat() {
+        String pattern = getDateFormatPattern();
+        try {
+            return new SimpleDateFormat(pattern);
+        } catch (Exception ex) {
+            return new SimpleDateFormat();
+        }
     }
     
     private LocaleSettings() {}

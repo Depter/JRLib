@@ -26,13 +26,15 @@ public final class AuditRecord {
     
     private final Date changeDate;
     private final Date logDate;
+    private final long componentId;
     private final String component;
     private final String user;
     private final String change;
 
-    public AuditRecord(Date changeDate, Date logDate, String component, String user, String change) {
+    public AuditRecord(Date changeDate, Date logDate, long componentId, String component, String user, String change) {
         this.changeDate = changeDate;
         this.logDate = logDate;
+        this.componentId = componentId;
         this.component = component;
         this.user = user;
         this.change = change;
@@ -45,7 +47,11 @@ public final class AuditRecord {
     public Date getLogDate() {
         return logDate;
     }
-
+    
+    public long getComponentId() {
+        return componentId;
+    }
+    
     public String getComponent() {
         return component;
     }

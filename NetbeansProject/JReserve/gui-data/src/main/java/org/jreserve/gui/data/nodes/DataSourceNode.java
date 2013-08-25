@@ -38,6 +38,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -59,9 +60,12 @@ class DataSourceNode extends AbstractNode {
     
     DataSourceNode(DataSource source) {
         super(Children.LEAF, 
-              Lookups.fixed(
-                source, source.getParent(), source.getDataProvider(), 
-                new ActionsCookie(source)
+              new ProxyLookup(
+                source.getLookup(),
+                Lookups.fixed(
+                    source.getParent(), source.getDataProvider(), 
+                    new ActionsCookie(source)
+                )
               )
         );
         this.source = source;

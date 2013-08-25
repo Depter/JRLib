@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -29,6 +31,8 @@ import java.util.Set;
  * @version 1.0
  */
 class EventBus {
+    
+    final static Logger logger = Logger.getLogger(EventBus.class.getName());
     
     final static char PATH_SEPARATOR = '.';
     
@@ -100,6 +104,10 @@ class EventBus {
         cleanSubscriptions();
         for(Method method : getAnnotatedMethods(listener)) {
             Subscription s = new Subscription(listener, method);
+            String msg = String.format(
+                    "Subscription '%s' for EventBus '%s', for event class '%s'.",
+                    listener, name, s.getEventClass().getName());
+            logger.log(Level.FINER, msg);
             subscriptions.add(s);
         }
     }

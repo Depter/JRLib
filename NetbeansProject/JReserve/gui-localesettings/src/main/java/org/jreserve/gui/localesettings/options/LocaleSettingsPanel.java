@@ -286,8 +286,8 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         nanText.setText(LocaleSettings.getNaN());
         exponentSepText.setText(LocaleSettings.getExponentSeparator());
         infinityText.setText(LocaleSettings.getInfinity());
-        dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormats()));
-        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());
+        dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormatPatterns()));
+        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatPattern());
     }
 
     void store() {
@@ -297,7 +297,7 @@ final class LocaleSettingsPanel extends javax.swing.JPanel {
         LocaleSettings.setNaN(nanText.getText());
         LocaleSettings.setExponentSeparator(exponentSepText.getText());
         LocaleSettings.setInfinity(infinityText.getText());
-        LocaleSettings.setDateFormat(new SimpleDateFormat(dateEditor.getText()));
+        LocaleSettings.setDateFormatPattern(new SimpleDateFormat(dateEditor.getText()));
     }
 
     boolean valid() {

@@ -19,21 +19,16 @@ package org.jreserve.gui.data.nodes;
 import java.awt.datatransfer.Transferable;
 import java.util.List;
 import javax.swing.Action;
-import javax.swing.Icon;
 import org.jreserve.gui.data.api.DataCategory;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
-import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.util.ImageUtilities;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
 import org.openide.util.datatransfer.PasteType;
-import org.openide.util.lookup.Lookups;
 
 /**
  *
@@ -53,19 +48,12 @@ class DataCategoryNode extends AbstractNode {
     DataCategoryNode(DataCategory category) {
         super(
             Children.create(new DataCategoryChildren(category),true),
-            createLookup(category)
+            category.getLookup()
         );
         this.category = category;
         setDisplayName(category.getName());
         setIconBaseWithExtension(ICON);
         EventBusManager.getDefault().subscribe(this);
-    }
-    
-    private static Lookup createLookup(DataCategory category) {
-        if(category.getParent() == null)
-            return Lookups.singleton(category);
-        else
-            return Lookups.fixed(category, new ActionCookies(category));
     }
     
     @Override
@@ -148,29 +136,5 @@ class DataCategoryNode extends AbstractNode {
     @Override
     public PasteType getDropType(final Transferable t, int action, int index) {
         return DataItemFlavor.getDropType(category, t);
-    }
-    
-    private static class ActionCookies implements Deletable {
-
-        private final DataCategory category;
-
-        private ActionCookies(DataCategory category) {
-            this.category = category;
-        }
-        
-        @Override
-        public void delete() throws Exception {
-            category.getDataManager().deleteDataItem(category);
-        }
-
-        @Override
-        public Icon getIcon() {
-            return ImageUtilities.loadImageIcon(ICON, false);
-        }
-
-        @Override
-        public String getDisplayName() {
-            return category.getPath();
-        }
     }
 }

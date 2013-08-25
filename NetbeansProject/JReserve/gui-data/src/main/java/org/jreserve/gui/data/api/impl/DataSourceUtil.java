@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
@@ -57,6 +58,7 @@ class DataSourceUtil {
         
         props.put(DataProvider.PROP_DATA_TYPE, ds.getDataType().name());
         props.put(DataProvider.PROP_FACTORY_ID, provider.getFactory().getId());
+        props.put(DataSource.PROP_AUDIT_ID, ""+ds.getAuditId());
         
         for(Map.Entry<String, String> entry : provider.getProperties().entrySet()) {
             if(isFixedProperty(entry.getKey()))
@@ -74,7 +76,11 @@ class DataSourceUtil {
             lock = file.lock();
             os = file.getOutputStream(lock);
             props.storeToXML(os, null);
+            os.flush();
         } catch (Exception ex) {
+            String msg = "Unable to save properties: "+(file==null? "null" : file.getPath());
+            logger.log(Level.SEVERE, msg, ex);
+            BubbleUtil.showException(msg, ex);
         } finally {
             close(file, os);
             if(lock != null)
@@ -94,23 +100,24 @@ class DataSourceUtil {
     
     private static boolean isFixedProperty(String name) {
         return DataProvider.PROP_DATA_TYPE.equalsIgnoreCase(name) ||
-               DataProvider.PROP_FACTORY_ID.equalsIgnoreCase(name);
+               DataProvider.PROP_FACTORY_ID.equalsIgnoreCase(name) ||
+               DataSource.PROP_AUDIT_ID.equalsIgnoreCase(name);
     }
     
-    static DataSourceImpl load(DataCategoryImpl parent, FileObject file) {
+    static DataSourceImpl load(DataCategoryImpl parent, FileObject file) throws Exception {
         logger.log(Level.FINE, "Loading DataSource: {0}", file.getPath());
-        DataSourceImpl ds = new DataSourceImpl(file, parent);
-        
         try {
             Properties props = loadProperties(file);
+            DataSourceImpl ds = new DataSourceImpl(file, parent, getAuditId(props));
             ds.setDataType(getDataType(props));
             ds.setProvider(createProvider(props));
+            return ds;
         } catch (Exception ex) {
             String msg = "Unable to load DataProvider from file '%s'!";
             logger.log(Level.SEVERE, String.format(msg, file.getPath()), ex);
-            BubbleUtil.showException("", ex);
+            BubbleUtil.showException(msg, ex);
+            throw ex;
         }
-        return ds;
     }
     
     private static Properties loadProperties(FileObject file) throws IOException {
@@ -133,7 +140,16 @@ class DataSourceUtil {
         try {
             return DataType.valueOf(name);
         } catch (IllegalArgumentException ex) {
-            throw new  IOException("Unknown DataType name: "+name);
+            throw new IOException("Unknown DataType name: "+name);
+        }
+    }
+    
+    private static long getAuditId(Properties props) throws IOException {
+        String id = getProperty(props, DataSource.PROP_AUDIT_ID);
+        try {
+            return Long.parseLong(id);
+        } catch (Exception ex) {
+            throw new IOException("Unable to parse audit id from: "+id);
         }
     }
     

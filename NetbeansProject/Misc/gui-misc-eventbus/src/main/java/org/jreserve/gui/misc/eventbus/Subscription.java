@@ -65,6 +65,10 @@ class Subscription {
                listener == reference.get();
     }
     
+    Class getEventClass() {
+        return eventClass[0];
+    }
+    
     void addSelf(List<Subscription> subscriptions, Class eventClass) {
         if(isInterested(eventClass) && !isListenerContained(subscriptions))
             subscriptions.add(this);

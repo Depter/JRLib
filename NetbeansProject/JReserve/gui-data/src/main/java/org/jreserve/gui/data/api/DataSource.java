@@ -32,6 +32,7 @@ import org.jreserve.gui.data.spi.DataProvider;
 public interface DataSource extends DataItem {
     
     public final static String MIME_TYPE = "application/jreserve-data-source";
+    public final static String PROP_AUDIT_ID = "audit.id";
     
     public DataType getDataType();
 

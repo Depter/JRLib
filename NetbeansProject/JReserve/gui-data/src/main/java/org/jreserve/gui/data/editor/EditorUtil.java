@@ -20,9 +20,11 @@ import java.io.Serializable;
 import java.util.Collection;
 import javax.swing.SwingUtilities;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.misc.audit.api.AuditableMultiview;
 import org.netbeans.core.api.multiview.MultiViews;
+import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.openide.util.Lookup;
-import org.openide.util.lookup.Lookups;
+import org.openide.util.NbBundle;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -33,6 +35,18 @@ import org.openide.windows.WindowManager;
  * @version 1.0
  */
 public class EditorUtil {
+    
+    @MultiViewElement.Registration(
+        displayName = "#LBL.EditorUtil.DataSourceAudit",
+        mimeType = DataSource.MIME_TYPE,
+        persistenceType = TopComponent.PERSISTENCE_NEVER,
+        preferredID = "org.jreserve.gui.data.editor.DataSourceAudit",
+        position = 1000
+    )
+    @NbBundle.Messages("LBL.EditorUtil.DataSourceAudit=Audit")
+    public static MultiViewElement createAuditElement(Lookup lkp) {
+        return new AuditableMultiview(lkp);
+    }
     
     private final static String EDITOR_MODE = "editor";
     
@@ -83,7 +97,7 @@ public class EditorUtil {
         private final Lookup lkp;
         
         private DataSourceContext(DataSource ds) {
-            lkp = Lookups.singleton(ds);
+            lkp = ds.getLookup();
         }
         
         @Override

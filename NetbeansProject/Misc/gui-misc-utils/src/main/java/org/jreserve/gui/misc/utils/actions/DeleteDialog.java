@@ -177,7 +177,7 @@ class DeleteDialog extends JPanel {
         private final List<Deletable> items;
 
         public DeleteTask(List<Deletable> items) {
-            this.items = new ArrayList<Deletable>();
+            this.items = new ArrayList<Deletable>(items);
         }
         
         @Override

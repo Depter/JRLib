@@ -31,6 +31,12 @@
     </folder>
     <folder name="Actions">
         <folder name="File">
+            <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.instance">
+                <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL_CreateDataCategoryAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.CreateDataCategoryAction"/>
+            </file>
             <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.instance">
                 <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                 <attr
@@ -43,12 +49,6 @@
                     bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL.ImportDataAction" name="displayName"/>
                 <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.ImportDataAction"/>
             </file>
-            <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.instance">
-                <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL_CreateDataCategoryAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.CreateDataCategoryAction"/>
-            </file>
         </folder>
     </folder>
     <folder name="Ribbon">
@@ -56,6 +56,11 @@
             <folder name="Edit">
                 <folder name="Edit">
                     <folder name="New">
+                        <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
+                            <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                            <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
+                            <attr intvalue="200" name="position"/>
+                        </file>
                         <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
                             <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                             <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
@@ -66,14 +71,15 @@
                             <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                             <attr intvalue="310" name="position"/>
                         </file>
-                        <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                            <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                            <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                            <attr intvalue="200" name="position"/>
-                        </file>
                     </folder>
                 </folder>
                 <folder name="Data">
+                    <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
+                        <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
+                        <attr intvalue="200" name="position"/>
+                        <attr name="priority" stringvalue="medium"/>
+                    </file>
                     <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
                         <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                         <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
@@ -85,12 +91,6 @@
                         <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-ImportDataAction.instance"/>
                         <attr intvalue="100" name="position"/>
                     </file>
-                    <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                        <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                        <attr intvalue="200" name="position"/>
-                        <attr name="priority" stringvalue="medium"/>
-                    </file>
                 </folder>
             </folder>
         </folder>
@@ -98,6 +98,11 @@
     <folder name="Node">
         <folder name="DataCategory">
             <folder name="Actions">
+                <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
+                    <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
+                    <attr intvalue="100" name="position"/>
+                </file>
                 <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
                     <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
                     <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
@@ -117,11 +122,6 @@
                     <!--org.jreserve.gui.data.actions.ImportDataAction-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                     <attr intvalue="350" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                    <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                    <attr intvalue="100" name="position"/>
                 </file>
             </folder>
         </folder>
@@ -172,6 +172,19 @@
         <folder name="application">
             <folder name="jreserve-data-source">
                 <folder name="MultiView">
+                    <file name="org-jreserve-gui-data-editor-EditorUtil-createAuditElement.instance">
+                        <!--org.jreserve.gui.data.editor.EditorUtil.createAuditElement(org.openide.util.Lookup)-->
+                        <attr
+                            methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
+                        <attr name="class" stringvalue="org.jreserve.gui.data.editor.EditorUtil"/>
+                        <attr
+                            bundlevalue="org.jreserve.gui.data.editor.Bundle#LBL.EditorUtil.DataSourceAudit" name="displayName"/>
+                        <attr name="preferredID" stringvalue="org.jreserve.gui.data.editor.DataSourceAudit"/>
+                        <attr intvalue="2" name="persistenceType"/>
+                        <attr intvalue="1000" name="position"/>
+                        <attr name="method" stringvalue="createAuditElement"/>
+                    </file>
                     <file name="org-jreserve-gui-data-editor-DataSourceTableMultiviewElement.instance">
                         <!--org.jreserve.gui.data.editor.DataSourceTableMultiviewElement-->
                         <attr
@@ -180,8 +193,10 @@
                         <attr name="class" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
                         <attr
                             bundlevalue="org.jreserve.gui.data.editor.Bundle#LBL.DataSourceTableMultiviewElement.Title" name="displayName"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/data/icons/database.png"/>
                         <attr name="preferredID" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
                         <attr intvalue="2" name="persistenceType"/>
+                        <attr intvalue="100" name="position"/>
                     </file>
                 </folder>
             </folder>

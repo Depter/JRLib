@@ -19,7 +19,7 @@ class Bundle {
     /**
      * @param oldPath oldPath
      * @param newPath newPath
-     * @return <i>Data category renamed '</i>{@code oldPath}<i>' -> '</i>{@code newPath}<i>'.</i>
+     * @return <i>Data category renamed ''</i>{@code oldPath}<i>'' -> ''</i>{@code newPath}<i>''.</i>
      * @see DataEventUtil
      */
     static String MSG_DataEvent_DataCategory_Renamed(Object oldPath, Object newPath) {
@@ -42,7 +42,7 @@ class Bundle {
     /**
      * @param oldPath oldPath
      * @param newPath newPath
-     * @return <i>Data storage renamed '</i>{@code oldPath}<i>' -> '</i>{@code newPath}<i>'.</i>
+     * @return <i>Data storage renamed ''</i>{@code oldPath}<i>'' -> ''</i>{@code newPath}<i>''.</i>
      * @see DataEventUtil
      */
     static String MSG_DataEvent_DataSource_Renamed(Object oldPath, Object newPath) {

@@ -26,6 +26,8 @@ import org.netbeans.api.project.Project;
  */
 public interface AuditEvent {
     
+    public final static long UNKOWN_ID = -1;
+    
     public static interface Provider {
         public AuditEvent getAuditEvent();
     }
@@ -33,7 +35,12 @@ public interface AuditEvent {
     public Project getAuditedProject();
     
     public Date getChangeDate();
+    
     public String getUserName();
+    
+    public long getComponentId();
+    
     public String getComponent();
+    
     public String getChange();
 }

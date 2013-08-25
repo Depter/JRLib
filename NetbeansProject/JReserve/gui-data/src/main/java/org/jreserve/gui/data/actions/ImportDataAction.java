@@ -23,7 +23,7 @@ import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.inport.ImportDataWizardIterator;
 import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
-import org.jreserve.gui.misc.utils.widgets.AbstractContextAwareAction;
+import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.openide.DialogDisplayer;
@@ -63,13 +63,19 @@ public class ImportDataAction extends AbstractContextAwareAction {
     @StaticResource private final static String SMALL_ICON = "org/jreserve/gui/data/icons/import_data.png";   //NOI18
     @StaticResource private final static String LARGE_ICON = "org/jreserve/gui/data/icons/import_data32.png"; //NOI18
     
+    public static ImportDataAction createSmall(Lookup lkp) {
+        ImportDataAction action = new ImportDataAction(lkp);
+        action.putValue(Action.LARGE_ICON_KEY, null);
+        return action;
+    }
+    
     private DataItem dataItem;
     
     public ImportDataAction() {
         this(Utilities.actionsGlobalContext());
     }
  
-    private ImportDataAction(Lookup context) {
+    public ImportDataAction(Lookup context) {
         super(context);
         putValue(Action.NAME, Bundle.CTL_ImportDataAction());
         super.putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(LARGE_ICON, false));

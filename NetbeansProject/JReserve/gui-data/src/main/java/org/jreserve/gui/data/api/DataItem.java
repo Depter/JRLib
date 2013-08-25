@@ -18,13 +18,14 @@
 package org.jreserve.gui.data.api;
 
 import org.openide.filesystems.FileObject;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataItem {
+public interface DataItem extends Lookup.Provider {
     public DataManager getDataManager();
 
     public DataCategory getParent();

@@ -21,7 +21,8 @@ import org.netbeans.api.project.Project;
 
 /**
  *
- * @author AA461472
+ * @author Peter Decsi
+ * @version 1.0
  */
 public class AbstractAuditEvent implements AuditEvent {
     
@@ -29,12 +30,18 @@ public class AbstractAuditEvent implements AuditEvent {
     private final String user = System.getProperty("user.name", "unknown");
     
     private final Project project;
+    private final long componentId;
     private final String component;
     private final String change;
-
-    public AbstractAuditEvent(Project project, String component, String change) {
+    
+    public AbstractAuditEvent(AuditedObject obj, String change) {
+        this(obj.getAuditedProject(), obj.getAuditId(), obj.getAuditName(), change);
+    }
+    
+    public AbstractAuditEvent(Project project, long componentId, String component, String change) {
         if(project == null)
             throw new NullPointerException("Project was null!");
+        this.componentId = componentId;
         this.project = project;
         this.component = component==null? "" : component;
         this.change = change==null? "" : change;
@@ -56,6 +63,11 @@ public class AbstractAuditEvent implements AuditEvent {
     }
 
     @Override
+    public long getComponentId() {
+        return componentId;
+    }
+
+    @Override
     public String getComponent() {
         return component;
     }
@@ -64,5 +76,4 @@ public class AbstractAuditEvent implements AuditEvent {
     public String getChange() {
         return change;
     }
-    
 }

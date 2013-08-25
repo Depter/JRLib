@@ -28,7 +28,7 @@ import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
 import org.jreserve.gui.misc.utils.actions.RibbonRegistrations;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.notifications.DialogUtil;
-import org.jreserve.gui.misc.utils.widgets.AbstractContextAwareAction;
+import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
