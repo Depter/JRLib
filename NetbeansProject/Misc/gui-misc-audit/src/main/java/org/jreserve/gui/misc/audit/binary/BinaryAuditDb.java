@@ -86,9 +86,10 @@ class BinaryAuditDb implements AuditDb {
     public long getNextObjectId() {
         try {
             long id = new BinaryIdReader(idFile).read();
-            new BinaryIdWriter(idFile).write(id++);
+            new BinaryIdWriter(idFile).write(id+1L);
             return id;
         } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Unable to obtain next object id!", ex);
             return -1;
         }
     }

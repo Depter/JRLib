@@ -16,10 +16,12 @@
  */
 package org.jreserve.gui.data.editor;
 
+import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -32,6 +34,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
@@ -53,7 +56,6 @@ import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.jreserve.jrlib.gui.data.DataEntry;
-import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.actions.CopyAction;
 import org.openide.util.Lookup;
@@ -72,7 +74,10 @@ import org.openide.util.lookup.Lookups;
     "# {0} - path",
     "MSG.DataSourceTablePanel.ProgressTitle=Loading data from ''{0}''.",
     "# {0} - path",
-    "MSG.DataSourceTablePanel.LoadError=Loading data from ''{0}'' failed!"
+    "MSG.DataSourceTablePanel.LoadError=Loading data from ''{0}'' failed!",
+    "LBL.DataSourceTablePanel.ToolTip.Filter=Filter the table...",
+    "LBL.DataSourceTablePanel.ToolTip.ClearFilter=Clear filter",
+    "LBL.DataSourceTablePanel.ToolTip.Copy=Copy to clipboard"
 })
 class DataSourceTablePanel extends JPanel {
     
@@ -87,10 +92,14 @@ class DataSourceTablePanel extends JPanel {
     private DataSource ds;
     private DataEntryRenderer renderer;
     private JToolBar toolBar;
-    private FilterAction filterAction = new FilterAction();
-    private FilterPanel filterPanel = new FilterPanel();
+    private JToggleButton filterButton;
+    private ClearFilterAction clearFilterAction;
+    private CopyAction copyAction;
+    private Action importDataAction;
+    private FilterPanel filterPanel;
     private InstanceContent ic = new InstanceContent();
     private Lookup lkp = new AbstractLookup(ic);
+    private JPanel tablePanel;
     
     DataSourceTablePanel(DataSource ds) {
         this.ds = ds;
@@ -113,8 +122,12 @@ class DataSourceTablePanel extends JPanel {
         table.setDefaultRenderer(Double.class, renderer);
         table.setDefaultRenderer(MonthDate.class, renderer);
         
+        tablePanel = new JPanel(new BorderLayout());
+        tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
+        add(tablePanel, TABLE_CARD);
         
-        add(new JScrollPane(table), TABLE_CARD);
+        filterPanel = new FilterPanel();
+        filterPanel.addChangeListener(new FilterListener());
         
         loadLabel = new JLabel("Loading...");
         loadLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -125,10 +138,17 @@ class DataSourceTablePanel extends JPanel {
     void loadEntries() {
         layout.show(this, LOADING_CARD);
         table.clearSelection();
-        getActionMap().remove(SystemAction.get(CopyAction.class).getActionMapKey());
+        setActionsEnabled(false);
         
         String msg = Bundle.MSG_DataSourceTablePanel_ProgressTitle(ds.getPath());
         TaskUtil.execute(new DataEntryLoader(ds), new LoaderCallback(), msg);
+    }
+    
+    private void setActionsEnabled(boolean enable) {
+        filterButton.setEnabled(enable);
+        clearFilterAction.setEnabled(enable);
+        copyAction.setEnabled(enable);
+        importDataAction.setEnabled(enable);
     }
     
     private void initToolbar() {
@@ -149,13 +169,36 @@ class DataSourceTablePanel extends JPanel {
         toolBar.add(scale);
         
         toolBar.addSeparator();
-        toolBar.add(filterAction);
+        filterButton = new JToggleButton(CommonIcons.filter());
+        filterButton.setToolTipText(Bundle.LBL_DataSourceTablePanel_ToolTip_Filter());
+        filterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(filterButton.isSelected())
+                    tablePanel.add(filterPanel, BorderLayout.NORTH);
+                else
+                    tablePanel.remove(filterPanel);
+                tablePanel.revalidate();
+            }
+        });
+        toolBar.add(filterButton);
         toolBar.add(Box.createHorizontalStrut(5));
-        toolBar.add(SystemAction.get(CopyAction.class));
+        
+        clearFilterAction = new ClearFilterAction();
+        toolBar.add(clearFilterAction);
         toolBar.add(Box.createHorizontalStrut(5));
+        
+        copyAction = SystemAction.get(CopyAction.class);
+        getActionMap().put(copyAction.getActionMapKey(), new CopyTableAction());
+        
+        toolBar.add(copyAction);
+        toolBar.add(Box.createHorizontalStrut(5));
+        
         toolBar.add(DeleteAction.createSmall(lkp));
         toolBar.add(Box.createHorizontalStrut(5));
-        toolBar.add(ImportDataAction.createSmall(Lookups.singleton(ds)));
+        
+        importDataAction = ImportDataAction.createSmall(Lookups.singleton(ds));
+        toolBar.add(importDataAction);
 
         toolBar.setBorderPainted(false);
         toolBar.setRollover(true);
@@ -177,11 +220,7 @@ class DataSourceTablePanel extends JPanel {
             filterPanel.setBounds(result);
             tableModel.setEntries(result);
             layout.show(DataSourceTablePanel.this, TABLE_CARD);
-            
-            CopyAction ca = SystemAction.get(CopyAction.class);
-            getActionMap().put(ca.getActionMapKey(), new CopyTableAction());
-            
-            filterAction.setEnabled(true);
+            setActionsEnabled(true);
         }
 
         @Override
@@ -216,22 +255,31 @@ class DataSourceTablePanel extends JPanel {
         }
     }
     
-    private class FilterAction extends AbstractAction {
-        
-        private FilterAction() {
-            putValue(Action.SMALL_ICON, CommonIcons.filter());
-            setEnabled(false);
+    private class FilterListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            tableModel.setFilter(filterPanel.createFilter());
+        }
+    }
+    
+    private class ClearFilterAction extends AbstractAction {
+        ClearFilterAction() {
+            putValue(SHORT_DESCRIPTION, Bundle.LBL_DataSourceTablePanel_ToolTip_ClearFilter());
+            putValue(SMALL_ICON, CommonIcons.clearFilter());
         }
         
         @Override
-        public void actionPerformed(ActionEvent e) {
-            DataEntryFilter filter = FilterPanel.createFilter(filterPanel);
-            if(filter != null)
-                tableModel.setFilter(filter);
+        public void actionPerformed(ActionEvent evt) {
+            filterPanel.clearFilter();
         }
     }
     
     private class CopyTableAction extends AbstractAction {
+
+        CopyTableAction() {
+            putValue(SHORT_DESCRIPTION, Bundle.LBL_DataSourceTablePanel_ToolTip_Copy());
+        }
+        
         @Override
         public void actionPerformed(ActionEvent e) {
             TableToClipboardRenderers.writeToClipboard(tableModel);

@@ -24,6 +24,13 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.ImportDataAction");
     }
     /**
+     * @return <i>Import Data</i>
+     * @see ImportDataAction
+     */
+    static String CTL_ImportDataAction_ToolTip() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "CTL.ImportDataAction.ToolTip");
+    }
+    /**
      * @return <i>Category Name</i>
      * @see CreateDataCategoryDialog
      */

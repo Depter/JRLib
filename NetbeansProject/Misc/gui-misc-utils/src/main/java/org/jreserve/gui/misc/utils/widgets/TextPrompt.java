@@ -18,10 +18,12 @@ package org.jreserve.gui.misc.utils.widgets;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import javax.swing.Icon;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
@@ -54,6 +56,28 @@ import org.openide.util.ImageUtilities;
  * @see http://tips4java.wordpress.com/2009/11/29/text-prompt/
  */
 public class TextPrompt extends JLabel {
+    
+    public static TextPrompt createStandard(String prompt, JComboBox component) {
+        return createStandard(prompt, getTextComponent(component));
+    }
+    
+    private static JTextComponent getTextComponent(JComboBox combo) {
+        Component editor = combo.getEditor().getEditorComponent();
+        if(editor instanceof JTextComponent) {
+            return (JTextComponent) editor;
+        } else {
+            String msg = "Editr component is not instance of JTextCombponent! " + editor;
+            throw new IllegalArgumentException(msg);
+        }
+    }
+    
+    public static TextPrompt createStandard(String prompt, String icon, JComboBox component) {
+        return createStandard(prompt, icon, getTextComponent(component));
+    }
+    
+    public static TextPrompt createStandard(String prompt, Icon icon, JComboBox component) {
+        return createStandard(prompt, icon, getTextComponent(component));
+    }
     
     public static TextPrompt createStandard(String prompt, JTextComponent component) {
         TextPrompt result = new TextPrompt(prompt, component, PromptStyle.FOCUS_LOST);

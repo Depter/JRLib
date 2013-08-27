@@ -1,1 +1,2 @@
-http://www.iconarchive.com/show/farm-fresh-icons-by-fatcow/filter-icon.html
+filter: http://www.iconarchive.com/show/farm-fresh-icons-by-fatcow/filter-icon.html
+clear_filter: http://www.iconarchive.com/show/farm-fresh-icons-by-fatcow/filter-delete-icon.html

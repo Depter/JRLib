@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.wrapper.jrlib">
-    <module_version install_time="1377194966774" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1377503985598" last="true" origin="installer" specification_version="1.0">
         <file crc="1315844411" name="config/Modules/org-jreserve-gui-wrapper-jrlib.xml"/>
-        <file crc="2342004480" name="modules/ext/org.jreserve/jrlib-1.0-SNAPSHOT.jar"/>
-        <file crc="4079047153" name="modules/org-jreserve-gui-wrapper-jrlib.jar"/>
+        <file crc="1197206848" name="modules/ext/org.jreserve/jrlib-1.0-SNAPSHOT.jar"/>
+        <file crc="2398481995" name="modules/org-jreserve-gui-wrapper-jrlib.jar"/>
     </module_version>
 </module>

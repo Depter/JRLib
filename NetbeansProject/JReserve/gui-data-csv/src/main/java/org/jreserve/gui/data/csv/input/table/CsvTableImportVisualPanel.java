@@ -322,11 +322,10 @@ public class CsvTableImportVisualPanel extends javax.swing.JPanel {
         add(dateFormatLabel, gridBagConstraints);
 
         dateFormatCombo.setEditable(true);
-        dateFormatCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "yyyy-MM", "yyyy-MM-dd", "MM-yyyy", "dd-MM-yyyy", " " }));
-        dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormats()));
+        dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormatPatterns()));
         dateFormatEditor = (JTextComponent) dateFormatCombo.getEditor().getEditorComponent();
         dateFormatEditor.getDocument().addDocumentListener(inputListener);
-        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());
+        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatPattern());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 6;

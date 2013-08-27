@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<triangle>
+    <nextWidgetId>1</nextWidgetId>
+    
+    <widgets>
+        <widget id="0" output="false">
+            <type>data-source</type>
+            <location x="5" y="5"/>
+            <parameters>
+                <path>Data/MD/Paid</path>
+            </parameters>
+        </widget>
+        <widget id="1" output="false">
+            <type>geometry</type>
+            <location x="10" y="10"/>
+            <parameters>
+                <startDate>1997-01</startDate>
+                <accidentLength>12</accidentLength>
+                <developmentLength>12</developmentLength>
+            </parameters>
+        </widget>
+        <widget id="2" output="false">
+            <type>triangle-correction</type>
+            <location x="15" y="15"/>
+            <parameters>
+                <accident>2</accident>
+                <development>2</development>
+                <value>50000.64</value>
+            </parameters>
+        </widget>
+        <widget id="3" output="false">
+            <type>triangle-exclusion</type>
+            <location x="20" y="20"/>
+            <parameters>
+                <accident>3</accident>
+                <development>3</development>
+            </parameters>
+        </widget>
+        <widget id="4" output="false">
+            <type>triangle-smoothing</type>
+            <location x="25" y="25"/>
+            <parameters>
+                <method>double-exponential</method>
+                <alpha>0.5</alpha>
+                <beta>0.5</beta>
+            </parameters>
+        </widget>
+        <widget id="5" output="false">
+            <type>triangle-smoothing-cell</type>
+            <location x="20" y="40"/>
+            <parameters>
+                <accident>2</accident>
+                <development>0</development>
+                <applied>false</applied>
+            </parameters>
+        </widget>
+        <widget id="6" output="false">
+            <type>triangle-smoothing-cell</type>
+            <location x="25" y="40"/>
+            <parameters>
+                <accident>3</accident>
+                <development>0</development>
+                <applied>false</applied>
+            </parameters>
+        </widget>
+        <widget id="7" output="false">
+            <type>triangle-smoothing-cell</type>
+            <location x="30" y="40"/>
+            <parameters>
+                <accident>4</accident>
+                <development>0</development>
+                <applied>true</applied>
+            </parameters>
+        </widget>
+        <widget id="8" output="true">
+            <type>triangle-output</type>
+            <location x="30" y="30"/>
+        </widget>
+    </widgets>
+    
+    <edges>
+        <edge from="0" to="1"/>
+        <edge from="1" to="2"/>
+        <edge from="2" to="3"/>
+        <edge from="3" to="4"/>
+        <edge from="5" to="4"/>
+        <edge from="6" to="4"/>
+        <edge from="7" to="4"/>
+        <edge from="4" to="8"/>
+    </edges>
+</triangle>

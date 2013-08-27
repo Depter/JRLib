@@ -39,6 +39,8 @@ import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.RowSorter;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import org.jreserve.gui.misc.audit.api.Auditable;
@@ -64,7 +66,11 @@ import org.openide.util.actions.SystemAction;
     "LBL.AuditTableMultiviewPanel.Sort.Date.Ascending=Date, Ascending",
     "LBL.AuditTableMultiviewPanel.Sort.Date.Descending=Date, Descending",
     "LBL.AuditTableMultiviewPanel.Sort.User.Ascending=User, Ascending",
-    "LBL.AuditTableMultiviewPanel.Sort.User.Descending=User, Descending"
+    "LBL.AuditTableMultiviewPanel.Sort.User.Descending=User, Descending",
+    "LBL.AuditTableMultiviewPanel.ToolTip.Filter=Filter table",
+    "LBL.AuditTableMultiviewPanel.ToolTip.ClearFilter=Clear filter",
+    "LBL.AuditTableMultiviewPanel.ToolTip.Copy=Copy table contents",
+    "LBL.AuditTableMultiviewPanel.ToolTip.Refresh=Refresh table"
 })
 public class AuditTableMultiviewPanel extends JPanel {
     private final static String LOADING_CARD = "loadingCard";  //NOI18
@@ -77,12 +83,14 @@ public class AuditTableMultiviewPanel extends JPanel {
     private JLabel loadLabel;
     private AuditRecordRenderer renderer;
     private JToolBar toolBar;
-    private FilterAction filterAction = new FilterAction();
-//    private FilterPanel filterPanel = new FilterPanel();
+    private CopyTableAction copyAction = new CopyTableAction();
+    private ClearFilterAction clearFilterAction = new ClearFilterAction();
     private RefreshAction refreshAction = new RefreshAction();
     private CopyTableAction copyTableAction = new CopyTableAction();
     private FilterPanel filterPanel;
+    private JToggleButton filterButton;
     private JPanel tablePanel;
+    private List<AuditRecord> records = Collections.EMPTY_LIST;
     
     public AuditTableMultiviewPanel(Auditable auditable) {
         this.auditable = auditable;
@@ -109,6 +117,7 @@ public class AuditTableMultiviewPanel extends JPanel {
         tablePanel = new JPanel(new BorderLayout());
         tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
         filterPanel = new FilterPanel();
+        filterPanel.addChangeListener(new FilterListener());
         
         add(tablePanel, TABLE_CARD);
         
@@ -123,7 +132,8 @@ public class AuditTableMultiviewPanel extends JPanel {
         
         toolBar.addSeparator();
         
-        final JToggleButton filterButton = new JToggleButton(CommonIcons.filter());
+        filterButton = new JToggleButton(CommonIcons.filter());
+        filterButton.setToolTipText(Bundle.LBL_AuditTableMultiviewPanel_ToolTip_Filter());
         filterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -136,8 +146,15 @@ public class AuditTableMultiviewPanel extends JPanel {
         });
         toolBar.add(filterButton);
         toolBar.add(Box.createHorizontalStrut(5));
-        toolBar.add(SystemAction.get(CopyAction.class));
+        
+        toolBar.add(clearFilterAction);
         toolBar.add(Box.createHorizontalStrut(5));
+        
+        CopyAction ca = SystemAction.get(CopyAction.class);
+        getActionMap().put(ca.getActionMapKey(), copyTableAction);
+        toolBar.add(ca);
+        toolBar.add(Box.createHorizontalStrut(5));
+        
         toolBar.add(refreshAction);
         toolBar.add(Box.createHorizontalStrut(5));
         
@@ -149,34 +166,60 @@ public class AuditTableMultiviewPanel extends JPanel {
     private void loadRecords() {
         layout.show(this, LOADING_CARD);
         tableModel.setRecords(Collections.EMPTY_LIST);
-        getActionMap().remove(SystemAction.get(CopyAction.class).getActionMapKey());
-        filterAction.setEnabled(false);
-        refreshAction.setEnabled(false);
+        setActionsEnabled(false);
         
         String msg = Bundle.MSG_AuditTableMultiviewPanel_Loading();
         TaskUtil.execute(new AuditRecordLoader(auditable), new LoaderCallback(), msg);
+    }
+    
+    private void setActionsEnabled(boolean enabled) {
+        filterButton.setEnabled(enabled);
+        clearFilterAction.setEnabled(enabled);
+        copyAction.setEnabled(enabled);
+        refreshAction.setEnabled(enabled);
     }
     
     public JComponent getToolBar() {
         return toolBar;
     }
     
+    private class FilterListener implements ChangeListener {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            tableModel.setRecords(filterPanel.filterRecords(records));
+        }
+    }
+    
+    private class ClearFilterAction extends AbstractAction {
+        ClearFilterAction() {
+            putValue(SMALL_ICON, CommonIcons.clearFilter());
+            putValue(SHORT_DESCRIPTION, Bundle.LBL_AuditTableMultiviewPanel_ToolTip_ClearFilter());
+        }
+        
+        @Override
+        public void actionPerformed(ActionEvent evt) {
+            filterPanel.clearFilter();
+        }
+    }
+    
     private class LoaderCallback implements SwingCallback<List<AuditRecord>> {
 
         @Override
         public void finnished(List<AuditRecord> result) {
-            tableModel.setRecords(result);
+            updateRecords(result);
             layout.show(AuditTableMultiviewPanel.this, TABLE_CARD);
-            
-            CopyAction ca = SystemAction.get(CopyAction.class);
-            getActionMap().put(ca.getActionMapKey(), copyTableAction);
-            
-            filterAction.setEnabled(true);
-            refreshAction.setEnabled(true);
+            setActionsEnabled(true);
+        }
+        
+        private void updateRecords(List<AuditRecord> newRecords) {
+            records = newRecords;
+            filterPanel.initFromRecords(records);
+            tableModel.setRecords(filterPanel.filterRecords(records));
         }
 
         @Override
         public void finnishedWithException(Exception ex) {
+            updateRecords(Collections.EMPTY_LIST);
             String msg = Bundle.MSG_AuditTableMultiviewPanel_Loading_Error();
             BubbleUtil.showException(msg, ex);
             layout.show(AuditTableMultiviewPanel.this, TABLE_CARD);
@@ -187,7 +230,7 @@ public class AuditTableMultiviewPanel extends JPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             TableToClipboard ttc = new TableToClipboard();
-            ttc.setRenderer(Date.class, null);
+            ttc.setRenderer(Date.class, renderer);
             ttc.toClipboard(tableModel, true);
         }
     }
@@ -226,24 +269,10 @@ public class AuditTableMultiviewPanel extends JPanel {
         }
     }
     
-    private class FilterAction extends AbstractAction {
-        
-        private FilterAction() {
-            putValue(Action.SMALL_ICON, CommonIcons.filter());
-            setEnabled(false);
-        }
-        
-        @Override
-        public void actionPerformed(ActionEvent e) {
-//            DataEntryFilter filter = FilterPanel.createFilter(filterPanel);
-//            if(filter != null)
-//                tableModel.setFilter(filter);
-        }
-    }
-    
     private class RefreshAction extends AbstractAction {
         private RefreshAction() {
             putValue(Action.SMALL_ICON, CommonIcons.refresh());
+            putValue(SHORT_DESCRIPTION, Bundle.LBL_AuditTableMultiviewPanel_ToolTip_Refresh());
             setEnabled(false);
         }
 

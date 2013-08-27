@@ -20,7 +20,8 @@ import java.util.Date;
 
 /**
  *
- * @author AA461472
+ * @author Peter Decsi
+ * @version 1.0
  */
 public final class AuditRecord {
     
@@ -29,14 +30,16 @@ public final class AuditRecord {
     private final long componentId;
     private final String component;
     private final String user;
+    private final String machine;
     private final String change;
 
-    public AuditRecord(Date changeDate, Date logDate, long componentId, String component, String user, String change) {
+    public AuditRecord(Date changeDate, Date logDate, long componentId, String component, String user, String machine, String change) {
         this.changeDate = changeDate;
         this.logDate = logDate;
         this.componentId = componentId;
         this.component = component;
         this.user = user;
+        this.machine = machine;
         this.change = change;
     }
 
@@ -59,8 +62,18 @@ public final class AuditRecord {
     public String getUser() {
         return user;
     }
+    
+    public String getMachine() {
+        return machine;
+    }
 
     public String getChange() {
         return change;
+    }
+    
+    @Override
+    public String toString() {
+        String msg = "%1$tF %1$tT [%2$s@%3$s]: %4$2";
+        return String.format(msg, changeDate, user, machine, change);
     }
 }

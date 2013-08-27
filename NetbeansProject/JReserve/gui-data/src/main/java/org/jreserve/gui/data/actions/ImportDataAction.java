@@ -57,6 +57,7 @@ import org.openide.util.Utilities;
 @RibbonRegistration(path="Ribbon/TaskPanes/Edit/Data", position=100)
 @Messages({
     "CTL.ImportDataAction=Import Data",
+    "CTL.ImportDataAction.ToolTip=Import Data",
     "LBL.ImportDataAction.WizardTitle=Import Data"
 })
 public class ImportDataAction extends AbstractContextAwareAction {
@@ -66,6 +67,7 @@ public class ImportDataAction extends AbstractContextAwareAction {
     public static ImportDataAction createSmall(Lookup lkp) {
         ImportDataAction action = new ImportDataAction(lkp);
         action.putValue(Action.LARGE_ICON_KEY, null);
+        action.putValue(SHORT_DESCRIPTION, Bundle.CTL_ImportDataAction_ToolTip());
         return action;
     }
     

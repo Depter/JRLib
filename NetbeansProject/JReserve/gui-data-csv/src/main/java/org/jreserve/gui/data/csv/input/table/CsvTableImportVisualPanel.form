@@ -215,18 +215,12 @@
     <Component class="javax.swing.JComboBox" name="dateFormatCombo">
       <Properties>
         <Property name="editable" type="boolean" value="true"/>
-        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="5">
-            <StringItem index="0" value="yyyy-MM"/>
-            <StringItem index="1" value="yyyy-MM-dd"/>
-            <StringItem index="2" value="MM-yyyy"/>
-            <StringItem index="3" value="dd-MM-yyyy"/>
-            <StringItem index="4" value=" "/>
-          </StringArray>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="new DefaultComboBoxModel(LocaleSettings.getDateFormatPatterns())" type="code"/>
         </Property>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormats()));&#xa;dateFormatEditor = (JTextComponent) dateFormatCombo.getEditor().getEditorComponent();&#xa;dateFormatEditor.getDocument().addDocumentListener(inputListener);&#xa;dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());"/>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="dateFormatEditor = (JTextComponent) dateFormatCombo.getEditor().getEditorComponent();&#xa;dateFormatEditor.getDocument().addDocumentListener(inputListener);&#xa;dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatPattern());"/>
       </AuxValues>
       <Constraints>
         <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout" value="org.netbeans.modules.form.compat2.layouts.DesignGridBagLayout$GridBagConstraintsDescription">

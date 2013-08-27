@@ -1,0 +1,24 @@
+Calculation {
+    getElements(): List<CalculationElement>
+    createCalculationData(): CalculationData
+}
+
+NodeCalculationElement extends CalculationElement {
+    createNode(): Node
+}
+
+
+CalculationElement {
+  getFactoryId(): String
+  getWidgetLocation(): Point
+  acceptsAsInput(Calculationelement e): boolean
+  addInputEdge(CalculationElement e): void
+  createCalculationDate(): CalculationData
+  getInputElements(): LisT<InputElement>()
+  createWidget(): Widget
+}
+
+CalculationelementFactory {
+  getId(): String
+  createElement(Map properties): CalculationElement
+}

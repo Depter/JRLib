@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.misc.audit.db;
 
+import java.net.InetAddress;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -37,8 +38,10 @@ public abstract class AuditDbManager {
 
     private final static Logger logger = Logger.getLogger(AuditDbManager.class.getName());
     
+    
     protected final static String AUDIT_PATH = "Audit";
     private static AuditDbManager INSTANCE;
+    private static String MACHINE_NAME = null;
     
     public synchronized static AuditDbManager getInstance() {
         if(INSTANCE == null) {
@@ -49,6 +52,19 @@ public abstract class AuditDbManager {
             }
         }
         return INSTANCE;
+    }
+    
+    public synchronized static String getMachineName() {
+        if(MACHINE_NAME == null) {
+            MACHINE_NAME = "Unknown";
+            try {
+                MACHINE_NAME = InetAddress.getLocalHost().getHostName();
+                logger.log(Level.CONFIG, "Machine name set to: {0}", MACHINE_NAME);
+            } catch (Exception ex) {
+                logger.log(Level.WARNING, "Unable to determine machine name!", ex);
+            }
+        }
+        return MACHINE_NAME;
     }
 
     private final Map<Project, AuditDb> dbs = new HashMap<Project, AuditDb>();

@@ -10,6 +10,27 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceTableMultiviewElement.Title");
     }
     /**
+     * @return <i>Clear filter</i>
+     * @see DataSourceTablePanel
+     */
+    static String LBL_DataSourceTablePanel_ToolTip_ClearFilter() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceTablePanel.ToolTip.ClearFilter");
+    }
+    /**
+     * @return <i>Copy to clipboard</i>
+     * @see DataSourceTablePanel
+     */
+    static String LBL_DataSourceTablePanel_ToolTip_Copy() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceTablePanel.ToolTip.Copy");
+    }
+    /**
+     * @return <i>Filter the table...</i>
+     * @see DataSourceTablePanel
+     */
+    static String LBL_DataSourceTablePanel_ToolTip_Filter() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceTablePanel.ToolTip.Filter");
+    }
+    /**
      * @return <i>Accident</i>
      * @see EditorTableModel
      */
@@ -36,27 +57,6 @@ class Bundle {
      */
     static String LBL_EditorUtil_DataSourceAudit() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorUtil.DataSourceAudit");
-    }
-    /**
-     * @return <i>Cancel</i>
-     * @see FilterPanel
-     */
-    static String LBL_FilterPanel_Cancel() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.FilterPanel.Cancel");
-    }
-    /**
-     * @return <i>Ok</i>
-     * @see FilterPanel
-     */
-    static String LBL_FilterPanel_Ok() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.FilterPanel.Ok");
-    }
-    /**
-     * @return <i>Select Filter</i>
-     * @see FilterPanel
-     */
-    static String LBL_FilterPanel_Title() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.FilterPanel.Title");
     }
     /**
      * @param path path

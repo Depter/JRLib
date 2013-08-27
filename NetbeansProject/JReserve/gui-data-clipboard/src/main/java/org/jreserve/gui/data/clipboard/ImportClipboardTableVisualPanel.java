@@ -84,11 +84,11 @@ class ImportClipboardTableVisualPanel extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 30, 5);
         add(dateFormatLabel, gridBagConstraints);
 
-        dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormats()));
+        dateFormatCombo.setModel(new DefaultComboBoxModel(LocaleSettings.getDateFormatPatterns()));
         dateFormatCombo.setEditable(true);
         dateFormatEditor = (JTextComponent) dateFormatCombo.getEditor().getEditorComponent();
         dateFormatEditor.getDocument().addDocumentListener(inputListener);
-        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormat());
+        dateFormatCombo.setSelectedItem(LocaleSettings.getDateFormatPattern());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;

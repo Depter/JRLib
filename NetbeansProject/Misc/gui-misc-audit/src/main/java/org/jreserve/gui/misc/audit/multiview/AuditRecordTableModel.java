@@ -91,7 +91,7 @@ class AuditRecordTableModel extends AbstractTableModel {
         AuditRecord record = records.get(row);
         switch(column) {
             case DATE_COLUMN: return record.getChangeDate();
-            case USER_COLUMN: return record.getUser();
+            case USER_COLUMN: return record.getUser()+"@"+record.getMachine();
             case OBJECT_COLUMN: return record.getComponent();
             case CHANGE_COLUMN: return record.getChange();
             default:

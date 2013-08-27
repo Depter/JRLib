@@ -62,8 +62,9 @@ class BinaryRecordReader extends AbstractBinaryReader<List<AuditRecord>>{
         long objId = is.readLong();
         String objName = is.readString();
         String user = is.readString();
+        String machine = is.readString();
         String change = is.readString();
-        return new AuditRecord(changeDate, logDate, objId, objName, user, change);
+        return new AuditRecord(changeDate, logDate, objId, objName, user, machine, change);
     }
 
 }

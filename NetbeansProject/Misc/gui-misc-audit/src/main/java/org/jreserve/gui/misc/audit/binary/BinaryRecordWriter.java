@@ -20,6 +20,7 @@ package org.jreserve.gui.misc.audit.binary;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.jreserve.gui.misc.audit.event.AuditEvent;
 
 /**
@@ -45,6 +46,7 @@ class BinaryRecordWriter extends AbstractBinaryWriter<List<AuditEvent>>{
         os.writeLong(event.getComponentId());
         os.writeString(event.getComponent());
         os.writeString(event.getUserName());
+        os.writeString(AuditDbManager.getMachineName());
         os.writeString(event.getChange());
     }
 }
