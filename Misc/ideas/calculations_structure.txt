@@ -3,19 +3,18 @@ Calculation {
     createCalculationData(): CalculationData
 }
 
-NodeCalculationElement extends CalculationElement {
-    createNode(): Node
-}
-
-
 CalculationElement {
   getFactoryId(): String
   getWidgetLocation(): Point
   acceptsAsInput(Calculationelement e): boolean
   addInputEdge(CalculationElement e): void
-  createCalculationDate(): CalculationData
+  createCalculationData(): CalculationData
   getInputElements(): LisT<InputElement>()
   createWidget(): Widget
+}
+
+NodeCalculationElement extends CalculationElement {
+    createNode(): Node
 }
 
 CalculationelementFactory {

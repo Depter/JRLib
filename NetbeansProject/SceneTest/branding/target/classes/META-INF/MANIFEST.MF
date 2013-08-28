@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+OpenIDE-Module-Localizing-Bundle: org/decsi/test/scenetest/branding/Bu
+ ndle.properties
+AutoUpdate-Essential-Module: true
+OpenIDE-Module-Specification-Version: 1.0
+OpenIDE-Module-Implementation-Version: 1.0-20130828
+OpenIDE-Module-Build-Version: 201308281106
+OpenIDE-Module: org.decsi.test.SceneTest.branding
+OpenIDE-Module-Public-Packages: -
+OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
+OpenIDE-Module-Display-Category: org.decsi.test
+OpenIDE-Module-Name: SceneTest-branding
+OpenIDE-Module-Short-Description: <undefined>
+OpenIDE-Module-Long-Description: <undefined>
+OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
+ n/1 > 1.14.1
+

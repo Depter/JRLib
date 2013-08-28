@@ -1,0 +1,9 @@
+home=1377707518667
+bin=1377707518667
+etc=1377707518667
+platform=1377707518667
+scenetest=1377707518667
+user=1377707518667
+crc=7
+locale=nl_NL
+branding=scenetest
