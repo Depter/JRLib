@@ -61,6 +61,10 @@ public class JRLibScene extends GraphPinScene<JRLibNode, JRLibEdge, JRLibPin>{
         sceneLayout = LayoutFactory.createSceneGraphLayout(this, ggl);
     }
     
+    public JRLibWidgetUI getUI() {
+        return ui;
+    }
+    
     @Override
     protected Widget attachNodeWidget(JRLibNode node) {
         JRLibNodeWidget widget = new JRLibNodeWidget(this, ui, node);

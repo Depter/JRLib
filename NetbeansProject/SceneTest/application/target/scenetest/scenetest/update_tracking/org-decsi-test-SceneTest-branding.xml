@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.decsi.test.SceneTest.branding">
-    <module_version install_time="1377688001080" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1377763613641" last="true" origin="installer" specification_version="1.0">
         <file crc="2490801397" name="config/Modules/org-decsi-test-SceneTest-branding.xml"/>
-        <file crc="1638859908" name="core/locale/core_scenetest.jar"/>
-        <file crc="793086911" name="modules/locale/org-netbeans-core-windows_scenetest.jar"/>
-        <file crc="20616588" name="modules/locale/org-netbeans-core_scenetest.jar"/>
-        <file crc="192105029" name="modules/org-decsi-test-SceneTest-branding.jar"/>
+        <file crc="2791560938" name="core/locale/core_scenetest.jar"/>
+        <file crc="915611252" name="modules/locale/org-netbeans-core-windows_scenetest.jar"/>
+        <file crc="2983979043" name="modules/locale/org-netbeans-core_scenetest.jar"/>
+        <file crc="3202683886" name="modules/org-decsi-test-SceneTest-branding.jar"/>
     </module_version>
 </module>

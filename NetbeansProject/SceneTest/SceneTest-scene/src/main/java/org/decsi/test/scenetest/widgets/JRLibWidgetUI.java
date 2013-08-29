@@ -32,6 +32,43 @@ public class JRLibWidgetUI {
     private final static Border PIN_BORDER = BorderFactory.createOpaqueBorder (2, 8, 2, 8);
     private final static Color PIN_FG_COLOR = Color.BLACK;
     
+    private final static Color CONTROL_BORDER_COLOR = Color.BLACK;
+    private final static Color CONTROL_BORDER_HOVER_COLOR = Color.BLUE;
+    private final static Color CONTROL_BORDER_DISABLED_COLOR = new Color(150, 150, 150);
+    private final static Color CONTROL_TEXT_COLOR = Color.BLACK;
+    private final static Color CONTROL_TEXT_DISABLED_COLOR = new Color(150, 150, 150);
+    
+    private final static Color TEXT_ENABLED_BG = Color.WHITE;
+    private final static Color TEXT_DISABLED_BG = new Color(210, 210, 210);
+    
+    Color getTextEnabledBg() {
+        return TEXT_ENABLED_BG;
+    }
+    
+    Color getTextDisabledBg() {
+        return TEXT_DISABLED_BG;
+    }
+    
+    Color getControlBorderColor() {
+        return CONTROL_BORDER_COLOR;
+    }
+    
+    Color getControlBorderHoverColor() {
+        return CONTROL_BORDER_HOVER_COLOR;
+    }
+    
+    Color getControlBorderDisabledColor() {
+        return CONTROL_BORDER_DISABLED_COLOR;
+    }
+    
+    Color getControlForeground() {
+        return CONTROL_TEXT_COLOR;
+    }
+    
+    Color getControlDisabledForeground() {
+        return CONTROL_TEXT_DISABLED_COLOR;
+    }
+    
     void initUI(JRLibNodeWidget widget) {
         widget.setBorder(NODE_BORDER);
         widget.setOpaque(false);

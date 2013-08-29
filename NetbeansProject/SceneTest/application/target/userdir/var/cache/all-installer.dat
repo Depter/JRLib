@@ -1,4 +1,4 @@
-#Wed Aug 28 18:32:23 CEST 2013
+#Thu Aug 29 18:13:29 CEST 2013
 org.netbeans.core.startup.OpenIDE-Module-Deprecated=\u0000
 org.netbeans.modules.settings.AutoUpdate-Show-In-Client=false
 org.netbeans.core.startup.OpenIDE-Module-Layer=org/netbeans/core/startup/layer.xml
@@ -34,8 +34,8 @@ org.netbeans.swing.outline.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 org.netbeans.modules.editor.mimelookup.OpenIDE-Module-Layer=\u0000
 org.netbeans.modules.masterfs.OpenIDE-Module-Deprecated=\u0000
 org.openide.actions.OpenIDE-Module-Layer=\u0000
-org.netbeans.bootstrap.AutoUpdate-Show-In-Client=false
 org.netbeans.api.progress.OpenIDE-Module-Description=\u0000
+org.netbeans.bootstrap.AutoUpdate-Show-In-Client=false
 org.openide.loaders.AutoUpdate-Show-In-Client=false
 org.netbeans.modules.favorites.OpenIDE-Module-Description=\u0000
 org.netbeans.spi.quicksearch.OpenIDE-Module-Layer=org/netbeans/modules/quicksearch/resources/layer.xml
@@ -207,9 +207,9 @@ org.netbeans.swing.tabcontrol.OpenIDE-Module-Install=\u0000
 org.netbeans.spi.quicksearch.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 org.netbeans.bootstrap.OpenIDE-Module-Layer=\u0000
 org.openide.modules.AutoUpdate-Show-In-Client=false
+org.openide.options.AutoUpdate-Show-In-Client=false
 org.netbeans.modules.progress.ui.OpenIDE-Module-Description=\u0000
 org.netbeans.modules.keyring.impl.OpenIDE-Module-Deprecated=\u0000
-org.openide.options.AutoUpdate-Show-In-Client=false
 org.openide.io.OpenIDE-Module-Hide-Classpath-Packages=\u0000
 org.netbeans.libs.osgi.OpenIDE-Module-Install=\u0000
 org.netbeans.api.search.AutoUpdate-Show-In-Client=false
@@ -252,8 +252,8 @@ org.netbeans.modules.autoupdate.ui.AutoUpdate-Show-In-Client=false
 org.netbeans.libs.felix.OpenIDE-Module-Description=\u0000
 org.openide.modules.OpenIDE-Module-Deprecated=\u0000
 org.decsi.test.SceneTest.scene.AutoUpdate-Show-In-Client=\u0000
-org.netbeans.modules.editor.mimelookup.AutoUpdate-Show-In-Client=false
 org.netbeans.modules.options.api.OpenIDE-Module-Layer=org/netbeans/modules/options/resources/mf-layer.xml
+org.netbeans.modules.editor.mimelookup.AutoUpdate-Show-In-Client=false
 org.decsi.test.SceneTest.branding.AutoUpdate-Show-In-Client=\u0000
 org.netbeans.modules.keyring.impl.OpenIDE-Module-Description=\u0000
 org.netbeans.modules.sampler.AutoUpdate-Show-In-Client=false

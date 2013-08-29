@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.decsi.test.SceneTest.scene">
-    <module_version install_time="1377707518151" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1377792783831" last="true" origin="installer" specification_version="1.0">
         <file crc="3792153200" name="config/Modules/org-decsi-test-SceneTest-scene.xml"/>
-        <file crc="3967515821" name="modules/org-decsi-test-SceneTest-scene.jar"/>
+        <file crc="258072504" name="modules/org-decsi-test-SceneTest-scene.jar"/>
     </module_version>
 </module>
