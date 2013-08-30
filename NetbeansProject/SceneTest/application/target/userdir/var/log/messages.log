@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
->Log Session: Thursday, August 29, 2013 6:13:05 PM CEST
+>Log Session: Friday, August 30, 2013 4:31:20 PM CEST
 >System Info: 
   Product Version         = SceneTest 201207171143
   Operating System        = Windows XP version 5.1 running on x86
@@ -70,7 +70,7 @@ INFO [org.netbeans.core.startup.NbEvents]: Turning on modules:
 	org.netbeans.core.nativeaccess/1 [1.16.1 201207171143]
 	org.netbeans.core.io.ui/1 [1.16.1 201207171143]
 	org.netbeans.api.visual [2.32.1 201207171143]
-	org.decsi.test.SceneTest.scene [1.0 1.0-20130829 201308291612]
+	org.decsi.test.SceneTest.scene [1.0 1.0-20130830 201308301430]
 	org.decsi.test.SceneTest.branding [1.0 1.0-20130829 201308290806]
 Diagnostic information
 Input arguments:
@@ -96,7 +96,7 @@ Heap memory usage: initial 24,0MB maximum 61,7MB
 Non heap memory usage: initial 18,2MB maximum 304,0MB
 Garbage collector: PS Scavenge (Collections=29 Total time spent=0s)
 Garbage collector: PS MarkSweep (Collections=0 Total time spent=0s)
-Classes: loaded=3974 total loaded=3974 unloaded 0
+Classes: loaded=4109 total loaded=4109 unloaded 0
 INFO [org.netbeans.core.ui.warmup.DiagnosticTask]: Total memory 2.147.483.647
 INFO [null]: Total physical memory 2.147.483.647
 WARNING [org.openide.filesystems.Ordering]: Not all children in Menu/Window/ marked with the position attribute: [org-decsi-test-scenetest-window-SceneTopComponent.shadow], but some are: [org-netbeans-modules-favorites-View.shadow, org-netbeans-core-windows-actions-GlobalPropertiesAction.shadow, Output, SwitchToRecentDocumentAction.shadow, ProgressListAction.shadow, Separator3.instance, ConfigureWindow, org-netbeans-core-windows-actions-ResetWindowsAction.shadow, Separator4.instance, CloseWindowAction.shadow, CloseAllDocumentsAction.shadow, CloseAllButThisAction.shadow, DocumentsAction.shadow]

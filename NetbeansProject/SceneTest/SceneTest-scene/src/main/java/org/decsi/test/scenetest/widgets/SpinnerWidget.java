@@ -33,13 +33,13 @@ import org.openide.util.ChangeSupport;
 public class SpinnerWidget extends Widget {
     
     private SpinnerModel model;
-    private ModelBridge bridge;
+    private TextBridge bridge;
     private SpinnerButton prevButton;
     private SpinnerButton nextButton;
     private LabelWidget labelWidget;
     private ChangeSupport cs = new ChangeSupport(this);
     
-    public SpinnerWidget(JRLibScene scene, SpinnerModel model, ModelBridge bridge) {
+    public SpinnerWidget(JRLibScene scene, SpinnerModel model, TextBridge bridge) {
         super(scene);
         this.model = model;
         this.bridge = bridge;
@@ -122,12 +122,6 @@ public class SpinnerWidget extends Widget {
             labelWidget.setLabel(bridge.toString(model.getValue()));
             fireChange();
         }
-    }
-    
-    public static interface ModelBridge {
-        public String toString(Object value);
-        
-        public Object toValue(String str) throws IllegalArgumentException;
     }
     
     private class EditProvider implements TextFieldInplaceEditor {

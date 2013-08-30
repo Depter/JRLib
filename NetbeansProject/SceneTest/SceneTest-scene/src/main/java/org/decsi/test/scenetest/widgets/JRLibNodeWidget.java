@@ -5,7 +5,6 @@
 package org.decsi.test.scenetest.widgets;
 
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.Rectangle;
 import org.decsi.test.scenetest.scene.JRLibNode;
 import org.decsi.test.scenetest.scene.JRLibPin;
@@ -13,7 +12,6 @@ import org.decsi.test.scenetest.scene.JRLibScene;
 import org.netbeans.api.visual.action.ActionFactory;
 import org.netbeans.api.visual.action.ResizeProvider;
 import org.netbeans.api.visual.action.ResizeStrategy;
-import org.netbeans.api.visual.action.SelectProvider;
 import org.netbeans.api.visual.border.Border;
 import org.netbeans.api.visual.border.BorderFactory;
 import org.netbeans.api.visual.layout.LayoutFactory;
@@ -87,18 +85,18 @@ public class JRLibNodeWidget extends Widget {
         header.setLayout (LayoutFactory.createHorizontalFlowLayout(LayoutFactory.SerialAlignment.CENTER, 8));
         
         if(node.hasInput())
-            header.addChild(new AnchorWidget(scene, true, ui));
+            header.addChild(new AnchorWidget(scene, true, ui), 0);
         
         imageWidget = new ImageWidget(super.getScene(), node.getImage());
-        header.addChild (imageWidget);
+        header.addChild(imageWidget, 0);
 
         titleWidget = new LabelWidget(scene, node.getTitle());
         titleWidget.setFont (ui.getHeaderFont(scene));
         titleWidget.setForeground(ui.getHeaderTitleColor());
-        header.addChild(titleWidget);
+        header.addChild(titleWidget, 1);
 
         if(node.hasOutput())
-            header.addChild(new AnchorWidget(scene, false, ui));
+            header.addChild(new AnchorWidget(scene, false, ui), 0);
         
         return header;
     

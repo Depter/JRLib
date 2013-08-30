@@ -24,8 +24,18 @@ public class TriangleCalculation {
     public void fillScene(JRLibScene scene) {
         DataSourceNode dsNode = new DataSourceNode();
         GeometryNode geometry = new GeometryNode();
+        CorrectionNode correction = new CorrectionNode();
+        SmoothingNode smoothing = new SmoothingNode();
+        CellNode cell1 = new CellNode();
+        CellNode cell2 = new CellNode();
+        CellNode cell3 = new CellNode();
         
         scene.addNode(dsNode);
         scene.addNode(geometry);
+        scene.addNode(correction);
+        scene.addNode(smoothing);
+        scene.addNode(cell1);
+        scene.addNode(cell2);
+        scene.addNode(cell3);
     }
 }
