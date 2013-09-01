@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.flamingo">
-    <module_version install_time="1377504054036" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1378061564081" last="true" origin="installer" specification_version="1.0">
         <file crc="3227785752" name="config/Modules/org-jreserve-gui-misc-flamingo.xml"/>
         <file crc="2270642787" name="modules/ext/com.github.insubstantial/flamingo-7.2.1.jar"/>
         <file crc="3533688983" name="modules/ext/com.github.insubstantial/trident-7.2.1-swing.jar"/>
-        <file crc="1573109410" name="modules/org-jreserve-gui-misc-flamingo.jar"/>
+        <file crc="2876115133" name="modules/org-jreserve-gui-misc-flamingo.jar"/>
     </module_version>
 </module>

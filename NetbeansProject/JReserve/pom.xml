@@ -78,6 +78,7 @@
         <module>gui-trianglewidget</module>
         <module>gui-wrapper-jrlib</module>
         <module>gui-wrapper-poi</module>
+    <module>gui-calculations</module>
   </modules>
 
     <properties>

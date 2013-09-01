@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.services">
-    <module_version install_time="1377504049598" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1378061580346" last="true" origin="installer" specification_version="1.0">
         <file crc="369730810" name="config/Modules/org-jreserve-gui-misc-services.xml"/>
-        <file crc="38860927" name="modules/org-jreserve-gui-misc-services.jar"/>
+        <file crc="3549542499" name="modules/org-jreserve-gui-misc-services.jar"/>
     </module_version>
 </module>

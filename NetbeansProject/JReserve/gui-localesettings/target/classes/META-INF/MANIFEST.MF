@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/localesettings/Bund
  le.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130826
-OpenIDE-Module-Build-Version: 201308260803
+OpenIDE-Module-Implementation-Version: 1.0-20130901
+OpenIDE-Module-Build-Version: 201309011905
 OpenIDE-Module: org.jreserve.gui.localesettings
 OpenIDE-Module-Public-Packages: org.jreserve.gui.localesettings.*
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
