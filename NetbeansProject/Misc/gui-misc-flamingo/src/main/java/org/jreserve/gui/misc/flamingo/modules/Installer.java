@@ -47,6 +47,7 @@ public class Installer extends ModuleInstall {
     private final static Logger logger = Logger.getLogger(Installer.class.getName());
     
     private final static String PROP_NO_NB_TOOLBAR = "netbeans.winsys.no_toolbars"; //NOI18
+    private final static String SWING_RENDERING = "nb.useSwingHtmlRendering";   //NOI18
     private final static String TRUE = "true"; //NOI18
     private final static String FALSE = "false"; //NOI18
     

@@ -15,7 +15,7 @@
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.project.api.fileprovider;
+package org.jreserve.gui.project.api.util;
 
 import java.util.logging.Logger;
 import org.jreserve.gui.misc.annotations.LayerRegistrationLoader;

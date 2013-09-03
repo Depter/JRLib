@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.layerexplorer">
-    <module_version install_time="1378061573125" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1378131851636" last="true" origin="installer" specification_version="1.0">
         <file crc="3204060441" name="config/Modules/org-jreserve-gui-misc-layerexplorer.xml"/>
-        <file crc="1735475672" name="modules/org-jreserve-gui-misc-layerexplorer.jar"/>
+        <file crc="3707513381" name="modules/org-jreserve-gui-misc-layerexplorer.jar"/>
+        <file crc="369483856" name="update_tracking/org-jreserve-gui-misc-layerexplorer.xml"/>
     </module_version>
 </module>

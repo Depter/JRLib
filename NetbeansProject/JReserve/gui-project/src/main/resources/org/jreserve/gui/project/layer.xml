@@ -10,7 +10,6 @@
             <file name="org-netbeans-modules-project-ui-CompileSingle.instance_hidden"/>
             <file name="org-netbeans-modules-project-ui-JavadocProject.instance_hidden"/>
             <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance_hidden"/>
-            <file name="org-netbeans-modules-project-ui-NewFile.instance_hidden"/>
             <file name="org-netbeans-modules-project-ui-RebuildMainProject.instance_hidden"/>
             <file name="org-netbeans-modules-project-ui-RebuildProject.instance_hidden"/>
             <file name="org-netbeans-modules-project-ui-Rerun.instance_hidden"/>
@@ -32,14 +31,19 @@
     <folder name="Ribbon">
         <folder name="AppMenu">
             <folder name="New">
-                <file name="org-netbeans-modules-project-ui-NewProject.shadow">
-                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewProject.instance"/>
+                <file name="org-netbeans-modules-project-ui-OpenProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-OpenProject.instance"/>
                     <attr name="position" intvalue="1000"/>
                     <attr name="iconBase" stringvalue="org/jreserve/gui/project/new.png"/>
                 </file>
-                <file name="org-netbeans-modules-project-ui-OpenProject.shadow">
-                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-OpenProject.instance"/>
+                <file name="org-netbeans-modules-project-ui-NewProject.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewProject.instance"/>
                     <attr name="position" intvalue="2000"/>
+                    <attr name="iconBase" stringvalue="org/jreserve/gui/project/new.png"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-NewFile.shadow">
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile.instance"/>
+                    <attr name="position" intvalue="3000"/>
                     <attr name="iconBase" stringvalue="org/jreserve/gui/project/new.png"/>
                 </file>
             </folder>
@@ -96,6 +100,14 @@
                 </file>
             </folder>
         </folder>
+    </folder>
+    <folder name="Templates">
+        <file name="Licenses_hidden"/>
+        <folder name="Other">
+            <file name="file_hidden"/>
+            <file name="org-netbeans-modules-project-ui-NewFileIterator-folderIterator_hidden"/>
+        </folder>
+        <file name="Properties_hidden"/>
     </folder>
     <folder name="Windows2">
         <folder name="Modes">

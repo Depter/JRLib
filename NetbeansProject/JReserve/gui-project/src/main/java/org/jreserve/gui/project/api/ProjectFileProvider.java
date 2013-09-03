@@ -19,6 +19,10 @@ package org.jreserve.gui.project.api;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  *
@@ -29,6 +33,8 @@ public interface ProjectFileProvider {
     
     public void createFiles(File projectFolder) throws IOException;
     
+    @Target({ElementType.TYPE, ElementType.METHOD})
+    @Retention(value= RetentionPolicy.SOURCE)
     public static @interface Registration {
         
         public String project();

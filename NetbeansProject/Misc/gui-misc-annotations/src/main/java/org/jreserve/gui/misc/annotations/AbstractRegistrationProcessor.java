@@ -41,6 +41,17 @@ import org.openide.filesystems.annotations.LayerGenerationException;
 public abstract class AbstractRegistrationProcessor<A extends Annotation, I> extends LayerGeneratingProcessor {
 
     public final static String POSITION = "position";
+    private final Class<A> annotationClass;
+    private final Class<I> interfaceClass;
+    
+    protected AbstractRegistrationProcessor() {
+        this(null, null);
+    }
+    
+    protected AbstractRegistrationProcessor(Class<A> annotationClass, Class<I> interfaceClass) {
+        this.annotationClass = annotationClass;
+        this.interfaceClass = interfaceClass;
+    }
     
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> set, RoundEnvironment re) throws LayerGenerationException {
@@ -59,17 +70,15 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
         return roundEnv.getElementsAnnotatedWith(getAnnotationClass());
     }
     
-    protected abstract Class<A> getAnnotationClass();
+    protected Class<A> getAnnotationClass() {
+        return annotationClass;
+    }
 
     protected void processElement(Element element) throws LayerGenerationException {
         String[] instanceDefinition = findDefinition(element);
         String className = instanceDefinition[0];
         String methodName = instanceDefinition[1];
         createLayerRegistration(element, className, methodName);
-//        
-//        checkImplementsInterface(element);
-//        checkConstructor(element);
-//        addClass(element);
     }
 
     private String[] findDefinition(Element e) throws LayerGenerationException {
@@ -123,7 +132,9 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
         return processingEnv.getElementUtils().getTypeElement(name);
     }
     
-    protected abstract Class<I> getInterfaceClass();
+    protected Class<I> getInterfaceClass() {
+        return interfaceClass;
+    }
     
     private boolean isAssignable(TypeMirror from, TypeMirror to) {
         return processingEnv.getTypeUtils().isAssignable(from, to);

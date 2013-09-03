@@ -14,43 +14,30 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
+package org.jreserve.gui.project.api.util;
 
-package org.jreserve.gui.project.api.fileprovider;
-
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.SupportedAnnotationTypes;
-import javax.annotation.processing.SupportedSourceVersion;
-import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
-import org.jreserve.gui.project.api.ProjectFileProvider;
+import org.jreserve.gui.project.api.DataObjectProvider;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@ServiceProvider(service=Processor.class)
-@SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.gui.project.api.ProjectFileProvider.Registration")
-public class ProjectFileProviderRegistrationProcessor extends AbstractRegistrationProcessor<ProjectFileProvider.Registration, ProjectFileProvider> {
-    final static String LAYER_PATH = "Projects/%s/CreateFileProviders/";
-
-    private final static String ERR_NO_PROJECT_NAME = 
-        "Project name is invalid!";
+public class ProjectFolderProviderRegistrationProcessor extends AbstractRegistrationProcessor<DataObjectProvider.Registration, DataObjectProvider> {
+    final static String LAYER_PATH = "Projects/%s/DataObjectProviders/";
+    final static String PROP_ID = "id";
+    final static String PROP_DISPLAY_NAME = "displayName";
+    final static String PROP_ICON_BASE = "iconBase";
     
-
-    @Override
-    protected Class<ProjectFileProvider.Registration> getAnnotationClass() {
-        return ProjectFileProvider.Registration.class;
-    }
-
-    @Override
-    protected Class<ProjectFileProvider> getInterfaceClass() {
-        return ProjectFileProvider.class;
+    private final static String ERR_NO_PROJECT_NAME = 
+        "Project type is invalid!";
+    
+    public ProjectFolderProviderRegistrationProcessor() {
+        super(DataObjectProvider.Registration.class, DataObjectProvider.class);
     }
 
     @Override
@@ -59,8 +46,8 @@ public class ProjectFileProviderRegistrationProcessor extends AbstractRegistrati
     }
     
     private String getProjectName(Element element) throws LayerGenerationException {
-        ProjectFileProvider.Registration annotation = getAnnotation(element);
-        String project = annotation.project();
+        DataObjectProvider.Registration annotation = getAnnotation(element);
+        String project = annotation.projectType();
         if(project == null || project.trim().length()==0)
             throw new LayerGenerationException(ERR_NO_PROJECT_NAME, element);
         return project;
@@ -68,7 +55,21 @@ public class ProjectFileProviderRegistrationProcessor extends AbstractRegistrati
     
     @Override
     protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
-        int position = getAnnotation(element).position();
-        file.position(position);
+        DataObjectProvider.Registration an = getAnnotation(element);
+        
+        String id = an.id();
+        if(id == null || id.length()==0)
+            throw new LayerGenerationException("id not set!", element, processingEnv, an, "id");
+        file.stringvalue(PROP_ID, id);
+        
+        String name = an.displayName();
+        if(name==null || name.length()==0)
+            throw new LayerGenerationException("displayName not set!", element, processingEnv, an, "displayName");
+        file.bundlevalue(PROP_DISPLAY_NAME, name, an, "displayName");
+        
+        String icon = an.iconBase();
+        if(icon != null && icon.length()>0)
+            file.stringvalue(PROP_ICON_BASE, icon);
+        file.position(an.position());
     }
 }

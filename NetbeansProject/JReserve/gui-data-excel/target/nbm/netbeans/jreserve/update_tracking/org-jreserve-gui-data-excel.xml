@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.data.excel">
-    <module_version install_time="1378062341996" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1378129797194" last="true" origin="installer" specification_version="1.0">
         <file crc="176886339" name="config/Modules/org-jreserve-gui-data-excel.xml"/>
-        <file crc="4280248522" name="modules/org-jreserve-gui-data-excel.jar"/>
+        <file crc="2678759942" name="modules/org-jreserve-gui-data-excel.jar"/>
+        <file crc="853464888" name="update_tracking/org-jreserve-gui-data-excel.xml"/>
     </module_version>
 </module>

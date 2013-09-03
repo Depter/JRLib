@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Set;
 import org.jreserve.gui.project.JReserveProjectFactory;
 import org.jreserve.gui.project.api.ProjectFileProvider;
-import org.jreserve.gui.project.api.fileprovider.ProjectFileProviderLoader;
+import org.jreserve.gui.project.api.util.ProjectFileProviderLoader;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 
