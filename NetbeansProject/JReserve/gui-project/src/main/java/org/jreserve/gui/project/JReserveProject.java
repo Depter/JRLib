@@ -17,6 +17,7 @@
 package org.jreserve.gui.project;
 
 import org.jreserve.gui.misc.audit.api.ProjectAuditable;
+import org.jreserve.gui.misc.utils.dataobject.DefaultProjectObjectLookup;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectState;
 import org.netbeans.spi.project.support.LookupProviderSupport;
@@ -60,7 +61,8 @@ public class JReserveProject implements Project {
             new JReserveProjectInformation(this),
             new JReserveLogicalView(this),
             new JReserveProjectCustomizer(this),
-            new ProjectAuditable(this)
+            new ProjectAuditable(this),
+            new DefaultProjectObjectLookup(this)
         };
         return LookupProviderSupport.createCompositeLookup(
                 Lookups.fixed(baseInfo), LOOKUP_PATH);

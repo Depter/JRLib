@@ -27,7 +27,7 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ProjectFileProviderLoader extends LayerRegistrationLoader<ProjectFileProvider>{
+public class ProjectFileProviderLoader extends LayerRegistrationLoader<ProjectFileProvider> {
 
     private final static Logger logger = Logger.getLogger(ProjectFileProviderLoader.class.getName());
     

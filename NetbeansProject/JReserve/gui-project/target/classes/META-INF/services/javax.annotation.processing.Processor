@@ -1,1 +1,1 @@
-org.jreserve.gui.project.api.fileprovider.ProjectFileProviderRegistrationProcessor
+org.jreserve.gui.project.api.util.ProjectFileProviderRegistrationProcessor

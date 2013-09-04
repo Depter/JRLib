@@ -3,8 +3,8 @@ OpenIDE-Module-Layer: org/jreserve/gui/project/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/project/Bundle.prop
  erties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130903
-OpenIDE-Module-Build-Version: 201309030932
+OpenIDE-Module-Implementation-Version: 1.0-20130904
+OpenIDE-Module-Build-Version: 201309041357
 OpenIDE-Module: org.jreserve.gui.project
 OpenIDE-Module-Public-Packages: org.jreserve.gui.project.api.*
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
@@ -19,5 +19,6 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  de.util > 8.25.1, org.openide.util.lookup > 8.15.1, org.netbeans.api.
  progress/1 > 1.28.1, org.openide.awt > 7.46.1, org.openide.dialogs > 
  7.25.1, org.jreserve.gui.misc.annotations > 1.0, org.jreserve.gui.mis
- c.audit > 1.0, org.jreserve.gui.misc.eventbus > 1.0
+ c.audit > 1.0, org.jreserve.gui.misc.eventbus > 1.0, org.jreserve.gui
+ .misc.utils > 1.0
 

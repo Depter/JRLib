@@ -12,4 +12,17 @@
             </file>
         </folder>
     </folder>
+    <folder name="Templates">
+        <folder name="Other">
+            <file name="org.jreserve.gui.project.api.util.CreateTriangleIterator">
+                <!--org.jreserve.gui.misc.utils.dataobject.impl.CreateDataFolderIterator-->
+                <attr boolvalue="true" name="template"/>
+                <attr intvalue="100" name="position"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.utils.dataobject.impl.Bundle#LBL.CreateDataFolderIterator.DisplayName" name="displayName"/>
+                <attr name="iconBase" stringvalue="org/jreserve/gui/misc/utils/folder.png"/>
+                <attr name="instantiatingIterator" newvalue="org.jreserve.gui.misc.utils.dataobject.impl.CreateDataFolderIterator"/>
+            </file>
+        </folder>
+    </folder>
 </filesystem>

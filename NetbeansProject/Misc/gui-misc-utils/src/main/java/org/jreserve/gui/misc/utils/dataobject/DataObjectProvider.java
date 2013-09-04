@@ -14,13 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.project.api;
+package org.jreserve.gui.misc.utils.dataobject;
 
 import java.io.IOException;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.netbeans.api.project.Project;
 import org.openide.loaders.DataFolder;
 
 /**
@@ -28,19 +26,9 @@ import org.openide.loaders.DataFolder;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataObjectProvider {
+public interface DataObjectProvider extends Displayable {
     
     public DataFolder getRootFolder();
     
     public DataFolder createFolder(String path) throws IOException;
-
-    @Target({ElementType.TYPE, ElementType.METHOD})
-    @Retention(value= RetentionPolicy.SOURCE)
-    public static @interface Registration {
-        String id();
-        String projectType();
-        String displayName();
-        String iconBase() default "";
-        int position() default Integer.MAX_VALUE;
-    }
 }
