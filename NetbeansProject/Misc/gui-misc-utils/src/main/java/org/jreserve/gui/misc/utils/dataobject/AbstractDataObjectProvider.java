@@ -66,8 +66,7 @@ public abstract class AbstractDataObjectProvider implements DataObjectProvider {
 
     @Override
     public DataFolder createFolder(String path) throws IOException {
-        FileObject folder = project.getProjectDirectory();
-        path += getRootName()+"/"+path;
+        FileObject folder = getRootFolder().getPrimaryFile();
         
         StringTokenizer tokenizer = new StringTokenizer(path, "/", false);
         while(tokenizer.hasMoreTokens()) {

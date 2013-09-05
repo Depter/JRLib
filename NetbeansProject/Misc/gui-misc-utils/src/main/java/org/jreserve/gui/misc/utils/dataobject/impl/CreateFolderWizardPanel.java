@@ -23,6 +23,8 @@ import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.netbeans.api.project.Project;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle.Messages;
@@ -37,6 +39,8 @@ import org.openide.util.Utilities;
     "MSG.CreateFolderWizardPanel.ProjectEmpty=Project not selected!",
     "MSG.CreateFolderWizardPanel.ProviderEmpty=Location not selected!",
     "MSG.CreateFolderWizardPanel.NameEmpty=Name is not selected!",
+    "# {0} - root",
+    "MSG.CreateFolderWizardPanel.WrongParent=New Folder must be within ''{0}''!",
     "MSG.CreateFolderWizardPanel.FolderExists=Folder already exists!"
 })
 class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
@@ -65,6 +69,13 @@ class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor
         
         DataObjectProvider provider = Utilities.actionsGlobalContext().lookup(DataObjectProvider.class);
         panel.setSelectedProvider(provider);
+        
+        DataFolder folder = Utilities.actionsGlobalContext().lookup(DataFolder.class);
+        if(provider != null && folder != null) {
+            FileObject parent = provider.getRootFolder().getPrimaryFile();
+            FileObject child = folder.getPrimaryFile();
+            panel.setFolder(FileUtil.getRelativePath(parent, child));
+        }
     }
     
     @Override
@@ -74,6 +85,9 @@ class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor
 
     @Override
     public void readSettings(WizardDescriptor settings) {
+        
+//        for(Map.Entry<String, Object> entry : settings.getProperties().entrySet())
+        
         this.wiz = settings;
         if(panel != null)
             initPanel();
@@ -81,8 +95,10 @@ class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor
 
     @Override
     public void storeSettings(WizardDescriptor settings) {
-        settings.putProperty(CreateDataFolderIterator.PROP_PATH, panel.getPath());
-        settings.putProperty(CreateDataFolderIterator.PROP_PROVIDER, panel.getProvider());
+        DataObjectProvider provider = panel.getProvider();
+        String path = panel.getPath();
+        settings.putProperty(CreateDataFolderIterator.PROP_PROVIDER, provider);
+        settings.putProperty(CreateDataFolderIterator.PROP_PATH, path);
     }
 
     @Override
@@ -137,6 +153,7 @@ class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor
         String path = panel.getPath();
         DataObjectProvider provider = panel.getProvider();
         FileObject root = provider.getRootFolder().getPrimaryFile();
+        
         FileObject child = root.getFileObject(path);
         if(child != null && child.isFolder()) {
             showError(Bundle.MSG_CreateFolderWizardPanel_FolderExists());

@@ -58,7 +58,9 @@ public class DefaultProjectObjectLookup implements ProjectObjectLookup {
             return null;
         
         DataFolder root = getRoot(elements.nextToken());
-        return root==null? null : getObject(root, elements);
+        if(root == null || !elements.hasMoreTokens())
+            return root;
+        return getObject(root, elements);
     }
     
     private DataFolder getRoot(String rootName) {

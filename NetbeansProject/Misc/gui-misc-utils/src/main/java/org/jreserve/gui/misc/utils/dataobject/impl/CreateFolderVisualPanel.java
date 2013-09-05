@@ -60,7 +60,11 @@ class CreateFolderVisualPanel extends javax.swing.JPanel {
     }
     
     void setSelectedProvider(DataObjectProvider provider) {
-        providerCombo.setSelectedItem(providerCombo);
+        providerCombo.setSelectedItem(provider);
+    }
+    
+    void setFolder(String folder) {
+        folderText.setText(folder);
     }
     
     DataObjectProvider getProvider() {
@@ -211,7 +215,14 @@ class CreateFolderVisualPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void providerComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_providerComboActionPerformed
-        browseFolderButton.setEnabled(providerCombo.getSelectedItem() != null);
+        DataObjectProvider provider = getProvider();
+        boolean enable = provider != null;
+        browseFolderButton.setEnabled(enable);
+        nameText.setEnabled(enable);
+        folderText.setEnabled(enable);
+        
+        folderText.setText(null);
+        
         controller.panelChanged();
     }//GEN-LAST:event_providerComboActionPerformed
 
@@ -268,15 +279,22 @@ class CreateFolderVisualPanel extends javax.swing.JPanel {
         }
         
         private void updatePath() {
+            String path = escapeFolder() + escapeName();
+            pathText.setText(path);
+        }
+        
+        private String escapeFolder() {
             String folder = folderText.getText();
-            String name = nameText.getText();
             if(folder == null)
                 folder = "";
             if(folder.length() > 0 && ! folder.endsWith("/"))
                 folder += "/";
-            if(name != null && name.length() > 0)
-                folder += name;
-            pathText.setText(folder);
+            return folder;
+        }
+        
+        private String escapeName() {
+            String name = nameText.getText();
+            return name==null? "" : name;
         }
     }
 }

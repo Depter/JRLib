@@ -16,7 +16,13 @@
  */
 package org.jreserve.gui.misc.utils.actions;
 
+import java.awt.Image;
+import java.beans.BeanInfo;
+import javax.swing.Icon;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
+import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -25,4 +31,33 @@ import org.jreserve.gui.misc.utils.widgets.Displayable;
 public interface Deletable extends Displayable {
     
     public void delete() throws Exception;
+    
+    public static abstract class NodeDeletable implements Deletable {
+        
+        protected final Node node;
+
+        protected NodeDeletable(Node node) {
+            this.node = node;
+        }
+        
+        @Override
+        public Icon getIcon() {
+            Image img = node.getIcon(BeanInfo.ICON_COLOR_16x16);
+            if(img == null)
+                return EmptyIcon.EMPTY_16;
+            return ImageUtilities.image2Icon(img);
+        }
+
+        @Override
+        public String getDisplayName() {
+            Node parent = node;
+            String path = "";
+            do {
+                path = "/" + parent.getDisplayName() + path;
+                parent = parent.getParentNode();
+            } while (parent != null);
+            
+            return path.length()==0? path : path.substring(1);
+        }
+    }
 }

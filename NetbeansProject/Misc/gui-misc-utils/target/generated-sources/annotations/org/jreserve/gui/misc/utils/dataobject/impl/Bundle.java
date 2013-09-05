@@ -67,5 +67,13 @@ class Bundle {
     static String MSG_CreateFolderWizardPanel_ProviderEmpty() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.CreateFolderWizardPanel.ProviderEmpty");
     }
+    /**
+     * @param root root
+     * @return <i>New Folder must be within ''</i>{@code root}<i>''!</i>
+     * @see CreateFolderWizardPanel
+     */
+    static String MSG_CreateFolderWizardPanel_WrongParent(Object root) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.CreateFolderWizardPanel.WrongParent", root);
+    }
     private void Bundle() {}
 }
