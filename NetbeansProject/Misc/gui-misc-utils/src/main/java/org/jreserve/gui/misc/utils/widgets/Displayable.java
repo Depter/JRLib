@@ -16,9 +16,8 @@
  */
 package org.jreserve.gui.misc.utils.widgets;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.Icon;
+import org.openide.nodes.Node;
 
 /**
  *
@@ -31,5 +30,20 @@ public interface Displayable {
     
     public String getDisplayName();
     
-    
+    public static class Utils {
+        
+        public static String displayPath(Node node) {
+            StringBuilder path = new StringBuilder();
+            while(node != null) {
+                if(path.length() > 0)
+                    path.insert(0, '/');
+                path.insert(0, node.getDisplayName());
+                
+                node = node.getParentNode();
+            }
+            return path.toString();
+        }
+        
+        private Utils() {}
+    }
 }

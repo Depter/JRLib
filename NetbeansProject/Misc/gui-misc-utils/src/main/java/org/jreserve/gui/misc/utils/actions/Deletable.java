@@ -50,14 +50,7 @@ public interface Deletable extends Displayable {
 
         @Override
         public String getDisplayName() {
-            Node parent = node;
-            String path = "";
-            do {
-                path = "/" + parent.getDisplayName() + path;
-                parent = parent.getParentNode();
-            } while (parent != null);
-            
-            return path.length()==0? path : path.substring(1);
+            return Displayable.Utils.displayPath(node);
         }
     }
 }

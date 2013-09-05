@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/annotations/Bu
  ndle.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130903
-OpenIDE-Module-Build-Version: 201309031051
+OpenIDE-Module-Implementation-Version: 1.0-20130905
+OpenIDE-Module-Build-Version: 201309051851
 OpenIDE-Module: org.jreserve.gui.misc.annotations
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.annotations.*
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
