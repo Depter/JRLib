@@ -16,9 +16,12 @@
  */
 package org.jreserve.gui.data.spi;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
+import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -29,7 +32,9 @@ public interface DataSourceWizard {
     
     public List<? extends WizardDescriptor.Panel> getPanels();
     
-    public DataProvider createDataProvider(WizardDescriptor wizard);
+    public Map<String, String> getDataProviderProperties();
+    
+    public void createSecondaryEntries(FileObject primaryFile) throws IOException;
     
     public void addChangeListener(ChangeListener listener);
 

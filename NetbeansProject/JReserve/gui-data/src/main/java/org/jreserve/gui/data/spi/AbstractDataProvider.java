@@ -19,70 +19,29 @@ package org.jreserve.gui.data.spi;
 
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
-import org.jreserve.gui.data.api.inport.SaveType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import org.jreserve.gui.data.api.DataEvent;
-import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "# {0} - path",
-    "MSG.AbstractDataProvider.Imported.OnlyNew=Data imported into ''{0}'', keeping old values!",
-    "# {0} - path",
-    "MSG.AbstractDataProvider.Imported.Overwrite=Data imported into ''{0}'', overwriting old values!",
-    "# {0} - path",
-    "MSG.AbstractDataProvider.Deleted=Data deleted from ''{0}''!"
-})
 public abstract class AbstractDataProvider implements DataProvider {
     
-    private final DataProvider.Factory factory;
-    private DataSource ds;
     private Set<DataEntry> entries;
-    
-    protected AbstractDataProvider(DataProvider.Factory factory) {
-        if(factory == null)
-            throw new NullPointerException("Factory is null!");
-        this.factory = factory;
-    }
     
     @Override
     public Map<String, String> getProperties() {
         return Collections.EMPTY_MAP;
     }
-    
-    @Override
-    public synchronized void setDataSource(DataSource dataSource) {
-        if(dataSource == null)
-            throw new NullPointerException("DataSource is null!");
-        if(ds != null)
-            throw new IllegalStateException("DataSource already set!");
-        this.ds = dataSource;
-    }
-    
-    protected synchronized DataSource getDataSource() {
-        return ds;
-    }
-    
-    @Override
-    public final DataProvider.Factory getFactory() {
-        return factory;
-    }
 
     @Override
     public synchronized final List<DataEntry> getEntries(DataEntryFilter filter) throws Exception {
-        if(ds == null)
-            throw new IllegalStateException("DataSource not set!");
         if(filter == null)
             filter = DataEntryFilter.ALL;
         
@@ -102,32 +61,19 @@ public abstract class AbstractDataProvider implements DataProvider {
     protected abstract Set<DataEntry> loadEntries() throws Exception;
 
     @Override
-    public synchronized final void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception {
+    public synchronized final boolean addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception {
         if(entries == null)
             throw new NullPointerException("Entries is null!");
         if(saveType == null)
             throw new NullPointerException("SaveType is null!");
-        if(ds == null)
-            throw new IllegalStateException("DataSource not set!");
-        
         boolean changed = false;
         for(DataEntry entry : entries)
             if(addEntry(entry, saveType))
                 changed = true;
             
-        if(changed) {
+        if(changed)
             saveEntries(entries);
-            String path = this.getDataSource().getPath();
-            String msg = SaveType.SAVE_NEW == saveType?
-                    Bundle.MSG_AbstractDataProvider_Imported_OnlyNew(path) :
-                    Bundle.MSG_AbstractDataProvider_Imported_Overwrite(path);
-            publishDataChange(msg);
-        }
-    }
-    
-    private void publishDataChange(String msg) {
-        DataEvent.DataChangeEvent evt = new DataEvent.DataChangeEvent(getDataSource(), msg);
-        EventBusManager.getDefault().publish(evt);
+        return changed;
     }
     
     private boolean addEntry(DataEntry newEntry, SaveType saveType) throws Exception {
@@ -155,11 +101,9 @@ public abstract class AbstractDataProvider implements DataProvider {
     protected abstract void saveEntries(Set<DataEntry> entries) throws Exception;
     
     @Override
-    public synchronized final void deleteEntries(Set<DataEntry> entries) throws Exception {
+    public synchronized final boolean deleteEntries(Set<DataEntry> entries) throws Exception {
         if(entries == null)
             throw new NullPointerException("Entries is null!");
-        if(ds == null)
-            throw new IllegalStateException("DataSource not set!");
         
         getLoadedEntries();
         boolean changed = false;
@@ -169,10 +113,8 @@ public abstract class AbstractDataProvider implements DataProvider {
             }
         }
             
-        if(changed) {
+        if(changed)
             saveEntries(this.entries);
-            String path = getDataSource().getPath();
-            publishDataChange(Bundle.MSG_AbstractDataProvider_Deleted(path));
-        }
+        return changed;
     }
 }

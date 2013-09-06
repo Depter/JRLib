@@ -1,3 +1,1 @@
-org.jreserve.gui.data.actions.createsourcewizard.DataSourceWizardRegistrationProcessor
-org.jreserve.gui.data.api.impl.DataProviderRegistrationProcessor
-org.jreserve.gui.data.inport.ImportDataProviderRegistrationProcessor
+org.jreserve.gui.data.spi.util.DataProviderRegistrationProcessor

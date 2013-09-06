@@ -3,8 +3,8 @@ OpenIDE-Module-Layer: org/jreserve/gui/project/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/project/Bundle.prop
  erties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130905
-OpenIDE-Module-Build-Version: 201309051856
+OpenIDE-Module-Implementation-Version: 1.0-20130906
+OpenIDE-Module-Build-Version: 201309061121
 OpenIDE-Module: org.jreserve.gui.project
 OpenIDE-Module-Public-Packages: org.jreserve.gui.project.api.*
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

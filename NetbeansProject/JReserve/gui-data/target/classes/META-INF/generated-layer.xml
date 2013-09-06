@@ -5,207 +5,26 @@
     <folder name="Projects">
         <folder name="org-jreserve-project-jreserve">
             <folder name="Lookup">
-                <file name="org-jreserve-gui-data-DataSourceObjectProvider.instance">
-                    <!--org.jreserve.gui.data.DataSourceObjectProvider-->
+                <file name="org-jreserve-gui-data-dataobject-DataSourceObjectProvider.instance">
+                    <!--org.jreserve.gui.data.dataobject.DataSourceObjectProvider-->
                     <attr
                         methodvalue="org.netbeans.modules.projectapi.LazyLookupProviders.forProjectServiceProvider" name="instanceCreate"/>
-                    <attr name="class" stringvalue="org.jreserve.gui.data.DataSourceObjectProvider"/>
-                    <attr name="service" stringvalue="org.jreserve.gui.misc.utils.dataobject.DataObjectProvider"/>
-                </file>
-                <file name="org-jreserve-gui-data-api-impl-DataManagerImpl-createDataManager.instance">
-                    <!--org.jreserve.gui.data.api.impl.DataManagerImpl.createDataManager(org.netbeans.api.project.Project)-->
-                    <attr
-                        methodvalue="org.netbeans.modules.projectapi.LazyLookupProviders.forProjectServiceProvider" name="instanceCreate"/>
-                    <attr name="class" stringvalue="org.jreserve.gui.data.api.impl.DataManagerImpl"/>
-                    <attr name="service" stringvalue="org.jreserve.gui.data.api.DataManager"/>
-                    <attr name="method" stringvalue="createDataManager"/>
+                    <attr name="class" stringvalue="org.jreserve.gui.data.dataobject.DataSourceObjectProvider"/>
+                    <attr name="service" stringvalue="org.jreserve.gui.data.dataobject.DataSourceObjectProvider"/>
                 </file>
             </folder>
             <folder name="Nodes">
-                <file name="org-jreserve-gui-data-nodes-DataRootNodeProvider.instance">
-                    <!--org.jreserve.gui.data.nodes.DataRootNodeProvider-->
+                <file name="org-jreserve-gui-data-dataobject-node-DataRootNodeProvider.instance">
+                    <!--org.jreserve.gui.data.dataobject.node.DataRootNodeProvider-->
                     <attr intvalue="100" name="position"/>
                 </file>
             </folder>
             <folder name="CreateFileProviders">
-                <file name="org-jreserve-gui-data-DataRootFileProvider.instance">
-                    <!--org.jreserve.gui.data.DataRootFileProvider-->
-                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.DataRootFileProvider"/>
+                <file name="org-jreserve-gui-data-dataobject-DataRootFileProvider.instance">
+                    <!--org.jreserve.gui.data.dataobject.DataRootFileProvider-->
+                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.dataobject.DataRootFileProvider"/>
                     <attr name="instanceClass" stringvalue="org.jreserve.gui.project.api.ProjectFileProvider"/>
                 </file>
-            </folder>
-        </folder>
-    </folder>
-    <folder name="Actions">
-        <folder name="File">
-            <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.instance">
-                <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL_CreateDataSourceAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.CreateDataSourceAction"/>
-            </file>
-            <file name="org-jreserve-gui-data-actions-ImportDataAction.instance">
-                <!--org.jreserve.gui.data.actions.ImportDataAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL.ImportDataAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.ImportDataAction"/>
-            </file>
-            <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.instance">
-                <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.data.actions.Bundle#CTL_CreateDataCategoryAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.actions.CreateDataCategoryAction"/>
-            </file>
-        </folder>
-    </folder>
-    <folder name="Ribbon">
-        <folder name="TaskPanes">
-            <folder name="Edit">
-                <folder name="Edit">
-                    <folder name="New">
-                        <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
-                            <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
-                            <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
-                            <attr intvalue="300" name="position"/>
-                        </file>
-                        <file name="org-jreserve-gui-data-actions-CreateDataSourceAction-separatorAfter.instance">
-                            <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
-                            <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                            <attr intvalue="310" name="position"/>
-                        </file>
-                        <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                            <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                            <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                            <attr intvalue="200" name="position"/>
-                        </file>
-                    </folder>
-                </folder>
-                <folder name="Data">
-                    <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
-                        <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
-                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
-                        <attr intvalue="300" name="position"/>
-                        <attr name="priority" stringvalue="medium"/>
-                    </file>
-                    <file name="org-jreserve-gui-data-actions-ImportDataAction.shadow">
-                        <!--org.jreserve.gui.data.actions.ImportDataAction-->
-                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-ImportDataAction.instance"/>
-                        <attr intvalue="100" name="position"/>
-                    </file>
-                    <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                        <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                        <attr intvalue="200" name="position"/>
-                        <attr name="priority" stringvalue="medium"/>
-                    </file>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
-    <folder name="Node">
-        <folder name="DataCategory">
-            <folder name="Actions">
-                <file name="org-jreserve-gui-data-actions-CreateDataSourceAction.shadow">
-                    <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataSourceAction.instance"/>
-                    <attr intvalue="200" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-data-actions-CreateDataSourceAction-separatorAfter.instance">
-                    <!--org.jreserve.gui.data.actions.CreateDataSourceAction-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="250" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-data-actions-ImportDataAction.shadow">
-                    <!--org.jreserve.gui.data.actions.ImportDataAction-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-ImportDataAction.instance"/>
-                    <attr intvalue="300" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-data-actions-ImportDataAction-separatorAfter.instance">
-                    <!--org.jreserve.gui.data.actions.ImportDataAction-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="350" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-data-actions-CreateDataCategoryAction.shadow">
-                    <!--org.jreserve.gui.data.actions.CreateDataCategoryAction-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-CreateDataCategoryAction.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
-            </folder>
-        </folder>
-        <folder name="DataSource">
-            <folder name="Actions">
-                <file name="org-jreserve-gui-data-actions-ImportDataAction.shadow">
-                    <!--org.jreserve.gui.data.actions.ImportDataAction-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-actions-ImportDataAction.instance"/>
-                    <attr intvalue="300" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-data-actions-ImportDataAction-separatorAfter.instance">
-                    <!--org.jreserve.gui.data.actions.ImportDataAction-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="350" name="position"/>
-                </file>
-            </folder>
-        </folder>
-    </folder>
-    <folder name="OptionsDialog">
-        <folder name="ImportDataSettings">
-            <file name="org-jreserve-gui-data-settings-ImportsOptionsPanelController.instance">
-                <!--org.jreserve.gui.data.settings.ImportsOptionsPanelController-->
-                <attr
-                    methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
-                <attr name="controller" newvalue="org.jreserve.gui.data.settings.ImportsOptionsPanelController"/>
-                <attr
-                    bundlevalue="org.jreserve.gui.data.settings.Bundle#AdvancedOption_DisplayName_Imports" name="displayName"/>
-                <attr intvalue="100" name="position"/>
-                <attr
-                    bundlevalue="org.jreserve.gui.data.settings.Bundle#AdvancedOption_Keywords_Imports" name="keywords"/>
-                <attr name="keywordsCategory" stringvalue="ImportDataSettings/Imports"/>
-            </file>
-            <!--org.jreserve.gui.data.inport-->
-            <attr intvalue="0" name="position"/>
-        </folder>
-        <file name="ImportDataSettings.instance">
-            <!--org.jreserve.gui.data.inport-->
-            <attr
-                methodvalue="org.netbeans.spi.options.OptionsCategory.createCategory" name="instanceCreate"/>
-            <attr name="advancedOptionsFolder" stringvalue="OptionsDialog/ImportDataSettings"/>
-            <attr
-                bundlevalue="org.jreserve.gui.data.inport.Bundle#LBL.ImportDataSettings.Title" name="categoryName"/>
-            <attr intvalue="600" name="position"/>
-            <attr name="iconBase" stringvalue="org/jreserve/gui/data/icons/import_data32.png"/>
-        </file>
-    </folder>
-    <folder name="Editors">
-        <folder name="application">
-            <folder name="jreserve-data-source">
-                <folder name="MultiView">
-                    <file name="org-jreserve-gui-data-editor-DataSourceTableMultiviewElement.instance">
-                        <!--org.jreserve.gui.data.editor.DataSourceTableMultiviewElement-->
-                        <attr
-                            methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
-                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
-                        <attr name="class" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
-                        <attr
-                            bundlevalue="org.jreserve.gui.data.editor.Bundle#LBL.DataSourceTableMultiviewElement.Title" name="displayName"/>
-                        <attr name="iconBase" stringvalue="org/jreserve/gui/data/icons/database.png"/>
-                        <attr name="preferredID" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
-                        <attr intvalue="2" name="persistenceType"/>
-                        <attr intvalue="100" name="position"/>
-                    </file>
-                    <file name="org-jreserve-gui-data-editor-EditorUtil-createAuditElement.instance">
-                        <!--org.jreserve.gui.data.editor.EditorUtil.createAuditElement(org.openide.util.Lookup)-->
-                        <attr
-                            methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
-                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
-                        <attr name="class" stringvalue="org.jreserve.gui.data.editor.EditorUtil"/>
-                        <attr
-                            bundlevalue="org.jreserve.gui.data.editor.Bundle#LBL.EditorUtil.DataSourceAudit" name="displayName"/>
-                        <attr name="preferredID" stringvalue="org.jreserve.gui.data.editor.DataSourceAudit"/>
-                        <attr intvalue="2" name="persistenceType"/>
-                        <attr intvalue="1000" name="position"/>
-                        <attr name="method" stringvalue="createAuditElement"/>
-                    </file>
-                </folder>
             </folder>
         </folder>
     </folder>

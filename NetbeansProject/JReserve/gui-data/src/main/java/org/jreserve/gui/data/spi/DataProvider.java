@@ -17,18 +17,18 @@
 
 package org.jreserve.gui.data.spi;
 
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
-import org.jreserve.gui.data.api.inport.SaveType;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.jreserve.gui.data.api.DataCategory;
-import org.jreserve.gui.data.api.DataSource;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.MultiDataObject;
 
 /**
  *
@@ -40,31 +40,19 @@ public interface DataProvider {
     public final static String PROP_DATA_TYPE = "data.type";
     public final static String PROP_FACTORY_ID = "factory.id";
     
-    //DataSystem management
-    public Factory getFactory();
-    
-    public void setDataSource(DataSource dataSource);
-    
-    public void delete() throws Exception;
-    
-    public void rename(String newName) throws Exception;
-    
-    public void move(DataCategory newParent) throws Exception;
-    
     public Map<String, String> getProperties();
     
-    //Data management
     public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
     
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
+    public boolean addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
     
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+    public boolean deleteEntries(Set<DataEntry> entries) throws Exception;
+    
+    public Set<MultiDataObject.Entry> getSecondaryEntries(MultiDataObject mdo) throws IOException;
     
     public static interface Factory {
         
-        public String getId();
-        
-        public DataProvider createProvider(Map<String, String> properties);
+        public DataProvider createProvider(FileObject primaryFile, Map<String, String> properties);
     }
     
     @Target({ElementType.TYPE, ElementType.METHOD})

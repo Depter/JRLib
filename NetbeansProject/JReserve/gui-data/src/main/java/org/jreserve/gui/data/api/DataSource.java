@@ -16,31 +16,28 @@
  */
 package org.jreserve.gui.data.api;
 
-import org.jreserve.gui.data.api.inport.SaveType;
-import org.jreserve.jrlib.gui.data.DataType;
-import org.jreserve.jrlib.gui.data.DataEntry;
-import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import java.util.List;
 import java.util.Set;
-import org.jreserve.gui.data.spi.DataProvider;
+import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.jrlib.gui.data.DataEntry;
+import org.jreserve.jrlib.gui.data.DataEntryFilter;
+import org.jreserve.jrlib.gui.data.DataType;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataSource extends DataItem {
-    
-    public final static String MIME_TYPE = "application/jreserve-data-source";
-    public final static String PROP_AUDIT_ID = "audit.id";
-    
-    public DataType getDataType();
+public interface DataSource {
+        public String getName();
 
-    public DataProvider getDataProvider();
-    
-    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
-    
-    public void addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
-    
-    public void deleteEntries(Set<DataEntry> entries) throws Exception;
+        public String getPath();
+
+        public DataType getDataType();
+
+        public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
+
+        public boolean addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
+
+        public boolean deleteEntries(Set<DataEntry> entries) throws Exception;
 }
