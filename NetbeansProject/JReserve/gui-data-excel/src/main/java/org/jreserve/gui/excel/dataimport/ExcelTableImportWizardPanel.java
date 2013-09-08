@@ -23,7 +23,7 @@ import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.apache.poi.ss.util.CellReference;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.spi.inport.ImportDataProvider;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.jreserve.jrlib.gui.data.DataEntry;

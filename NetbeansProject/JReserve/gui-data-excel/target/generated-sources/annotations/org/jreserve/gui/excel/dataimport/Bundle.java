@@ -122,6 +122,13 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.ExcelTemplateImportVisualPanel2.Name");
     }
     /**
+     * @return <i>Select Storage</i>
+     * @see ExcelTemplateImportVisualPanel2
+     */
+    static String LBL_ExcelTemplateImportVisualPanel2_SelectTitle() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.ExcelTemplateImportVisualPanel2.SelectTitle");
+    }
+    /**
      * @return <i>Excel Triangle</i>
      * @see ExcelTriangleImportDataProvider
      */

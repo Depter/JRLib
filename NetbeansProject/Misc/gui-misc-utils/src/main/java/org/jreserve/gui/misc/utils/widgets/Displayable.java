@@ -17,6 +17,10 @@
 package org.jreserve.gui.misc.utils.widgets;
 
 import javax.swing.Icon;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.Node;
 
 /**
@@ -31,6 +35,26 @@ public interface Displayable {
     public String getDisplayName();
     
     public static class Utils {
+        public static String displayProjectPath(FileObject fo) {
+            return displayProjectPath(fo, false);
+        }
+        
+        public static String displayProjectPath(FileObject fo, boolean extension) {
+            StringBuilder path = new StringBuilder();
+            path.append(extension? fo.getNameExt() : fo.getName());
+            
+            Project p = FileOwnerQuery.getOwner(fo);
+            FileObject pFo = p==null? null : p.getProjectDirectory();
+            if(pFo != null && FileUtil.isParentOf(pFo, fo)) {
+                fo = fo.getParent();
+                while(!pFo.equals(fo)) {
+                    path.insert(0, '/').insert(0, fo.getName());
+                    fo = fo.getParent();
+                }
+            }
+            
+            return path.toString();
+        }
         
         public static String displayPath(Node node) {
             StringBuilder path = new StringBuilder();

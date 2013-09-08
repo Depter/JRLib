@@ -59,7 +59,8 @@ abstract class ActionItem {
     public static final String TOOLTIP_FOOTER = "tooltipFooter";
     public static final String TOOLTIP_FOOTER_ICON = "tooltipFooterIcon";
     public static final String DEFAULT_ACTION = "defaultAction";
-
+    public static final String DISPLAY_NAME = "displayName";
+    
     public static ActionItem separator() {
         return new Separator();
     }
@@ -130,7 +131,9 @@ abstract class ActionItem {
 
     public String getText() {
         String s;
-        if (getValue(MENU_TEXT) != null) {
+        if(getValue(DISPLAY_NAME) != null) {
+            s = getValue(DISPLAY_NAME).toString();
+        } else if(getValue(MENU_TEXT) != null) {
             s = getValue(MENU_TEXT).toString();
         } else {
             s = String.valueOf(getValue(Action.NAME));

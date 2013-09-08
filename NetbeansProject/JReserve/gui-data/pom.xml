@@ -188,9 +188,9 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.data.api</publicPackage>
-                        <publicPackage>org.jreserve.gui.data.api.inport</publicPackage>
-                        <publicPackage>org.jreserve.gui.data.api.util</publicPackage>
+                        <publicPackage>org.jreserve.gui.data.api.wizard</publicPackage>
                         <publicPackage>org.jreserve.gui.data.spi</publicPackage>
+                        <publicPackage>org.jreserve.gui.data.spi.inport</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

@@ -18,15 +18,29 @@ package org.jreserve.gui.data.api.wizard;
 
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.dataobject.DataSourceDataObject;
+import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.netbeans.api.project.Project;
 import org.openide.WizardDescriptor;
+import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataFolder;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "MSG.DataSourceNameWizardPanel.NoDOP=DataProvider not present in the given project!",
+    "MSG.DataSourceNameWizardPanel.NoDataType=Type not selected!",
+    "MSG.DataSourceNameWizardPanel.NoName=Name is not selected!",
+    "# {0} - root",
+    "MSG.DataSourceNameWizardPanel.PathNotInRoot=Data sources must be within ''{0}'' folder!",
+    "MSG.DataSourceNameWizardPanel.PathExists=Data source already exists!"
+})
 public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
     private DataSourceNameVisualPanel panel;
@@ -45,6 +59,12 @@ public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardD
     }
     
     private void initPanel() {
+        Project project = (Project) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_PROJECT);
+        panel.setProject(project);
+        DataObjectProvider dop = (DataObjectProvider) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_OBJECT_PROVIDER);
+        panel.setObjectProvider(dop);
+        DataFolder folder = (DataFolder) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_FOLDER);
+        panel.setDataFolder(folder);
     }
 
     @Override
@@ -61,6 +81,8 @@ public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardD
 
     @Override
     public void storeSettings(WizardDescriptor settings) {
+        settings.putProperty(AbstractDataSourceWizardIterator.PROP_PATH, panel.getDataSourcePath());
+        settings.putProperty(AbstractDataSourceWizardIterator.PROP_DATA_TYPE, panel.getDataType());
     }
 
     @Override
@@ -87,10 +109,59 @@ public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardD
     
     private void showError(String msg) {
         if(wiz != null)
-            wiz.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, panel);
+            wiz.putProperty(WizardDescriptor.PROP_ERROR_MESSAGE, msg);
     }
     
     private boolean isInputValid() {
-        return false;
+        return isObjectProviderSet() && 
+               isDataTypeValid() &&
+               isNameValid() &&
+               isPathValid();
+    }
+    
+    private boolean isObjectProviderSet() {
+        if(panel.getObjectProvider() == null) {
+            showError(Bundle.MSG_DataSourceNameWizardPanel_NoDOP());
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean isDataTypeValid() {
+        if(panel.getDataType() == null) {
+            showError(Bundle.MSG_DataSourceNameWizardPanel_NoDataType());
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean isNameValid() {
+        String name = panel.getFileName();
+        if(name==null || name.length()==0) {
+            showError(Bundle.MSG_DataSourceNameWizardPanel_NoName());
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean isPathValid() {
+        DataObjectProvider dop = panel.getObjectProvider();
+        String path = panel.getDataSourcePath();
+        
+        DataFolder root = dop.getRootFolder();
+        String rootName = root.getName();
+        if(!path.startsWith(rootName+"/")) {
+            showError(Bundle.MSG_DataSourceNameWizardPanel_PathNotInRoot(rootName));
+            return false;
+        }
+        
+        path += "." + DataSourceDataObject.EXTENSION;
+        FileObject parent = root.getPrimaryFile().getParent();
+        FileObject fo = parent.getFileObject(path);
+        if(fo != null) {
+            showError(Bundle.MSG_DataSourceNameWizardPanel_PathExists());
+            return false;
+        }
+        return true;
     }
 }

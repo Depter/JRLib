@@ -19,6 +19,7 @@ package org.jreserve.gui.data.dataobject;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -26,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.util.DataProviderFactoryRegistry;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 
@@ -34,7 +36,7 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-class DataSourceUtil {
+public class DataSourceUtil {
     
     private final static Logger logger = Logger.getLogger(DataSourceUtil.class.getName());
     
@@ -82,6 +84,37 @@ class DataSourceUtil {
         for(String key : properties.stringPropertyNames())
             result.put(key, properties.getProperty(key));
         return result;
+    }
+    
+    static DataType getDataType(FileObject primaryFile, Properties props) throws IOException {
+        String name = props.getProperty(DataSourceDataObject.PROP_DATA_TYPE);
+        try {
+            return DataType.valueOf(name);
+        } catch (Exception ex) {
+            throw new IOException("DataType not set for file: "+primaryFile.getPath());
+        }
+    }
+    
+    public static void saveProperties(FileObject file, Properties props) throws IOException {
+        OutputStream os = null;
+        FileLock lock = null;
+        try {
+            lock = file.lock();
+            os = file.getOutputStream(lock);
+            props.storeToXML(os, null);
+        } catch (IOException ex) {
+            String msg = "Unabel to save properties to file: "+file.getPath();
+            logger.log(Level.SEVERE, msg, ex);
+            throw ex;
+        } finally {
+            if(os != null) {
+                try {os.close();} catch(IOException ex) {}
+            }
+
+            if(lock != null) {
+                lock.releaseLock();
+            }
+        }
     }
     
     private DataSourceUtil() {}

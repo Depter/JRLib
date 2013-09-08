@@ -71,16 +71,18 @@ public class DataProviderFactoryRegistry extends CachedLayerRegistrationLoader<F
 
     @Override
     protected FactoryEntry getValue(FileObject file) throws Exception {
-        return new FactoryEntry(file);
+        String id = AnnotationUtils.stringAttribute(DataProviderRegistrationProcessor.ID, file);
+        DataProvider.Factory factory = getInstance(file, DataProvider.Factory.class);
+        return new FactoryEntry(id, factory);
     }
     
-    public class FactoryEntry {
+    public static class FactoryEntry {
         private final String id;
         private final DataProvider.Factory factory;
 
-        public FactoryEntry(FileObject file) throws Exception {
-            id = AnnotationUtils.stringAttribute(DataProviderRegistrationProcessor.ID, file);
-            factory = getInstance(file, DataProvider.Factory.class);
+        public FactoryEntry(String id, DataProvider.Factory factory) throws Exception {
+            this.factory = factory;
+            this.id = id;
         }
     }
 }

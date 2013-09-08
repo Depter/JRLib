@@ -1,2 +1,4 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/gui/misc/eventbus/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/eventbus/Bundle.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager

@@ -1,16 +1,19 @@
 Manifest-Version: 1.0
+OpenIDE-Module-Layer: org/jreserve/gui/misc/eventbus/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/eventbus/Bundl
  e.properties
+OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130905
-OpenIDE-Module-Build-Version: 201309051851
+OpenIDE-Module-Implementation-Version: 1.0-20130908
+OpenIDE-Module-Build-Version: 201309081558
 OpenIDE-Module: org.jreserve.gui.misc.eventbus
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.eventbus.*
-OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
 OpenIDE-Module-Display-Category: org.jreserve
 OpenIDE-Module-Name: org-jreserve-gui-misc-eventbus
 OpenIDE-Module-Short-Description: <undefined>
 OpenIDE-Module-Long-Description: <undefined>
 OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
- n/1 > 1.14.1
+ n/1 > 1.14.1, org.openide.windows > 6.55.1, org.openide.util > 8.25.1
+ , org.openide.util.lookup > 8.15.1, org.openide.awt > 7.46.1, org.ope
+ nide.actions > 6.26.1, org.netbeans.modules.settings/1 > 1.35.1
 

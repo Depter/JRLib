@@ -70,12 +70,9 @@
         <module>branding</module>
         <module>application</module>
         <module>gui-data</module>
-
-<!--                
         <module>gui-data-clipboard</module>
         <module>gui-data-csv</module>
         <module>gui-data-excel</module>
--->
         <module>gui-localesettings</module>
         <module>gui-project</module>
         <module>gui-trianglewidget</module>

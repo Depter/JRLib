@@ -62,7 +62,8 @@ public class JReserveProject implements Project {
             new JReserveLogicalView(this),
             new JReserveProjectCustomizer(this),
             new ProjectAuditable(this),
-            new DefaultProjectObjectLookup(this)
+            new DefaultProjectObjectLookup(this),
+            new JReserveRecommendedTemplates()
         };
         return LookupProviderSupport.createCompositeLookup(
                 Lookups.fixed(baseInfo), LOOKUP_PATH);

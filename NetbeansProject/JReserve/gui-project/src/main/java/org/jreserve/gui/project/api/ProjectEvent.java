@@ -79,6 +79,11 @@ public abstract class ProjectEvent {
         public AuditEvent getAuditEvent() {
             return auditEvent;
         }
+        
+        @Override
+        public String toString() {
+            return "Project created: "+super.project.getProjectDirectory().getPath();
+        }
     }
     
     public static class ProjectPropertyChangedEvent extends ProjectEvent implements AuditEvent.Provider {
@@ -118,6 +123,12 @@ public abstract class ProjectEvent {
         public AuditEvent getAuditEvent() {
             return auditEvent;
         }
-    
+        
+        @Override
+        public String toString() {
+            return String.format("ProjectProperty changed: '%s/%s', '%s' -> '%s', %s",
+                    configName, property, oldValue, newValue, 
+                    super.project.getProjectDirectory().getPath());
+        }
     }
 }

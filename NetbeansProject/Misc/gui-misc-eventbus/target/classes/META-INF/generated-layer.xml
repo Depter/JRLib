@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="org-jreserve-gui-misc-eventbus-ui-EventLogTopComponent.instance">
+                <!--org.jreserve.gui.misc.eventbus.ui.EventLogTopComponent-->
+                <attr
+                    methodvalue="org.openide.windows.TopComponent.openAction" name="instanceCreate"/>
+                <attr name="component" newvalue="org.jreserve.gui.misc.eventbus.ui.EventLogTopComponent"/>
+                <attr name="preferredID" stringvalue="EventLogTopComponent"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.eventbus.ui.Bundle#CTL_EventLogAction" name="displayName"/>
+                <attr name="iconBase" stringvalue="org/jreserve/gui/misc/eventbus/message.png"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="org-jreserve-gui-misc-eventbus-ui-EventLogTopComponent.shadow">
+                <!--org.jreserve.gui.misc.eventbus.ui.EventLogTopComponent-->
+                <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-gui-misc-eventbus-ui-EventLogTopComponent.instance"/>
+                <attr intvalue="20" name="position"/>
+            </file>
+        </folder>
+    </folder>
+</filesystem>

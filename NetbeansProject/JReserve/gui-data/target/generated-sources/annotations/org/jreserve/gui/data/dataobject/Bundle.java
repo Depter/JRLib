@@ -16,5 +16,49 @@ class Bundle {
     static String LBL_DataSourceObjectProvider_Name() {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceObjectProvider.Name");
     }
+    /**
+     * @return <i>Audit</i>
+     * @see DataSourceDataObject
+     */
+    static String LBL_EditorUtil_DataSourceAudit() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.EditorUtil.DataSourceAudit");
+    }
+    /**
+     * @return <i>Storage created</i>
+     * @see DataEventUtil
+     */
+    static String MSG_DataEventUtil_Created() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.Created");
+    }
+    /**
+     * @return <i>Data deleted.</i>
+     * @see DataEventUtil
+     */
+    static String MSG_DataEventUtil_DataDelete() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.DataDelete");
+    }
+    /**
+     * @return <i>Data imported.</i>
+     * @see DataEventUtil
+     */
+    static String MSG_DataEventUtil_DataImport() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.DataImport");
+    }
+    /**
+     * @return <i>Storage deleted</i>
+     * @see DataEventUtil
+     */
+    static String MSG_DataEventUtil_Deleted() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.Deleted");
+    }
+    /**
+     * @param oldName oldName
+     * @param newName newName
+     * @return <i>Storage renamed ''</i>{@code oldName}<i>'' => ''</i>{@code newName}<i>''.</i>
+     * @see DataEventUtil
+     */
+    static String MSG_DataEventUtil_Renamed(Object oldName, Object newName) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.Renamed", oldName, newName);
+    }
     private void Bundle() {}
 }

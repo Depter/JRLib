@@ -17,14 +17,12 @@
 package org.jreserve.gui.data.spi;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.FileEntry;
-import org.openide.loaders.MultiDataObject;
 
 /**
  *
@@ -36,29 +34,40 @@ public abstract class AbstractFileDataProvider extends AbstractDataProvider {
     private final static Logger logger = Logger.getLogger(AbstractFileDataProvider.class.getName());
     private FileObject secondary;
     
-    @Override
-    public Set<MultiDataObject.Entry> getSecondaryEntries(MultiDataObject mdo) throws IOException {
-        FileObject primary = mdo.getPrimaryFile();
-        FileObject parent = primary.getParent();
-        secondary = parent.getFileObject(primary.getName(), getExtension());
-        if(secondary == null)
-            secondary = createSecondaryFile(parent, primary.getName());
-        return Collections.singleton((MultiDataObject.Entry)new FileEntry(mdo, secondary));
-    }
-
-    protected abstract String getExtension();
-
-    protected FileObject createSecondaryFile(FileObject parent, String name) throws IOException {
-        try {
-            return parent.createData(name, getExtension());
-        } catch (IOException ex) {
-            String msg = "Unable to create file %s/%s.%s!";
-            msg = String.format(msg, parent.getPath(), name, getExtension());
-            logger.log(Level.SEVERE, msg, ex);
-            throw ex;
+    protected AbstractFileDataProvider(FileObject primaryFile, String extension) {
+        FileObject parent = primaryFile.getParent();
+        secondary = parent.getFileObject(primaryFile.getName(), extension);
+        if(secondary == null) {
+            String msg = "Secondary file '%s/'%s.%s does not exists!";
+            msg = String.format(msg, parent.getPath(), primaryFile.getName(), extension);
+            logger.log(Level.SEVERE, msg);
+            throw new IllegalArgumentException(msg);
         }
     }
     
+    protected AbstractFileDataProvider(FileObject secondaryFile) {
+        if(secondaryFile == null)
+            throw new NullPointerException("Seconday file is null!");
+        this.secondary = secondaryFile;
+    }
+    
+    @Override
+    public Set<FileObject> getSecondryFiles(FileObject primary) {
+        Set<FileObject> entries = new LinkedHashSet<FileObject>();
+        
+        for(FileObject child : primary.getParent().getChildren())
+            if(isSecondaryFile(primary, child))
+                entries.add(child);
+        
+        return entries;
+    }
+    
+    private boolean isSecondaryFile(FileObject primary, FileObject fo) {
+        return fo.isData() &&
+               fo.getName().equals(primary.getName()) &&
+               !fo.getExt().equals(primary.getExt());
+    }
+        
     @Override
     protected Set<DataEntry> loadEntries() throws Exception {
         if(secondary == null) {

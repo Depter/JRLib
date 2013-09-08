@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.spi.inport.ImportDataProvider;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.MonthDate;

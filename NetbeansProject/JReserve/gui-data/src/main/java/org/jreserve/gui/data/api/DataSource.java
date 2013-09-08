@@ -18,7 +18,7 @@ package org.jreserve.gui.data.api;
 
 import java.util.List;
 import java.util.Set;
-import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.jrlib.gui.data.DataType;
@@ -29,15 +29,16 @@ import org.jreserve.jrlib.gui.data.DataType;
  * @version 1.0
  */
 public interface DataSource {
-        public String getName();
 
-        public String getPath();
+    public String getName();
 
-        public DataType getDataType();
+    public String getPath();
 
-        public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
+    public DataType getDataType();
 
-        public boolean addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
+    public List<DataEntry> getEntries(DataEntryFilter filter) throws Exception;
 
-        public boolean deleteEntries(Set<DataEntry> entries) throws Exception;
+    public boolean addEntries(Set<DataEntry> entries, SaveType saveType) throws Exception;
+
+    public boolean deleteEntries(Set<DataEntry> entries) throws Exception;
 }

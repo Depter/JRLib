@@ -22,6 +22,7 @@
                     bundlevalue="org.jreserve.gui.misc.utils.dataobject.impl.Bundle#LBL.CreateDataFolderIterator.DisplayName" name="displayName"/>
                 <attr name="iconBase" stringvalue="org/jreserve/gui/misc/utils/folder.png"/>
                 <attr name="instantiatingIterator" newvalue="org.jreserve.gui.misc.utils.dataobject.impl.CreateDataFolderIterator"/>
+                <attr name="templateCategory" stringvalue="misc-folder"/>
             </file>
         </folder>
     </folder>

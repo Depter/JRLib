@@ -40,6 +40,7 @@ import org.openide.util.NbBundle.Messages;
     displayName = "#LBL.CreateDataFolderIterator.DisplayName",
     iconBase = "org/jreserve/gui/misc/utils/folder.png",
     id = "org.jreserve.gui.project.api.util.CreateTriangleIterator",
+    category = {"misc-folder"},
     position = 100
 )
 @Messages({

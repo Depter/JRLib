@@ -53,8 +53,8 @@ import org.openide.util.NbBundle.Messages;
     id = "org.jreserve.gui.misc.layerexplorer.LayerExplorerTopComponent"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Window", position = 70),
-    @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 100)
+    @ActionReference(path = "Menu/Window", position = 70)//,
+//    @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 100)
 })
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_LayerExplorerAction",

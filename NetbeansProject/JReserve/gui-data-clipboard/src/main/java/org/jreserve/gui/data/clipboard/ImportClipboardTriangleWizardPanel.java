@@ -21,7 +21,7 @@ import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.inport.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.spi.inport.ImportDataWizardPanelGeometry;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;

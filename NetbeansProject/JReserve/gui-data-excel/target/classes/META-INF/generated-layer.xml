@@ -82,7 +82,7 @@
                     <attr boolvalue="false" name="requiresDataSource"/>
                     <attr intvalue="4500" name="position"/>
                     <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.dataimport.ExcelTemplateImportDataProvider"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.inport.ImportDataProvider"/>
                 </file>
                 <file name="org-jreserve-gui-excel-dataimport-ExcelTriangleImportDataProvider.instance">
                     <!--org.jreserve.gui.excel.dataimport.ExcelTriangleImportDataProvider-->
@@ -93,7 +93,7 @@
                     <attr boolvalue="true" name="requiresDataSource"/>
                     <attr intvalue="3000" name="position"/>
                     <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.dataimport.ExcelTriangleImportDataProvider"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.inport.ImportDataProvider"/>
                 </file>
                 <file name="org-jreserve-gui-excel-dataimport-ExcelTableImportDataProvider.instance">
                     <!--org.jreserve.gui.excel.dataimport.ExcelTableImportDataProvider-->
@@ -104,7 +104,7 @@
                     <attr boolvalue="true" name="requiresDataSource"/>
                     <attr intvalue="4000" name="position"/>
                     <attr name="instanceCreate" newvalue="org.jreserve.gui.excel.dataimport.ExcelTableImportDataProvider"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.inport.ImportDataProvider"/>
                 </file>
             </folder>
         </folder>

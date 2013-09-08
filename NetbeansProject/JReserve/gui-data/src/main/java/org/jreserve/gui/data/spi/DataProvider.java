@@ -27,8 +27,8 @@ import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.jreserve.gui.data.spi.inport.SaveType;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.MultiDataObject;
 
 /**
  *
@@ -48,7 +48,7 @@ public interface DataProvider {
     
     public boolean deleteEntries(Set<DataEntry> entries) throws Exception;
     
-    public Set<MultiDataObject.Entry> getSecondaryEntries(MultiDataObject mdo) throws IOException;
+    public Set<FileObject> getSecondryFiles(FileObject primary) throws IOException;
     
     public static interface Factory {
         

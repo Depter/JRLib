@@ -16,17 +16,15 @@
  */
 package org.jreserve.gui.data.spi.util;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.jreserve.gui.data.spi.DataProvider;
-import org.jreserve.gui.data.spi.SaveType;
+import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.openide.filesystems.FileObject;
-import org.openide.loaders.MultiDataObject;
 
 /**
  *
@@ -67,7 +65,7 @@ public class EmptyDataProvider implements DataProvider {
     }
 
     @Override
-    public Set<MultiDataObject.Entry> getSecondaryEntries(MultiDataObject mdo) throws IOException {
+    public Set<FileObject> getSecondryFiles(FileObject primary) {
         return Collections.EMPTY_SET;
     }
 }

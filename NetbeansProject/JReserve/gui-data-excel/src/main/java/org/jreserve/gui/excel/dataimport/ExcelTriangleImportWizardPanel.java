@@ -21,7 +21,7 @@ import java.awt.Component;
 import java.io.File;
 import javax.swing.event.ChangeListener;
 import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.data.api.inport.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.spi.inport.ImportDataWizardPanelGeometry;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.openide.WizardDescriptor;

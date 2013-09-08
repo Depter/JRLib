@@ -31,4 +31,6 @@ public interface DataObjectProvider extends Displayable {
     public DataFolder getRootFolder();
     
     public DataFolder createFolder(String path) throws IOException;
+    
+    public Project getProject();
 }

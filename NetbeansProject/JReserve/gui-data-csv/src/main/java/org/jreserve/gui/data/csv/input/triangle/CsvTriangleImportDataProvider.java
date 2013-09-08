@@ -18,12 +18,11 @@
 package org.jreserve.gui.data.csv.input.triangle;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.api.inport.ImportDataWizardPanelGeometry;
-import org.jreserve.gui.data.api.inport.ImportDataWizardPanelLast;
-import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.spi.inport.ImportDataProvider;
+import org.jreserve.gui.data.spi.inport.ImportDataWizardPanelGeometry;
+import org.jreserve.gui.data.spi.inport.ImportDataWizardPanelLast;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 

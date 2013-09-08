@@ -48,19 +48,6 @@
             </file>
         </folder>
     </folder>
-    <folder name="Ribbon">
-        <folder name="TaskPanes">
-            <folder name="Windows">
-                <folder name="Development">
-                    <file name="org-jreserve-gui-misc-systemproperties-SystemPropertiesTopComponent.shadow">
-                        <!--org.jreserve.gui.misc.systemproperties.SystemPropertiesTopComponent-->
-                        <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-gui-misc-systemproperties-SystemPropertiesTopComponent.instance"/>
-                        <attr intvalue="300" name="position"/>
-                    </file>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
     <folder name="xml">
         <folder name="entities">
             <folder name="org_jreserve_gui_misc_systemproperties">

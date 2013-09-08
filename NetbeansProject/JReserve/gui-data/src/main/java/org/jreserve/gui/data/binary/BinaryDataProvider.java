@@ -17,21 +17,21 @@
 package org.jreserve.gui.data.binary;
 
 import org.jreserve.gui.data.spi.AbstractFileDataProvider;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class BinaryDataProvider extends AbstractFileDataProvider {
-    private final static String BINARY_EXTENSION = "bde";
+class BinaryDataProvider extends AbstractFileDataProvider {
+    final static String BINARY_EXTENSION = "bde";
 
     private BinaryLoader loader;
     private BinaryWriter writer;
     
-    @Override
-    protected String getExtension() {
-        return BINARY_EXTENSION;
+    BinaryDataProvider(FileObject primaryFile) {
+        super(primaryFile, BINARY_EXTENSION);
     }
 
     @Override

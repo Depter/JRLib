@@ -16,12 +16,14 @@
  */
 package org.jreserve.gui.data.csv;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.DataSourceWizard;
 import org.openide.WizardDescriptor;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -43,11 +45,11 @@ public class CsvDataSourceWizard implements DataSourceWizard {
     public List<? extends WizardDescriptor.Panel> getPanels() {
         return Collections.EMPTY_LIST;
     }
-
-    @Override
-    public DataProvider createDataProvider(WizardDescriptor wizard) {
-        return new CsvDataProvider(CsvDataProviderFactory.getInstance());
-    }
+//
+//    @Override
+//    public DataProvider createDataProvider(WizardDescriptor wizard) {
+//        return new CsvDataProvider(CsvDataProviderFactory.getInstance());
+//    }
     
     @Override
     public void addChangeListener(ChangeListener listener) {
@@ -55,5 +57,16 @@ public class CsvDataSourceWizard implements DataSourceWizard {
 
     @Override
     public void removeChangeListener(ChangeListener listener) {
+    }
+
+    @Override
+    public Map<String, String> getDataProviderProperties() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void createSecondaryEntries(FileObject primaryFile) throws IOException {
+        FileObject parent = primaryFile.getParent();
+        parent.createData(primaryFile.getName(), CsvDataProvider.CSV_EXTENSION);
     }
 }

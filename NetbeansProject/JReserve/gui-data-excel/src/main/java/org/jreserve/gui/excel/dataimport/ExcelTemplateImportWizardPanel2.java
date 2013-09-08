@@ -30,12 +30,12 @@ import java.util.TreeSet;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import org.apache.poi.ss.util.CellReference;
-import org.jreserve.gui.data.api.DataItem;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.inport.SaveType;
-import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.spi.inport.SaveType;
+import org.jreserve.gui.data.spi.inport.ImportDataProvider;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplate;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
+import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.jreserve.gui.poi.read.PoiUtil;
 import org.jreserve.gui.poi.read.ReferenceUtil;
 import org.jreserve.gui.poi.read.TableFactory;
@@ -82,9 +82,9 @@ class ExcelTemplateImportWizardPanel2 implements WizardDescriptor.AsynchronousVa
         DataImportTemplate template = (DataImportTemplate) wiz.getProperty(ExcelTemplateImportDataProvider.PROP_TEMPLATE);
         component.setItems(template.getItems());
         
-        DataItem item = (DataItem) wiz.getProperty(ImportDataProvider.PROP_INIT_DATA_ITEM);
-        if(item != null)
-            component.setDataManager(item.getDataManager());
+        DataObjectProvider dop = (DataObjectProvider) wiz.getProperty(ImportDataProvider.PROP_SOURCE_PROVIDER);
+        if(dop != null)
+            component.setDataObjectProvider(dop);
     }
 
     @Override

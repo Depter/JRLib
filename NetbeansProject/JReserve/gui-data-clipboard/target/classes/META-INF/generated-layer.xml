@@ -14,7 +14,7 @@
                     <attr boolvalue="true" name="requiresDataSource"/>
                     <attr intvalue="8000" name="position"/>
                     <attr name="instanceCreate" newvalue="org.jreserve.gui.data.clipboard.ClipboardTriangleImportDataProvider"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.inport.ImportDataProvider"/>
                 </file>
                 <file name="org-jreserve-gui-data-clipboard-ClipboardTableImportDataProvider.instance">
                     <!--org.jreserve.gui.data.clipboard.ClipboardTableImportDataProvider-->
@@ -25,7 +25,7 @@
                     <attr boolvalue="true" name="requiresDataSource"/>
                     <attr intvalue="7000" name="position"/>
                     <attr name="instanceCreate" newvalue="org.jreserve.gui.data.clipboard.ClipboardTableImportDataProvider"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.ImportDataProvider"/>
+                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.inport.ImportDataProvider"/>
                 </file>
             </folder>
         </folder>

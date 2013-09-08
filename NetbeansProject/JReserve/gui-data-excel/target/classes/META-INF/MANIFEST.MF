@@ -4,8 +4,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/excel/Bundle.proper
  ties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130905
-OpenIDE-Module-Build-Version: 201309051856
+OpenIDE-Module-Implementation-Version: 1.0-20130907
+OpenIDE-Module-Build-Version: 201309072347
 OpenIDE-Module: org.jreserve.gui.data.excel
 OpenIDE-Module-Public-Packages: org.jreserve.gui.excel.template.*
 OpenIDE-Module-Display-Category: org.jreserve
@@ -17,10 +17,10 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
   org.openide.util > 8.25.1, org.openide.windows > 6.55.1, org.openide
  .util.lookup > 8.15.1, org.netbeans.modules.settings/1 > 1.35.1, org.
  openide.nodes > 7.28.1, org.openide.explorer > 6.45.1, org.openide.fi
- lesystems > 7.62.1, org.netbeans.api.progress/1 > 1.28.1, org.jreserv
- e.gui.misc.annotations > 1.0, org.jreserve.gui.misc.utils > 1.0, org.
- jreserve.gui.misc.services > 1.0, org.jreserve.gui.misc.eventbus > 1.
- 0, org.jreserve.gui.wrapper.poi > 1.0, org.jreserve.gui.wrapper.jrlib
-  > 1.0, org.jreserve.gui.data > 1.0, org.jreserve.gui.trianglewidget 
- > 1.0
+ lesystems > 7.62.1, org.openide.loaders > 7.37.1, org.netbeans.api.pr
+ ogress/1 > 1.28.1, org.jreserve.gui.misc.annotations > 1.0, org.jrese
+ rve.gui.misc.utils > 1.0, org.jreserve.gui.misc.services > 1.0, org.j
+ reserve.gui.misc.eventbus > 1.0, org.jreserve.gui.wrapper.poi > 1.0, 
+ org.jreserve.gui.wrapper.jrlib > 1.0, org.jreserve.gui.data > 1.0, or
+ g.jreserve.gui.trianglewidget > 1.0
 

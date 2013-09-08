@@ -6,30 +6,32 @@
             <folder name="Edit">
                 <folder name="Data">
                     <attr name="position" intvalue="100"/>
+                    <folder name="NewDataSource">
+                        <attr name="priority" stringvalue="medium"/>
+                        <attr name="displayName" bundlevalue="org.jreserve.gui.data.Bundle#LBL.NewDataSource.Name"/>
+                        <attr name="menuText" bundlevalue="org.jreserve.gui.data.Bundle#LBL.NewDataSource.Name"/>
+                        <attr name="position" intvalue="100"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/data/icons/database_add.png"/>
+                    </folder>
                 </folder>
             </folder>
         </folder>
     </folder>
 
+    <folder name="Templates">
+        <folder name="Data">
+            <attr name="position" intvalue="100"/>
+        </folder>
+    </folder>
+    
     <folder name="JReserve">
         <folder name="DataStore">
-            <folder name="DataSourceWizards">
-                <file name="org-jreserve-gui-data-binaryprovider-BinaryDataSourceWizard.instance">
-                    <!--org.jreserve.gui.data.binaryprovider.BinaryDataSourceWizard-->
-                    <attr intvalue="100" name="position"/>
-                    <attr
-                        bundlevalue="org.jreserve.gui.data.binaryprovider.Bundle#LBL.BinaryDataSourceWizard.Name" name="displayName"/>
-                    <attr name="iconBase" stringvalue="org/jreserve/gui/data/binaryprovider/binary.png"/>
-                    <attr name="instanceCreate" newvalue="org.jreserve.gui.data.binaryprovider.BinaryDataSourceWizard"/>
-                    <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.DataSourceWizard"/>
-                </file>
-            </folder>
             <folder name="DataProviders">
-                <file name="org-jreserve-gui-data-binaryprovider-BinaryDataProviderFactory-getInstance.instance">
-                    <!--org.jreserve.gui.data.binaryprovider.BinaryDataProviderFactory.getInstance()-->
-                    <attr name="id" stringvalue="org.jreserve.gui.data.binaryprovider.BinaryDataProviderFactory"/>
+                <file name="org-jreserve-gui-data-binary-BinaryDataProviderFactory-getInstance.instance">
+                    <!--org.jreserve.gui.data.binary.BinaryDataProviderFactory.getInstance()-->
+                    <attr name="id" stringvalue="org.jreserve.gui.data.binary.BinaryDataProviderFactory"/>
                     <attr
-                        methodvalue="org.jreserve.gui.data.binaryprovider.BinaryDataProviderFactory.getInstance" name="instanceCreate"/>
+                        methodvalue="org.jreserve.gui.data.binary.BinaryDataProviderFactory.getInstance" name="instanceCreate"/>
                     <attr name="instanceClass" stringvalue="org.jreserve.gui.data.spi.DataProvider$Factory"/>
                 </file>
             </folder>
@@ -37,19 +39,6 @@
     </folder>
         
     <folder name="Node">
-        <folder name="DataCategory">
-            <folder name="Actions">
-                <file name="Separator1.instance">
-                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                    <attr name="position" intvalue="99990"/>
-                </file>
-                <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
-                    <attr name="priority" stringvalue="top"/>
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
-                    <attr name="position" intvalue="100000"/>
-                </file>
-            </folder>
-        </folder>
         <folder name="DataSource">
             <folder name="Actions">
                 <file name="Separator1.instance">

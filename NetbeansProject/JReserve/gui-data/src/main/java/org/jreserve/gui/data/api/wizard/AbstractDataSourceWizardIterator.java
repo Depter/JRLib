@@ -22,13 +22,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Properties;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.dataobject.DataEventUtil;
+import org.jreserve.gui.data.dataobject.DataSourceDataObject;
+import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.dataobject.DataSourceUtil;
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
+import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.project.Project;
+import org.netbeans.modules.project.uiapi.ProjectChooserFactory;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -42,19 +59,92 @@ import org.openide.util.NbBundle.Messages;
 })
 public abstract class AbstractDataSourceWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
 
+    public static boolean canInitialize() {
+        return canInitialize(Utilities.actionsGlobalContext());
+    }
+    
+    public static boolean canInitialize(Lookup context) {
+        Project p = context.lookup(Project.class);
+        return p!=null &&
+               p.getLookup().lookup(DataSourceObjectProvider.class) != null;
+    }
+    
+    public final static String PROP_PROJECT = "dataSource.Project";
+    public final static String PROP_OBJECT_PROVIDER = "dataSource.ObjectProject";
+    public final static String PROP_FOLDER = "dataSource.Folder";
+    
+    public final static String PROP_PATH = "dataSource.Path";
+    public final static String PROP_DATA_TYPE = "dataSource.DataType";
+    public final static String PROP_EXTRA_PROPERTIES = "dataSource.ExtraProperties";
+    public final static String PROP_FACTORY_ID = "dataSource.FactoryId";
+    
+    private final static Logger logger = Logger.getLogger(AbstractDataSourceWizardIterator.class.getName());
+    
+//    private Project project;
+//    private DataFolder folder;
+//    private DataSourceObjectProvider dsop;
+    
     private WizardDescriptor wizard;
     private List<WizardDescriptor.Panel> panels;
     private int index;
     private int panelCount;
     
+//    protected AbstractDataSourceWizardIterator(Project project) {
+//        this(project, project.getLookup().lookup(DataSourceObjectProvider.class));
+//    }
+//    
+//    protected AbstractDataSourceWizardIterator(Project project, DataSourceObjectProvider dsop) {
+//        this(project, dsop, null);
+//    }
+//    
+//    protected AbstractDataSourceWizardIterator(Project project, DataSourceObjectProvider dsop, DataFolder folder) {
+//        if(project == null)
+//            throw new NullPointerException("Project is null!");
+//        this.project = project;
+//        
+//        if(dsop == null)
+//            throw new NullPointerException("DataSourceObjectProvider is null!");
+//        this.dsop = dsop;
+//        
+//        this.folder = folder;
+//    }
+    
+    public void initializeFrom(Lookup lkp) {
+        DataSourceObjectProvider dsop = lkp.lookup(DataSourceObjectProvider.class);
+        if(dsop != null) {
+            wizard.putProperty(PROP_OBJECT_PROVIDER, dsop);
+            wizard.putProperty(PROP_PROJECT, dsop.getProject());
+        }
+        
+        DataFolder folder = lkp.lookup(DataFolder.class);
+        if(folder != null)
+            wizard.putProperty(PROP_PATH, lkp);
+    }
+    
     @Override
     public void initialize(WizardDescriptor wizard) {
         this.wizard = wizard;
+        initializeProperties();
+        initializePanels();
+    }
+    
+    private void initializeProperties() {
+        Project p = (Project) wizard.getProperty(ProjectChooserFactory.WIZARD_KEY_PROJECT);
+        if(p != null) {
+            wizard.putProperty(PROP_PROJECT, p);
+            wizard.putProperty(PROP_OBJECT_PROVIDER, p.getLookup().lookup(DataSourceObjectProvider.class));
+        }
+        
+        DataFolder folder = (DataFolder) wizard.getProperty(ProjectChooserFactory.WIZARD_KEY_TARGET_FOLDER);
+        if(folder == null)
+            folder = Utilities.actionsGlobalContext().lookup(DataFolder.class);
+        if(folder != null)
+            wizard.putProperty(PROP_FOLDER, folder);
+    }
+    
+    private void initializePanels() {
         panels = new ArrayList<WizardDescriptor.Panel>(createPanels());
         panelCount = panels.size();
-        
-        //TODO add properties
-        
         calculateState();
     }
     
@@ -144,11 +234,99 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
 
     @Override
     public Set instantiate(ProgressHandle handle) throws IOException {
-        //TODO get parameters
-        //Create primary file
+        handle.start();
+        handle.switchToIndeterminate();
+        try {
+            return Collections.singleton(buildDataSource());
+        } catch(IOException ex) {
+            String msg = "Unable to create new DataSource!";
+            logger.log(Level.SEVERE, msg, ex);
+            throw new IOException(msg, ex);
+        } finally {
+            handle.finish();
+        }
+    }
+    
+    private FileObject buildDataSource() throws IOException {
+        FileObject primary = createPrimaryFile();
+        Properties props = createProperties();
+        DataSourceUtil.saveProperties(primary, props);
+        createSecondaryFiles(primary);
         
-        //long auditId = AuditDbManager.getInstance().getNextObjectId(getDataManager().getProject())
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        DataSourceDataObject ds = (DataSourceDataObject) DataObject.find(primary);
+        DataEventUtil.fireCreated(ds);
+        
+        return primary;
+    }
+    
+    private FileObject createPrimaryFile() throws IOException {
+        String path = getPath();
+        DataObjectProvider dop = (DataObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
+        DataFolder root = dop.getRootFolder();
+        if(!path.startsWith(root.getName()+"/")) {
+            String msg = "Path '%s' does not start with '%s'/!";
+            throw new IOException(String.format(msg, path, root.getName()));
+        }
+        
+        FileObject parent = root.getPrimaryFile().getParent();
+        return FileUtil.createData(parent, path);
+    }
+    
+    private String getPath() throws IOException {
+        String path = (String) wizard.getProperty(PROP_PATH);
+        if(path == null)
+            throw new IOException("DataSoruce name not set!");
+        return path + "." + DataSourceDataObject.EXTENSION;
+    }
+    
+    private Properties createProperties() throws IOException {
+        Properties props = new Properties();
+        props.setProperty(DataSourceDataObject.PROP_AUDIT_ID, getAuditId());
+        props.setProperty(DataSourceDataObject.PROP_DATA_TYPE, getDataType());
+        props.setProperty(DataSourceDataObject.PROP_FACTORY_ID, getFactoryId());
+        addProviderProperties(props);
+        return props;
+    }
+    
+    private String getAuditId() {
+        Project project = (Project) wizard.getProperty(PROP_PROJECT);
+        return ""+AuditDbManager.getInstance().getNextObjectId(project);
+    }
+    
+    private String getDataType() throws IOException {
+        DataType dataType = (DataType) wizard.getProperty(PROP_DATA_TYPE);
+        if(dataType == null)
+            throw new IOException("DataType not set!");
+        return dataType.name();
+    }
+    
+    private String getFactoryId() throws IOException {
+        String factoryId = (String) wizard.getProperty(PROP_FACTORY_ID);
+        if(factoryId == null || factoryId.length()==0)
+            throw new IOException("FactoryId not set!");
+        return factoryId;
+    }
+    
+    private void addProviderProperties(Properties props) {
+        Properties extraProps = (Properties) wizard.getProperty(PROP_EXTRA_PROPERTIES);
+        if(extraProps == null)
+            return;
+        
+        for(String name : extraProps.stringPropertyNames()) {
+            if(isProtectedProperty(name)) {
+                logger.log(Level.WARNING, "Property ''{0}'' can not be overwritten!", name);
+            } else {
+                String value = extraProps.getProperty(name);
+                if(value != null)
+                    extraProps.setProperty(name, value);
+            }
+        }
+    }
+    
+    private boolean isProtectedProperty(String name) {
+        return DataSourceDataObject.PROP_AUDIT_ID.equals(name) ||
+               DataSourceDataObject.PROP_DATA_TYPE.equals(name) ||
+               DataSourceDataObject.PROP_FACTORY_ID.equals(name);
     }
     
     protected abstract void createSecondaryFiles(FileObject primaryFile) throws IOException;

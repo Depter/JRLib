@@ -1,1 +1,2 @@
+org.jreserve.gui.data.inport.ImportDataProviderRegistrationProcessor
 org.jreserve.gui.data.spi.util.DataProviderRegistrationProcessor

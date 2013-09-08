@@ -18,10 +18,13 @@ package org.jreserve.gui.data.dataobject.node;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
+import org.openide.util.Lookup;
 
 /**
  *
@@ -47,13 +50,17 @@ class DataFolderChildren extends FilterNode.Children {
     }
     
     private boolean accepts(Node node) {
-        return true;
+        Lookup lkp = node.getLookup();
+        DataObject obj = lkp.lookup(DataObject.class);
+        return lkp.lookup(DataFolder.class) != null || 
+               lkp.lookup(DataSource.class) != null ||
+               (obj != null && obj.getLookup().lookup(DataSource.class) != null);
     }
 
     @Override
     protected Node copyNode(Node node) {
         DataFolder folder = node.getLookup().lookup(DataFolder.class);
-        return folder==null? node : new DataFolderNode(node, doProvider, false);
+        return folder==null? node.cloneNode() : new DataFolderNode(node, doProvider, false);
     }
 }
 

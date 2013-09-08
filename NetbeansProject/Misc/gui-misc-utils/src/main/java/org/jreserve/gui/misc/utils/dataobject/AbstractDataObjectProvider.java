@@ -41,6 +41,11 @@ public abstract class AbstractDataObjectProvider implements DataObjectProvider {
     }
     
     @Override
+    public Project getProject() {
+        return project;
+    }
+    
+    @Override
     public DataFolder getRootFolder() {
         FileObject folder = project.getProjectDirectory();
         folder = folder.getFileObject(getRootName());

@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import org.jreserve.gui.data.spi.AbstractFileDataProvider;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.MonthDate;
-import org.jreserve.gui.data.spi.DataProvider;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
 
@@ -39,9 +38,9 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public class CsvDataProvider extends AbstractFileDataProvider {
+class CsvDataProvider extends AbstractFileDataProvider {
     
-    private final static String CSV_EXTENSION = "csv";
+    final static String CSV_EXTENSION = "csv";
     private final static String CELL_SEPARATOR = ",";
     private final static int ACCIDENT_CELL = 0;
     private final static int DEVELOPMENT_CELL = 1;
@@ -51,13 +50,8 @@ public class CsvDataProvider extends AbstractFileDataProvider {
     private Writer writer;
     private Loader loader;
     
-    public CsvDataProvider(DataProvider.Factory factory) {
-        super(factory);
-    }
-
-    @Override
-    protected String getFileExtension() {
-        return CSV_EXTENSION;
+    CsvDataProvider(FileObject primaryFile) {
+        super(primaryFile, CSV_EXTENSION);
     }
 
     @Override

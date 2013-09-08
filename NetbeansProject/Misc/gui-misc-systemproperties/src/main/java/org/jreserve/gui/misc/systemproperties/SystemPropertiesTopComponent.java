@@ -60,8 +60,8 @@ import org.openide.util.NbBundle.Messages;
     id = "org.jreserve.gui.misc.systemproperties.SystemPropertiesTopComponent"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Window", position = 90),
-    @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 300)
+    @ActionReference(path = "Menu/Window", position = 90)//,
+//    @ActionReference(path = "Ribbon/TaskPanes/Windows/Development", position = 300)
 })
 @TopComponent.OpenActionRegistration(
     displayName = "#CTL_SystemPropertiesAction",

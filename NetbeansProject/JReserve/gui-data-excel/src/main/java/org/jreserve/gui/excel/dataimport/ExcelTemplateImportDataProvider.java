@@ -20,7 +20,7 @@ package org.jreserve.gui.excel.dataimport;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.data.spi.ImportDataProvider;
+import org.jreserve.gui.data.spi.inport.ImportDataProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.NbBundle.Messages;
 

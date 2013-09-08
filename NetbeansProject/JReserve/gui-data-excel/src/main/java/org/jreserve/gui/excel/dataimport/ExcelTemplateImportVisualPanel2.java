@@ -38,16 +38,17 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import org.jreserve.gui.data.api.util.DataItemChooser;
-import org.jreserve.gui.data.api.DataManager;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.inport.ImportSettings;
-import org.jreserve.gui.data.api.inport.SaveType;
+import org.jreserve.gui.data.spi.inport.ImportSettings;
+import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
+import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
+import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.jrlib.gui.data.DataType;
+import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -56,7 +57,8 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.ExcelTemplateImportVisualPanel2.Name=Link Template"
+    "LBL.ExcelTemplateImportVisualPanel2.Name=Link Template",
+    "LBL.ExcelTemplateImportVisualPanel2.SelectTitle=Select Storage"
 })
 class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
     
@@ -66,7 +68,7 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
     private final DataSourceRenderer dsRenderer = new DataSourceRenderer();
     private final ExcelTemplateImportTableModel tableModel = new ExcelTemplateImportTableModel();
     private final ExcelTemplateImportWizardPanel2 controller;
-    private DataManager dm;
+    private DataObjectProvider dop;
     
     public ExcelTemplateImportVisualPanel2(ExcelTemplateImportWizardPanel2 controller) {
         this.controller = controller;
@@ -95,8 +97,8 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
         column.setWidth(MAX_IMG_WIDTH);
     }
 
-    void setDataManager(DataManager dm) {
-        this.dm = dm;
+    void setDataObjectProvider(DataObjectProvider dop) {
+        this.dop = dop;
     }
     
     SaveType getSaveType() {
@@ -339,7 +341,7 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
             Point cellLoc = table.getCellRect(row, column, false).getLocation();
             point = new Point(point.x-cellLoc.x, point.y - cellLoc.y);
             point = getPointWithin(point, renderer.button);
-            if(renderer.button.contains(point) && dm != null)
+            if(renderer.button.contains(point) && dop != null)
                 selectDataSource(row);
         }
         
@@ -350,7 +352,8 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
         
         private void selectDataSource(int row) {
             DataType dt = tableModel.getItem(row).getDataType();
-            DataSource ds = DataItemChooser.chooseSource(dm, dt);
+            DataObject obj = DataObjectChooser.selectOne(new DsController(dop, dt));
+            DataSource ds = obj==null? null : obj.getLookup().lookup(DataSource.class);
             if(ds != null)
                 tableModel.setDataSource(row, ds);
         }
@@ -358,6 +361,32 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
         private void switchUsed(int row) {
             tableModel.setUsed(row, !tableModel.isUsed(row));
         }
+    }
+    
+    private static class DsController extends DataObjectChooser.DefaultController {
+        
+        private final DataType dt;
+        
+        private DsController(DataObjectProvider dop, DataType dt) {
+            super(Bundle.LBL_ExcelTemplateImportVisualPanel2_SelectTitle(), dop.getRootFolder());
+            this.dt = dt;
+        }
+
+        @Override
+        public boolean showDataObject(DataObject obj) {
+            if(super.showDataObject(obj))
+                return true;
+            DataSource ds = obj.getLookup().lookup(DataSource.class);
+            return ds != null && ds.getDataType() == dt;
+        }
+
+        @Override
+        public boolean canSelectObject(DataObject obj) {
+            DataSource ds = obj.getLookup().lookup(DataSource.class);
+            return ds != null && ds.getDataType() == dt;
+        }
+        
+        
     }
     
     private class TableKeyListener extends KeyAdapter {

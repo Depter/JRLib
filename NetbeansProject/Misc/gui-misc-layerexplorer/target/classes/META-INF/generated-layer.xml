@@ -48,19 +48,6 @@
             </file>
         </folder>
     </folder>
-    <folder name="Ribbon">
-        <folder name="TaskPanes">
-            <folder name="Windows">
-                <folder name="Development">
-                    <file name="org-jreserve-gui-misc-layerexplorer-LayerExplorerTopComponent.shadow">
-                        <!--org.jreserve.gui.misc.layerexplorer.LayerExplorerTopComponent-->
-                        <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-gui-misc-layerexplorer-LayerExplorerTopComponent.instance"/>
-                        <attr intvalue="100" name="position"/>
-                    </file>
-                </folder>
-            </folder>
-        </folder>
-    </folder>
     <folder name="xml">
         <folder name="entities">
             <folder name="org_jreserve_gui_misc_layerexplorer">
