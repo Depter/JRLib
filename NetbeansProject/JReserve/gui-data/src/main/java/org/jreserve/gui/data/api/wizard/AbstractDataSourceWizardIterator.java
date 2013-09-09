@@ -318,7 +318,7 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
             } else {
                 String value = extraProps.getProperty(name);
                 if(value != null)
-                    extraProps.setProperty(name, value);
+                    props.setProperty(name, value);
             }
         }
     }

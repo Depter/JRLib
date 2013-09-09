@@ -4,8 +4,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/layerexplorer/
  Bundle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130908
-OpenIDE-Module-Build-Version: 201309081441
+OpenIDE-Module-Implementation-Version: 1.0-20130909
+OpenIDE-Module-Build-Version: 201309090744
 OpenIDE-Module: org.jreserve.gui.misc.layerexplorer
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Display-Category: org.jreserve

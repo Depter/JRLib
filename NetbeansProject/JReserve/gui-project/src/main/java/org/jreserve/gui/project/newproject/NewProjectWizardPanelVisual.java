@@ -20,6 +20,7 @@ import java.io.File;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.Document;
+import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.netbeans.spi.project.ui.support.ProjectChooser;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileChooserBuilder;
@@ -225,6 +226,7 @@ class NewProjectWizardPanelVisual extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 5);
         add(pathText, gridBagConstraints);
 
+        browseButton.setIcon(CommonIcons.search());
         org.openide.awt.Mnemonics.setLocalizedText(browseButton, org.openide.util.NbBundle.getMessage(NewProjectWizardPanelVisual.class, "NewProjectWizardPanelVisual.browseButton.text")); // NOI18N
         browseButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

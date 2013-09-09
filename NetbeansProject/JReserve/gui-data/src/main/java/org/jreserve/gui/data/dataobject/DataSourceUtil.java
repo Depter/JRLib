@@ -40,23 +40,24 @@ public class DataSourceUtil {
     
     private final static Logger logger = Logger.getLogger(DataSourceUtil.class.getName());
     
-    static Properties loadProperties(FileObject file) throws IOException {
-        FileLock lock = null;
-        
-        try {
-            lock = file.lock();
-            InputStream is = file.getInputStream();
-            Properties props = new Properties();
-            props.loadFromXML(is);
-            return props;
-        } catch (IOException ex) {
-            String msg = "Unable to load properties from file '%s'!";
-            msg = String.format(msg, file.getPath());
-            logger.log(Level.SEVERE, msg, ex);
-            throw ex;
-        } finally {
-            if(lock != null)
-                lock.releaseLock();
+    static Properties loadProperties(final FileObject file) throws IOException {
+        synchronized(file) {
+            FileLock lock = null;
+            try {
+                lock = file.lock();
+                InputStream is = file.getInputStream();
+                Properties props = new Properties();
+                props.loadFromXML(is);
+                return props;
+            } catch (IOException ex) {
+                String msg = "Unable to load properties from file '%s'!";
+                msg = String.format(msg, file.getPath());
+                logger.log(Level.SEVERE, msg, ex);
+                throw ex;
+            } finally {
+                if(lock != null)
+                    lock.releaseLock();
+            }
         }
     }
     
@@ -95,24 +96,28 @@ public class DataSourceUtil {
         }
     }
     
-    public static void saveProperties(FileObject file, Properties props) throws IOException {
-        OutputStream os = null;
-        FileLock lock = null;
-        try {
-            lock = file.lock();
-            os = file.getOutputStream(lock);
-            props.storeToXML(os, null);
-        } catch (IOException ex) {
-            String msg = "Unabel to save properties to file: "+file.getPath();
-            logger.log(Level.SEVERE, msg, ex);
-            throw ex;
-        } finally {
-            if(os != null) {
-                try {os.close();} catch(IOException ex) {}
-            }
+    public static void saveProperties(final FileObject file, Properties props) throws IOException {
+        synchronized(file) {
+            OutputStream os = null;
+            FileLock lock = null;
+            try {
+                lock = file.lock();
+                os = file.getOutputStream(lock);
+                props.storeToXML(os, null);
+            } catch (IOException ex) {
+                String msg = "Unabel to save properties to file: "+file.getPath();
+                logger.log(Level.SEVERE, msg, ex);
+                throw ex;
+            } finally {
+                if(os != null) {
+                    try {os.close();} catch(IOException ex) {
+                        logger.log(Level.SEVERE, "Unable to close outputstrem for file: {0}", file.getPath());
+                    }
+                }
 
-            if(lock != null) {
-                lock.releaseLock();
+                if(lock != null) {
+                    lock.releaseLock();
+                }
             }
         }
     }

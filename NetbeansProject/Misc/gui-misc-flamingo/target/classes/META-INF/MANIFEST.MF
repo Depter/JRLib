@@ -5,8 +5,8 @@ OpenIDE-Module-Layer: org/jreserve/gui/misc/flamingo/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/flamingo/Bundl
  e.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130907
-OpenIDE-Module-Build-Version: 201309072147
+OpenIDE-Module-Implementation-Version: 1.0-20130909
+OpenIDE-Module-Build-Version: 201309090745
 OpenIDE-Module: org.jreserve.gui.misc.flamingo
 OpenIDE-Module-Public-Packages: com.jgoodies.**, org.pushingpixels.fla
  mingo.**, org.pushingpixels.trident.**, org.jreserve.gui.misc.flaming

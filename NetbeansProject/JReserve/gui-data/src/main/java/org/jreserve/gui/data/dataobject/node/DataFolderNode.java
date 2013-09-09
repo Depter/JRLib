@@ -32,6 +32,7 @@ import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.nodes.NodeTransfer;
 import org.openide.util.ImageUtilities;
+import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.datatransfer.PasteType;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -96,49 +97,115 @@ class DataFolderNode extends FilterNode {
     }
     
     @Override
+    public Transferable clipboardCopy() throws IOException {
+        ExTransferable t = ExTransferable.create(super.clipboardCopy());
+        DataObject obj = getLookup().lookup(DataFolder.class);
+        if(obj != null)
+            t.put(DataSourceTransfer.createCopy(obj));
+        return t;
+    }
+
+    @Override
+    public Transferable clipboardCut() throws IOException {
+        ExTransferable t = ExTransferable.create(super.clipboardCut());
+        DataObject obj = getLookup().lookup(DataFolder.class);
+        if(obj != null)
+            t.put(DataSourceTransfer.createMove(obj));
+        return t;
+    }
+
+    @Override
+    public Transferable drag() throws IOException {
+        ExTransferable t = ExTransferable.create(super.drag());
+        DataObject obj = getLookup().lookup(DataFolder.class);
+        if(obj != null)
+            t.put(DataSourceTransfer.createMove(obj));
+        return t;
+    }
+
+    //FROM org.netbeans.spi.java.project.support.ui.PackageRootNode
+    //    public @Override void createPasteTypes(Transferable t, List<PasteType> list) {
+    //        if (t.isDataFlavorSupported(ExTransferable.multiFlavor)) {
+    //            try {
+    //                MultiTransferObject mto = (MultiTransferObject) t.getTransferData(ExTransferable.multiFlavor);
+    //                List<PackageViewChildren.PackageNode> l = new ArrayList<PackageViewChildren.PackageNode>();
+    //                boolean isPackageFlavor = false;
+    //                boolean hasTheSameRoot = false;
+    //                int op = -1;
+    //                for (int i=0; i < mto.getCount(); i++) {
+    //                    Transferable pt = mto.getTransferableAt(i);
+    //                    DataFlavor[] flavors = mto.getTransferDataFlavors(i);
+    //                    for (int j=0; j< flavors.length; j++) {
+    //                        if (PackageViewChildren.SUBTYPE.equals(flavors[j].getSubType ()) &&
+    //                                PackageViewChildren.PRIMARY_TYPE.equals(flavors[j].getPrimaryType ())) {
+    //                            if (op == -1) {
+    //                                op = Integer.valueOf (flavors[j].getParameter (PackageViewChildren.MASK)).intValue ();
+    //                            }
+    //                            PackageViewChildren.PackageNode pkgNode = (PackageViewChildren.PackageNode) pt.getTransferData(flavors[j]);
+    //                            if ( !((PackageViewChildren)getChildren()).getRoot().equals( pkgNode.getRoot() ) ) {
+    //                                l.add(pkgNode);
+    //                            }
+    //                            else {
+    //                                hasTheSameRoot = true;
+    //                            }
+    //                            isPackageFlavor = true;
+    //                        }
+    //                    }
+    //                }
+    //                if (isPackageFlavor && !hasTheSameRoot) {
+    //                    list.add(new PackageViewChildren.PackagePasteType(this.group.getRootFolder(),
+    //                            l.toArray(new PackageViewChildren.PackageNode[l.size()]),
+    //                            op));
+    //                }
+    //                else if (!isPackageFlavor) {
+    //                    list.addAll( Arrays.asList( getDataFolderNodeDelegate().getPasteTypes( t ) ) );
+    //                }
+    //            } catch (UnsupportedFlavorException e) {
+    //                Exceptions.printStackTrace(e);
+    //            } catch (IOException e) {
+    //                Exceptions.printStackTrace(e);
+    //            }
+    //        }
+    //        else {
+    //            DataFlavor[] flavors = t.getTransferDataFlavors();
+    //            FileObject root = this.group.getRootFolder();
+    //            boolean isPackageFlavor = false;
+    //            if (root!= null  && root.canWrite()) {
+    //                for (DataFlavor flavor : flavors) {
+    //                    if (PackageViewChildren.SUBTYPE.equals(flavor.getSubType ()) &&
+    //                            PackageViewChildren.PRIMARY_TYPE.equals(flavor.getPrimaryType ())) {
+    //                        isPackageFlavor = true;
+    //                        try {
+    //                            int op = Integer.parseInt(flavor.getParameter(PackageViewChildren.MASK));
+    //                            PackageViewChildren.PackageNode pkgNode = (PackageViewChildren.PackageNode) t.getTransferData(flavor);
+    //                            if ( !((PackageViewChildren)getChildren()).getRoot().equals( pkgNode.getRoot() ) ) {
+    //                                list.add(new PackageViewChildren.PackagePasteType (root, new PackageViewChildren.PackageNode[] {pkgNode}, op));
+    //                            }
+    //                        } catch (IOException ioe) {
+    //                            Exceptions.printStackTrace(ioe);
+    //                        }
+    //                        catch (UnsupportedFlavorException ufe) {
+    //                            Exceptions.printStackTrace(ufe);
+    //                        }
+    //                    }
+    //                }
+    //            }
+    //            if (!isPackageFlavor) {
+    //                list.addAll( Arrays.asList( getDataFolderNodeDelegate().getPasteTypes( t ) ) );
+    //            }
+    //        }
+    //    }
+    
+    
+    @Override
+    public PasteType getDropType(Transferable t, int action, int index) {
+        return null;
+    }
+    
+    
+    @Override
     public PasteType[] getPasteTypes(Transferable t) {
-        final List<Node> pastables = getPastableNodes(t, NodeTransfer.COPY);
-        if(pastables.isEmpty())
-            return new PasteType[0];
-        
-        PasteType paste = new PasteType() {
-            @Override
-            public Transferable paste() throws IOException {
-                Node[] nn = new Node[pastables.size()];
-                for(int i=0; i<nn.length; i++)
-                    nn[i] = pastables.get(i).cloneNode();
-                getChildren().add(nn);
-                return null;
-            }
-        };
-        
-        return new PasteType[]{paste};
-    }
-    
-    private List<Node> getPastableNodes(Transferable t, int action) {
-        List<Node> result = new ArrayList<Node>();
-        Node[] nodes = NodeTransfer.nodes(t, action);
-        if(nodes == null)
-            return result;
-        
-        for(Node node : nodes)
-            if(canPasteNode(node))
-                result.add(node);
-        return result;
-    }
-    
-    private boolean canPasteNode(Node node) {
-        DataObject obj = node.getLookup().lookup(DataObject.class);
-        if(obj instanceof DataSourceDataObject) {
-            return true;
-        } else if(obj instanceof DataFolder) {
-            DataObjectProvider dop = getLookup().lookup(DataObjectProvider.class);
-            FileObject root = dop.getRootFolder().getPrimaryFile();
-            FileObject dir = ((DataFolder)obj).getPrimaryFile();
-            return FileUtil.isParentOf(root, dir);
-        } else {
-            return false;
-        }
+        return new PasteType[0];
     }
     
     private static class FolderDeletable extends Deletable.NodeDeletable {
@@ -151,6 +218,60 @@ class DataFolderNode extends FilterNode {
         public void delete() throws Exception {
             DataFolder folder = node.getLookup().lookup(DataFolder.class);
             folder.delete();
+        }
+    }
+    
+    private abstract class DataSourcePasteType extends PasteType {
+        
+        protected final DataFolder folder;
+        protected final DataObject client;
+
+        public DataSourcePasteType(DataObject client) {
+            folder = getLookup().lookup(DataFolder.class);
+            this.client = client;
+        }
+        
+        @Override
+        public Transferable paste() throws IOException {
+            if(folder == null || client == null)
+                return null;
+            if(canPaste(folder.getPrimaryFile(), client.getPrimaryFile()))
+                operate();
+            return null;
+        }
+        
+        private boolean canPaste(FileObject myFolder, FileObject fo) {
+            if(fo.isData())
+                return true;
+            return !FileUtil.isParentOf(fo, myFolder);
+        }
+        
+        protected abstract void operate() throws IOException;
+    }
+    
+    private class CopyPasteType extends DataSourcePasteType {
+
+        private CopyPasteType(DataObject client) {
+            super(client);
+        }
+
+        @Override
+        protected void operate() throws IOException {
+            //TODO check copy
+            client.copy(folder);
+        }
+    }
+    
+    private class MovePasteType extends DataSourcePasteType {
+
+        private MovePasteType(DataObject client) {
+            super(client);
+        }
+
+        @Override
+        protected void operate() throws IOException {
+            //TODO check move
+            client.move(folder);
         }
     }
 }

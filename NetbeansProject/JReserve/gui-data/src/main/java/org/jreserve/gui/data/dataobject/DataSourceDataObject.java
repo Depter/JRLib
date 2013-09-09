@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.data.dataobject;
 
+import org.jreserve.gui.data.dataobject.node.DataSourceNode;
 import java.io.IOException;
 import java.util.List;
 import java.util.Properties;
@@ -26,7 +27,6 @@ import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.gui.misc.audit.api.AuditableMultiview;
 import org.jreserve.gui.misc.audit.api.AuditableObject;
-import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.gui.data.DataEntry;
