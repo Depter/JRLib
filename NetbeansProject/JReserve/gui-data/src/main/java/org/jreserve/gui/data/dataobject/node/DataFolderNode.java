@@ -21,17 +21,21 @@ import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.gui.data.dataobject.DataSourceDataObject;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
-import org.openide.nodes.NodeTransfer;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
 import org.openide.util.datatransfer.ExTransferable;
 import org.openide.util.datatransfer.PasteType;
 import org.openide.util.lookup.AbstractLookup;
@@ -199,13 +203,24 @@ class DataFolderNode extends FilterNode {
     
     @Override
     public PasteType getDropType(Transferable t, int action, int index) {
-        return null;
+        DataObject obj = DataSourceTransfer.getMovedObject(t);
+        return obj==null? null : new MovePasteType(obj);
     }
     
     
     @Override
     public PasteType[] getPasteTypes(Transferable t) {
-        return new PasteType[0];
+        List<PasteType> pts = new ArrayList<PasteType>();
+        
+        DataObject obj = DataSourceTransfer.getCopiedObject(t);
+        if(obj != null)
+            pts.add(new CopyPasteType(obj));
+        
+        obj = DataSourceTransfer.getMovedObject(t);
+        if(obj != null)
+            pts.add(new MovePasteType(obj));
+        
+        return pts.toArray(new PasteType[pts.size()]);
     }
     
     private static class FolderDeletable extends Deletable.NodeDeletable {
@@ -221,7 +236,7 @@ class DataFolderNode extends FilterNode {
         }
     }
     
-    private abstract class DataSourcePasteType extends PasteType {
+    private abstract class DataSourcePasteType extends PasteType implements Runnable {
         
         protected final DataFolder folder;
         protected final DataObject client;
@@ -236,7 +251,7 @@ class DataFolderNode extends FilterNode {
             if(folder == null || client == null)
                 return null;
             if(canPaste(folder.getPrimaryFile(), client.getPrimaryFile()))
-                operate();
+                doPaste();
             return null;
         }
         
@@ -246,7 +261,18 @@ class DataFolderNode extends FilterNode {
             return !FileUtil.isParentOf(fo, myFolder);
         }
         
-        protected abstract void operate() throws IOException;
+        private void doPaste() {
+            final ProgressHandle ph = ProgressHandleFactory.createHandle("PasteOperation");
+            ph.start();
+            ph.switchToIndeterminate();
+            TaskUtil.execute(this, new TaskListener() {
+                @Override
+                public void taskFinished(Task task) {
+                    ph.finish();
+                }
+            });
+            ph.finish();
+        }
     }
     
     private class CopyPasteType extends DataSourcePasteType {
@@ -254,11 +280,19 @@ class DataFolderNode extends FilterNode {
         private CopyPasteType(DataObject client) {
             super(client);
         }
+        
+        public String getName() {
+            return "Paste copy";
+        }
 
         @Override
-        protected void operate() throws IOException {
-            //TODO check copy
-            client.copy(folder);
+        public void run() {
+            try {
+                client.copy(folder);
+            } catch (Exception ex) {
+                String path = client.getPrimaryFile().getPath();
+                BubbleUtil.showException("Unable to copy: "+path, ex);
+            }
         }
     }
     
@@ -267,11 +301,20 @@ class DataFolderNode extends FilterNode {
         private MovePasteType(DataObject client) {
             super(client);
         }
+        
+        public String getName() {
+            return "Move";
+        }
 
         @Override
-        protected void operate() throws IOException {
-            //TODO check move
-            client.move(folder);
+        public void run() {
+            try {
+                //TODO check move
+                client.move(folder);
+            } catch (Exception ex) {
+                String path = client.getPrimaryFile().getPath();
+                BubbleUtil.showException("Unable to move: "+path, ex);
+            }
         }
     }
 }

@@ -35,7 +35,8 @@ import org.openide.util.datatransfer.ExTransferable;
 class DataSourceTransfer extends ExTransferable.Single {
     private final static int COPY = DnDConstants.ACTION_COPY;
     private final static int MOVE = DnDConstants.ACTION_MOVE;
-    private final static String MIME_TYPE = DataSourceDataObject.MIME_TYPE+";action=%d";
+    private final static String ACTION_PARAM = "action";
+    private final static String MIME_TYPE = DataSourceDataObject.MIME_TYPE+";"+ACTION_PARAM+"=%d";
     
     private final static Logger logger = Logger.getLogger(DataSourceTransfer.class.getName());
     
@@ -58,7 +59,7 @@ class DataSourceTransfer extends ExTransferable.Single {
     
     private static DataObject getSourceObjects(Transferable t, int action) {
         DataFlavor flavor = getFlavor(action);
-        if(t.isDataFlavorSupported(flavor)) {
+        if(isSupported(t, flavor, action)) {
             try {
                 return (DataObject) t.getTransferData(flavor);
             } catch (ClassCastException ex) {
@@ -70,6 +71,13 @@ class DataSourceTransfer extends ExTransferable.Single {
             }
         }
         return null;
+    }
+    
+    private static boolean isSupported(Transferable t, DataFlavor flavor, int action) {
+        for(DataFlavor f : t.getTransferDataFlavors())
+            if(flavor.equals(f) && action == Integer.parseInt(f.getParameter(ACTION_PARAM)))
+                return true;
+        return false;
     }
     
     static DataObject getMovedObject(Transferable t) {

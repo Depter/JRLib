@@ -50,11 +50,11 @@ import org.openide.util.datatransfer.ExTransferable;
         position = 200, separatorAfter = 250),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+        id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
         position = 300),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+        id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
         position = 400, separatorAfter = 450),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,

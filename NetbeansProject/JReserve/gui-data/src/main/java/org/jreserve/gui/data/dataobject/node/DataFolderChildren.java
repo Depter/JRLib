@@ -60,7 +60,10 @@ class DataFolderChildren extends FilterNode.Children {
     @Override
     protected Node copyNode(Node node) {
         DataFolder folder = node.getLookup().lookup(DataFolder.class);
-        return folder==null? node.cloneNode() : new DataFolderNode(node, doProvider, false);
+        if(folder==null)
+            return node.cloneNode();
+        else
+            return new DataFolderNode(node, doProvider, false);
     }
 }
 

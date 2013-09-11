@@ -108,17 +108,17 @@
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                     <attr intvalue="250" name="position"/>
                 </file>
-                <file name="org-openide-actions-CutAction.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
-                    <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
-                    <attr intvalue="300" name="position"/>
-                </file>
                 <file name="org-openide-actions-CopyAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
+                    <attr intvalue="300" name="position"/>
+                </file>
+                <file name="org-openide-actions-CutAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
                     <attr intvalue="400" name="position"/>
                 </file>
-                <file name="org-openide-actions-CopyAction-separatorAfter.instance">
+                <file name="org-openide-actions-CutAction-separatorAfter.instance">
                     <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                     <attr intvalue="450" name="position"/>
