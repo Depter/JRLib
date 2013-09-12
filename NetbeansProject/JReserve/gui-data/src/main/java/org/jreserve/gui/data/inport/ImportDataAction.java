@@ -32,7 +32,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.nodes.Node;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
@@ -82,10 +81,10 @@ public class ImportDataAction extends AbstractContextAwareAction {
     }
  
     public ImportDataAction(Lookup context) {
-        super(context);
-        putValue(Action.NAME, Bundle.CTL_ImportDataAction());
-        super.putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(ICON_32, false));
-        super.putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(ICON_16, false));
+        super(context, Object.class);
+        super.setDisplayName(Bundle.CTL_ImportDataAction());
+        super.setSmallIconPath(ICON_16);
+        super.setLargeIconPath(ICON_32);
     }
 
     @Override

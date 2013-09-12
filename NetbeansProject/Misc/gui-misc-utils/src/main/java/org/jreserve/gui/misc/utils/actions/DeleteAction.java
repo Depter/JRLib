@@ -21,7 +21,6 @@ import javax.swing.Action;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
@@ -50,18 +49,18 @@ public class DeleteAction extends AbstractContextAwareAction {
         return action;
     }
     
-    @StaticResource private final static String SMALL_ICON = "org/jreserve/gui/misc/utils/delete.png";   //NOI18
-    @StaticResource private final static String LARGE_ICON = "org/jreserve/gui/misc/utils/delete32.png"; //NOI18
+    @StaticResource private final static String IMG_16 = "org/jreserve/gui/misc/utils/delete.png";   //NOI18
+    @StaticResource private final static String IMG_32 = "org/jreserve/gui/misc/utils/delete32.png"; //NOI18
     
     public DeleteAction() {
         this(Utilities.actionsGlobalContext());
     }
     
     public DeleteAction(Lookup ctx) {
-        super(ctx);
-        putValue(Action.NAME, Bundle.CTL_DeleteAction());
-        putValue(Action.LARGE_ICON_KEY, ImageUtilities.loadImageIcon(LARGE_ICON, false));
-        putValue(Action.SMALL_ICON, ImageUtilities.loadImageIcon(SMALL_ICON, false));
+        super(ctx, Deletable.class);
+        super.setDisplayName(Bundle.CTL_DeleteAction());
+        super.setSmallIconPath(IMG_16);
+        super.setLargeIconPath(IMG_32);
     }
     
     @Override

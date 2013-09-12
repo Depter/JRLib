@@ -32,7 +32,11 @@ import org.openide.awt.ActionReferences;
 import org.openide.loaders.DataNode;
 import org.openide.nodes.Children;
 import org.openide.util.Utilities;
-import org.openide.util.datatransfer.ExTransferable;
+import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
+import org.openide.loaders.LoaderTransfer;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -50,11 +54,11 @@ import org.openide.util.datatransfer.ExTransferable;
         position = 200, separatorAfter = 250),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
         position = 300),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
         position = 400, separatorAfter = 450),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
@@ -67,8 +71,21 @@ public class DataSourceNode extends DataNode {
     @StaticResource public final static String IMG_VECTOR = "org/jreserve/gui/data/icons/database_vector.png";
     public final static String ACTION_PATH = "Node/DataSourceNode/Actions";  //NOI18
     
+    private final InstanceContent ic;
+    
     public DataSourceNode(DataSourceDataObject obj) {
-        super(obj, Children.LEAF, obj.getLookup());
+        this(obj, new InstanceContent());
+    }
+    
+    private DataSourceNode(DataSourceDataObject obj, InstanceContent ic) {
+        super(obj, Children.LEAF, 
+              new ProxyLookup(obj.getLookup(), new AbstractLookup(ic))
+        );
+        
+        this.ic = ic;
+        ic.add(ClipboardUtil.createCopiable(obj));
+        ic.add(ClipboardUtil.createCutable(obj));
+        
         super.setDisplayName(obj.getName());
         if(getLookup().lookup(DataSource.class).getDataType() == DataType.TRIANGLE) {
             super.setIconBaseWithExtension(IMG_TRIANGLE);
@@ -87,25 +104,9 @@ public class DataSourceNode extends DataNode {
     public Action getPreferredAction() {
         return OpenAction.get(OpenAction.class);
     }
-    
-    @Override
-    public Transferable clipboardCopy() throws IOException {
-        ExTransferable t = ExTransferable.create(super.clipboardCopy());
-        t.put(DataSourceTransfer.createCopy(getDataObject()));
-        return t;
-    }
-
-    @Override
-    public Transferable clipboardCut() throws IOException {
-        ExTransferable t = ExTransferable.create(super.clipboardCut());
-        t.put(DataSourceTransfer.createMove(getDataObject()));
-        return t;
-    }
 
     @Override
     public Transferable drag() throws IOException {
-        ExTransferable t = ExTransferable.create(super.drag());
-        t.put(DataSourceTransfer.createMove(getDataObject()));
-        return t;
+        return LoaderTransfer.transferable(getDataObject(), LoaderTransfer.DND_MOVE);
     }
 }

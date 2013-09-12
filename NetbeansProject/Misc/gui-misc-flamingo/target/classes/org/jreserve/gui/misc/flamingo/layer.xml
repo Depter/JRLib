@@ -76,24 +76,7 @@
                         <attr name="position" intvalue="2000"/>
                         <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/edit.png"/>
                     </file>
-                    <file name="org-openide-actions-CopyAction.shadow">
-                        <attr name="priority" stringvalue="medium"/>
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CopyAction.instance"/>
-                        <attr name="position" intvalue="3000"/>
-                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/copy.png"/>
-                    </file>
-                    <file name="org-openide-actions-CutAction.shadow">
-                        <attr name="priority" stringvalue="medium"/>
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-CutAction.instance"/>
-                        <attr name="position" intvalue="4000"/>
-                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/cut.png"/>
-                    </file>
-                    <file name="org-openide-actions-PasteAction.shadow">
-                        <attr name="priority" stringvalue="medium"/>
-                        <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-PasteAction.instance"/>
-                        <attr name="position" intvalue="5000"/>
-                        <attr name="iconBase" stringvalue="org/jreserve/gui/misc/flamingo/modules/paste.png"/>
-                    </file>
+                    
                     <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
                         <attr name="priority" stringvalue="top"/>
                         <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>

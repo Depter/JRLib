@@ -33,7 +33,7 @@ import org.openide.util.Lookup;
 public abstract class AbstractCreateDataSourceAction extends AbstractContextAwareAction {
 
     protected AbstractCreateDataSourceAction(Lookup context) {
-        super(context);
+        super(context, DataSourceObjectProvider.class);
     }
     
     @Override

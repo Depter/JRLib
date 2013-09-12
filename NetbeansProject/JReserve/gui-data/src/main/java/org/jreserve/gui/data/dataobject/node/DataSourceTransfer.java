@@ -36,7 +36,10 @@ class DataSourceTransfer extends ExTransferable.Single {
     private final static int COPY = DnDConstants.ACTION_COPY;
     private final static int MOVE = DnDConstants.ACTION_MOVE;
     private final static String ACTION_PARAM = "action";
-    private final static String MIME_TYPE = DataSourceDataObject.MIME_TYPE+";"+ACTION_PARAM+"=%d";
+    private final static String MIME_TYPE = 
+            DataSourceDataObject.MIME_TYPE+
+            ";class="+DataSourceDataObject.class.getName()+
+            ";"+ACTION_PARAM+"=%d";
     
     private final static Logger logger = Logger.getLogger(DataSourceTransfer.class.getName());
     

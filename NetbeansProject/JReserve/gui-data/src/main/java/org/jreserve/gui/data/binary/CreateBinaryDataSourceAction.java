@@ -25,7 +25,6 @@ import org.jreserve.gui.misc.utils.actions.RibbonRegistrations;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
@@ -63,8 +62,8 @@ public class CreateBinaryDataSourceAction extends AbstractCreateDataSourceAction
     
     private CreateBinaryDataSourceAction(Lookup lkp) {
         super(lkp);
-        putValue(NAME, Bundle.LBL_CreateBinaryDataSourceAction_Name());
-        putValue(SMALL_ICON, ImageUtilities.loadImageIcon(ICON_16, false));
+        setDisplayName(Bundle.LBL_CreateBinaryDataSourceAction_Name());
+        setSmallIconPath(ICON_16);
     }
 
     @Override

@@ -3,6 +3,26 @@
                             "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
+        <folder name="Edit">
+            <file name="org-jreserve-gui-misc-utils-actions-CutAction.instance">
+                <!--org.jreserve.gui.misc.utils.actions.CutAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.utils.actions.Bundle#CTL_CutAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.misc.utils.actions.CutAction"/>
+            </file>
+            <file name="org-jreserve-gui-misc-utils-actions-PasteAction.instance">
+                <!--org.jreserve.gui.misc.utils.actions.PasteAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.utils.actions.Bundle#CTL_PasteAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.misc.utils.actions.PasteAction"/>
+            </file>
+            <file name="org-jreserve-gui-misc-utils-actions-CopyAction.instance">
+                <!--org.jreserve.gui.misc.utils.actions.CopyAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.misc.utils.actions.Bundle#CTL_CopyAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.misc.utils.actions.CopyAction"/>
+            </file>
+        </folder>
         <folder name="File">
             <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance">
                 <!--org.jreserve.gui.misc.utils.actions.DeleteAction-->
