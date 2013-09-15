@@ -45,7 +45,7 @@ import org.openide.util.Utilities;
 })
 class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor> {
 
-    private final static String PROP_PROJECT = "project";
+    final static String PROP_PROJECT = "project";
     
     private WizardDescriptor wiz;
     private ChangeSupport cs = new ChangeSupport(this);
@@ -67,15 +67,29 @@ class CreateFolderWizardPanel implements WizardDescriptor.Panel<WizardDescriptor
         panel.setProviders(project==null? Collections.EMPTY_LIST :
                 project.getLookup().lookupAll(DataObjectProvider.class));
         
-        DataObjectProvider provider = Utilities.actionsGlobalContext().lookup(DataObjectProvider.class);
+        DataObjectProvider provider = getDataObjectProvider();
         panel.setSelectedProvider(provider);
         
-        DataFolder folder = Utilities.actionsGlobalContext().lookup(DataFolder.class);
+        DataFolder folder = getDataFolder();
         if(provider != null && folder != null) {
             FileObject parent = provider.getRootFolder().getPrimaryFile();
             FileObject child = folder.getPrimaryFile();
             panel.setFolder(FileUtil.getRelativePath(parent, child));
         }
+    }
+    
+    private DataObjectProvider getDataObjectProvider() {
+        DataObjectProvider provider = (DataObjectProvider) wiz.getProperty(CreateDataFolderIterator.PROP_OBJECT_PROVIDER);
+        if(provider != null)
+            return provider;
+        return Utilities.actionsGlobalContext().lookup(DataObjectProvider.class);
+    }
+    
+    private DataFolder getDataFolder() {
+        DataFolder folder = (DataFolder) wiz.getProperty(CreateDataFolderIterator.PROP_FOLDER);
+        if(folder != null)
+            return folder;
+        return Utilities.actionsGlobalContext().lookup(DataFolder.class);
     }
     
     @Override

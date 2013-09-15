@@ -22,14 +22,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.Action;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
 import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
@@ -38,6 +41,7 @@ import org.openide.loaders.LoaderTransfer;
 import org.openide.nodes.FilterNode;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
+import org.openide.util.Utilities;
 import org.openide.util.datatransfer.PasteType;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -48,10 +52,33 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  * @version 1.0
  */
+@ActionReferences({
+    @ActionReference(
+        path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "Project", id = "org.netbeans.modules.project.ui.NewFile$WithSubMenu"),
+        position = 100, separatorAfter = 150),
+    @ActionReference(
+        path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
+        position = 300),
+    @ActionReference(
+        path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
+        position = 400),
+    @ActionReference(
+        path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.PasteAction"),
+        position = 500, separatorAfter = 550),
+    @ActionReference(
+        path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "File", id = "org.jreserve.gui.misc.utils.notifications.actions.DeleteAction"), 
+        position = 600)
+})
 class DataFolderNode extends FilterNode {
     
-    private final static String ROOT_IMG_PATH = "org/jreserve/gui/data/icons/database.png";
-    private final static String IMG_PATH = "org/jreserve/gui/data/icons/folder_db.png";
+    public final static String ACTION_PATH = "Node/DataFolderNode/Actions";  //NOI18
+    private final static String ROOT_IMG_PATH = "org/jreserve/gui/data/icons/database.png"; //NOI18
+    private final static String IMG_PATH = "org/jreserve/gui/data/icons/folder_db.png"; //NOI18
     private static Image ROOT_IMG = ImageUtilities.loadImage(ROOT_IMG_PATH);
     private static Image IMG = ImageUtilities.loadImage(IMG_PATH);
     
@@ -76,6 +103,12 @@ class DataFolderNode extends FilterNode {
             ic.add(ClipboardUtil.createCopiable(folder));
             ic.add(ClipboardUtil.createCutable(folder));
         }
+    }
+
+    @Override
+    public Action[] getActions(boolean context) {
+        List<? extends Action> actions = Utilities.actionsForPath(ACTION_PATH);
+        return actions.toArray(new Action[actions.size()]);
     }
 
     @Override
@@ -105,7 +138,7 @@ class DataFolderNode extends FilterNode {
 
     @Override
     public PasteType getDropType(Transferable t, int action, int index) {
-        List<DataObject> objs = getPastedObjects(t, LoaderTransfer.DND_MOVE);
+        List<DataObject> objs = getPastedObjects(t, LoaderTransfer.CLIPBOARD_CUT);
         if(objs.isEmpty())
             return null;
         
@@ -130,30 +163,14 @@ class DataFolderNode extends FilterNode {
     
     private List<DataObject> getPastedObjects(Transferable t, int action) {
         DataObject[] objects = LoaderTransfer.getDataObjects(t, action);
-        if(objects == null)
+        if(objects == null || objects.length == 0)
             return Collections.EMPTY_LIST;
         
         List<DataObject> result = new ArrayList<DataObject>(objects.length);
         for(DataObject obj : objects) {
-            if((obj instanceof DataSourceDataObject) &&
-                !obj.getFolder().equals(folder)) {
+            if((obj instanceof DataSourceDataObject) && canPaste((DataSourceDataObject)obj)) {
                 result.add(obj);
-            } else if(obj instanceof DataFolder) {
-                FileObject client = obj.getPrimaryFile();
-                if(FileUtil.isParentOf(client, folder.getPrimaryFile()))
-                    continue;
-                if(folder.equals(obj))
-                    continue;
-                
-                Project p = FileOwnerQuery.getOwner(client);
-                if(p == null)
-                    continue;
-                ProjectObjectLookup pol = p.getLookup().lookup(ProjectObjectLookup.class);
-                if(pol == null)
-                    continue;
-                String path = FileUtil.getRelativePath(p.getProjectDirectory(), client);
-                if(pol.lookupOne(path, DataSourceObjectProvider.class) == null)
-                    continue;
+            } else if((obj instanceof DataFolder) && canPaste((DataFolder) obj)) {
                 result.add(obj);
             }
         }
@@ -161,7 +178,42 @@ class DataFolderNode extends FilterNode {
         return result;
     }
     
+    private boolean canPaste(DataSourceDataObject obj) {
+        if(obj.getFolder().equals(folder))
+            return false;
+        FileObject file = obj.getPrimaryFile();
+        if(folder.getPrimaryFile().getFileObject(file.getNameExt()) != null)
+            return false;
+        return true;
+    }
     
+    private boolean canPaste(DataFolder obj) {
+        FileObject client = obj.getPrimaryFile();
+        //Can not paste parent into child
+        if(FileUtil.isParentOf(client, folder.getPrimaryFile()))
+            return false;
+        //Can not paste into itself
+        if(folder.equals(obj))
+            return false;
+        //Name already exists
+        if(folder.getPrimaryFile().getFileObject(client.getName()) != null)
+            return false;
+        
+        //Check if it is a folder containing DataSources.
+        Project p = FileOwnerQuery.getOwner(client);
+        if(p == null)
+            return false;
+        DataSourceObjectProvider dsop = p.getLookup().lookup(DataSourceObjectProvider.class);
+        if(dsop == null)
+            return false;
+        DataFolder dataRoot = dsop.getRootFolder();
+        if(dataRoot == null)
+            return false;
+        
+        FileObject rootFile = dataRoot.getPrimaryFile();
+        return rootFile.equals(client) || FileUtil.isParentOf(rootFile, client);
+    }
+        
     private static class FolderDeletable extends Deletable.NodeDeletable {
         
         private FolderDeletable(DataFolderNode node) {

@@ -35,7 +35,8 @@ import org.openide.loaders.MultiFileLoader;
 @MIMEResolver.ExtensionRegistration(
     displayName = "Data Source",
     mimeType = DataSourceDataObject.MIME_TYPE,
-    extension = "jds"
+    extension = "jds",
+    position = 1000
 )
 @DataObject.Registration(
     mimeType = DataSourceDataObject.MIME_TYPE,
@@ -65,7 +66,7 @@ public class DataSourceDataObjectLoader extends MultiFileLoader {
 
     @Override
     protected MultiDataObject.Entry createPrimaryEntry(MultiDataObject obj, FileObject primaryFile) {
-        return new FileEntry(obj, primaryFile);
+        return new DataSourcePrimaryEntry(obj, primaryFile);
     }
 
     @Override

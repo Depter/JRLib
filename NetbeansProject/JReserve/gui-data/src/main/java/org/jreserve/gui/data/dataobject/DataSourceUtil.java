@@ -30,6 +30,7 @@ import org.jreserve.gui.data.spi.util.DataProviderFactoryRegistry;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -72,12 +73,12 @@ public class DataSourceUtil {
         }
     }
     
-    static DataProvider createProvider(FileObject primaryFile, Properties props) throws IOException {
+    static DataProvider createProvider(DataObject obj, Properties props) throws IOException {
         String id = props.getProperty(DataProvider.PROP_FACTORY_ID);
         if(id == null)
             throw new IOException("Factory ID not found!");
         DataProvider.Factory factory = DataProviderFactoryRegistry.getFactory(id);
-        return factory.createProvider(primaryFile, toMapp(props));
+        return factory.createProvider(obj, toMapp(props));
     }
     
     private static Map<String, String> toMapp(Properties properties) {

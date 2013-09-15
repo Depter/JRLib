@@ -32,6 +32,7 @@ import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.filesystems.FileLock;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -50,8 +51,8 @@ class CsvDataProvider extends AbstractFileDataProvider {
     private Writer writer;
     private Loader loader;
     
-    CsvDataProvider(FileObject primaryFile) {
-        super(primaryFile, CSV_EXTENSION);
+    CsvDataProvider(DataObject obj) {
+        super(obj, CSV_EXTENSION);
     }
 
     @Override

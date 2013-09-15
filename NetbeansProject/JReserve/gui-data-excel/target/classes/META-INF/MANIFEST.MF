@@ -4,8 +4,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/excel/Bundle.proper
  ties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130909
-OpenIDE-Module-Build-Version: 201309090746
+OpenIDE-Module-Implementation-Version: 1.0-20130913
+OpenIDE-Module-Build-Version: 201309131951
 OpenIDE-Module: org.jreserve.gui.data.excel
 OpenIDE-Module-Public-Packages: org.jreserve.gui.excel.template.*
 OpenIDE-Module-Display-Category: org.jreserve

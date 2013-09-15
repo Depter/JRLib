@@ -23,6 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -32,28 +34,36 @@ import org.openide.filesystems.FileObject;
 public abstract class AbstractFileDataProvider extends AbstractDataProvider {
 
     private final static Logger logger = Logger.getLogger(AbstractFileDataProvider.class.getName());
-    private FileObject secondary;
+    private final String extension;
+    private final DataObject obj;
     
-    protected AbstractFileDataProvider(FileObject primaryFile, String extension) {
-        FileObject parent = primaryFile.getParent();
-        secondary = parent.getFileObject(primaryFile.getName(), extension);
-        if(secondary == null) {
-            String msg = "Secondary file '%s/'%s.%s does not exists!";
-            msg = String.format(msg, parent.getPath(), primaryFile.getName(), extension);
-            logger.log(Level.SEVERE, msg);
-            throw new IllegalArgumentException(msg);
-        }
+    protected AbstractFileDataProvider(DataObject obj, String extension) {
+        if(obj == null)
+            throw new NullPointerException("DataObject is null!");
+        this.obj = obj;
+        if(extension == null)
+            throw new NullPointerException("Extension is null!");
+        this.extension = extension;
+//        FileObject parent = primaryFile.getParent();
+//        secondary = parent.getFileObject(primaryFile.getName(), extension);
+//        if(secondary == null) {
+//            String msg = "Secondary file '%s/'%s.%s does not exists!";
+//            msg = String.format(msg, parent.getPath(), primaryFile.getName(), extension);
+//            logger.log(Level.SEVERE, msg);
+//            throw new IllegalArgumentException(msg);
+//        }
     }
-    
-    protected AbstractFileDataProvider(FileObject secondaryFile) {
-        if(secondaryFile == null)
-            throw new NullPointerException("Seconday file is null!");
-        this.secondary = secondaryFile;
-    }
+//    
+//    protected AbstractFileDataProvider(FileObject secondaryFile) {
+//        if(secondaryFile == null)
+//            throw new NullPointerException("Seconday file is null!");
+//        this.secondary = secondaryFile;
+//    }
     
     @Override
-    public Set<FileObject> getSecondryFiles(FileObject primary) {
+    public Set<FileObject> getSecondryFiles() {
         Set<FileObject> entries = new LinkedHashSet<FileObject>();
+        FileObject primary = obj.getPrimaryFile();
         
         for(FileObject child : primary.getParent().getChildren())
             if(isSecondaryFile(primary, child))
@@ -70,23 +80,27 @@ public abstract class AbstractFileDataProvider extends AbstractDataProvider {
         
     @Override
     protected Set<DataEntry> loadEntries() throws Exception {
-        if(secondary == null) {
-            String msg = "DataFile not initialized!";
-            logger.log(Level.SEVERE, msg);
-            throw new IllegalStateException(msg);
-        }
+        FileObject secondary = getDataFile();
         return getLoader().loadEntries(secondary);
+    }
+    
+    private FileObject getDataFile() throws IOException {
+        FileObject primary = obj.getPrimaryFile();
+        FileObject secondary = FileUtil.findBrother(primary, extension);
+        if(secondary == null) {
+            String msg = "DataFile '%s/%s.%s' not found!";
+            msg = String.format(msg, primary.getParent().getPath(), primary.getName(), extension);
+            logger.log(Level.SEVERE, msg);
+            throw new IOException(msg);
+        }
+        return secondary;
     }
     
     protected abstract Loader getLoader();
 
     @Override
     protected void saveEntries(Set<DataEntry> entries) throws Exception {
-        if(secondary == null) {
-            String msg = "DataFile not initialized!";
-            logger.log(Level.SEVERE, msg);
-            throw new IllegalStateException(msg);
-        }
+        FileObject secondary = getDataFile();
         getWriter().writeEntries(secondary, entries);
     }
     

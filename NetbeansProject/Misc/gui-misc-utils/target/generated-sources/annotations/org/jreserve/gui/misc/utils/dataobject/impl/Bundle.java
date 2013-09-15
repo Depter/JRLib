@@ -19,6 +19,20 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.CreateDataFolderIterator.Name", current, total);
     }
     /**
+     * @return <i>Create Folder</i>
+     * @see CreateFolderAction
+     */
+    static String LBL_CreateFolderAction_Name() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.CreateFolderAction.Name");
+    }
+    /**
+     * @return <i>Create Folder</i>
+     * @see CreateFolderAction
+     */
+    static String LBL_CreateFolderAction_WizardTitle() {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.CreateFolderAction.WizardTitle");
+    }
+    /**
      * @return <i>Name of the folder</i>
      * @see CreateFolderVisualPanel
      */

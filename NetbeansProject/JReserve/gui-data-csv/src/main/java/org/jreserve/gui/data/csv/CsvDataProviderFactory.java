@@ -18,7 +18,7 @@ package org.jreserve.gui.data.csv;
 
 import java.util.Map;
 import org.jreserve.gui.data.spi.DataProvider;
-import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -44,7 +44,7 @@ public class CsvDataProviderFactory implements DataProvider.Factory {
     }
 
     @Override
-    public DataProvider createProvider(FileObject primaryFile, Map<String, String> properties) {
-        return new CsvDataProvider(primaryFile);
+    public DataProvider createProvider(DataObject obj, Map<String, String> properties) {
+        return new CsvDataProvider(obj);
     }
 }

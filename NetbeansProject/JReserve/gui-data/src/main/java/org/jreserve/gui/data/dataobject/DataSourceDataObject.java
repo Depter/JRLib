@@ -59,55 +59,6 @@ import org.openide.windows.TopComponent;
 @Messages({
     "LBL.DataSourceDataObject.Loader=DataSource File"
 })
-//@MIMEResolver.ExtensionRegistration(
-//    displayName = "#LBL.DataSourceDataObject.Loader",
-//    mimeType = DataSourceDataObject.MIME_TYPE,
-//    extension = {"jds"}
-//)
-//@DataObject.Registration(
-//    mimeType = DataSourceDataObject.MIME_TYPE,
-//    iconBase = "org/jreserve/gui/data/icons/database_triangle.png",
-//    displayName = "#LBL.DataSourceDataObject.Loader",
-//    position = 300
-//)
-//@ActionReferences({
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
-//        position = 100, separatorAfter = 200),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "Edit", id = "org.openide.actions.CutAction"),
-//        position = 300),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "Edit", id = "org.openide.actions.CopyAction"),
-//        position = 400, separatorAfter = 500),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "Edit", id = "org.openide.actions.DeleteAction"),
-//        position = 600),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "System", id = "org.openide.actions.RenameAction"),
-//        position = 700, separatorAfter = 800),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "System", id = "org.openide.actions.SaveAsTemplateAction"),
-//        position = 900, separatorAfter = 1000),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "System", id = "org.openide.actions.FileSystemAction"),
-//        position = 1100, separatorAfter = 1200),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "System", id = "org.openide.actions.ToolsAction"),
-//        position = 1300),
-//    @ActionReference(
-//        path = "Loaders/"+DataSourceDataObject.MIME_TYPE+"/Actions",
-//        id = @ActionID(category = "System", id = "org.openide.actions.PropertiesAction"),
-//        position = 1400)
-//})
 public class DataSourceDataObject extends MultiDataObject {
     private final static int LKP_VERSION = 1;
     private final static boolean IS_MULTIVIEW = true;
@@ -134,10 +85,10 @@ public class DataSourceDataObject extends MultiDataObject {
         
         Properties props = DataSourceUtil.loadProperties(fo);
         auditId = DataSourceUtil.getLong(props, PROP_AUDIT_ID, -1);
-        provider = DataSourceUtil.createProvider(fo, props);
+        provider = DataSourceUtil.createProvider(this, props);
         dataType = DataSourceUtil.getDataType(fo, props);
         
-        for(FileObject entry : provider.getSecondryFiles(fo))
+        for(FileObject entry : provider.getSecondryFiles())
             super.registerEntry(entry);
         
         ic.add(new DataSourceAuditable());
@@ -187,7 +138,7 @@ public class DataSourceDataObject extends MultiDataObject {
     @Override
     protected DataObject handleCopy(DataFolder df) throws IOException {
         DataObject result = super.handleCopy(df);
-        DataEventUtil.fireCreated((DataSourceDataObject) result);
+        DataEventUtil.fireCreated((DataSourceDataObject) result, this);
         return result;
     }
 

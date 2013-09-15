@@ -17,11 +17,12 @@
 
 package org.jreserve.gui.calculations.nodes;
 
+import org.jreserve.gui.calculations.CalculationObjectProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
-import org.openide.nodes.Node;
+import org.openide.loaders.DataFolder;
 
 /**
  *
@@ -36,7 +37,11 @@ public class CalculationRootNodeProvider implements NodeFactory {
 
     @Override
     public NodeList<?> createNodes(Project p) {
-        Node node = new CalculationFolderNode(p);
-        return NodeFactorySupport.fixedNodeList(node);
+        CalculationObjectProvider dsop = p.getLookup().lookup(CalculationObjectProvider.class);
+        DataFolder df = dsop.getRootFolder();
+        if(df == null)
+            return NodeFactorySupport.fixedNodeList();
+        CalculationFolderNode root = new CalculationFolderNode(df.getNodeDelegate(), dsop, true);
+        return NodeFactorySupport.fixedNodeList(root);
     }
 }

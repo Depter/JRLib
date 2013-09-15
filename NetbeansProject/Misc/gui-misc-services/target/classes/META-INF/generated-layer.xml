@@ -45,6 +45,7 @@
             <file name="org-jreserve-gui-misc-services-registration-ServicesTopComponent.shadow">
                 <!--org.jreserve.gui.misc.services.registration.ServicesTopComponent-->
                 <attr name="originalFile" stringvalue="Actions/Window/org-jreserve-gui-misc-services-registration-ServicesTopComponent.instance"/>
+                <attr intvalue="1000" name="position"/>
             </file>
         </folder>
     </folder>

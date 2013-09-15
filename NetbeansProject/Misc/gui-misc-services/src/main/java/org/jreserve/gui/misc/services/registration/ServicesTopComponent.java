@@ -50,7 +50,7 @@ import org.openide.util.NbBundle.Messages;
     id = "org.jreserve.gui.misc.services.registration.ServicesTopComponent"
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/Window" /*, position = 333 */),
+    @ActionReference(path = "Menu/Window", position = 1000),
     @ActionReference(path = "Ribbon/TaskPanes/Windows/Utilities", position = 2000)
 })
 @TopComponent.OpenActionRegistration(

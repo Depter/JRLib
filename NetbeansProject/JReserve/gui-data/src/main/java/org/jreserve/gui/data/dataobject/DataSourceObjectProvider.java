@@ -23,7 +23,6 @@ import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
 import org.openide.loaders.DataFolder;
-import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 

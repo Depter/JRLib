@@ -77,7 +77,7 @@ public class LoggerProperties {
     
     private static File getPropertiesFile() {
         InstalledFileLocator locator = InstalledFileLocator.getDefault();
-        File child = locator.locate("logging/logging.properties", null, false);
+        File child = locator.locate("logging/logging.properties", "org.jreserve.gui.misc.logging", false);
         return (child!=null && child.exists())? child : null;
     }
     

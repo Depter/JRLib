@@ -84,7 +84,7 @@ public abstract class AbstractContextAwareAction
             return;
         
         lkpInfo = context.lookupResult(clazz);
-        lkpInfo.addLookupListener(WeakListeners.create(LookupListener.class, listener, context));
+        lkpInfo.addLookupListener(WeakListeners.create(LookupListener.class, listener, lkpInfo));
         contextChanged();
     }
  

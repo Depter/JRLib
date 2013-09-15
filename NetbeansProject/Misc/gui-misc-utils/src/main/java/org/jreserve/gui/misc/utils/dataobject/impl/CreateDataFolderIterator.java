@@ -16,19 +16,24 @@
  */
 package org.jreserve.gui.misc.utils.dataobject.impl;
 
+import java.awt.Component;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.templates.TemplateRegistration;
 import org.openide.WizardDescriptor;
+import org.openide.loaders.DataFolder;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.Utilities;
 
 /**
  *
@@ -51,24 +56,77 @@ import org.openide.util.NbBundle.Messages;
 })
 public class CreateDataFolderIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
     
+    final static String PROP_PROJECT = "project";
+    final static String PROP_OBJECT_PROVIDER = "dataObjectProvider";
+    final static String PROP_FOLDER = "initialDataFolder";
+    
     final static String PROP_PATH = "newFolderPath";
     final static String PROP_PROVIDER = "objectProvider";
     
     private final static Logger logger = Logger.getLogger(CreateDataFolderIterator.class.getName());
     
     private CreateFolderWizardPanel panel;
-    private WizardDescriptor wizardDesc;
+    private WizardDescriptor wizard;
+    private Project initialProject;
+    private DataObjectProvider dop;
+    
+    public CreateDataFolderIterator() {
+    }
+    
+    public CreateDataFolderIterator(DataObjectProvider dop) {
+        this.dop = dop;
+        this.initialProject = getProjectFromDOP(dop);
+    }
+    
+    private Project getProjectFromDOP(DataObjectProvider dop) {
+        if(dop == null) return null;
+        DataFolder root = dop.getRootFolder();
+        if(root == null) return null;
+        return FileOwnerQuery.getOwner(root.getPrimaryFile());
+    }
     
     @Override
     public void initialize(WizardDescriptor wizard) {
-        panel = new CreateFolderWizardPanel();
-        this.wizardDesc = wizard;
+        this.wizard = wizard;
+        initializeProperties();
+        initializePanels();
     }
+    
+    private void initializeProperties() {
+        Project p = (Project) wizard.getProperty(PROP_PROJECT);
+        if(p == null && initialProject != null)
+            wizard.putProperty(PROP_PROJECT, initialProject);
+        
+        if(dop != null)
+            wizard.putProperty(PROP_OBJECT_PROVIDER, dop);
+        DataFolder folder = Utilities.actionsGlobalContext().lookup(DataFolder.class);
+        if(folder != null)
+            wizard.putProperty(PROP_FOLDER, folder);
+    }
+    
+    private void initializePanels() {
+        panel = new CreateFolderWizardPanel();
+        Component c = panel.getComponent();
+        String[] steps = new String[]{c.getName()};
+        initPanel(steps, c);
+        wizard.putProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
+    }
+    
+    private void initPanel(String[] steps, Component c) {
+        if(c instanceof JComponent) {
+            JComponent jc = (JComponent) c;
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_SELECTED_INDEX, Integer.valueOf(0));
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DATA, steps);
+            jc.putClientProperty(WizardDescriptor.PROP_AUTO_WIZARD_STYLE, Boolean.TRUE);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_DISPLAYED, Boolean.TRUE);
+            jc.putClientProperty(WizardDescriptor.PROP_CONTENT_NUMBERED, Boolean.TRUE);
+        }
+    }    
 
     @Override
     public void uninitialize(WizardDescriptor wizard) {
         panel = null;
-        this.wizardDesc = null;
+        this.wizard = null;
     }
 
     @Override
@@ -119,9 +177,9 @@ public class CreateDataFolderIterator implements WizardDescriptor.ProgressInstan
         handle.start();
         handle.switchToIndeterminate();
         
-        String path = (String) wizardDesc.getProperty(PROP_PATH);
-        DataObjectProvider provider = (DataObjectProvider) wizardDesc.getProperty(PROP_PROVIDER);
-        Project project = (Project) wizardDesc.getProperty("project");  //NOI18
+        String path = (String) wizard.getProperty(PROP_PATH);
+        DataObjectProvider provider = (DataObjectProvider) wizard.getProperty(PROP_PROVIDER);
+        Project project = (Project) wizard.getProperty("project");  //NOI18
         try {
             return Collections.singleton(provider.createFolder(path));
         } catch(Exception ex) {

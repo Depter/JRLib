@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.data.csv">
-    <module_version install_time="1378978616728" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1379174746435" last="true" origin="installer" specification_version="1.0">
         <file crc="2547870043" name="config/Modules/org-jreserve-gui-data-csv.xml"/>
-        <file crc="1458050261" name="modules/org-jreserve-gui-data-csv.jar"/>
+        <file crc="1150230600" name="modules/org-jreserve-gui-data-csv.jar"/>
     </module_version>
 </module>

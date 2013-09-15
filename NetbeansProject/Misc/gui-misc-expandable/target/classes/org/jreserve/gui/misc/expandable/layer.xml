@@ -28,6 +28,7 @@ along with this library.  If not, see <http://www.gnu.org/licenses/>.
         <folder name="TaskPanes">
             <folder name="Windows">
                 <folder name="Miscellaneous">
+                    <attr name="position" intvalue="1000"/>
                     <file name="org-netbeans-modules-navigator-ShowNavigatorAction.shadow">
                         <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-modules-navigator-ShowNavigatorAction.instance"/>
                         <attr name="position" intvalue="100"/>

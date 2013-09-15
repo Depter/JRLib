@@ -38,6 +38,7 @@ import org.openide.windows.TopComponent;
 @MIMEResolver.ExtensionRegistration(
     displayName = "#LBL_Triangle_LOADER",
     mimeType = "text/jreserve-triangle+xml",
+    position = 2000,
     extension = {"triangle"}
 )
 @DataObject.Registration(

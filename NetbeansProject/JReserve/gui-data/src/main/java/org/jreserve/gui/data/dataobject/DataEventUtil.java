@@ -30,6 +30,8 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
+    "# {0} - source",
+    "MSG.DataEventUtil.CreatedFrom=Storage created from ''{0}''.",
     "MSG.DataEventUtil.Created=Storage created",
     "MSG.DataEventUtil.Deleted=Storage deleted",
     "# {0} - oldName",
@@ -39,6 +41,13 @@ import org.openide.util.NbBundle.Messages;
     "MSG.DataEventUtil.DataDelete=Data deleted."
 })
 public class DataEventUtil extends AbstractAuditEvent implements DataEvent {
+    
+    public static void fireCreated(DataSourceDataObject obj, DataSourceDataObject sourceObj) {
+        AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
+        DataSource ds = obj.getLookup().lookup(DataSource.class);
+        DataSource source = sourceObj.getLookup().lookup(DataSource.class);
+        fireEvent(new Created(ao, ds, source));
+    }
     
     public static void fireCreated(DataSourceDataObject obj) {
         AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
@@ -87,6 +96,10 @@ public class DataEventUtil extends AbstractAuditEvent implements DataEvent {
     }
     
     private static class Created extends DataEventUtil implements DataEvent.Created {
+        private Created(AuditedObject ao, DataSource ds, DataSource source) {
+            super(ao, ds, Bundle.MSG_DataEventUtil_CreatedFrom(source.getPath()));
+        }
+        
         private Created(AuditedObject ao, DataSource ds) {
             super(ao, ds, Bundle.MSG_DataEventUtil_Created());
         }

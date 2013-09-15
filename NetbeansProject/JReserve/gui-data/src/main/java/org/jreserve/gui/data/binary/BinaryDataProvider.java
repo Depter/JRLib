@@ -17,7 +17,7 @@
 package org.jreserve.gui.data.binary;
 
 import org.jreserve.gui.data.spi.AbstractFileDataProvider;
-import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -30,8 +30,8 @@ class BinaryDataProvider extends AbstractFileDataProvider {
     private BinaryLoader loader;
     private BinaryWriter writer;
     
-    BinaryDataProvider(FileObject primaryFile) {
-        super(primaryFile, BINARY_EXTENSION);
+    BinaryDataProvider(DataObject obj) {
+        super(obj, BINARY_EXTENSION);
     }
 
     @Override

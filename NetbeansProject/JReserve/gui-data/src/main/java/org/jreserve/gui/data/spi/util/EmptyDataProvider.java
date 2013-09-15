@@ -25,6 +25,7 @@ import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 
 /**
  *
@@ -36,7 +37,7 @@ public class EmptyDataProvider implements DataProvider {
 
     public final static DataProvider.Factory FACTORY = new DataProvider.Factory() {
         @Override
-        public DataProvider createProvider(FileObject primaryFile, Map<String, String> properties) {
+        public DataProvider createProvider(DataObject obj, Map<String, String> properties) {
             return INSTANCE;
         }
     };
@@ -65,7 +66,7 @@ public class EmptyDataProvider implements DataProvider {
     }
 
     @Override
-    public Set<FileObject> getSecondryFiles(FileObject primary) {
+    public Set<FileObject> getSecondryFiles() {
         return Collections.EMPTY_SET;
     }
 }

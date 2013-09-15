@@ -34,6 +34,7 @@ import org.openide.nodes.Children;
 import org.openide.util.Utilities;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.openide.loaders.LoaderTransfer;
+import org.openide.nodes.Node;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
@@ -43,27 +44,31 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  * @version 1.0
  */
-@ActionReferences({//TODO NewAction + separator
+@ActionReferences({
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "Project", id = "org.netbeans.modules.project.ui.NewFile$WithSubMenu"),
         position = 100, separatorAfter = 150),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
+        id = @ActionID(category = "File", id = "org.jreserve.gui.data.inport.ImportDataAction"),
+        position = 200),
+    @ActionReference(
+        path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
-        position = 200, separatorAfter = 250),
+        position = 300, separatorAfter = 350),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
-        position = 300),
+        position = 400),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
-        position = 400, separatorAfter = 450),
+        position = 500, separatorAfter = 550),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "File", id = "org.jreserve.gui.misc.utils.notifications.actions.DeleteAction"), 
-        position = 500)
+        position = 600)
 })
 public class DataSourceNode extends DataNode {
 
@@ -93,6 +98,11 @@ public class DataSourceNode extends DataNode {
             super.setIconBaseWithExtension(IMG_VECTOR);
         }
     }
+    
+    @Override
+    public Node cloneNode() {
+        return new DataSourceNode((DataSourceDataObject) getDataObject());
+    }
 
     @Override
     public Action[] getActions(boolean context) {
@@ -104,9 +114,19 @@ public class DataSourceNode extends DataNode {
     public Action getPreferredAction() {
         return OpenAction.get(OpenAction.class);
     }
+    
+    @Override
+    public boolean canCut() {
+        return true;
+    }
+    
+    @Override
+    public boolean canCopy() {
+        return true;
+    }
 
     @Override
     public Transferable drag() throws IOException {
-        return LoaderTransfer.transferable(getDataObject(), LoaderTransfer.DND_MOVE);
+        return clipboardCut();
     }
 }

@@ -31,6 +31,14 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.Created");
     }
     /**
+     * @param source source
+     * @return <i>Storage created from ''</i>{@code source}<i>''.</i>
+     * @see DataEventUtil
+     */
+    static String MSG_DataEventUtil_CreatedFrom(Object source) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.DataEventUtil.CreatedFrom", source);
+    }
+    /**
      * @return <i>Data deleted.</i>
      * @see DataEventUtil
      */
