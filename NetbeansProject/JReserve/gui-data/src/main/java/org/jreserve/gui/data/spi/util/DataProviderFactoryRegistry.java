@@ -35,7 +35,7 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - id",
     "MSG.DataProviderFactoryRegistry.NoFactory=Data provider for id ''{0}'' not found!"
 })
-public class DataProviderFactoryRegistry extends CachedLayerRegistrationLoader<FactoryEntry>{
+public class DataProviderFactoryRegistry extends CachedLayerRegistrationLoader<FactoryEntry> {
     
     private final static Logger logger = Logger.getLogger(DataProviderFactoryRegistry.class.getName());
     

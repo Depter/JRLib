@@ -79,6 +79,7 @@
         <module>gui-wrapper-jrlib</module>
         <module>gui-wrapper-poi</module>
     <module>gui-calculations</module>
+    <module>gui-wrapper-jdom</module>
   </modules>
 
     <properties>

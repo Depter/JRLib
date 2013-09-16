@@ -24,9 +24,10 @@ import org.jreserve.jrlib.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationProvider<T extends CalculationData> {
+public interface CalculationProvider<C extends CalculationData> {
     
-    public Class<T> getCalculationClass();
-    T createCalculation();
-    T getGuiCalculation();
+    public Class<C> getCalculationClass();
+    
+    public C createCalculation() throws Exception;
+
 }

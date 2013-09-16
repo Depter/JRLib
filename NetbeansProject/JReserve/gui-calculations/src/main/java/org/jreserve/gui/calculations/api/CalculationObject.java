@@ -30,4 +30,5 @@ public interface CalculationObject<T extends CalculationData> extends Displayabl
     public Class<T> getCalculationClass();
     
     public T createCalculation();
+    
 }

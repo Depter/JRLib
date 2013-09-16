@@ -128,7 +128,17 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>gui-wrapper-jdom</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>gui-project</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>gui-data</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

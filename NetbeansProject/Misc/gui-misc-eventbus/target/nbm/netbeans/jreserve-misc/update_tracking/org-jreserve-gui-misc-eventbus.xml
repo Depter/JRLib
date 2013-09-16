@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.eventbus">
-    <module_version install_time="1379101741624" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1379329233092" last="true" origin="installer" specification_version="1.0">
         <file crc="2408086287" name="config/Modules/org-jreserve-gui-misc-eventbus.xml"/>
-        <file crc="1217702197" name="modules/org-jreserve-gui-misc-eventbus.jar"/>
+        <file crc="3095311392" name="modules/org-jreserve-gui-misc-eventbus.jar"/>
     </module_version>
 </module>

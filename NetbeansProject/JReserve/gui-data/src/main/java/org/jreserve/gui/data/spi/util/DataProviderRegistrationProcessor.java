@@ -64,6 +64,4 @@ public class DataProviderRegistrationProcessor extends AbstractRegistrationProce
             throw new LayerGenerationException("ID not set!", element);
         file.stringvalue(ID, id);
     }
-    
-    
 }
