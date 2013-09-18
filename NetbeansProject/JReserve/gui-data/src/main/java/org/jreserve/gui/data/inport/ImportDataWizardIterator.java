@@ -35,7 +35,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.data.spi.inport.ImportDataProvider;
 import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.jrlib.gui.data.MonthDate;

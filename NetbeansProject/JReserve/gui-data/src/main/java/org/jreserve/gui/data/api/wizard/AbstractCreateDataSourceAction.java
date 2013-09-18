@@ -19,7 +19,7 @@ package org.jreserve.gui.data.api.wizard;
 
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
-import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;

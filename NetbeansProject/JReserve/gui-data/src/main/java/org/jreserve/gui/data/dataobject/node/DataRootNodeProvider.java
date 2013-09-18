@@ -17,7 +17,7 @@
 package org.jreserve.gui.data.dataobject.node;
 
 import org.jreserve.gui.data.dataobject.DataRootFileProvider;
-import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;

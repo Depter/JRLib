@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.data.dataobject;
+package org.jreserve.gui.data.api;
 
 import java.io.IOException;
 import javax.swing.Icon;

@@ -3,13 +3,13 @@ OpenIDE-Module-Layer: org/jreserve/gui/misc/utils/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/utils/Bundle.p
  roperties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130916
-OpenIDE-Module-Build-Version: 201309161056
+OpenIDE-Module-Implementation-Version: 1.0-20130918
+OpenIDE-Module-Build-Version: 201309181609
 OpenIDE-Module: org.jreserve.gui.misc.utils
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.utils.actions.*,
   org.jreserve.gui.misc.utils.dataobject.*, org.jreserve.gui.misc.util
- s.notifications.*, org.jreserve.gui.misc.utils.widgets.*, org.jreserv
- e.gui.misc.utils.tasks.*
+ s.notifications.*, org.jreserve.gui.misc.utils.tasks.*, org.jreserve.
+ gui.misc.utils.widgets.*, org.jreserve.gui.misc.utils.wizard.*
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1
 OpenIDE-Module-Display-Category: org.jreserve
 OpenIDE-Module-Name: org-jreserve-gui-misc-utils

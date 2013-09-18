@@ -10,13 +10,6 @@ class Bundle {
         return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceDataObject.Loader");
     }
     /**
-     * @return <i>Data</i>
-     * @see DataSourceObjectProvider
-     */
-    static String LBL_DataSourceObjectProvider_Name() {
-        return org.openide.util.NbBundle.getMessage(Bundle.class, "LBL.DataSourceObjectProvider.Name");
-    }
-    /**
      * @return <i>Audit</i>
      * @see DataSourceDataObject
      */

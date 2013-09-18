@@ -5,12 +5,12 @@
     <folder name="Projects">
         <folder name="org-jreserve-project-jreserve">
             <folder name="Lookup">
-                <file name="org-jreserve-gui-data-dataobject-DataSourceObjectProvider.instance">
-                    <!--org.jreserve.gui.data.dataobject.DataSourceObjectProvider-->
+                <file name="org-jreserve-gui-data-api-DataSourceObjectProvider.instance">
+                    <!--org.jreserve.gui.data.api.DataSourceObjectProvider-->
                     <attr
                         methodvalue="org.netbeans.modules.projectapi.LazyLookupProviders.forProjectServiceProvider" name="instanceCreate"/>
-                    <attr name="class" stringvalue="org.jreserve.gui.data.dataobject.DataSourceObjectProvider"/>
-                    <attr name="service" stringvalue="org.jreserve.gui.data.dataobject.DataSourceObjectProvider"/>
+                    <attr name="class" stringvalue="org.jreserve.gui.data.api.DataSourceObjectProvider"/>
+                    <attr name="service" stringvalue="org.jreserve.gui.data.api.DataSourceObjectProvider"/>
                 </file>
             </folder>
             <folder name="Nodes">

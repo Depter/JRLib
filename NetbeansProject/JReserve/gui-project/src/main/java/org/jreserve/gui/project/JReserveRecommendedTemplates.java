@@ -29,7 +29,8 @@ class JReserveRecommendedTemplates implements RecommendedTemplates {
     private final static String[] TYPES = {
         "jreserve",
         "misc-folder",
-        "jreserve-data"
+        "jreserve-data",
+        "jreserve-calculation"
     };
     
     @Override

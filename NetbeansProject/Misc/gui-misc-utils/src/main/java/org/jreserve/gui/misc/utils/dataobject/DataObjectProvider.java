@@ -17,6 +17,7 @@
 package org.jreserve.gui.misc.utils.dataobject;
 
 import java.io.IOException;
+import java.util.Collection;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.project.Project;
 import org.openide.loaders.DataFolder;

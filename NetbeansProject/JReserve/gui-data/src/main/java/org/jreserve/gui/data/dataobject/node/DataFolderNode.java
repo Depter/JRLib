@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
-import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;

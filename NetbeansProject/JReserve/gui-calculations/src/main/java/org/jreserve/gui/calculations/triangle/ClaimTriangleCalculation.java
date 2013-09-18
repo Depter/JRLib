@@ -44,10 +44,11 @@ public class ClaimTriangleCalculation extends AbstractModifiableCalculationProvi
     private DataSource dataSource;
     private TriangleGeometry geometry;
     
-    public ClaimTriangleCalculation(Project project) {
+    public ClaimTriangleCalculation(Project project, DataSource ds, TriangleGeometry geometry) {
         super(ClaimTriangle.class);
         auditId = AuditDbManager.getInstance().getNextObjectId(project);
-        dataSource = null;
+        dataSource = ds;
+        this.geometry = geometry;
     }
     
     public ClaimTriangleCalculation(FileObject file, Element root) throws Exception {

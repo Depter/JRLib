@@ -27,14 +27,16 @@ import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class TriangleGeometryUtil {
+public class TriangleGeometryUtil {
     
+    private final static String CT_ROOT = "claimTriangle";
     private final static String GEOMETRY_ELEMENT = "geometry";
     private final static String START_ELEMENT = "startDate";
     private final static String END_ELEMENT = "startDate";

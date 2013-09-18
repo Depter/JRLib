@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
 import org.netbeans.api.annotations.common.StaticResource;

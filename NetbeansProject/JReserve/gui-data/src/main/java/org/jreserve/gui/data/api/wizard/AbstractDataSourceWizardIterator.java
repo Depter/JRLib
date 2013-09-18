@@ -30,7 +30,7 @@ import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.dataobject.DataEventUtil;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
-import org.jreserve.gui.data.dataobject.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.data.dataobject.DataSourceUtil;
 import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
@@ -80,35 +80,11 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
     
     private final static Logger logger = Logger.getLogger(AbstractDataSourceWizardIterator.class.getName());
     
-//    private Project project;
-//    private DataFolder folder;
-//    private DataSourceObjectProvider dsop;
-    
     private WizardDescriptor wizard;
     private List<WizardDescriptor.Panel> panels;
     private int index;
     private int panelCount;
-    
-//    protected AbstractDataSourceWizardIterator(Project project) {
-//        this(project, project.getLookup().lookup(DataSourceObjectProvider.class));
-//    }
-//    
-//    protected AbstractDataSourceWizardIterator(Project project, DataSourceObjectProvider dsop) {
-//        this(project, dsop, null);
-//    }
-//    
-//    protected AbstractDataSourceWizardIterator(Project project, DataSourceObjectProvider dsop, DataFolder folder) {
-//        if(project == null)
-//            throw new NullPointerException("Project is null!");
-//        this.project = project;
-//        
-//        if(dsop == null)
-//            throw new NullPointerException("DataSourceObjectProvider is null!");
-//        this.dsop = dsop;
-//        
-//        this.folder = folder;
-//    }
-    
+        
     public void initializeFrom(Lookup lkp) {
         DataSourceObjectProvider dsop = lkp.lookup(DataSourceObjectProvider.class);
         if(dsop != null) {
