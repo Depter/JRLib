@@ -21,6 +21,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.TypeElement;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.openide.filesystems.annotations.LayerBuilder;
@@ -69,6 +70,8 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
     protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
         ExpandableElement.Registration an = getAnnotation(element);
         
+        file.stringvalue(CLASS, getClassName(element));
+        
         file.position(an.position());
         
         String str  = an.displayName();
@@ -106,6 +109,11 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
                 throw new LayerGenerationException("Invalid foreground!", element);
             }
         }
+    }
+    
+    private String getClassName(Element e) {
+        TypeElement te = (TypeElement) e;
+        return processingEnv.getElementUtils().getBinaryName(te).toString();
     }
     
     private boolean validHex(String color) {

@@ -29,5 +29,6 @@ public interface CalculationProvider<C extends CalculationData> {
     public Class<C> getCalculationClass();
     
     public C createCalculation() throws Exception;
-
+    
+    public String getPath();
 }

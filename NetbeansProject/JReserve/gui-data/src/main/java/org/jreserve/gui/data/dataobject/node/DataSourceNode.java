@@ -33,7 +33,6 @@ import org.openide.loaders.DataNode;
 import org.openide.nodes.Children;
 import org.openide.util.Utilities;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
-import org.openide.loaders.LoaderTransfer;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;

@@ -5,7 +5,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/eventbus/Bundl
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20130919
-OpenIDE-Module-Build-Version: 201309191503
+OpenIDE-Module-Build-Version: 201309191808
 OpenIDE-Module: org.jreserve.gui.misc.eventbus
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.eventbus.*
 OpenIDE-Module-Display-Category: org.jreserve

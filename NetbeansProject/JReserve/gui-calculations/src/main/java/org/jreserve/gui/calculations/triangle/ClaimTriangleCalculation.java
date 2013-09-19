@@ -43,6 +43,7 @@ public class ClaimTriangleCalculation extends AbstractModifiableCalculationProvi
     private long auditId;
     private DataSource dataSource;
     private TriangleGeometry geometry;
+    private String path;
     
     public ClaimTriangleCalculation(Project project, DataSource ds, TriangleGeometry geometry) {
         super(ClaimTriangle.class);
@@ -59,8 +60,8 @@ public class ClaimTriangleCalculation extends AbstractModifiableCalculationProvi
     
     private DataSource initDataSource(FileObject file, Element root) throws IOException {
         Element dse = JDomUtil.getExistingChild(root, DS_ELEMENT);
-        String path = dse.getTextTrim();
-        if(path == null || path.length() == 0)
+        String dsPath = dse.getTextTrim();
+        if(dsPath == null || dsPath.length() == 0)
             return null;
         
         Project p = FileOwnerQuery.getOwner(file);
@@ -71,7 +72,7 @@ public class ClaimTriangleCalculation extends AbstractModifiableCalculationProvi
         if(pol == null) 
             return null;
         
-        return pol.lookupOne(path, DataSource.class);
+        return pol.lookupOne(dsPath, DataSource.class);
     }
     
     @Override
@@ -91,5 +92,18 @@ public class ClaimTriangleCalculation extends AbstractModifiableCalculationProvi
         root.addContent(TriangleGeometryUtil.toXml(geometry));
         root.addContent(super.toXml());
         return root;
+    }
+    
+    long getAuditId() {
+        return auditId;
+    }
+    
+    @Override
+    public String getPath() {
+        return path;
+    }
+    
+    void setPath(String path) {
+        this.path = path;
     }
 }

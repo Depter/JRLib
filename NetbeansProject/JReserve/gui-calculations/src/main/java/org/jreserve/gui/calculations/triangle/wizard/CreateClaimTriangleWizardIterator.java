@@ -18,7 +18,6 @@
 package org.jreserve.gui.calculations.triangle.wizard;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -26,10 +25,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jdom2.Document;
 import org.jdom2.Element;
-import org.jdom2.output.XMLOutputter;
 import org.jreserve.gui.calculations.CalculationObjectProvider;
+import org.jreserve.gui.calculations.api.CalculationEventUtil;
 import org.jreserve.gui.calculations.triangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.triangle.ClaimTriangleDataObject;
 import org.jreserve.gui.data.api.DataSource;
@@ -136,7 +134,11 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
         FileObject file = createFile(wizard);
         Element root = createXml(wizard);
         JDomUtil.save(file, root);
-        return DataObject.find(file);
+        
+        DataObject obj = DataObject.find(file);
+        CalculationEventUtil.fireCreated(obj);
+        
+        return obj;
     }
     
     private FileObject createFile(WizardDescriptor wizard) throws IOException {
