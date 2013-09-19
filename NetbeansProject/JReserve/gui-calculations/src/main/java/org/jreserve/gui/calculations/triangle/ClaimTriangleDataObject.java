@@ -17,13 +17,19 @@
 package org.jreserve.gui.calculations.triangle;
 
 import java.io.IOException;
+import org.jdom2.Element;
+import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
 import org.openide.loaders.MultiDataObject;
 import org.openide.loaders.MultiFileLoader;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
+import org.openide.util.lookup.ProxyLookup;
 
 @MIMEResolver.ExtensionRegistration(
     displayName = "Claim Triangle",
@@ -46,13 +52,33 @@ public class ClaimTriangleDataObject extends MultiDataObject {
     public final static String EXTENSION = "jct";
     private final static int LKP_VERSION = 1;
     
+    private final InstanceContent ic = new InstanceContent();
+    private final Lookup lkp;
+    
     public ClaimTriangleDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
         registerEditor("text/jreserve-claimtriangle+xml", true);
+        
+        lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
+        if(lkp.lookup(ClaimTriangleDataObject.class) == null)
+            ic.add(this);
+        
+        try {
+            Element element = JDomUtil.getRootElement(pf);
+            ic.add(new ClaimTriangleCalculation(pf, element));
+        } catch (Exception ex) {
+            String msg = "Unable to create calculation!";
+            throw new IOException(msg, ex);
+        }
     }
 
     @Override
     protected int associateLookup() {
         return LKP_VERSION;
+    }
+    
+    @Override
+    public Lookup getLookup() {
+        return lkp;
     }
 }

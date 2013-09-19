@@ -18,6 +18,7 @@ package org.jreserve.gui.misc.expandable.registration;
 
 import java.util.logging.Logger;
 import org.jreserve.gui.misc.annotations.LayerRegistrationLoader;
+import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 import org.openide.filesystems.FileObject;
 import org.openide.util.Lookup;
@@ -53,7 +54,7 @@ public class ExpandableElementLayerRegistrationLoader extends LayerRegistrationL
     }
     
     @Override
-    public ExpandableElementDescription getValue(FileObject file) {
+    public ExpandableElementDescription getValue(FileObject file) throws Exception {
         return new FileAdapter(file, context);
     }
 }

@@ -19,7 +19,6 @@ package org.jreserve.gui.calculations.nodes;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.gui.calculations.api.CalculationObject;
 import org.jreserve.gui.calculations.api.CalculationProvider;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.openide.loaders.DataFolder;
@@ -55,8 +54,8 @@ class CalculationsFolderChildren extends FilterNode.Children {
         Lookup lkp = node.getLookup();
         DataObject obj = lkp.lookup(DataObject.class);
         return lkp.lookup(DataFolder.class) != null || 
-               lkp.lookup(CalculationObject.class) != null ||
-               (obj != null && obj.getLookup().lookup(CalculationObject.class) != null);
+               lkp.lookup(CalculationProvider.class) != null ||
+               (obj != null && obj.getLookup().lookup(CalculationProvider.class) != null);
     }
 
     @Override

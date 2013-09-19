@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.audit">
-    <module_version install_time="1379328911381" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1379603067048" last="true" origin="installer" specification_version="1.0">
         <file crc="3325545911" name="config/Modules/org-jreserve-gui-misc-audit.xml"/>
-        <file crc="4233619870" name="modules/org-jreserve-gui-misc-audit.jar"/>
+        <file crc="3580743302" name="modules/org-jreserve-gui-misc-audit.jar"/>
     </module_version>
 </module>

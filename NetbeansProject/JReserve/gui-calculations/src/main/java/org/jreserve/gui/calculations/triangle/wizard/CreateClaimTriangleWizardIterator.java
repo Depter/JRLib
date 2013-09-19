@@ -34,6 +34,7 @@ import org.jreserve.gui.calculations.triangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.triangle.ClaimTriangleDataObject;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.utils.wizard.AbstractWizardIterator;
+import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
@@ -134,7 +135,7 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
         WizardDescriptor wizard = super.getWizardDescriptor();
         FileObject file = createFile(wizard);
         Element root = createXml(wizard);
-        write(file, root);
+        JDomUtil.save(file, root);
         return DataObject.find(file);
     }
     
@@ -155,17 +156,5 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
         DataSource ds = (DataSource) wizard.getProperty(PROP_DATA_SOURCE);
         TriangleGeometry geometry = (TriangleGeometry) wizard.getProperty(PROP_GEOMETRY);
         return new ClaimTriangleCalculation(project, ds, geometry).toXml();
-    }
-    
-    private void write(FileObject file, Element root) throws IOException {
-        OutputStream os = null;
-        try {
-            os = file.getOutputStream();
-            XMLOutputter writer = new XMLOutputter();
-            writer.output(new Document(root), os);
-        } finally {
-            if(os != null)
-                os.close();
-        }
     }
 }

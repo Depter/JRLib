@@ -17,13 +17,78 @@
 package org.jreserve.gui.wrapper.jdom;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jdom2.Document;
 import org.jdom2.Element;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.XMLOutputter;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Peter Decsi
  */
 public class JDomUtil {
+    
+    private final static Logger logger = Logger.getLogger(JDomUtil.class.getName());
+    
+    public static Element getRootElement(final FileObject file) throws IOException {
+        synchronized(file) {
+            SAXBuilder builder = new SAXBuilder();
+            InputStream is = null;
+            
+            try {
+                is = file.getInputStream();
+                Document doc = builder.build(is);
+                return doc.getRootElement();
+            } catch (Exception ex) {
+                String msg = String.format("Unable to read xml from '%s'!", file.getPath());
+                logger.log(Level.SEVERE, msg, ex);
+                throw new IOException(msg, ex);
+            } finally {
+                if(is != null) {
+                    try{is.close();} catch(IOException ex) {
+                        String msg = String.format("Unable to close inputstream for file '%s'!", file.getPath());
+                        logger.log(Level.SEVERE, msg, ex);
+                        throw ex;
+                    }
+                }
+            }
+        }
+    }
+    
+    public static void save(final FileObject file, Element element) throws IOException {
+        save(file, new Document(element));
+    }
+    
+    public static void save(final FileObject file, Document document) throws IOException {
+        synchronized(file) {
+            XMLOutputter output = new XMLOutputter();
+            OutputStream os = null;
+            
+            try {
+                os = file.getOutputStream();
+                output.output(document, os);
+                os.flush();
+            } catch (IOException ex) {
+                String msg = "Unable to save document to file '%s'!";
+                msg = String.format(msg, file.getPath());
+                logger.log(Level.SEVERE, msg, ex);
+                throw new IOException(msg, ex);
+            } finally {
+                if(os != null) {
+                    try{os.close();} catch (IOException ex) {
+                        String msg = String.format("Unable to close outputstream for file '%s'!", file.getPath());
+                        logger.log(Level.SEVERE, msg, ex);
+                        throw ex;
+                    }
+                }
+            }
+        }
+    }
     
     public static void addElement(Element root, String name, String value) {
         Element e = new Element(name);

@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
 import org.jreserve.gui.calculations.CalculationObjectProvider;
-import org.jreserve.gui.calculations.api.CalculationObject;
+import org.jreserve.gui.calculations.api.CalculationProvider;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
@@ -176,7 +176,7 @@ class CalculationFolderNode extends FilterNode {
         for(DataObject obj : objects) {
             if((obj instanceof DataFolder) && canPaste((DataFolder)obj)) {
                 result.add(obj);
-            } else if(obj.getLookup().lookup(CalculationObject.class) != null) {
+            } else if(obj.getLookup().lookup(CalculationProvider.class) != null) {
                 result.add(obj);
             }
         }

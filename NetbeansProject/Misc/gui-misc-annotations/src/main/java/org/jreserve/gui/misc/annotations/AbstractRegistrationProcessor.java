@@ -17,6 +17,7 @@
 package org.jreserve.gui.misc.annotations;
 
 import java.lang.annotation.Annotation;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.annotation.processing.RoundEnvironment;
@@ -28,7 +29,6 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
-import org.openide.filesystems.FileObject;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -43,6 +43,7 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
     public final static String POSITION = "position";
     private final Class<A> annotationClass;
     private final Class<I> interfaceClass;
+    private Set<Class[]> constructorTypes = new HashSet<Class[]>();
     
     protected AbstractRegistrationProcessor() {
         this(null, null);
@@ -51,6 +52,11 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
     protected AbstractRegistrationProcessor(Class<A> annotationClass, Class<I> interfaceClass) {
         this.annotationClass = annotationClass;
         this.interfaceClass = interfaceClass;
+        this.constructorTypes.add(new Class[0]);
+    }
+    
+    protected final void addConstructorParams(Class[] parameters) {
+        constructorTypes.add(parameters);
     }
     
     @Override
@@ -154,13 +160,26 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
     }
     
     private boolean goodParameters(List<? extends VariableElement> params) {
-        return params.isEmpty() ||
-               (params.size()==1 && isFileObjectType(params.get(0)));
+        for(Class[] pl : constructorTypes)
+            if(sameParams(pl, params))
+                return true;
+        return false;
     }
     
-    private boolean isFileObjectType(VariableElement e) {
-        TypeElement fo = getElementFor(FileObject.class);
-        return isAssignable(e.asType(), fo.asType());
+    private boolean sameParams(Class[] pl, List<? extends VariableElement> params) {
+        int size = pl.length;
+        if(size != params.size())
+            return false;
+        for(int i=0; i<size; i++)
+            if(!accepts(pl[i], params.get(i)))
+                return false;
+        return true;
+    }
+    
+    
+    private boolean accepts(Class clazz, VariableElement e) {
+        TypeElement te = getElementFor(clazz);
+        return isAssignable(e.asType(), te.asType());
     }
     
     protected void createLayerRegistration(Element element, String className, String methodName) throws LayerGenerationException {

@@ -25,6 +25,7 @@ import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
+import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -36,8 +37,6 @@ import org.openide.util.lookup.ServiceProvider;
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes("org.jreserve.gui.misc.expandable.ExpandableElement.Registration")
 public class ExpandableElementRegistrationProcessor extends AbstractRegistrationProcessor<ExpandableElement.Registration, ExpandableElement> {
-    private final static Class<ExpandableElement.Registration> ANNOTATION = ExpandableElement.Registration.class;
-    private final static Class<ExpandableElement> INTERFACE = ExpandableElement.class;
 
     final static String PATH = "Editors/%s/ExpandableView/";
     private final static String ERR_NO_MIME = 
@@ -49,14 +48,9 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
     public final static String BACKGROUND = "background";
     public final static String FOREGROUND = "foreground";
 
-    @Override
-    protected Class<ExpandableElement.Registration> getAnnotationClass() {
-        return ANNOTATION;
-    }
-
-    @Override
-    protected Class<ExpandableElement> getInterfaceClass() {
-        return INTERFACE;
+    public ExpandableElementRegistrationProcessor() {
+        super(ExpandableElement.Registration.class, ExpandableElement.class);
+        super.addConstructorParams(new Class[]{Lookup.class});
     }
 
     @Override
@@ -72,8 +66,9 @@ public class ExpandableElementRegistrationProcessor extends AbstractRegistration
     }
     
     @Override
-    protected void initInstanceAttributes(LayerBuilder.File file, Element element, String className, String methodName) throws LayerGenerationException {
+    protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
         ExpandableElement.Registration an = getAnnotation(element);
+        
         file.position(an.position());
         
         String str  = an.displayName();

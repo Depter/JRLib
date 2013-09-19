@@ -3,8 +3,8 @@ OpenIDE-Module-Layer: org/jreserve/gui/trianglewidget/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/trianglewidget/Bund
  le.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130918
-OpenIDE-Module-Build-Version: 201309181618
+OpenIDE-Module-Implementation-Version: 1.0-20130919
+OpenIDE-Module-Build-Version: 201309191527
 OpenIDE-Module: org.jreserve.gui.trianglewidget
 OpenIDE-Module-Public-Packages: org.jreserve.gui.trianglewidget.*, org
  .jreserve.gui.trianglewidget.geometry.*, org.jreserve.gui.trianglewid

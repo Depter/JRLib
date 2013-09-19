@@ -153,6 +153,9 @@ public class AnnotationUtils {
     
     public static Object instantiate(FileObject file, Object[] parameters, Class[] paramTypes) {
         String className = stringAttribute("class", file, null);
+        if(className == null)
+            className = stringAttribute("instanceClass", file, null);
+        
         String method = stringAttribute("method", file, null);
         Exception initial = null;
         

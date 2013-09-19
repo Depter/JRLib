@@ -91,9 +91,15 @@ class FileAdapter implements ExpandableElementDescription {
     }
     
     private void initElement(FileObject file, Lookup context) {
-        element = (context == null)?
-                (ExpandableElement) AnnotationUtils.instantiate(file) :
-                (ExpandableElement) AnnotationUtils.instantiate(file, context);
+        if(context == null) {
+            element = (ExpandableElement) AnnotationUtils.instantiate(file);
+        } else {
+            try {
+                element = (ExpandableElement) AnnotationUtils.instantiate(file, context);
+            } catch (Exception ex) {
+                element = (ExpandableElement) AnnotationUtils.instantiate(file);
+            }
+        }
     }
     
     @Override

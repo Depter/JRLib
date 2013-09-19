@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.782" errors="0" skipped="0" tests="5" name="org.jreserve.gui.misc.eventbus.SubscriptionTest">
+<testsuite failures="0" time="1.859" errors="0" skipped="0" tests="5" name="org.jreserve.gui.misc.eventbus.SubscriptionTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="D:\Eigen\Programs\JAVA\jdk1.6.0_17\jre\bin"/>
@@ -62,5 +62,5 @@
   <testcase time="0" classname="org.jreserve.gui.misc.eventbus.SubscriptionTest" name="testReferences"/>
   <testcase time="0" classname="org.jreserve.gui.misc.eventbus.SubscriptionTest" name="testAddSelf"/>
   <testcase time="0" classname="org.jreserve.gui.misc.eventbus.SubscriptionTest" name="testPublish"/>
-  <testcase time="0.782" classname="org.jreserve.gui.misc.eventbus.SubscriptionTest" name="testPublish_FromEdt"/>
+  <testcase time="1.859" classname="org.jreserve.gui.misc.eventbus.SubscriptionTest" name="testPublish_FromEdt"/>
 </testsuite>
