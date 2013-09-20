@@ -27,7 +27,6 @@ import org.jreserve.jrlib.gui.data.DataEntryFilter;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
-import org.openide.filesystems.FileObject;
 
 /**
  *
@@ -36,10 +35,9 @@ import org.openide.filesystems.FileObject;
  */
 public class TriangleGeometryUtil {
     
-    private final static String CT_ROOT = "claimTriangle";
     private final static String GEOMETRY_ELEMENT = "geometry";
     private final static String START_ELEMENT = "startDate";
-    private final static String END_ELEMENT = "startDate";
+    private final static String END_ELEMENT = "endDate";
     private final static String AL_ELEMENT = "accidentLength";
     private final static String DL_ELEMENT = "developmentLength";
     

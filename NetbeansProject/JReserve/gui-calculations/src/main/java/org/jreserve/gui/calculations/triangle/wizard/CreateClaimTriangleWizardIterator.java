@@ -21,22 +21,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jdom2.Element;
 import org.jreserve.gui.calculations.CalculationObjectProvider;
-import org.jreserve.gui.calculations.api.CalculationEventUtil;
-import org.jreserve.gui.calculations.triangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.triangle.ClaimTriangleDataObject;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.jreserve.gui.misc.utils.wizard.AbstractWizardIterator;
-import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
 import org.netbeans.api.templates.TemplateRegistration;
+import org.netbeans.spi.project.ui.templates.support.Templates;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -55,9 +55,11 @@ import org.openide.util.Utilities;
     folder = "Calculation",
     displayName = "#LBL.CreateClaimTriangleWizardIterator.DisplayName",
     iconBase = "org/jreserve/gui/calculations/icons/triangle.png",
-    id = "org.jreserve.gui.calculations.triangle.wizard.CreateClaimTriangleWizardIterator",
+//    id = "org.jreserve.gui.calculations.triangle.wizard.CreateClaimTriangleWizardIterator",
     category = {"jreserve-calculation"},
-    position = 100
+    position = 100,
+    content = "ClaimTriangleTemplate.jct",
+    scriptEngine = "freemarker"
 )
 @Messages({
     "LBL.CreateClaimTriangleWizardIterator.DisplayName=Claim Triangle",
@@ -66,6 +68,9 @@ import org.openide.util.Utilities;
     "LBL.CreateClaimTriangleWizardIterator.Name={0} of {1}"
 })
 public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
+    
+    private final static String TEMPLATE_FILE = "Templates/Calculation/ClaimTriangleTemplate.jct"; //NOI18
+    
     final static String PROP_PROJECT = "project";
     final static String PROP_INIT_FOLDER = "initFolder";
     
@@ -76,6 +81,16 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
     final static String PROP_DATA_SOURCE = "dataSource";
     
     private final static Logger logger = Logger.getLogger(CreateClaimTriangleWizardIterator.class.getName());
+    
+    private Project project;
+    
+    public CreateClaimTriangleWizardIterator() {
+        this(null);
+    }
+    
+    CreateClaimTriangleWizardIterator(Project project) {
+        this.project = project;
+    }
     
     @Override
     public void initialize(WizardDescriptor wizard) {
@@ -89,9 +104,13 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
         
         Project p = (Project) wizard.getProperty(PROP_PROJECT);
         if(p == null) {
-            Collection<? extends Project> ps = lkp.lookupAll(Project.class);
-            if(ps.size() == 1)
-                wizard.putProperty(PROP_PROJECT, ps.iterator().next());
+            if(project != null) {
+                wizard.putProperty(PROP_PROJECT, project);
+            } else {
+                Collection<? extends Project> ps = lkp.lookupAll(Project.class);
+                if(ps.size() == 1)
+                    wizard.putProperty(PROP_PROJECT, ps.iterator().next());
+            }
         }
         
         wizard.putProperty(PROP_INIT_FOLDER, lkp.lookup(DataFolder.class));
@@ -130,33 +149,86 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
     }
     
     private DataObject buildClaimTriangle() throws IOException {
-        WizardDescriptor wizard = super.getWizardDescriptor();
-        FileObject file = createFile(wizard);
-        Element root = createXml(wizard);
-        JDomUtil.save(file, root);
-        
-        DataObject obj = DataObject.find(file);
-        CalculationEventUtil.fireCreated(obj);
-        
-        return obj;
+        DataObject template = getTemplateObject();
+        DataFolder folder = getParentFolder();
+        String name = getFileName();
+        Map parameters = getParameters();
+        return template.createFromTemplate(folder, name, parameters);
     }
     
-    private FileObject createFile(WizardDescriptor wizard) throws IOException {
-        String path = (String) wizard.getProperty(PROP_FOLDER);
-        if(!path.endsWith("/"))
-            path += "/";
-        path += (String) wizard.getProperty(PROP_NAME);
-        path += "."+ClaimTriangleDataObject.EXTENSION;
+    private DataObject getTemplateObject() throws IOException {
+        WizardDescriptor wizard = super.getWizardDescriptor();
+        FileObject template = Templates.getTemplate(wizard);
+        if(template == null)
+            template = FileUtil.getConfigFile(TEMPLATE_FILE);
+        return DataObject.find(template);
+    }
+    
+    private DataFolder getParentFolder() throws IOException {
+        WizardDescriptor wizard = super.getWizardDescriptor();
         
         CalculationObjectProvider cop = (CalculationObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
         FileObject root = cop.getRootFolder().getPrimaryFile();
-        return FileUtil.createData(root, path);
+        String folderPath = (String) wizard.getProperty(PROP_FOLDER);
+        FileObject folder = FileUtil.createData(root, folderPath);
+        return (DataFolder) DataObject.find(folder);
     }
     
-    private Element createXml(WizardDescriptor wizard) {
-        Project project = (Project) wizard.getProperty(PROP_PROJECT);
+    private String getFileName() {
+        WizardDescriptor wizard = super.getWizardDescriptor();
+        return (String) wizard.getProperty(PROP_NAME);
+    }
+    
+    private Map getParameters() {
+        WizardDescriptor wizard = super.getWizardDescriptor();
+        
+        Project p = (Project) wizard.getProperty(PROP_PROJECT);
+        long auditId = AuditDbManager.getInstance().getNextObjectId(p);
         DataSource ds = (DataSource) wizard.getProperty(PROP_DATA_SOURCE);
         TriangleGeometry geometry = (TriangleGeometry) wizard.getProperty(PROP_GEOMETRY);
-        return new ClaimTriangleCalculation(project, ds, geometry).toXml();
+        
+        Map params = new HashMap();
+        params.put("auditId", auditId);
+        params.put("dataSource", ds.getPath());
+        params.put("startDate", geometry.getStartDate().toString());
+        params.put("endDate", geometry.getEndDate().toString());
+        params.put("accidentLength", geometry.getAccidentLength());
+        params.put("developmentLength", geometry.getDevelopmentLength());
+        return params;
     }
+    
+//    private DataObject buildClaimTriangle() throws IOException {
+//        WizardDescriptor wizard = super.getWizardDescriptor();
+//        Element root = createXml(wizard);
+//        
+//        final FileObject file = createFile(wizard);
+//        DataObject obj;
+//        synchronized(file) {
+//            JDomUtil.save(file, root);
+//            obj = DataObject.find(file);
+//            CalculationEventUtil.fireCreated(obj);
+//        }
+//        
+//        return obj;
+//    }
+//    
+//    private FileObject createFile(WizardDescriptor wizard) throws IOException {
+//        String path = (String) wizard.getProperty(PROP_FOLDER);
+//        if(!path.endsWith("/"))
+//            path += "/";
+//        path += (String) wizard.getProperty(PROP_NAME);
+//        path += "."+ClaimTriangleDataObject.EXTENSION;
+//        
+//        CalculationObjectProvider cop = (CalculationObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
+//        FileObject root = cop.getRootFolder().getPrimaryFile();
+//        return FileUtil.createData(root, path);
+//    }
+//    
+//    private Element createXml(WizardDescriptor wizard) {
+//        Project p = (Project) wizard.getProperty(PROP_PROJECT);
+//        long auditId = AuditDbManager.getInstance().getNextObjectId(p);
+//        DataSource ds = (DataSource) wizard.getProperty(PROP_DATA_SOURCE);
+//        TriangleGeometry geometry = (TriangleGeometry) wizard.getProperty(PROP_GEOMETRY);
+//        return new ClaimTriangleCalculation(p, ds, geometry).toXml();
+//    }
 }

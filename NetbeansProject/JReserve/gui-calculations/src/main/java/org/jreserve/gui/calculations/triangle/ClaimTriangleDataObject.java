@@ -76,24 +76,40 @@ public class ClaimTriangleDataObject extends MultiDataObject {
         
         try {
             Element element = JDomUtil.getRootElement(pf);
-            calculation = new ClaimTriangleCalculation(pf, element);
-            ic.add(calculation);
+            if(isTemplate(element)) {
+                super.setTemplate(true);
+                lkp = super.getLookup();
+            } else {
+                super.setTemplate(false);
+                lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
+                initLookupContent(element);
+            }
         } catch (Exception ex) {
             String msg = "Unable to create calculation!";
             throw new IOException(msg, ex);
         }
-        
-        String path = Displayable.Utils.displayProjectPath(pf);
+    }
+    
+    private boolean isTemplate(Element element) throws IOException {
+        Element auditE = JDomUtil.getExistingChild(element, ClaimTriangleCalculation.AUDIT_ID_ELEMENT);
+        String str = auditE.getTextTrim();
+        return str != null && str.length() > 0 && str.charAt(0) == '$';
+    }
+    
+    private void initLookupContent(Element element) throws Exception {
+        calculation = new ClaimTriangleCalculation(getPrimaryFile(), element);
+        ic.add(calculation);
+        String path = Displayable.Utils.displayProjectPath(getPrimaryFile());
         calculation.setPath(path);
         
         ic.add(new ClaimTriangleAuditable());
         ic.add(new ClaimTriangleDeletable());
         
-        lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
         if(lkp.lookup(ClaimTriangleDataObject.class) == null)
             ic.add(this);
+    
     }
-
+    
     @Override
     protected int associateLookup() {
         return LKP_VERSION;

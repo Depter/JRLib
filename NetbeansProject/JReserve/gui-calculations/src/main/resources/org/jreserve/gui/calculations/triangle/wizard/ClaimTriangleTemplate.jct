@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?> 
+<claimTriangle>
+  <auditId>${auditId}</auditId>
+  <dataSource>${dataSource}</dataSource>
+  <geometry>
+    <startDate>${startDate}</startDate>
+    <endDate>${endDate}</endDate>
+    <accidentLength>${accidentLength}</accidentLength>
+    <developmentLength>${developmentLength}</developmentLength>
+  </geometry>
+  <modifications/>
+</claimTriangle>

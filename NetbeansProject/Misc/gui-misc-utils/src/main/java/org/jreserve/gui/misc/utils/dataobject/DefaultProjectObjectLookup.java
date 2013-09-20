@@ -19,8 +19,6 @@ package org.jreserve.gui.misc.utils.dataobject;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.StringTokenizer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.netbeans.api.project.Project;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
@@ -32,8 +30,6 @@ import org.openide.loaders.DataObject;
  */
 public class DefaultProjectObjectLookup implements ProjectObjectLookup {
     
-    private final static Logger logger = Logger.getLogger(DefaultProjectObjectLookup.class.getName());
-    
     private final Project project;
 
     public DefaultProjectObjectLookup(Project project) {
@@ -43,10 +39,8 @@ public class DefaultProjectObjectLookup implements ProjectObjectLookup {
     @Override
     public <T> Collection<? extends T> lookup(String path, Class<T> clazz) {
         DataObject obj = getObject(path);
-        if(obj == null) {
-            logger.log(Level.WARNING, "No Data is found at path ''{0}''!", path);
+        if(obj == null)
             return Collections.EMPTY_LIST;
-        }
         return obj.getLookup().lookupAll(clazz);
     }
     

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module codename="org.jreserve.org.jreserve.gui.triangletable">
+    <module_version install_time="1371468244663" last="true" origin="installer" specification_version="1.0">
+        <file crc="4039343719" name="config/Modules/org-jreserve-org-jreserve-gui-triangletable.xml"/>
+        <file crc="1169197725" name="modules/org-jreserve-org-jreserve-gui-triangletable.jar"/>
+    </module_version>
+</module>

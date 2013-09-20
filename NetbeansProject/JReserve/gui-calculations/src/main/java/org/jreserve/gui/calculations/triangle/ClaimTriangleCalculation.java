@@ -36,9 +36,9 @@ import org.openide.filesystems.FileObject;
  */
 public class ClaimTriangleCalculation extends AbstractModifiableCalculationProvider<ClaimTriangle> {
 
-    private final static String CT_ELEMENT = "claimTriangle";
-    private final static String DS_ELEMENT = "dataSource";
-    private final static String AUDIT_ID_ELEMENT = "auditId";
+    final static String CT_ELEMENT = "claimTriangle";
+    final static String DS_ELEMENT = "dataSource";
+    final static String AUDIT_ID_ELEMENT = "auditId";
     
     private long auditId;
     private DataSource dataSource;
