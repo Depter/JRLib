@@ -57,7 +57,7 @@ public class CalculationEventUtil extends AbstractAuditEvent implements Calculat
         fireEvent(new Created(ao, cp));
     }
     
-    private static void fireEvent(CalculationEvent evt) {
+    public static void fireEvent(CalculationEvent evt) {
         EventBusManager.getDefault().publish(evt);
     }
     
@@ -153,8 +153,8 @@ public class CalculationEventUtil extends AbstractAuditEvent implements Calculat
         }
     }
     
-    private static class Change extends CalculationEventUtil implements CalculationEvent.Change {
-        private Change(AuditedObject ao, CalculationProvider cp, String change) {
+    public static class Change extends CalculationEventUtil implements CalculationEvent.Change {
+        protected Change(AuditedObject ao, CalculationProvider cp, String change) {
             super(ao, cp, change);
         }
         

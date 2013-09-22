@@ -32,6 +32,25 @@ public interface Deletable extends Displayable {
     
     public void delete() throws Exception;
     
+    public static abstract class DisplayableDeletable implements Deletable {
+
+        private final Displayable displayable;
+
+        protected DisplayableDeletable(Displayable displayable) {
+            this.displayable = displayable;
+        }
+        
+        @Override
+        public Icon getIcon() {
+            return displayable.getIcon();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return displayable.getDisplayName();
+        }
+    }
+    
     public static abstract class NodeDeletable implements Deletable {
         
         protected final Node node;

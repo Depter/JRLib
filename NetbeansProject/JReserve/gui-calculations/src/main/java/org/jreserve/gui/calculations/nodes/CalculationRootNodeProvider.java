@@ -17,7 +17,7 @@
 
 package org.jreserve.gui.calculations.nodes;
 
-import org.jreserve.gui.calculations.CalculationObjectProvider;
+import org.jreserve.gui.calculations.api.CalculationObjectProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;

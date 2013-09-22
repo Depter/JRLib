@@ -213,7 +213,13 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
         handle.start();
         handle.switchToIndeterminate();
         try {
-            return Collections.singleton(buildDataSource());
+            FileBuilder builder = new FileBuilder();
+            FileUtil.runAtomicAction(builder);
+            
+            FileObject result = builder.getResult();
+            DataSourceDataObject ds = (DataSourceDataObject) DataObject.find(result);
+            DataEventUtil.fireCreated(ds);
+            return Collections.singleton(result);
         } catch(IOException ex) {
             String msg = "Unable to create new DataSource!";
             logger.log(Level.SEVERE, msg, ex);
@@ -223,87 +229,99 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
         }
     }
     
-    private FileObject buildDataSource() throws IOException {
-        FileObject primary = createPrimaryFile();
-        Properties props = createProperties();
-        DataSourceUtil.saveProperties(primary, props);
-        createSecondaryFiles(primary);
+    private class FileBuilder implements Runnable {
         
-        DataSourceDataObject ds = (DataSourceDataObject) DataObject.find(primary);
-        DataEventUtil.fireCreated(ds);
+        private FileObject result;
+        private IOException exception;
         
-        return primary;
-    }
-    
-    private FileObject createPrimaryFile() throws IOException {
-        String path = getPath();
-        DataObjectProvider dop = (DataObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
-        DataFolder root = dop.getRootFolder();
-        if(!path.startsWith(root.getName()+"/")) {
-            String msg = "Path '%s' does not start with '%s'/!";
-            throw new IOException(String.format(msg, path, root.getName()));
-        }
-        
-        FileObject parent = root.getPrimaryFile().getParent();
-        return FileUtil.createData(parent, path);
-    }
-    
-    private String getPath() throws IOException {
-        String path = (String) wizard.getProperty(PROP_PATH);
-        if(path == null)
-            throw new IOException("DataSoruce name not set!");
-        return path + "." + DataSourceDataObject.EXTENSION;
-    }
-    
-    private Properties createProperties() throws IOException {
-        Properties props = new Properties();
-        props.setProperty(DataSourceDataObject.PROP_AUDIT_ID, getAuditId());
-        props.setProperty(DataSourceDataObject.PROP_DATA_TYPE, getDataType());
-        props.setProperty(DataSourceDataObject.PROP_FACTORY_ID, getFactoryId());
-        addProviderProperties(props);
-        return props;
-    }
-    
-    private String getAuditId() {
-        Project project = (Project) wizard.getProperty(PROP_PROJECT);
-        return ""+AuditDbManager.getInstance().getNextObjectId(project);
-    }
-    
-    private String getDataType() throws IOException {
-        DataType dataType = (DataType) wizard.getProperty(PROP_DATA_TYPE);
-        if(dataType == null)
-            throw new IOException("DataType not set!");
-        return dataType.name();
-    }
-    
-    private String getFactoryId() throws IOException {
-        String factoryId = (String) wizard.getProperty(PROP_FACTORY_ID);
-        if(factoryId == null || factoryId.length()==0)
-            throw new IOException("FactoryId not set!");
-        return factoryId;
-    }
-    
-    private void addProviderProperties(Properties props) {
-        Properties extraProps = (Properties) wizard.getProperty(PROP_EXTRA_PROPERTIES);
-        if(extraProps == null)
-            return;
-        
-        for(String name : extraProps.stringPropertyNames()) {
-            if(isProtectedProperty(name)) {
-                logger.log(Level.WARNING, "Property ''{0}'' can not be overwritten!", name);
-            } else {
-                String value = extraProps.getProperty(name);
-                if(value != null)
-                    props.setProperty(name, value);
+        @Override
+        public void run() {
+            try {
+                result = createPrimaryFile();
+                Properties props = createProperties();
+                DataSourceUtil.saveProperties(result, props);
+                createSecondaryFiles(result);
+            } catch (IOException ex) {
+                exception = ex;
             }
         }
-    }
     
-    private boolean isProtectedProperty(String name) {
-        return DataSourceDataObject.PROP_AUDIT_ID.equals(name) ||
-               DataSourceDataObject.PROP_DATA_TYPE.equals(name) ||
-               DataSourceDataObject.PROP_FACTORY_ID.equals(name);
-    }
+        private FileObject createPrimaryFile() throws IOException {
+            String path = getPath();
+            DataObjectProvider dop = (DataObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
+            DataFolder root = dop.getRootFolder();
+            if(!path.startsWith(root.getName()+"/")) {
+                String msg = "Path '%s' does not start with '%s'/!";
+                throw new IOException(String.format(msg, path, root.getName()));
+            }
+
+            FileObject parent = root.getPrimaryFile().getParent();
+            return FileUtil.createData(parent, path);
+        }
     
+        private String getPath() throws IOException {
+            String path = (String) wizard.getProperty(PROP_PATH);
+            if(path == null)
+                throw new IOException("DataSoruce name not set!");
+            return path + "." + DataSourceDataObject.EXTENSION;
+        }
+    
+        private Properties createProperties() throws IOException {
+            Properties props = new Properties();
+            props.setProperty(DataSourceDataObject.PROP_AUDIT_ID, getAuditId());
+            props.setProperty(DataSourceDataObject.PROP_DATA_TYPE, getDataType());
+            props.setProperty(DataSourceDataObject.PROP_FACTORY_ID, getFactoryId());
+            addProviderProperties(props);
+            return props;
+        }
+
+        private String getAuditId() {
+            Project project = (Project) wizard.getProperty(PROP_PROJECT);
+            return ""+AuditDbManager.getInstance().getNextObjectId(project);
+        }
+
+        private String getDataType() throws IOException {
+            DataType dataType = (DataType) wizard.getProperty(PROP_DATA_TYPE);
+            if(dataType == null)
+                throw new IOException("DataType not set!");
+            return dataType.name();
+        }
+
+        private String getFactoryId() throws IOException {
+            String factoryId = (String) wizard.getProperty(PROP_FACTORY_ID);
+            if(factoryId == null || factoryId.length()==0)
+                throw new IOException("FactoryId not set!");
+            return factoryId;
+        }
+
+        private void addProviderProperties(Properties props) {
+            Properties extraProps = (Properties) wizard.getProperty(PROP_EXTRA_PROPERTIES);
+            if(extraProps == null)
+                return;
+
+            for(String name : extraProps.stringPropertyNames()) {
+                if(isProtectedProperty(name)) {
+                    logger.log(Level.WARNING, "Property ''{0}'' can not be overwritten!", name);
+                } else {
+                    String value = extraProps.getProperty(name);
+                    if(value != null)
+                        props.setProperty(name, value);
+                }
+            }
+        }
+
+        private boolean isProtectedProperty(String name) {
+            return DataSourceDataObject.PROP_AUDIT_ID.equals(name) ||
+                   DataSourceDataObject.PROP_DATA_TYPE.equals(name) ||
+                   DataSourceDataObject.PROP_FACTORY_ID.equals(name);
+        }
+       
+        FileObject getResult() throws IOException {
+            if(exception != null)
+                throw exception;
+            return result;
+        }
+    }
+     
     protected abstract void createSecondaryFiles(FileObject primaryFile) throws IOException;
 }

@@ -18,6 +18,7 @@
 package org.jreserve.gui.calculations.api;
 
 import org.jreserve.jrlib.CalculationData;
+import org.netbeans.api.project.Project;
 
 /**
  *
@@ -25,6 +26,8 @@ import org.jreserve.jrlib.CalculationData;
  * @version 1.0
  */
 public interface CalculationProvider<C extends CalculationData> {
+    
+    public Project getProject();
     
     public Class<C> getCalculationClass();
     

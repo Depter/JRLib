@@ -42,6 +42,10 @@ public class CommonIcons {
     @StaticResource private final static String REFRESH = "org/jreserve/gui/misc/utils/refresh.png";
     @StaticResource private final static String SEARCH = "org/jreserve/gui/misc/utils/search.png";
     
+    private final static String ERROR = "org/netbeans/modules/dialogs/error.gif";
+    private final static String INFO = "org/netbeans/modules/dialogs/info.gif";
+    private final static String WARNING = "org/netbeans/modules/dialogs/warning.gif";
+    
     private final static Map<String, ImageIcon> cache = new HashMap<String, ImageIcon>(9);
     
     public static ImageIcon add() {
@@ -95,6 +99,18 @@ public class CommonIcons {
     
     public static ImageIcon search() {
         return getIcon(SEARCH);
+    }
+    
+    public static ImageIcon error() {
+        return getIcon(ERROR);
+    }
+    
+    public static ImageIcon warning() {
+        return getIcon(WARNING);
+    }
+    
+    public static ImageIcon info() {
+        return getIcon(INFO);
     }
     
     private CommonIcons() {}

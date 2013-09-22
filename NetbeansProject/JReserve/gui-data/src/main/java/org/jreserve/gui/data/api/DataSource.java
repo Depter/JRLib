@@ -30,6 +30,9 @@ import org.jreserve.jrlib.gui.data.DataType;
  */
 public interface DataSource {
 
+    public final static DataSource EMPTY_TRIANGLE = new EmptyDataSource(DataType.TRIANGLE);
+    public final static DataSource EMPTY_VECTOR = new EmptyDataSource(DataType.VECTOR);
+    
     public String getName();
 
     public String getPath();

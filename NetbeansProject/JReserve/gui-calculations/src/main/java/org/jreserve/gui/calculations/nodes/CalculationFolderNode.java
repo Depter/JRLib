@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
-import org.jreserve.gui.calculations.CalculationObjectProvider;
+import org.jreserve.gui.calculations.api.CalculationObjectProvider;
 import org.jreserve.gui.calculations.api.CalculationProvider;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.Deletable;

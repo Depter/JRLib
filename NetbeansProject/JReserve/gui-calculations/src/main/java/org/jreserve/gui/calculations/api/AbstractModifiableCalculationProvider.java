@@ -31,7 +31,7 @@ import org.jreserve.jrlib.CalculationData;
 public abstract class AbstractModifiableCalculationProvider<C extends CalculationData>
     implements ModifiableCalculationProvider<C> {
 
-    protected final static String MODIFICATIONS_ELEMENT = "modifications";
+    public final static String MODIFICATIONS_ELEMENT = "modifications";
     
     private List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
     private final Class<C> clazz;

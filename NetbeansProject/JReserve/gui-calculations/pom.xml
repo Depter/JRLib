@@ -9,9 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jreserve</groupId>
     <artifactId>gui-calculations</artifactId>
-    <version>1.0-SNAPSHOT</version>
     <packaging>nbm</packaging>
 
     <name>org-jreserve-gui-calculations</name>
@@ -184,6 +182,11 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>nbm-maven-plugin</artifactId>
                 <extensions>true</extensions>
+                <configuration>
+                    <publicPackages>
+                        <publicPackage>org.jreserve.gui.calculations.api</publicPackage>
+                    </publicPackages>
+                </configuration>
             </plugin>
 
             <plugin>

@@ -128,4 +128,10 @@ public class DataSourceNode extends DataNode {
     public Transferable drag() throws IOException {
         return clipboardCut();
     }
+    
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        setDisplayName(name);
+    }
 }

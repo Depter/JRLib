@@ -24,7 +24,9 @@ import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JComponent;
 import org.jreserve.gui.misc.audit.event.AuditRecord;
+import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.audit.multiview.AuditTableMultiviewPanel;
+import org.netbeans.api.project.Project;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.MultiViewElementCallback;
@@ -48,6 +50,12 @@ public class AuditableMultiview implements MultiViewElement {
     public AuditableMultiview(Lookup lkp) {
         this.lkp = lkp;
         auditable = lkp.lookup(Auditable.class);
+        if(auditable == null) {
+            AuditedObject ao = lkp.lookup(AuditedObject.class);
+            if(ao != null)
+                auditable = new AbstractAuditable(ao);
+        }
+        
         if(auditable == null) {
             logger.log(Level.WARNING, "No Auditable instance in the supplied lookup!");
             auditable = new DummyAuditable();
@@ -106,6 +114,30 @@ public class AuditableMultiview implements MultiViewElement {
         @Override
         public List<AuditRecord> getAuditEvents() {
             return Collections.EMPTY_LIST;
+        }
+    }
+    
+    private static class AbstractAuditable extends AuditableObject {
+
+        private final AuditedObject obj;
+
+        AbstractAuditable(AuditedObject obj) {
+            this.obj = obj;
+        }
+        
+        @Override
+        public Project getAuditedProject() {
+            return obj.getAuditedProject();
+        }
+
+        @Override
+        public long getAuditId() {
+            return obj.getAuditId();
+        }
+
+        @Override
+        public String getAuditName() {
+            return obj.getAuditName();
         }
     }
 }
