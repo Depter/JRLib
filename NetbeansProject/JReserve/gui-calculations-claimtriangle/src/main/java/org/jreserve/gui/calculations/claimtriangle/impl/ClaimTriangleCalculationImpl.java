@@ -55,6 +55,7 @@ public class ClaimTriangleCalculationImpl
     private DataSource dataSource;
     private TriangleGeometry geometry;
     private String path;
+    private ClaimTriangle claimTriangle;
     
     ClaimTriangleCalculationImpl(ClaimTriangleDataObject dObj, Element root) throws Exception {
         super(root, ClaimTriangle.class);
@@ -134,10 +135,10 @@ public class ClaimTriangleCalculationImpl
     @Override
     protected void modificationsChanged() {
     }
-
+    
     @Override
-    protected synchronized ClaimTriangle createBaseCalculation() throws Exception {
-        return TriangleGeometryUtil.createTriangle(dataSource, geometry);
+    public ClaimTriangle getCalculation() {
+        return claimTriangle;
     }
     
     @Override

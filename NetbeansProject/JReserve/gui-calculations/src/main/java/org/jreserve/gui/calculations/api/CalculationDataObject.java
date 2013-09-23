@@ -22,9 +22,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
+import org.jreserve.gui.misc.utils.actions.AbstractDisplayableSavable;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
+import org.netbeans.api.actions.Savable;
 import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
@@ -42,48 +44,40 @@ import org.openide.util.lookup.ProxyLookup;
  * @version 1.0
  */
 public abstract class CalculationDataObject<C extends CalculationProvider> extends MultiDataObject {
-    
+
     private final static Logger logger = Logger.getLogger(CalculationDataObject.class.getName());
     private final static int LKP_VERSION = 1;
     
+    private final Object lock = new Object();
     protected final InstanceContent ic = new InstanceContent();
     private final Lookup lkp;
-    protected final C calculation;
-    protected final CalculationEventUtil2 evtUtil;
+    private C calculation;
+    private CalculationEventUtil evtUtil;
     
-    protected CalculationDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException, IOException {
+    public CalculationDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException {
         super(fo, loader);
-        registerEditor(getMimeType(), true);
-        
-        try {
-            Element root = JDomUtil.getRootElement(fo);
-            calculation = createCalculationProvider(root);
-            ic.add(calculation);
-        
-            ic.add(new CalculationDeletable());
-        
-            lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
-            if(lkp.lookup(CalculationDataObject.class) == null)
-                ic.add(this);
-            
-            AuditedObject auditedObject = createAuditedObject();
-            ic.add(auditedObject);
-            evtUtil = new CalculationEventUtil2(auditedObject, calculation);
-        } catch (Exception ex) {
-            String msg = "Unable to create calculation from file '%s'!";
-            msg = String.format(msg, fo.getPath());
-            logger.log(Level.SEVERE, msg, ex);
-            throw new IOException(msg, ex);
-        }
+        lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
+        if(lkp.lookup(CalculationDataObject.class) == null)
+            ic.add(this);
     }
 
-    protected abstract String getMimeType();
+    protected final void registerCalculation(C calculation, AuditedObject aObj) {
+        synchronized(lock) {
+            this.calculation = calculation;
+            this.evtUtil = new CalculationEventUtil(aObj, calculation);
+            ic.add(calculation);
+        }
+    }
     
-    protected abstract C createCalculationProvider(Element root) throws Exception;
+    protected final C getCalculation() {
+        return calculation;
+    }
     
-    protected abstract AuditedObject createAuditedObject();
-    
-    protected abstract Displayable createDisplayable();
+    protected static String getPath(final FileObject file) {
+        synchronized(file) {
+            return Displayable.Utils.displayProjectPath(file);
+        }
+    }
     
     @Override
     protected int associateLookup() {
@@ -95,25 +89,28 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
         return lkp;
     }
 
+    protected final Object getThreadLock() {
+        return lock;
+    }
+    
     @Override
     public String getName() {
-        synchronized(calculation) {
+        synchronized(lock) {
             return getPrimaryFile().getName();
         }
     }
 
     @Override
     protected void handleDelete() throws IOException {
-        synchronized(calculation) {
+        synchronized(lock) {
             super.handleDelete();
-            evtUtil.flushAuditCache();
             evtUtil.fireDeleted();
         }
     }
 
     @Override
     protected DataObject handleCopy(DataFolder df) throws IOException {
-        synchronized(calculation) {
+        synchronized(lock) {
             if(isModified())
                 saveCalculation();
             CalculationDataObject result = (CalculationDataObject) super.handleCopy(df);
@@ -123,35 +120,113 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
     }
     
     private void saveCalculation() throws IOException {
+        FileObject pf = getPrimaryFile();
         try {
-            Element e = calculationToXml();
-            JDomUtil.save(getPrimaryFile(), e);
-            evtUtil.flushAuditCache();
+            Element e = toXml(calculation);
+            JDomUtil.save(pf, e);
             setModified(false);
         } catch (IOException ex) {
-            logger.log(Level.SEVERE, "", ex);
+            String msg = String.format("Unabel to save calculation to file ''%s''.", pf.getPath());
+            logger.log(Level.SEVERE, msg, ex);
             throw ex;
         }
     } 
     
-    protected abstract Element calculationToXml();
+    protected abstract Element toXml(C calculation);
 
     @Override
     protected FileObject handleRename(String name) throws IOException {
-        synchronized(calculation) {
+        synchronized(lock) {
             if(isModified())
                 saveCalculation();
             
             String oldPath = calculation.getPath();
             FileObject result = super.handleRename(name);
-            String path = Displayable.Utils.displayProjectPath(result);
-            calculation.setPath(path);
-            CalculationEventUtil.fireRenamed(this, oldPath);
+            renameCalculation(result);
+            evtUtil.fireRenamed(oldPath);
+            return result;
+        }
+    }
+    
+    protected abstract void renameCalculation(FileObject newFile);
+
+    @Override
+    protected FileObject handleMove(DataFolder df) throws IOException {
+        synchronized(lock) {
+            if(isModified())
+                saveCalculation();
+            
+            String oldPath = calculation.getPath();
+            FileObject result = super.handleMove(df);
+            renameCalculation(result);
+            evtUtil.fireRenamed(oldPath);
+            return result;
+        }
+    }
+
+    @Override
+    public void setModified(boolean modified) {
+        synchronized(lock) {
+            if(modified)
+                addSavable();
+            else 
+                removeSavable();
+            super.setModified(modified);
+        }
+    }
+    
+    private void addSavable() {
+        if(getLookup().lookup(Savable.class) == null)
+            ic.add(new ClaimTriangleSavable());
+    }
+    
+    private void removeSavable() {
+        Savable savable = getLookup().lookup(Savable.class);
+        if(savable != null)
+            ic.remove(savable);
+    }
+    
+    protected abstract Displayable createDisplayable();
+    
+    @Override
+    public boolean isModified() {
+        synchronized(lock) {
+            return super.isModified();
+        }
+    }
+    
+    @Override
+    public boolean isDeleteAllowed() {
+        synchronized(lock) {
+            return lkp.lookup(Deletable.class) != null;
+        }
+    }
+    
+    protected void setDeleteAllowed(boolean allowed) {
+        synchronized(lock) {
+            Deletable deletable = lkp.lookup(Deletable.class);
+            if(allowed && deletable == null) {
+                ic.add(new CalculationDeletable());
+            } else if(!allowed && deletable != null) {
+                ic.remove(deletable);
+            }
+        }
+    }
+    
+    @Override
+    protected DataObject handleCopyRename(DataFolder df, String name, String ext) throws IOException {
+        synchronized(lock) {
+            if(isModified())
+                saveCalculation();
+
+            CalculationDataObject result = (CalculationDataObject) super.handleCopyRename(df, name, ext);
+            result.evtUtil.fireCreated();
             return result;
         }
     }
     
     private class CalculationDeletable extends Deletable.DisplayableDeletable {
+        
         private CalculationDeletable() {
             super(createDisplayable());
         }
@@ -159,6 +234,31 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
         @Override
         public void delete() throws Exception {
             CalculationDataObject.this.delete();
+        }
+    }
+    
+    private class ClaimTriangleSavable extends AbstractDisplayableSavable {
+
+        public ClaimTriangleSavable() {
+            super(createDisplayable());
+            register();
+        }
+
+        @Override
+        protected void handleSave() throws IOException {
+            synchronized(lock) {
+                saveCalculation();
+            }
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this == obj;
+        }
+
+        @Override
+        public int hashCode() {
+            return CalculationDataObject.this.hashCode();
         }
     }
 }

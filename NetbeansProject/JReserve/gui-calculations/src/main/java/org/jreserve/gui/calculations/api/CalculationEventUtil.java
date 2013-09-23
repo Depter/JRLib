@@ -17,10 +17,11 @@
 
 package org.jreserve.gui.calculations.api;
 
+import java.util.LinkedList;
+import java.util.Queue;
 import org.jreserve.gui.misc.audit.event.AbstractAuditEvent;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -29,138 +30,90 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "# {0} - source",
-    "MSG.CalculationEventUtil.CreatedFrom=Created from ''{0}''.",
-    "MSG.CalculationEventUtil.Created=Created.",
-    "MSG.CalculationEventUtil.Deleted=Deleted.",
-    "# {0} - oldName",
-    "# {1} - newName",
-    "MSG.CalculationEventUtil.Renamed=Renamed ''{0}'' => ''{1}''.",
-    "MSG.CalculationEventUtil.Changed=Calculation changed."
+    "LBL.CalculationEventUtil2.Created=Created.",
+    "LBL.CalculationEventUtil2.Deleted=Deleted.",
+    "# {0} - oldPath",
+    "# {1} - newPath",
+    "LBL.CalculationEventUtil2.Renamed=Renamed from ''{0}'' to ''{1}''."
 })
-public class CalculationEventUtil extends AbstractAuditEvent implements CalculationEvent {
+public class CalculationEventUtil {
+
+    private final AuditedObject auditedObject;
+    private final CalculationProvider calculation;
+    private final Queue<AbstractAuditEvent> auditCache = new LinkedList<AbstractAuditEvent>();
     
-    public static void fireCreated(DataObject obj, DataObject sourceObj) {
-        AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
-        CalculationProvider ds = obj.getLookup().lookup(CalculationProvider.class);
-        CalculationProvider source = sourceObj.getLookup().lookup(CalculationProvider.class);
-        fireEvent(new Created(ao, ds, source));
+    public CalculationEventUtil(AuditedObject auditedObject, CalculationProvider calculation) {
+        this.auditedObject = auditedObject;
+        this.calculation = calculation;
     }
     
-    public static void fireCreated(DataObject obj) {
-        AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
-        CalculationProvider cp = obj.getLookup().lookup(CalculationProvider.class);
-        fireCreated(ao, cp);
+    public void fireCreated() {
+        synchronized(calculation) {
+            fireEvent(new Created());
+            fireEvent(new AbstractAuditEvent(auditedObject, Bundle.LBL_CalculationEventUtil2_Created()));
+        }
     }
     
-    public static void fireCreated(AuditedObject ao, CalculationProvider cp) {
-        fireEvent(new Created(ao, cp));
-    }
-    
-    public static void fireEvent(CalculationEvent evt) {
+    private void fireEvent(Object evt) {
         EventBusManager.getDefault().publish(evt);
     }
     
-    public static void fireDeleted(DataObject obj) {
-        AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
-        CalculationProvider cp = obj.getLookup().lookup(CalculationProvider.class);
-        fireDeleted(ao, cp);
-    }
-    
-    public static void fireDeleted(AuditedObject ao, CalculationProvider cp) {
-        fireEvent(new Deleted(ao, cp));
-    }
-    
-    public static void fireRenamed(DataObject obj, String oldPath) {
-        AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
-        CalculationProvider cp = obj.getLookup().lookup(CalculationProvider.class);
-        fireRenamed(ao, cp, oldPath);
-    }
-    
-    public static void fireRenamed(AuditedObject ao, CalculationProvider cp, String oldPath) {
-        fireEvent(new Renamed(ao, cp, oldPath));
-    }
-    
-    public static void fireChanged(DataObject obj) {
-        fireChanged(obj, Bundle.MSG_CalculationEventUtil_Changed());
-    }
-    
-    public static void fireChanged(DataObject obj, String change) {
-        AuditedObject ao = obj.getLookup().lookup(AuditedObject.class);
-        CalculationProvider cp = obj.getLookup().lookup(CalculationProvider.class);
-        fireChanged(ao, cp, change);
-    }
-    
-    public static void fireChanged(AuditedObject ao, CalculationProvider cp, String change) {
-        fireEvent(new Change(ao, cp, change));
-    }
-
-    private final CalculationProvider cp;
-    
-    private CalculationEventUtil(AuditedObject obj, CalculationProvider cp, String change) {
-        super(obj, change);
-        this.cp = cp;
-    }
-
-    @Override
-    public CalculationProvider getCalculationProvider() {
-        return cp;
-    }
-
-    
-    private static class Created extends CalculationEventUtil implements CalculationEvent.Created {
-        private Created(AuditedObject ao, CalculationProvider cp, CalculationProvider source) {
-            super(ao, cp, Bundle.MSG_CalculationEventUtil_CreatedFrom(source.getPath()));
+    public void fireDeleted() {
+        synchronized(calculation) {
+            fireEvent(new Deleted());
+            fireEvent(new AbstractAuditEvent(auditedObject, Bundle.LBL_CalculationEventUtil2_Deleted()));
         }
-        
-        private Created(AuditedObject ao, CalculationProvider cp) {
-            super(ao, cp, Bundle.MSG_CalculationEventUtil_Created());
+    }
+    
+    public void fireRenamed(String oldPath) {
+        synchronized(calculation) {
+            fireEvent(new Renamed(oldPath));
+            String path = calculation.getPath();
+            fireEvent(new AbstractAuditEvent(auditedObject, Bundle.LBL_CalculationEventUtil2_Renamed(oldPath, path)));
         }
-        
+    }
+    
+    public void fireChange(String change) {
+        synchronized(calculation) {
+            fireEvent(new Changed());
+            auditCache.add(new AbstractAuditEvent(auditedObject, change));
+        }
+    }
+    
+    public void clearAuditCache() {
+        synchronized(calculation) {
+            auditCache.clear();
+        }
+    }
+    
+    public void flushAuditCache() {
+        synchronized(calculation) {
+            AbstractAuditEvent evt;
+            while((evt = auditCache.poll()) != null)
+                fireEvent(evt);
+        }
+    }
+    
+    private class Event implements CalculationEvent {
         @Override
-        public String toString() {
-            return "Calculation created: "+super.getComponent();
+        public CalculationProvider getCalculationProvider() {
+            return calculation;
         }
     }
     
-    private static class Deleted extends CalculationEventUtil implements CalculationEvent.Deleted {
-        private Deleted(AuditedObject ao, CalculationProvider cp) {
-            super(ao, cp, Bundle.MSG_CalculationEventUtil_Deleted());
-        }
-        
-        @Override
-        public String toString() {
-            return "Calculation deleted: "+super.getComponent();
-        }
-    }
-    
-    private static class Renamed extends CalculationEventUtil implements CalculationEvent.Renamed {
+    private class Created extends Event implements CalculationEvent.Created {}
+    private class Deleted extends Event implements CalculationEvent.Deleted {}
+    private class Changed extends Event implements CalculationEvent.Change {}
+    private class Renamed extends Event implements CalculationEvent.Renamed {
         private final String oldPath;
-        
-        private Renamed(AuditedObject ao, CalculationProvider cp, String oldPath) {
-            super(ao, cp, Bundle.MSG_CalculationEventUtil_Renamed(oldPath, cp.getPath()));
+
+        private Renamed(String oldPath) {
             this.oldPath = oldPath;
         }
-
+        
         @Override
         public String getOldPath() {
             return oldPath;
-        }
-        
-        @Override
-        public String toString() {
-            return "Calculation renamed: "+oldPath+" => " + super.getComponent();
-        }
-    }
-    
-    public static class Change extends CalculationEventUtil implements CalculationEvent.Change {
-        protected Change(AuditedObject ao, CalculationProvider cp, String change) {
-            super(ao, cp, change);
-        }
-        
-        @Override
-        public String toString() {
-            return "Calculation changed: "+super.getComponent();
         }
     }
 }

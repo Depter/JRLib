@@ -95,15 +95,11 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
         modificationsChanged();
     }
 
-    @Override
-    public C createCalculation() throws Exception {
-        C calculation = createBaseCalculation();
+    protected C modifyCalculation(C calculation) throws Exception {
         for(CalculationModifier<C> mf : modifications)
             calculation = mf.createCalculation(calculation);
         return calculation;
     }
-    
-    protected abstract C createBaseCalculation() throws Exception;
     
     protected Element toXml() {
         Element root = new Element(MODIFICATIONS_ELEMENT);
