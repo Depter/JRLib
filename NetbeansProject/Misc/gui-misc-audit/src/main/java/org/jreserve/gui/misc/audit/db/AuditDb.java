@@ -27,10 +27,6 @@ import org.jreserve.gui.misc.audit.event.AuditRecord;
  */
 public interface AuditDb {
     
-//    public FileObject getProjectDir();
-//    
-//    public FileObject getDbFile();
-    
     public void storeEvent(AuditEvent event);
     
     public List<AuditRecord> getAuditRecords();

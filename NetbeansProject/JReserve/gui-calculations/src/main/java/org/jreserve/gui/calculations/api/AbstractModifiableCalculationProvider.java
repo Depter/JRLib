@@ -18,6 +18,8 @@ package org.jreserve.gui.calculations.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.util.CalculationModifierFactoryRegistry;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -29,25 +31,33 @@ import org.jreserve.jrlib.CalculationData;
  * @version 1.0
  */
 public abstract class AbstractModifiableCalculationProvider<C extends CalculationData>
+    extends AbstractCalculationProvider<C>
     implements ModifiableCalculationProvider<C> {
 
     public final static String MODIFICATIONS_ELEMENT = "modifications";
     
     private List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
     private final Class<C> clazz;
+    private final ModificationListener cmListener = new ModificationListener();
+    //private C calculation;
     
-    protected AbstractModifiableCalculationProvider(Class<C> clazz) {
+    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Class<C> clazz) {
+        super(obj);
         this.clazz = clazz;
     }
     
-    protected AbstractModifiableCalculationProvider(Element parent, Class<C> category) throws Exception {
+    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Element parent, Class<C> category) throws Exception {
+        super(obj);
         this.clazz = category;
         Element mr = JDomUtil.getExistingChild(parent, MODIFICATIONS_ELEMENT);
         for(Element me : mr.getChildren()) {
             String rootName = me.getName();
             CalculationModifierFactory<C> factory = CalculationModifierFactoryRegistry.getFactory(category, rootName);
-            if(factory != null)
-                modifications.add(factory.fromXml(me));
+            if(factory != null) {
+                CalculationModifier cm = factory.fromXml(me);
+                cm.addChangeListener(cmListener);
+                modifications.add(cm);
+            }
         }
     }
     
@@ -57,42 +67,65 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     }
     
     @Override
-    public synchronized int getModificationCount() {
-        return modifications.size();
+    public int getModificationCount() {
+        synchronized(super.obj.lock) {
+            return modifications.size();
+        }
     }
 
     @Override
-    public synchronized CalculationModifier<C> getModificationAt(int index) {
-        return modifications.get(index);
+    public CalculationModifier<C> getModificationAt(int index) {
+        synchronized(super.obj.lock) {
+            return modifications.get(index);
+        }
     }
 
     @Override
-    public synchronized void setModification(int index, CalculationModifier<C> cm) {
-        if(cm == null)
-            throw new NullPointerException("ModificationFactory is null!");
-        modifications.set(index, cm);
-        modificationsChanged();
+    public void setModification(int index, CalculationModifier<C> cm) {
+        synchronized(super.obj.lock) {
+            if(cm == null)
+                throw new NullPointerException("ModificationFactory is null!");
+            CalculationModifier removed = modifications.set(index, cm);
+            cm.addChangeListener(cmListener);
+            modificationsChanged();
+            
+            if(removed != null) {
+                removed.removeChangeListener(cmListener);
+                super.events.fireModificationDeleted(removed);
+            }
+            super.events.fireModificationAdded(cm);
+        }
     }
-
+    
     protected abstract void modificationsChanged();
     
     @Override
-    public synchronized void addModification(CalculationModifier<C> cm) {
-        this.addModification(modifications.size(), cm);
+    public void addModification(CalculationModifier<C> cm) {
+        synchronized(super.obj.lock) {
+            this.addModification(modifications.size(), cm);
+        }
     }
     
     @Override
-    public synchronized void addModification(int index, CalculationModifier<C> cm) {
-        if(cm == null)
-            throw new NullPointerException("ModificationFactory is null!");
-        modifications.add(index, cm);
-        modificationsChanged();
+    public void addModification(int index, CalculationModifier<C> cm) {
+        synchronized(super.obj.lock) {
+            if(cm == null)
+                throw new NullPointerException("ModificationFactory is null!");
+            modifications.add(index, cm);
+            cm.addChangeListener(cmListener);
+            modificationsChanged();
+            super.events.fireModificationAdded(cm);
+        }
     }
 
     @Override
-    public synchronized void deleteModification(int index) {
-        modifications.remove(index);
-        modificationsChanged();
+    public void deleteModification(int index) {
+        synchronized(super.obj.lock) {
+            CalculationModifier cm = modifications.remove(index);
+            cm.removeChangeListener(cmListener);
+            modificationsChanged();
+            super.events.fireModificationDeleted(cm);
+        }
     }
 
     protected C modifyCalculation(C calculation) throws Exception {
@@ -106,5 +139,15 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
         for(CalculationModifier cm : modifications)
             root.addContent(cm.toXml());
         return root;
+    }
+    
+    private class ModificationListener implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            synchronized(AbstractModifiableCalculationProvider.super.obj.lock) {
+                modificationsChanged();
+            }
+        }
     }
 }

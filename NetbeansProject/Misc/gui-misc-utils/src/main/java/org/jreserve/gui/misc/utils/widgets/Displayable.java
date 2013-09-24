@@ -16,12 +16,14 @@
  */
 package org.jreserve.gui.misc.utils.widgets;
 
+import java.awt.Image;
+import java.beans.BeanInfo;
 import javax.swing.Icon;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -56,7 +58,7 @@ public interface Displayable {
             return path.toString();
         }
         
-        public static String displayPath(Node node) {
+        public static String displayPath(org.openide.nodes.Node node) {
             StringBuilder path = new StringBuilder();
             while(node != null) {
                 if(path.length() > 0)
@@ -69,5 +71,25 @@ public interface Displayable {
         }
         
         private Utils() {}
+    }
+    
+    public static class Node implements Displayable {
+        
+        private final org.openide.nodes.Node node;
+        
+        public Node(org.openide.nodes.Node node) {
+            this.node = node;
+        }
+        
+        @Override
+        public Icon getIcon() {
+            Image img = node.getIcon(BeanInfo.ICON_COLOR_16x16);
+            return ImageUtilities.image2Icon(img);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Displayable.Utils.displayPath(node);
+        }
     }
 }

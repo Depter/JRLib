@@ -20,7 +20,6 @@ package org.jreserve.gui.calculations.api;
 import java.util.LinkedList;
 import java.util.Queue;
 import org.jreserve.gui.misc.audit.event.AbstractAuditEvent;
-import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.openide.util.NbBundle.Messages;
 
@@ -34,64 +33,74 @@ import org.openide.util.NbBundle.Messages;
     "LBL.CalculationEventUtil2.Deleted=Deleted.",
     "# {0} - oldPath",
     "# {1} - newPath",
-    "LBL.CalculationEventUtil2.Renamed=Renamed from ''{0}'' to ''{1}''."
+    "LBL.CalculationEventUtil2.Renamed=Renamed from ''{0}'' to ''{1}''.",
+    "# {0} - modification",
+    "LBL.CalculationEventUtil2.Modification.Added=Modification added. {0}.",
+    "# {0} - modification",
+    "LBL.CalculationEventUtil2.Modification.Deleted=Modification deleted. {0}.",
+    "# {0} - modification",
+    "LBL.CalculationEventUtil2.Modification.Changed=Modification changed. {0}."
 })
-public class CalculationEventUtil {
+class CalculationEventUtil {
 
-    private final AuditedObject auditedObject;
-    private final CalculationProvider calculation;
+    private final AbstractCalculationProvider calculation;
     private final Queue<AbstractAuditEvent> auditCache = new LinkedList<AbstractAuditEvent>();
     
-    public CalculationEventUtil(AuditedObject auditedObject, CalculationProvider calculation) {
-        this.auditedObject = auditedObject;
+    CalculationEventUtil(AbstractCalculationProvider calculation) {
         this.calculation = calculation;
     }
     
-    public void fireCreated() {
-        synchronized(calculation) {
-            fireEvent(new Created());
-            fireEvent(new AbstractAuditEvent(auditedObject, Bundle.LBL_CalculationEventUtil2_Created()));
-        }
+    void fireCreated() {
+        fireEvent(new Created());
+        fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Created()));
     }
     
-    private void fireEvent(Object evt) {
+    void fireEvent(Object evt) {
         EventBusManager.getDefault().publish(evt);
     }
     
-    public void fireDeleted() {
-        synchronized(calculation) {
-            fireEvent(new Deleted());
-            fireEvent(new AbstractAuditEvent(auditedObject, Bundle.LBL_CalculationEventUtil2_Deleted()));
-        }
+    void fireDeleted() {
+        fireEvent(new Deleted());
+        fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Deleted()));
     }
     
-    public void fireRenamed(String oldPath) {
-        synchronized(calculation) {
-            fireEvent(new Renamed(oldPath));
-            String path = calculation.getPath();
-            fireEvent(new AbstractAuditEvent(auditedObject, Bundle.LBL_CalculationEventUtil2_Renamed(oldPath, path)));
-        }
+    void fireRenamed(String oldPath) {
+        fireEvent(new Renamed(oldPath));
+        String path = calculation.getPath();
+        fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Renamed(oldPath, path)));
     }
     
-    public void fireChange(String change) {
-        synchronized(calculation) {
-            fireEvent(new Changed());
-            auditCache.add(new AbstractAuditEvent(auditedObject, change));
-        }
+    void fireChange(String change) {
+        fireEvent(new Changed());
+        auditCache.add(new AbstractAuditEvent(calculation, change));
     }
     
-    public void clearAuditCache() {
-        synchronized(calculation) {
-            auditCache.clear();
-        }
+    void fireModificationAdded(CalculationModifier modifier) {
+        fireEvent(new ModificationAdded(modifier));
+        String description = modifier.getDescription();
+        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Added(description)));
     }
     
-    public void flushAuditCache() {
-        synchronized(calculation) {
-            AbstractAuditEvent evt;
-            while((evt = auditCache.poll()) != null)
-                fireEvent(evt);
-        }
+    void fireModificationDeleted(CalculationModifier modifier) {
+        fireEvent(new ModificationDeleted(modifier));
+        String description = modifier.getDescription();
+        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Deleted(description)));
+    }
+    
+    void fireModificationChanged(CalculationModifier modifier) {
+        fireEvent(new ModificationChanged(modifier));
+        String description = modifier.getDescription();
+        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Changed(description)));
+    }
+    
+    void clearAuditCache() {
+        auditCache.clear();
+    }
+    
+    void flushAuditCache() {
+        AbstractAuditEvent evt;
+        while((evt = auditCache.poll()) != null)
+            fireEvent(evt);
     }
     
     private class Event implements CalculationEvent {
@@ -114,6 +123,38 @@ public class CalculationEventUtil {
         @Override
         public String getOldPath() {
             return oldPath;
+        }
+    }
+    
+    private class ModificationChange extends Event implements CalculationEvent.ModificationChange {
+        
+        private final CalculationModifier modifier;
+
+        private ModificationChange(CalculationModifier modifier) {
+            this.modifier = modifier;
+        }
+        
+        @Override
+        public CalculationModifier getModifier() {
+            return modifier;
+        }
+    }
+    
+    private class ModificationAdded extends ModificationChange implements CalculationEvent.ModificationAdded {
+        private ModificationAdded(CalculationModifier modifier) {
+            super(modifier);
+        }
+    }
+    
+    private class ModificationDeleted extends ModificationChange implements CalculationEvent.ModificationDeleted {
+        private ModificationDeleted(CalculationModifier modifier) {
+            super(modifier);
+        }
+    }
+    
+    private class ModificationChanged extends ModificationChange implements CalculationEvent.ModificationChanged {
+        private ModificationChanged(CalculationModifier modifier) {
+            super(modifier);
         }
     }
 }

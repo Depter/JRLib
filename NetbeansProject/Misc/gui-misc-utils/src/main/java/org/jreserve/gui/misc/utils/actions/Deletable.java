@@ -21,7 +21,6 @@ import java.beans.BeanInfo;
 import javax.swing.Icon;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
-import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -53,9 +52,9 @@ public interface Deletable extends Displayable {
     
     public static abstract class NodeDeletable implements Deletable {
         
-        protected final Node node;
+        protected final org.openide.nodes.Node node;
 
-        protected NodeDeletable(Node node) {
+        protected NodeDeletable(org.openide.nodes.Node node) {
             this.node = node;
         }
         

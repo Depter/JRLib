@@ -35,4 +35,12 @@ public interface CalculationEvent {
     }
     
     public static interface Change extends CalculationEvent {}
+    
+    public static interface ModificationChange extends Change {
+        public CalculationModifier getModifier();
+    }
+    
+    public static interface ModificationAdded extends ModificationChange {}
+    public static interface ModificationDeleted extends ModificationChange {}
+    public static interface ModificationChanged extends ModificationChange {}
 }

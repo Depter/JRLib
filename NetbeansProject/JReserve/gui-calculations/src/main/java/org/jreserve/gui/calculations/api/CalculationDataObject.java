@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
-import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.utils.actions.AbstractDisplayableSavable;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
@@ -43,34 +42,18 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class CalculationDataObject<C extends CalculationProvider> extends MultiDataObject {
+public abstract class CalculationDataObject extends MultiDataObject {
 
     private final static Logger logger = Logger.getLogger(CalculationDataObject.class.getName());
     private final static int LKP_VERSION = 1;
     
-    private final Object lock = new Object();
+    protected final Object lock = new Object();
     protected final InstanceContent ic = new InstanceContent();
     private final Lookup lkp;
-    private C calculation;
-    private CalculationEventUtil evtUtil;
     
     public CalculationDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException {
         super(fo, loader);
         lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
-        if(lkp.lookup(CalculationDataObject.class) == null)
-            ic.add(this);
-    }
-
-    protected final void registerCalculation(C calculation, AuditedObject aObj) {
-        synchronized(lock) {
-            this.calculation = calculation;
-            this.evtUtil = new CalculationEventUtil(aObj, calculation);
-            ic.add(calculation);
-        }
-    }
-    
-    protected final C getCalculation() {
-        return calculation;
     }
     
     protected static String getPath(final FileObject file) {
@@ -104,8 +87,18 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
     protected void handleDelete() throws IOException {
         synchronized(lock) {
             super.handleDelete();
-            evtUtil.fireDeleted();
+            getCalculation().events.fireDeleted();
         }
+    }
+    
+    private AbstractCalculationProvider getCalculation() {
+        AbstractCalculationProvider calculation = getLookup().lookup(AbstractCalculationProvider.class);
+        if(calculation == null) {
+            String msg = String.format("No instance of '%s' found in the lookup!", AbstractCalculationProvider.class.getName());
+            logger.log(Level.SEVERE, msg);
+            throw new IllegalStateException(msg);
+        }
+        return calculation;
     }
 
     @Override
@@ -114,7 +107,7 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
             if(isModified())
                 saveCalculation();
             CalculationDataObject result = (CalculationDataObject) super.handleCopy(df);
-            result.evtUtil.fireCreated();
+            result.getCalculation().events.fireDeleted();
             return result;
         }
     }
@@ -122,8 +115,10 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
     private void saveCalculation() throws IOException {
         FileObject pf = getPrimaryFile();
         try {
-            Element e = toXml(calculation);
+            AbstractCalculationProvider calculation = getCalculation();
+            Element e = calculation.toXml();
             JDomUtil.save(pf, e);
+            calculation.events.flushAuditCache();
             setModified(false);
         } catch (IOException ex) {
             String msg = String.format("Unabel to save calculation to file ''%s''.", pf.getPath());
@@ -131,8 +126,6 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
             throw ex;
         }
     } 
-    
-    protected abstract Element toXml(C calculation);
 
     @Override
     protected FileObject handleRename(String name) throws IOException {
@@ -140,15 +133,11 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
             if(isModified())
                 saveCalculation();
             
-            String oldPath = calculation.getPath();
             FileObject result = super.handleRename(name);
-            renameCalculation(result);
-            evtUtil.fireRenamed(oldPath);
+            getCalculation().setPath(getPath(result));
             return result;
         }
     }
-    
-    protected abstract void renameCalculation(FileObject newFile);
 
     @Override
     protected FileObject handleMove(DataFolder df) throws IOException {
@@ -156,10 +145,8 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
             if(isModified())
                 saveCalculation();
             
-            String oldPath = calculation.getPath();
             FileObject result = super.handleMove(df);
-            renameCalculation(result);
-            evtUtil.fireRenamed(oldPath);
+            getCalculation().setPath(getPath(result));
             return result;
         }
     }
@@ -186,7 +173,14 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
             ic.remove(savable);
     }
     
-    protected abstract Displayable createDisplayable();
+    protected Displayable getDisplayable() {
+        synchronized(lock) {
+            Displayable result = getLookup().lookup(Displayable.class);
+            if(result == null)
+                result = new Displayable.Node(getNodeDelegate());
+            return result;
+        }
+    }
     
     @Override
     public boolean isModified() {
@@ -220,7 +214,7 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
                 saveCalculation();
 
             CalculationDataObject result = (CalculationDataObject) super.handleCopyRename(df, name, ext);
-            result.evtUtil.fireCreated();
+            result.getCalculation().events.fireCreated();
             return result;
         }
     }
@@ -228,7 +222,7 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
     private class CalculationDeletable extends Deletable.DisplayableDeletable {
         
         private CalculationDeletable() {
-            super(createDisplayable());
+            super(getDisplayable());
         }
         
         @Override
@@ -240,7 +234,7 @@ public abstract class CalculationDataObject<C extends CalculationProvider> exten
     private class ClaimTriangleSavable extends AbstractDisplayableSavable {
 
         public ClaimTriangleSavable() {
-            super(createDisplayable());
+            super(getDisplayable());
             register();
         }
 
