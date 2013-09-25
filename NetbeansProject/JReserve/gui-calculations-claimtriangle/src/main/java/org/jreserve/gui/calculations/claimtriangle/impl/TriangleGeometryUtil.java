@@ -119,7 +119,9 @@ public class TriangleGeometryUtil {
         }
         
         void addEntry(DataEntry entry) {
-            getRow(entry).addEntry(entry);
+            AccidentRow row = getRow(entry);
+            if(row != null)
+                row.addEntry(entry);
         }
         
         private AccidentRow getRow(DataEntry entry) {
@@ -162,7 +164,9 @@ public class TriangleGeometryUtil {
         }
         
         void addEntry(DataEntry entry) {
-            getCell(entry).addEntry(entry);
+            DevelopmentCell cell = getCell(entry);
+            if(cell != null)
+                cell.addEntry(entry);
         }
         
         private DevelopmentCell getCell(DataEntry entry) {

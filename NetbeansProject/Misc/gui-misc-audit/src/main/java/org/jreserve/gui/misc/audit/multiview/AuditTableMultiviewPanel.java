@@ -75,7 +75,8 @@ import org.openide.util.actions.SystemAction;
 public class AuditTableMultiviewPanel extends JPanel {
     private final static String LOADING_CARD = "loadingCard";  //NOI18
     private final static String TABLE_CARD = "tableCard";  //NOI18
-
+    private final static String TIME_FORMAT = "HH:mm:ss";
+    
     private Auditable auditable;
     private CardLayout layout;
     private AuditRecordTableModel tableModel = new AuditRecordTableModel();
@@ -245,7 +246,7 @@ public class AuditTableMultiviewPanel extends JPanel {
                 df = new SimpleDateFormat();
             } else {
                 try {
-                    df = new SimpleDateFormat(format);
+                    df = new SimpleDateFormat(format+" "+TIME_FORMAT);
                 } catch (Exception ex) {
                     df = new SimpleDateFormat();
                 }

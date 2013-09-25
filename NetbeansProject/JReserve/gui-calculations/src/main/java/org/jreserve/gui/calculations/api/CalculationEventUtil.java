@@ -41,7 +41,7 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - modification",
     "LBL.CalculationEventUtil2.Modification.Changed=Modification changed. {0}."
 })
-class CalculationEventUtil {
+public class CalculationEventUtil {
 
     private final AbstractCalculationProvider calculation;
     private final Queue<AbstractAuditEvent> auditCache = new LinkedList<AbstractAuditEvent>();
@@ -50,54 +50,58 @@ class CalculationEventUtil {
         this.calculation = calculation;
     }
     
-    void fireCreated() {
+    public void fireCreated() {
         fireEvent(new Created());
         fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Created()));
     }
     
-    void fireEvent(Object evt) {
+    public void fireEvent(Object evt) {
         EventBusManager.getDefault().publish(evt);
     }
     
-    void fireDeleted() {
+    public void fireDeleted() {
         fireEvent(new Deleted());
         fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Deleted()));
     }
     
-    void fireRenamed(String oldPath) {
+    public void fireRenamed(String oldPath) {
         fireEvent(new Renamed(oldPath));
         String path = calculation.getPath();
         fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Renamed(oldPath, path)));
     }
     
-    void fireChange(String change) {
+    public void fireChange() {
+        fireEvent(new Changed());
+    }
+    
+    public void fireChange(String change) {
         fireEvent(new Changed());
         auditCache.add(new AbstractAuditEvent(calculation, change));
     }
     
-    void fireModificationAdded(CalculationModifier modifier) {
+    public void fireModificationAdded(CalculationModifier modifier) {
         fireEvent(new ModificationAdded(modifier));
         String description = modifier.getDescription();
         auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Added(description)));
     }
     
-    void fireModificationDeleted(CalculationModifier modifier) {
+    public void fireModificationDeleted(CalculationModifier modifier) {
         fireEvent(new ModificationDeleted(modifier));
         String description = modifier.getDescription();
         auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Deleted(description)));
     }
     
-    void fireModificationChanged(CalculationModifier modifier) {
+    public void fireModificationChanged(CalculationModifier modifier) {
         fireEvent(new ModificationChanged(modifier));
         String description = modifier.getDescription();
         auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Changed(description)));
     }
     
-    void clearAuditCache() {
+    public void clearAuditCache() {
         auditCache.clear();
     }
     
-    void flushAuditCache() {
+    public void flushAuditCache() {
         AbstractAuditEvent evt;
         while((evt = auditCache.poll()) != null)
             fireEvent(evt);

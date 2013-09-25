@@ -163,7 +163,7 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
                 FileObject file = createFile(wizard);
                 JDomUtil.save(file, root);
                 result = DataObject.find(file);
-                CalculationEventUtil.fireCreated(result);
+                result.getLookup().lookup(ClaimTriangleCalculationImpl.class).fireCreated();
             } catch (IOException ex) {
                 this.exception = ex;
             }

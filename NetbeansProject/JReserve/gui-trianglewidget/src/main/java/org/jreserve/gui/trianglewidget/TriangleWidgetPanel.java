@@ -16,6 +16,9 @@
  */
 package org.jreserve.gui.trianglewidget;
 
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,12 +29,16 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
+import org.jreserve.gui.trianglewidget.model.TitleModel;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelAdapter;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelRegistry;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
+import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.triangle.TriangleUtil;
 
 /**
  *
@@ -167,6 +174,11 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
 
         cummulatedCheck.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(cummulatedCheck, null);
+        cummulatedCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cummulatedCheckActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
@@ -255,6 +267,10 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
         triangleWidget.setLayers(selected);
     }//GEN-LAST:event_layerComboActionPerformed
 
+    private void cummulatedCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cummulatedCheckActionPerformed
+        triangleWidget.setCummulated(cummulatedCheck.isSelected());
+    }//GEN-LAST:event_cummulatedCheckActionPerformed
+
     private void scaleSpinnerChanged(ChangeEvent evt) {
         LocaleSettings.DecimalFormatter df = triangleWidget.getDecimalFormatter();
         df.setDecimalCount((Integer)scaleSpinner.getValue());
@@ -297,6 +313,10 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
         return layoutCombo.isVisible();
     }
     
+    public ClipboardUtil.Copiable createCopiable() {
+        return new TriangleCopiable();
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox cummulatedCheck;
     private javax.swing.JLabel cumulatedLabel;
@@ -312,4 +332,107 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane widgetScroll;
     // End of variables declaration//GEN-END:variables
 
+    private class TriangleCopiable implements ClipboardUtil.Copiable {
+
+        private char separator;
+        private String nan;
+        private String inf;
+        private StringBuilder sb = new StringBuilder();
+        private TriangleModel model;
+        private TitleModel columnNames;
+        private TitleModel rowNames;
+        private int rows;
+        private int columns;
+        private double[][] values;
+        
+        @Override
+        public boolean canCopy() {
+            return true;
+        }
+        
+        @Override
+        public Transferable clipboardCopy() throws IOException {
+            initState();
+            String result = toStringTriangle();
+            clearState();
+            return new StringSelection(result);
+        }
+        
+        private void initState() {
+            separator = LocaleSettings.getDecimalSeparator();
+            nan = LocaleSettings.getNaN();
+            inf = LocaleSettings.getInfinity();
+            model = triangleWidget.getModel();
+            rowNames = model.getVerticalTitleModel();
+            columnNames = model.getHorizontalTitleModel();
+            rows = model.getRowCount();
+            columns = model.getColumnCount();
+            
+            values = model.getTriangle().toArray();
+            if(!triangleWidget.isCummulated())
+                TriangleUtil.deCummulate(values);
+        }
+        
+        private String toStringTriangle() {
+            appendHeader();
+            for(int r=0; r<rows; r++) {
+                sb.append('\n');
+                appendRow(r);
+            }
+            return sb.toString();
+        }
+        
+        private void appendHeader() {
+            for(int c=0; c<columns; c++)
+                sb.append('\t').append(columnNames.getName(triangleWidget, c));
+        }
+        
+        private void appendRow(int row) {
+            sb.append(rowNames.getName(triangleWidget, row));
+            for(int c=0; c<columns; c++) {
+                sb.append('\t');
+                if(model.hasValueAt(row, c))
+                    appendCell(row, c);
+            }
+        }
+        
+        private void appendCell(int row, int column) {
+            double value = getValueAt(row, column);
+            String str = toString(value);
+            sb.append(str);
+        }
+        
+        private double getValueAt(int row, int column) {
+            int accident = model.getAccidentIndex(row, column);
+            int development = model.getDevelopmentIndex(row, column);
+            if(accident < 0 || accident >= values.length)
+                return Double.NaN;
+            double[] rValues = values[accident];
+            if(development < 0 || development >= rValues.length)
+                return Double.NaN;
+            return rValues[development];
+        }
+        
+        private String toString(double value) {
+            if(Double.isNaN(value))
+                return nan;
+            else if(Double.isInfinite(value))
+                return inf;
+            else
+                return (""+value).replace('.', separator);
+        }
+    
+        private void clearState() {
+            separator = '.';
+            nan = null;
+            inf = null;
+            model = null;
+            rowNames = null;
+            columnNames = null;
+            rows = 0;
+            columns = 0;
+            values = null;
+            sb.setLength(0);
+        }
+    }
 }

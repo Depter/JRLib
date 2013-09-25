@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.project">
-    <module_version install_time="1379614233445" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1380108644151" last="true" origin="installer" specification_version="1.0">
         <file crc="453073757" name="config/Modules/org-jreserve-gui-project.xml"/>
-        <file crc="2758259109" name="modules/org-jreserve-gui-project.jar"/>
+        <file crc="1390313362" name="modules/org-jreserve-gui-project.jar"/>
+        <file crc="464232786" name="update_tracking/org-jreserve-gui-project.xml"/>
     </module_version>
 </module>

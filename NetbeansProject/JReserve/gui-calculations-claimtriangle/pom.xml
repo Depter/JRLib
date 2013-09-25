@@ -12,7 +12,7 @@
     <artifactId>gui-calculations-claimtriangle</artifactId>
     <packaging>nbm</packaging>
 
-    <name>gui-calculations-claimtriangle</name>
+    <name>org-jreserve-gui-calculations-claimtriangle</name>
     
     <licenses>
         <license>

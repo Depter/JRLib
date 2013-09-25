@@ -16,17 +16,12 @@
  */
 package org.jreserve.gui.misc.expandable.view;
 
-import java.awt.Component;
-import java.awt.KeyboardFocusManager;
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
 import org.jreserve.gui.misc.expandable.ExpandableContainerHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 import org.netbeans.core.spi.multiview.CloseOperationState;
@@ -42,12 +37,10 @@ import org.openide.util.lookup.ProxyLookup;
  */
 abstract class AbstractExpandableContainerHandler implements ExpandableContainerHandler {
 
-    private final static String FOCUS_OWNER = "focusOwner";
     private final static int UNDO_LIMIT = 30;
     
     private ExpandableElementDescription[] elements;
     private JComponent component;
-    private FocusListenr focusListener;
     private ExpandableElementDescription selected;
     private ExtendableLookup lookup;
     private UndoRedo.Manager undoRedo;
@@ -74,20 +67,12 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
     
     @Override
     public JComponent getComponent() {
-        if(component == null) {
+        if(component == null)
             this.component = createComponent();
-            initFocusListenr();
-        }
         return component;
     }
     
     protected abstract JComponent createComponent();
-
-    private void initFocusListenr() {
-        focusListener = new FocusListenr();
-        KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        mgr.addPropertyChangeListener(FOCUS_OWNER, focusListener);
-    }
     
     @Override
     public ExpandableElementDescription[] getElements() {
@@ -106,17 +91,8 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
 
     @Override
     public void componentClosed() {
-        removeFocusListener();
         for(ExpandableElementDescription description : elements)
             description.getElement().componentClosed();
-    }
-    
-    private void removeFocusListener() {
-        if(focusListener != null) {
-            KeyboardFocusManager mgr = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-            mgr.removePropertyChangeListener(focusListener);
-            focusListener = null;
-        }
     }
 
     @Override
@@ -180,27 +156,10 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
     
     protected abstract JComponent getComponentFor(ExpandableElementDescription description);
     
-    private class FocusListenr implements PropertyChangeListener {
-
-        @Override
-        public void propertyChange(PropertyChangeEvent evt) {
-            Object owner = evt.getNewValue();
-            if(owner instanceof Component) {
-                focusChanged((Component) owner);
-                lookup.updateLookups();
-            }
-        }
-        
-        private void focusChanged(Component owner) {
-            selected = null;
-            for(ExpandableElementDescription description : elements) {
-                JComponent container = getComponentFor(description);
-                if(SwingUtilities.isDescendingFrom(owner, container)) {
-                    selected = description;
-                    return;
-                }
-            }
-        }
+    @Override
+    public void setSelected(ExpandableElementDescription description) {
+        this.selected = description;
+        lookup.updateLookups();
     }
     
     private class ExtendableLookup extends ProxyLookup {

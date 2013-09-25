@@ -68,21 +68,21 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     
     @Override
     public int getModificationCount() {
-        synchronized(super.obj.lock) {
+        synchronized(lock) {
             return modifications.size();
         }
     }
 
     @Override
     public CalculationModifier<C> getModificationAt(int index) {
-        synchronized(super.obj.lock) {
+        synchronized(lock) {
             return modifications.get(index);
         }
     }
 
     @Override
     public void setModification(int index, CalculationModifier<C> cm) {
-        synchronized(super.obj.lock) {
+        synchronized(lock) {
             if(cm == null)
                 throw new NullPointerException("ModificationFactory is null!");
             CalculationModifier removed = modifications.set(index, cm);
@@ -101,14 +101,14 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     
     @Override
     public void addModification(CalculationModifier<C> cm) {
-        synchronized(super.obj.lock) {
+        synchronized(lock) {
             this.addModification(modifications.size(), cm);
         }
     }
     
     @Override
     public void addModification(int index, CalculationModifier<C> cm) {
-        synchronized(super.obj.lock) {
+        synchronized(lock) {
             if(cm == null)
                 throw new NullPointerException("ModificationFactory is null!");
             modifications.add(index, cm);
@@ -120,7 +120,7 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
 
     @Override
     public void deleteModification(int index) {
-        synchronized(super.obj.lock) {
+        synchronized(lock) {
             CalculationModifier cm = modifications.remove(index);
             cm.removeChangeListener(cmListener);
             modificationsChanged();

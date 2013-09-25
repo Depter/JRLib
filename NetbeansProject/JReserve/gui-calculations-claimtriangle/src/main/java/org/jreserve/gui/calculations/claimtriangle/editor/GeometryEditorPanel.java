@@ -17,17 +17,23 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import javax.swing.Icon;
+import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
+import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "MSG.GeometryEditorPanel.EndBeforeStart=End date is before the start date!"
+})
 public class GeometryEditorPanel extends javax.swing.JPanel {
     
     private final static Icon LINK_IMG = ImageUtilities.loadImageIcon("org/jreserve/gui/calculations/claimtriangle/chain.png", false);   //NOI18
@@ -38,6 +44,7 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
     
     public GeometryEditorPanel() {
         initComponents();
+        
     }
 
     void setCalculation(ClaimTriangleCalculationImpl calculation) {
@@ -74,6 +81,31 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         this.calculation = null;
     }
     
+    private void updateFromGUI() {
+        TriangleGeometry geometry = createGeometry();
+        if(geometry != null)
+            msgLabel.clearMessage();
+        
+        final TriangleGeometry cg = calculation.getGeometry();
+        synchronized(cg) {
+            if(cg.equals(geometry))
+                return;
+            calculation.setGeometry(geometry);
+        }
+    }
+    
+    private TriangleGeometry createGeometry() {
+        MonthDate start = startDateSpinner.getMonthDate();
+        MonthDate end = endDateSpinner.getMonthDate();
+        if(end.before(start)) {
+            msgLabel.showError(Bundle.MSG_GeometryEditorPanel_EndBeforeStart());
+            return null;
+        }
+        int al = (Integer) accidentLengthSpinner.getValue();
+        int dl = (Integer) developmentLengthSpinner.getValue();
+        return new TriangleGeometry(start, end, al, dl);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -84,7 +116,6 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        geometryLabel = new javax.swing.JLabel();
         intervalLabel = new javax.swing.JLabel();
         intervalSeparatorLabel = new javax.swing.JLabel();
         startDateSpinner = new org.jreserve.gui.trianglewidget.geometry.MonthDateSpinner();
@@ -102,15 +133,6 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.GridBagLayout());
-
-        org.openide.awt.Mnemonics.setLocalizedText(geometryLabel, org.openide.util.NbBundle.getMessage(GeometryEditorPanel.class, "GeometryEditorPanel.geometryLabel.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
-        add(geometryLabel, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(intervalLabel, org.openide.util.NbBundle.getMessage(GeometryEditorPanel.class, "GeometryEditorPanel.intervalLabel.text")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -268,7 +290,6 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
     private org.jreserve.gui.trianglewidget.geometry.MonthDateSpinner endDateSpinner;
     private javax.swing.JLabel endLabel;
     private javax.swing.Box.Filler filler1;
-    private javax.swing.JLabel geometryLabel;
     private javax.swing.JLabel intervalLabel;
     private javax.swing.JLabel intervalSeparatorLabel;
     private javax.swing.JLabel lengthLabel;
@@ -278,10 +299,17 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
     private javax.swing.JToggleButton symmetricButton;
     // End of variables declaration//GEN-END:variables
 
+    private void disableTextField(JSpinner spinner) {
+        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
+        editor.getTextField().setEditable(false);
+    }
+    
     private class InputListener implements ChangeListener {
 
         @Override
         public void stateChanged(ChangeEvent e) {
+            if(!myChange)
+                updateFromGUI();
         }
     }
 }

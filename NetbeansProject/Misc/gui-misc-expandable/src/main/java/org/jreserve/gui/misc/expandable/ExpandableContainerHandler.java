@@ -48,4 +48,6 @@ public interface ExpandableContainerHandler extends Lookup.Provider {
     public CloseOperationState canCloseElement();
     
     public UndoRedo.Manager getUndoRedo();
+    
+    public void setSelected(ExpandableElementDescription description);
 }

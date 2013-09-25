@@ -35,11 +35,12 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
     final CalculationDataObject obj;
     private String path;
     protected final CalculationEventUtil events;
+    protected final Object lock;
     
     protected AbstractCalculationProvider(CalculationDataObject obj) {
         this.events = new CalculationEventUtil(this);
         this.obj = obj;
-        this.obj.ic.add(this);
+        this.lock = obj.lock;
         this.project = FileOwnerQuery.getOwner(obj.getPrimaryFile());
         path = Displayable.Utils.displayProjectPath(obj.getPrimaryFile());
     }
@@ -56,13 +57,13 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
 
     @Override
     public String getPath() {
-        synchronized(obj.lock) {
+        synchronized(lock) {
             return path;
         }
     }
     
     protected void setPath(String path) {
-        synchronized(obj.lock) {
+        synchronized(lock) {
             String oldPath = path;
             this.path = path;
             events.fireRenamed(oldPath);

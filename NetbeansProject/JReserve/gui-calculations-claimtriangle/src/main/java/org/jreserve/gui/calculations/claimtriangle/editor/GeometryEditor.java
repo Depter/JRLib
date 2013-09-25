@@ -22,8 +22,11 @@ import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculation
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
+import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
+import org.openide.util.lookup.Lookups;
+import org.openide.util.lookup.ProxyLookup;
 
 /**
  *
@@ -45,6 +48,7 @@ public class GeometryEditor extends AbstractExpandableElement {
 
     private GeometryEditorPanel panel;
     private ClaimTriangleCalculationImpl calculation;
+    private final Lookup lkp;
     
     public GeometryEditor() {
         this(Lookup.EMPTY);
@@ -52,6 +56,15 @@ public class GeometryEditor extends AbstractExpandableElement {
     
     public GeometryEditor(Lookup context) {
         calculation = context.lookup(ClaimTriangleCalculationImpl.class);
+        DataObject obj = context.lookup(DataObject.class);
+        Lookup oLkp = obj==null? Lookup.EMPTY : obj.getLookup();
+        Lookup cLkp = calculation==null? Lookup.EMPTY : Lookups.singleton(calculation);
+        lkp = new ProxyLookup(oLkp, cLkp);
+    }
+
+    @Override
+    public Lookup getLookup() {
+        return lkp;
     }
     
     @Override

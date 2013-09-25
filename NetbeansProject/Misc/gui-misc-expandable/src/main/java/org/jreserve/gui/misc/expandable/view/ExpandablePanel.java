@@ -149,10 +149,16 @@ public class ExpandablePanel extends JPanel {
         return contentPanel;
     }
     
+    ExpandableElementDescription getDescription() {
+        return description;
+    }
+    
     private void setOpened(boolean opened) {
         if(this.opened != opened) {
             this.opened = opened;
             contentPanel.setVisible(opened);
+            if(opened)
+                container.setSelected(description);
             pcs.firePropertyChange(ExpandableComponentHandler.OPENED, !opened, opened);
         }
     }

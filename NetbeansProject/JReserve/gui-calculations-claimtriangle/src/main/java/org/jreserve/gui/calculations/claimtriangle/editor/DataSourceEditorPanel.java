@@ -38,7 +38,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.DataSourceEditorPanel.DataSource.NoProvider=Project can not contain storages!",
     "MSG.DataSourceEditorPanel.DataSource.Empty=Field 'Storage' is empty!",
-    "MSG.DataSourceEditorPanel.DataSource.NotFound=Storage not found!",
+    "MSG.DataSourceEditorPanel.DataSource.NotFound=Storage not found!"
 })
 class DataSourceEditorPanel extends javax.swing.JPanel {
 

@@ -16,6 +16,8 @@
  */
 package org.jreserve.gui.misc.expandable.view;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
@@ -31,12 +33,13 @@ import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
  * @version 1.0
  */
 class ExpandableView extends JPanel {
-    private final static int BORDER_WIDHT = 15;
+    private final static int BORDER_WIDHT = 12;
     private final static int COMPONENT_SPACING = 5;
     
     private ExpandableContainerHandler handler;
     private ExpandableElementDescription[] descriptions;
     private List<ExpandablePanel> panels;
+    private SelectListener selectListener = new SelectListener();
     
     ExpandableView(ExpandableContainerHandler handler, ExpandableElementDescription[] descriptions) {
         super(new ExpandableLayout(COMPONENT_SPACING));
@@ -54,11 +57,14 @@ class ExpandableView extends JPanel {
     
     private void addPanels() {
         panels = new ArrayList<ExpandablePanel>(descriptions.length);
-        for(ExpandableElementDescription desc : descriptions) {
-            ExpandablePanel panel = new ExpandablePanel(handler, desc);
-            panels.add(panel);
-            add(panel);
-        }
+        for(ExpandableElementDescription desc : descriptions)
+            addPanel(new ExpandablePanel(handler, desc));
+    }
+    
+    private void addPanel(ExpandablePanel panel) {
+        panel.addMouseListener(selectListener);
+        panels.add(panel);
+        add(panel);
     }
     
     JComponent getPanelForDescription(ExpandableElementDescription description) {
@@ -72,5 +78,13 @@ class ExpandableView extends JPanel {
             if(descriptions[i] == description)
                 return i;
         return -1;
+    }
+    
+    private class SelectListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            ExpandablePanel panel = (ExpandablePanel) e.getSource();
+            handler.setSelected(panel.getDescription());
+        }
     }
 }
