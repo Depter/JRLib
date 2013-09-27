@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="JReserve">
+        <folder name="ColorGenerators">
+            
+            <file name="org-jreserve-gui-plot-colors-DefaultColorGeneratorFactory.instance">
+                <!--org.jreserve.gui.plot.colors.DefaultColorGeneratorFactory-->
+                <attr name="id" stringvalue="org.jreserve.gui.plot.colors.DefaultColorGeneratorFactory"/>
+                <attr name="displayName" bundlevalue="org.jreserve.gui.plot.colors.Bundle#LBL.DefaultColorGenerator.Name"/>
+                
+                <attr name="instanceCreate" 
+                      newvalue="org.jreserve.gui.plot.colors.DefaultColorGeneratorFactory"/>
+                <attr name="instanceClass" 
+                      stringvalue="org.jreserve.gui.plot.ColorGenerator.Factory"/>
+                
+                <!--<attr name="instanceCreate" newvalue="org.jreserve.gui.plot.colors.DefaultColorGenerator.Factory"/>
+                <attr name="instanceClass" stringvalue="org.jreserve.gui.plot.ColorGenerator.Factory"/>-->
+            </file>
+        </folder>
+    </folder>
+</filesystem>

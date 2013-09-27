@@ -31,6 +31,8 @@ import org.openide.util.Lookup;
  * @version 1.0
  */
 public interface ExpandableElement extends Lookup.Provider {
+
+    public Lookup getGlobalLookup();
     
     public Component getVisualComponent();
     

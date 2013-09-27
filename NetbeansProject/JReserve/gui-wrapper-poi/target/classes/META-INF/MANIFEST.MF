@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/poi/Bundle.properti
  es
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130925
-OpenIDE-Module-Build-Version: 201309251130
+OpenIDE-Module-Implementation-Version: 1.0-20130927
+OpenIDE-Module-Build-Version: 201309270821
 OpenIDE-Module: org.jreserve.gui.wrapper.poi
 OpenIDE-Module-Public-Packages: org.apache.poi.**, org.xml.sax.**, org
  .jreserve.gui.poi.*, org.jreserve.gui.poi.read.*

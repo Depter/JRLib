@@ -18,12 +18,15 @@ package org.jreserve.gui.misc.expandable.view;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableContainerHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 
@@ -40,6 +43,7 @@ class ExpandableView extends JPanel {
     private ExpandableElementDescription[] descriptions;
     private List<ExpandablePanel> panels;
     private SelectListener selectListener = new SelectListener();
+    private ElementListener elementListener = new ElementListener();
     
     ExpandableView(ExpandableContainerHandler handler, ExpandableElementDescription[] descriptions) {
         super(new ExpandableLayout(COMPONENT_SPACING));
@@ -63,6 +67,7 @@ class ExpandableView extends JPanel {
     
     private void addPanel(ExpandablePanel panel) {
         panel.addMouseListener(selectListener);
+        panel.getComponentHandler().addPropertyChangeListener(elementListener);
         panels.add(panel);
         add(panel);
     }
@@ -85,6 +90,25 @@ class ExpandableView extends JPanel {
         public void mouseClicked(MouseEvent e) {
             ExpandablePanel panel = (ExpandablePanel) e.getSource();
             handler.setSelected(panel.getDescription());
+            revalidate();
         }
+    }
+    
+    private class ElementListener implements PropertyChangeListener {
+
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+            if(shouldUpdate(evt)) {
+                revalidate();
+                repaint();
+            }
+        }
+        
+        private boolean shouldUpdate(PropertyChangeEvent evt) {
+            String prop = evt.getPropertyName();
+            return ExpandableComponentHandler.OPENED.equals(prop) ||
+                   ExpandableComponentHandler.DOCKED.equals(prop);
+        }
+    
     }
 }

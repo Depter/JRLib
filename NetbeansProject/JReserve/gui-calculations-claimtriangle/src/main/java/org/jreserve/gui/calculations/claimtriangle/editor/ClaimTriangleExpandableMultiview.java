@@ -65,7 +65,7 @@ public class ClaimTriangleExpandableMultiview extends AbstractExpandableMultivie
 
     @Override
     protected ExpandableContainerHandler createHandler() {
-        return ExpandableFactory.createPanel(
+        return ExpandableFactory.createScrollPanel(
                 ClaimTriangleDataObject.MIME_TYPE, 
                 context);
     }

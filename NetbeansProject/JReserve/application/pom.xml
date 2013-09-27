@@ -127,6 +127,12 @@
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>gui-wrapper-jfreechart</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
         
         <!-- JReserve Modules -->
         <dependency>
@@ -184,11 +190,17 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>gui-plot</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>gui-calculations-claimtriangle</artifactId>
             <version>${project.version}</version>
             <type>jar</type>
         </dependency>        
-        
+                
         <!-- FOR DEVELOPMENT -->
         <dependency>
             <groupId>org.jreserve</groupId>

@@ -49,6 +49,11 @@ public abstract class AbstractExpandableElement implements ExpandableElement {
     }
     
     @Override
+    public Lookup getGlobalLookup() {
+        return Lookup.EMPTY;
+    }
+    
+    @Override
     public void componentOpened() {
     }
 

@@ -81,6 +81,8 @@
     <module>gui-calculations</module>
     <module>gui-wrapper-jdom</module>
     <module>gui-calculations-claimtriangle</module>
+    <module>gui-wrapper-jfreechart</module>
+    <module>gui-plot</module>
   </modules>
 
     <properties>

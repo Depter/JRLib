@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.localesettings">
-    <module_version install_time="1380108621932" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1380270092103" last="true" origin="installer" specification_version="1.0">
         <file crc="2966043834" name="config/Modules/org-jreserve-gui-localesettings.xml"/>
-        <file crc="3781447124" name="modules/org-jreserve-gui-localesettings.jar"/>
-        <file crc="2338892495" name="update_tracking/org-jreserve-gui-localesettings.xml"/>
+        <file crc="2979093333" name="modules/org-jreserve-gui-localesettings.jar"/>
+        <file crc="1740200315" name="update_tracking/org-jreserve-gui-localesettings.xml"/>
     </module_version>
 </module>

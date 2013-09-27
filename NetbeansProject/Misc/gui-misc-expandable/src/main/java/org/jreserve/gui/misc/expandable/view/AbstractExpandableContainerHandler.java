@@ -26,6 +26,7 @@ import org.jreserve.gui.misc.expandable.ExpandableContainerHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElementDescription;
 import org.netbeans.core.spi.multiview.CloseOperationState;
 import org.netbeans.core.spi.multiview.MultiViewFactory;
+import org.netbeans.spi.navigator.NavigatorLookupPanelsPolicy;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.lookup.Lookups;
@@ -36,7 +37,14 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  */
 abstract class AbstractExpandableContainerHandler implements ExpandableContainerHandler {
-
+    
+    private final static NavigatorLookupPanelsPolicy NAVIGATOR_LOOKUP_POLICY = new NavigatorLookupPanelsPolicy() {
+        @Override
+        public int getPanelsPolicy() {
+            return NavigatorLookupPanelsPolicy.LOOKUP_HINTS_ONLY;
+        }
+    };
+    
     private final static int UNDO_LIMIT = 30;
     
     private ExpandableElementDescription[] elements;
@@ -67,8 +75,9 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
     
     @Override
     public JComponent getComponent() {
-        if(component == null)
+        if(component == null) {
             this.component = createComponent();
+        }
         return component;
     }
     
@@ -166,12 +175,20 @@ abstract class AbstractExpandableContainerHandler implements ExpandableContainer
         private Lookup fixed;
         
         public ExtendableLookup() {
-            fixed = Lookups.fixed(AbstractExpandableContainerHandler.this, ExpandableNavigatorPanel.LOOKUP_HINT);
+            fixed = Lookups.fixed(
+                    AbstractExpandableContainerHandler.this, 
+                    ExpandableNavigatorPanel.LOOKUP_HINT,
+                    NAVIGATOR_LOOKUP_POLICY);
         }
         
         void updateLookups() {
-            Lookup lkp = selected==null? Lookup.EMPTY : selected.getElement().getLookup();
-            setLookups(fixed, lkp);
+            int size = elements.length;
+            Lookup[] lkps = new Lookup[size+2];
+            lkps[0] = selected==null? Lookup.EMPTY : selected.getElement().getLookup();
+            lkps[1] = fixed;
+            for(int i=0; i<size; i++) 
+                lkps[i+2] = elements[i].getElement().getGlobalLookup();
+            setLookups(lkps);
         }
     }    
     

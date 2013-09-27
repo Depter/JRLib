@@ -57,6 +57,15 @@ import org.openide.windows.TopComponent;
 })
 public class ExpandableNavigatorPanel implements NavigatorPanel {
     
+    
+    private static ExpandableNavigatorPanel INSTANCE = null;
+    
+    static synchronized ExpandableNavigatorPanel getInstance() {
+        if(INSTANCE == null)
+            INSTANCE = new ExpandableNavigatorPanel();
+        return INSTANCE;
+    }
+    
     final static String MIME_TYPE = "application/expandable-navigator";
     final static NavigatorLookupHint LOOKUP_HINT = new NavigatorLookupHint() {
         @Override

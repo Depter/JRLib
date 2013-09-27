@@ -62,7 +62,7 @@ public class DataSourceEditor extends AbstractExpandableElement {
     }
 
     @Override
-    public Lookup getLookup() {
+    public Lookup getGlobalLookup() {
         return lkp;
     }
     

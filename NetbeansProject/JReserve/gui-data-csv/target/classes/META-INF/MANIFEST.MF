@@ -2,8 +2,8 @@ Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/data/csv/Bundle.pro
  perties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130925
-OpenIDE-Module-Build-Version: 201309251130
+OpenIDE-Module-Implementation-Version: 1.0-20130927
+OpenIDE-Module-Build-Version: 201309270822
 OpenIDE-Module: org.jreserve.gui.data.csv
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

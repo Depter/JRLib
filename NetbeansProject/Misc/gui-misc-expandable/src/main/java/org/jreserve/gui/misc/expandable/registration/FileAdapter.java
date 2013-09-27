@@ -72,7 +72,7 @@ class FileAdapter implements ExpandableElementDescription {
         String hex = (String) file.getAttribute(name);
         if(hex != null && hex.length()==6 && hex.matches("[0-9A-Fa-f]+"))
             return parseColor(hex);
-        return null;
+        return Color.BLACK;
     }
     
     private Color parseColor(String hex) {

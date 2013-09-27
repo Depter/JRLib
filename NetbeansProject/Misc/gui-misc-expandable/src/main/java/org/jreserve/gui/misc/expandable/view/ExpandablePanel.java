@@ -168,6 +168,10 @@ public class ExpandablePanel extends JPanel {
         pcs.firePropertyChange(ExpandableComponentHandler.DOCKED, !docked, docked);
     }
     
+    ExpandableComponentHandler getComponentHandler() {
+        return handler;
+    }
+    
     private class Handler implements ExpandableComponentHandler {
         
         @Override

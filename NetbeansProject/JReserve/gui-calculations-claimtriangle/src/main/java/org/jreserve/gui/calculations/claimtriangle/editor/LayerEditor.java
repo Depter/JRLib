@@ -26,7 +26,6 @@ import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
-import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
@@ -63,12 +62,7 @@ public class LayerEditor extends AbstractExpandableElement {
     
     public LayerEditor(Lookup context) {
         calculation = context.lookup(ClaimTriangleCalculationImpl.class);
-        DataObject obj = context.lookup(DataObject.class);
-        Lookup oLkp = obj==null? Lookup.EMPTY : obj.getLookup();
-        
-        if(calculation==null)
-            ic.add(calculation);
-        lkp = new ProxyLookup(oLkp, new AbstractLookup(ic));
+        lkp = new ProxyLookup(new AbstractLookup(ic));
         EventBusManager.getDefault().subscribe(this);
     }
 
