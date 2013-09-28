@@ -127,7 +127,8 @@ public class ExpandablePanel extends JPanel {
         String path = description.getIconBase();
         if(path == null || path.trim().length()==0)
             path = DEFAULT_IMG;
-        return ImageUtilities.loadImage(path);
+        Image img = ImageUtilities.loadImage(path);
+        return img!=null? img : ImageUtilities.loadImage(DEFAULT_IMG);
     }
     
     private JPanel createButtons() {

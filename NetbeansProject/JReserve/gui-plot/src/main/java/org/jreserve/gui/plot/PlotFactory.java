@@ -19,6 +19,7 @@ package org.jreserve.gui.plot;
 import java.awt.Component;
 import java.util.List;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
 import org.jreserve.gui.plot.charts.AbstractBarChart;
 import org.jreserve.gui.plot.charts.AbstractLineChart;
 
@@ -29,13 +30,18 @@ import org.jreserve.gui.plot.charts.AbstractLineChart;
  */
 public class PlotFactory {
     
-    public static Component createLinePlot(PlotFormat format, List<PlotSerie> series) {
+    public static ChartWrapper createLinePlot(PlotFormat format, List<PlotSerie> series) {
         AbstractLineChart plot = new AbstractLineChart(format, series);
-        return new ChartPanel(plot.buildChart());
+        return createWrapper(plot.buildChart());
     }
     
-    public static Component createBarPlot(PlotFormat format, List<PlotSerie> series) {
+    private static ChartWrapper createWrapper(JFreeChart chart) {
+        ChartPanel panel = new ChartPanel(chart);
+        return new ChartWrapperImpl(panel);
+    }
+    
+    public static ChartWrapper createBarPlot(PlotFormat format, List<PlotSerie> series) {
         AbstractBarChart plot = new AbstractBarChart(format, series);
-        return new ChartPanel(plot.buildChart());
+        return createWrapper(plot.buildChart());
     }
 }

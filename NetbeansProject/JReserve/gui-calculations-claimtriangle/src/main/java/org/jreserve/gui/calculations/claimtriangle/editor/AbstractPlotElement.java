@@ -25,9 +25,13 @@ import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculation
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
+import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
+import org.jreserve.gui.plot.ChartWrapper;
 import org.jreserve.gui.plot.PlotLabel;
 import org.jreserve.gui.plot.PlotSerie;
 import org.openide.util.Lookup;
+import org.openide.util.lookup.AbstractLookup;
+import org.openide.util.lookup.InstanceContent;
 
 /**
  *
@@ -37,25 +41,53 @@ import org.openide.util.Lookup;
 abstract class AbstractPlotElement extends AbstractExpandableElement {
 
     private JPanel panel;
-    private Component plotCompoent;
+    private ChartWrapper plot;
+    private Component plotComponent;
     protected ClaimTriangleCalculationImpl calculation;
+    private InstanceContent ic = new InstanceContent();
+    private ClipboardUtil.Copiable copiable;
+    private Lookup lkp;
     
-     protected AbstractPlotElement(Lookup context) {
+    protected AbstractPlotElement(Lookup context) {
         this.calculation = context.lookup(ClaimTriangleCalculationImpl.class);
+        this.lkp = new AbstractLookup(ic);
     }
 
+    @Override
+    public Lookup getLookup() {
+        return lkp;
+    }
+    
     @Override
     protected Component createVisualComponent() {
         if(panel == null) {
             panel = new JPanel(new BorderLayout());
-            plotCompoent = createPlotComponent();
-            panel.add(plotCompoent, BorderLayout.CENTER);
+            initPlot();
         }
         return panel;
     }
-
-    protected abstract Component createPlotComponent();
     
+    private void initPlot() {
+        plot = createPlot();
+        initPlotComponent();
+        initCopiable();
+    }
+
+    protected abstract ChartWrapper createPlot();
+    
+    private void initCopiable() {
+        if(copiable != null)
+            ic.remove(copiable);
+        copiable = plot.createCopiable();
+        ic.add(copiable);
+    }
+    
+    private void initPlotComponent() {
+        if(plotComponent != null)
+            panel.remove(plotComponent);
+        plotComponent = plot.getChartComponent();
+        panel.add(plotComponent);
+    }
     
     protected String[] getSeriesNames(List<PlotSerie> series) {
         int size = series.size();
@@ -85,11 +117,9 @@ abstract class AbstractPlotElement extends AbstractExpandableElement {
     @EventBusListener(forceEDT = true)
     public void calculationChanged(CalculationEvent.Change evt) {
         if(panel!=null && calculation==evt.getCalculationProvider()) {
-            panel.remove(plotCompoent);
-            plotCompoent = createPlotComponent();
-            panel.add(plotCompoent, BorderLayout.CENTER);
+            initPlot();
             panel.revalidate();
             panel.repaint();
         }
-    }    
+    }  
 }

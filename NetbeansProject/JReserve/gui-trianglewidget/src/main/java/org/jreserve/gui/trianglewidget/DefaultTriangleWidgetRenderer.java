@@ -20,9 +20,12 @@ package org.jreserve.gui.trianglewidget;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
+import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 
 /**
@@ -35,6 +38,12 @@ import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWidgetRenderer {
     
     private DecimalFormatter df;
+    private DefaultListCellRenderer renderer = new DefaultListCellRenderer();
+    
+    private Color background;
+    private Color foreground;
+    private Color selectionBackground;
+    private Color selectionForeground;
     
     public DefaultTriangleWidgetRenderer() {
         this(null);
@@ -42,10 +51,18 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
     
     public DefaultTriangleWidgetRenderer(DecimalFormatter df) {
         this.df = df;
+        initColors();
         setBorder(createBorder());
         setOpaque(true);
-        setBackground(Color.WHITE);
         setHorizontalAlignment(SwingConstants.RIGHT);
+    }
+    
+    private void initColors() {
+        JList list = new JList();
+        background = list.getBackground();
+        foreground = list.getForeground();
+        selectionBackground = list.getSelectionBackground();
+        selectionForeground = list.getSelectionForeground();
     }
     
     private Border createBorder() {
@@ -62,9 +79,18 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
     public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
         DecimalFormatter wdf = widget.getDecimalFormatter();
         setText(format(df!=null? df : wdf, value));
+        
+        if(selected) {
+            setBackground(selectionBackground);
+            setForeground(selectionForeground);
+        } else {
+            setForeground(foreground);
+            setBackground(background);
+        }
+        
         return this;
     }
-
+    
     private String format(DecimalFormatter format, double value) {
         if(format == null)
             return ""+value;

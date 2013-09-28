@@ -20,9 +20,13 @@ package org.jreserve.gui.trianglewidget;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.JComponent;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
 import org.jreserve.jrlib.triangle.Triangle;
 
 /**
@@ -39,12 +43,14 @@ class WidgetContentPanel extends JComponent {
     
     //Init before painting
     private TriangleModel model;
+    private TriangleSelectionModel selectionModel;
     private int rowCount;
     private int columnCount;
     
     WidgetContentPanel(TriangleWidget widget, TriangleWidgetRenderer renderer) {
         this.widget = widget;
         this.renderer = renderer;
+        this.addMouseListener(new MouseSelectionListener());
         calculateSizes();
     }
     
@@ -97,6 +103,7 @@ class WidgetContentPanel extends JComponent {
     
     private void initPainting() {
         model = widget.getModel();
+        selectionModel = widget.getTriangleSelectionModel();
         rowCount = model.getRowCount();
         columnCount = model.getColumnCount();
 
@@ -111,9 +118,17 @@ class WidgetContentPanel extends JComponent {
             return;
         
         double value = getScaledValue(row, column);
-        Component c = renderer.getComponent(widget, value, row, column, false);
+        
+        boolean selected = isSelected(row, column);
+        Component c = renderer.getComponent(widget, value, row, column, selected);
         initCellBounds(row, column);
         paintCell(c, g);
+    }
+    
+    private boolean isSelected(int row, int column) {
+        int accident = model.getAccidentIndex(row, column);
+        int development = model.getDevelopmentIndex(row, column);
+        return selectionModel.isSelected(accident, development);
     }
     
     private double getScaledValue(int row, int column) {
@@ -149,5 +164,46 @@ class WidgetContentPanel extends JComponent {
 	}
 
 	c.setBounds(-cellBounds.width, -cellBounds.height, 0, 0);    
+    }
+    
+    
+    private class MouseSelectionListener extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            if(cellBounds.width == 0 || cellBounds.height == 0)
+                return;
+            
+            Point p = e.getPoint();
+            int r = p.y / cellBounds.height;
+            int c = p.x / cellBounds.width;
+            
+            if(!widget.getModel().hasValueAt(r, c))
+                return;
+            
+            int a = model.getAccidentIndex(r, c);
+            int d = model.getDevelopmentIndex(r, c);
+            if(e.isControlDown()) {
+                switchSelection(a, d);
+            } else {
+                setSelection(a, d);
+            }
+        }
+        
+        private void switchSelection(int accident, int development) {
+            TriangleSelectionModel selectionModel = widget.getTriangleSelectionModel();
+            if(selectionModel.isSelected(accident, development))
+                selectionModel.removeSelection(accident, development);
+            else
+                selectionModel.setSelected(accident, development);
+        }
+        
+        private void setSelection(int accident, int development) {
+            TriangleSelectionModel selectionModel = widget.getTriangleSelectionModel();
+            selectionModel.setValueAdjusting(true);
+            selectionModel.clearSelection();
+            selectionModel.setSelected(accident, development);
+            selectionModel.setValueAdjusting(false);
+        }
     }
 }

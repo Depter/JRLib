@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.CalculationEventUtil;
 import org.jreserve.gui.calculations.api.CalculationObjectProvider;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
@@ -140,7 +139,7 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
         try {
             ClaimTriangleBuilder builder = new ClaimTriangleBuilder();
             FileUtil.runAtomicAction(builder);
-            return Collections.singleton(builder.getResult());
+            return Collections.singleton(builder.getResult().getPrimaryFile());
         } catch(IOException ex) {
             String msg = "Unable to create new ClaimTriangle!";
             logger.log(Level.SEVERE, msg, ex);

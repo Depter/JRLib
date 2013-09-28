@@ -67,8 +67,8 @@ public abstract class AbstractChart {
         
         if(plot instanceof CategoryPlot) {
             CategoryPlot cPlot = (CategoryPlot) plot;
-            formatAxisColors(cPlot.getDomainAxis());
-            formatAxisColors(cPlot.getRangeAxis());
+            formatAxis(cPlot.getDomainAxis());
+            formatAxis(cPlot.getRangeAxis());
         }
         
         LegendTitle legend = chart.getLegend();
@@ -78,12 +78,23 @@ public abstract class AbstractChart {
 
     protected abstract void formatPlot(Plot plot);
     
+    protected void formatAxis(Axis axis) {
+        formatAxisColors(axis);
+        if(axis instanceof ValueAxis)
+            setAxisMargins((ValueAxis) axis);
+    }
+    
     protected void formatAxisColors(Axis axis) {
         Color color = format.getForeColor();
         axis.setAxisLinePaint(color);
         axis.setTickMarkPaint(color);
         axis.setTickLabelPaint(color);
         axis.setLabelPaint(color);
+    }
+    
+    private void setAxisMargins(ValueAxis axis) {
+        axis.setUpperMargin(MARGIN);
+        axis.setLowerMargin(MARGIN);
     }
     
     protected void formatLegend(LegendTitle legend) {

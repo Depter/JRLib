@@ -21,7 +21,6 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,6 +35,11 @@ import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.jrlib.triangle.Triangle;
 import javax.swing.JPanel;
 import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.trianglewidget.model.DefaultTriangleSelectionModel;
+import org.jreserve.gui.trianglewidget.model.TriangleSelection;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionListener;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 
 /**
@@ -50,9 +54,11 @@ public class TriangleWidget extends JPanel {
     
     private List<TriangleLayer> layers;
     private TriangleModel model;
+    private TriangleSelectionModel selectionModel = new DefaultTriangleSelectionModel();
     private ModelListener modelListener = new ModelListener();
     private TriangleGeometry geometry;
     private LocaleSettings.DecimalFormatter df = LocaleSettings.createDecimalFormatter();
+    private SelectionListener selectionListener = new SelectionListener();
     
     //Components
     private LayerTriangleRenderer renderer;
@@ -91,6 +97,7 @@ public class TriangleWidget extends JPanel {
         if(model == null) model = new DevelopmentTriangleModel();
         
         this.layers = layers;
+        this.selectionModel.addTriangleSelectionListener(selectionListener);
         initNewModel(model);
         initComponents();
     }
@@ -145,6 +152,19 @@ public class TriangleWidget extends JPanel {
     
     }
     
+    public TriangleSelectionModel getTriangleSelectionModel() {
+        return selectionModel;
+    }
+    
+    public void setTriangleSelectionModel(TriangleSelectionModel selectionModel) {
+        if(selectionModel == null)
+            throw new NullPointerException("TriangleSelectionModel can not be null!");
+        this.selectionModel.removeTriangleSelectionListener(selectionListener);
+        this.selectionModel = selectionModel;
+        this.selectionModel.addTriangleSelectionListener(selectionListener);
+        resizeAndRepaint();
+    }
+    
     public LocaleSettings.DecimalFormatter getDecimalFormatter() {
         return df;
     }
@@ -161,12 +181,35 @@ public class TriangleWidget extends JPanel {
     }
     
     public void setTriangleGeometry(TriangleGeometry geometry) {
+        TriangleSelection selection = selectionModel.createSelection();
         if(this.geometry != null)
             this.geometry.removeChangeListener(modelListener);
         this.geometry = geometry;
         if(this.geometry != null)
             this.geometry.addChangeListener(modelListener);
         resizeAndRepaint();
+        updateSelection(selection);
+    }
+    
+    private void updateSelection(TriangleSelection selection) {
+        selectionModel.setValueAdjusting(true);
+        
+        selectionModel.clearSelection();
+        int count = selection.getCellCount();
+        for(int i=0; i<count; i++) {
+            int accident = selection.getAccident(i);
+            int development = selection.getDevelopment(i);
+            if(isCellSelected(accident, development))
+                selectionModel.setSelected(accident, development);
+        }
+        
+        selectionModel.setValueAdjusting(false);
+    }
+    
+    private boolean isCellSelected(int accident, int development) {
+        int row = model.getRowIndex(accident, development);
+        int column = model.getColumnIndex(accident, development);
+        return model.hasValueAt(row, column);
     }
     
     /**
@@ -325,6 +368,13 @@ public class TriangleWidget extends JPanel {
         public void stateChanged(ChangeEvent e) {
             resizeAndRepaint();
         }
-        
+    }
+    
+    private class SelectionListener implements TriangleSelectionListener {
+        @Override
+        public void selectionChanged(TriangleSelectionEvent event) {
+            if(!event.isAdjusting())
+                resizeAndRepaint();
+        }
     }
 }

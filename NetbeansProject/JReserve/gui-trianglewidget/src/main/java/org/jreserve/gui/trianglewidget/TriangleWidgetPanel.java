@@ -34,6 +34,7 @@ import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.gui.trianglewidget.model.TitleModel;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelAdapter;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelRegistry;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
@@ -121,6 +122,10 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
     
     public List<TriangleLayer> getLayers() {
         return new ArrayList<TriangleLayer>(layers);
+    }
+    
+    public TriangleSelectionModel getTriangleSelectionModel() {
+        return triangleWidget.getTriangleSelectionModel();
     }
     
     public void setDecimalCount(int decimalCount) {

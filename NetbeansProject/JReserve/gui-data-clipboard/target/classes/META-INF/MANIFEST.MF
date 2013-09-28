@@ -3,7 +3,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/data/clipboard/Bund
  le.properties
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20130927
-OpenIDE-Module-Build-Version: 201309270822
+OpenIDE-Module-Build-Version: 201309271851
 OpenIDE-Module: org.jreserve.gui.data.clipboard
 OpenIDE-Module-Public-Packages: -
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

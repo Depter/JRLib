@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.trianglewidget">
-    <module_version install_time="1380270095556" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1380397642814" last="true" origin="installer" specification_version="1.0">
         <file crc="1597700490" name="config/Modules/org-jreserve-gui-trianglewidget.xml"/>
-        <file crc="3587873989" name="modules/org-jreserve-gui-trianglewidget.jar"/>
-        <file crc="1023149332" name="update_tracking/org-jreserve-gui-trianglewidget.xml"/>
+        <file crc="3462740885" name="modules/org-jreserve-gui-trianglewidget.jar"/>
     </module_version>
 </module>

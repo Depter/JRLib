@@ -75,8 +75,13 @@ public class AbstractLineChart extends AbstractChart {
     protected void formatPlot(Plot plot) {
         CategoryPlot cPlot = (CategoryPlot) plot;
         cPlot.setBackgroundPaint(format.getBackgroundColor());
+        
+        cPlot.setRangeGridlinesVisible(true);
         cPlot.setRangeGridlinePaint(format.getGridColor());
+        cPlot.setRangeGridlineStroke(new BasicStroke(3));
+        cPlot.setDomainGridlinesVisible(true);
         cPlot.setDomainGridlinePaint(format.getGridColor());
+        cPlot.setDomainGridlineStroke(new BasicStroke(3));
         
         formatSeries((LineAndShapeRenderer) cPlot.getRenderer());
         formatRangeAxis(getMinValue(), getMaxValue());

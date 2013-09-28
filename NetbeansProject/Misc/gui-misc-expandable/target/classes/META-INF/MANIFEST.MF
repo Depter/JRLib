@@ -4,8 +4,8 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/expandable/Bun
  dle.properties
 OpenIDE-Module-Requires: org.openide.windows.WindowManager
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130927
-OpenIDE-Module-Build-Version: 201309271446
+OpenIDE-Module-Implementation-Version: 1.0-20130928
+OpenIDE-Module-Build-Version: 201309281222
 OpenIDE-Module: org.jreserve.gui.misc.expandable
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.expandable.*, or
  g.jreserve.gui.misc.expandable.buttons.*

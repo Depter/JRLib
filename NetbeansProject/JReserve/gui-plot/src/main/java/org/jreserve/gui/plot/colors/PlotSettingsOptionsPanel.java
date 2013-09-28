@@ -61,8 +61,8 @@ class PlotSettingsOptionsPanel extends javax.swing.JPanel {
     
     void store() {
         PlotSettings.setBackground(bgColorLabel.getBackground());
-        PlotSettings.setBackground(fgColorLabel.getBackground());
-        PlotSettings.setBackground(gridColorLabel.getBackground());
+        PlotSettings.setForeground(fgColorLabel.getBackground());
+        PlotSettings.setGridColor(gridColorLabel.getBackground());
         
         AbstractColorGeneratorAdapter cg = (AbstractColorGeneratorAdapter) colorGeneratorCombo.getSelectedItem();
         PlotSettings.setColorGeneratorId(cg==null? null : cg.getId());

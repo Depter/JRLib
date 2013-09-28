@@ -3,8 +3,8 @@ OpenIDE-Module-Install: org/officelaf/Installer.class
 OpenIDE-Module-Layer: org/officelaf/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/officelaf/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130822
-OpenIDE-Module-Build-Version: 201308221806
+OpenIDE-Module-Implementation-Version: 1.0-20130927
+OpenIDE-Module-Build-Version: 201309271849
 OpenIDE-Module: org.jreserve.gui.misc.officelaf
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.officelaf.**, or
  g.pushingpixels.**

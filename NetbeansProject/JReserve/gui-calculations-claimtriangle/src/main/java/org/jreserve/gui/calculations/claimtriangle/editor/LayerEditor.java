@@ -26,6 +26,9 @@ import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
+import org.jreserve.gui.trianglewidget.model.TriangleSelection;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionListener;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
@@ -79,6 +82,7 @@ public class LayerEditor extends AbstractExpandableElement {
         if(calculation != null) {
             panel.setTriangleGeometry(calculation.getGeometry());
             panel.setLayers(calculation.createLayers());
+            panel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
         }
         ic.add(panel.createCopiable());
         return panel;
@@ -96,5 +100,18 @@ public class LayerEditor extends AbstractExpandableElement {
     public void componentClosed() {
         EventBusManager.getDefault().unsubscribe(this);
         super.componentClosed();
+    }
+    
+    private class SelectionListener implements TriangleSelectionListener {
+
+        @Override
+        public void selectionChanged(TriangleSelectionEvent event) {
+            TriangleSelection ts = lkp.lookup(TriangleSelection.class);
+            if(ts != null)
+                ic.remove(ts);
+            ts = panel.getTriangleSelectionModel().createSelection();
+            ic.add(ts);
+        }
+    
     }
 }

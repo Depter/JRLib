@@ -16,12 +16,12 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
-import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
+import org.jreserve.gui.plot.ChartWrapper;
 import org.jreserve.gui.plot.PlotFactory;
 import org.jreserve.gui.plot.PlotFormat;
 import org.jreserve.gui.plot.PlotLabel;
@@ -64,7 +64,8 @@ public class DevelopmentPeriodPlot extends AbstractPlotElement {
         super(context);
     }
     
-    protected Component createPlotComponent() {
+    @Override
+    protected ChartWrapper createPlot() {
         List<PlotSerie> series;
         if(calculation == null) {
             series = Collections.EMPTY_LIST;
