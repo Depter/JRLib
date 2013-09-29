@@ -26,10 +26,16 @@ import org.jreserve.jrlib.CalculationData;
  */
 public interface CalculationModifierFactory<C extends CalculationData> {
     
+    public boolean canModify(Class calculationClass);
+    
+    public CalculationModifier<C> createNew();
+    
     public CalculationModifier<C> fromXml(Element element) throws Exception;
     
     public static @interface Registration {
+        //The Category, to which factory belongs (exclusion, correction, smoothing)
         String category();
+        //The xml root name for the factory
         String rootName();
         int position() default Integer.MAX_VALUE;
     }
