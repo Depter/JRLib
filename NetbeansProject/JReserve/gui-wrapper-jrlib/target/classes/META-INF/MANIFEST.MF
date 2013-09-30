@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 OpenIDE-Module-Localizing-Bundle: org/jreserve/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130927
-OpenIDE-Module-Build-Version: 201309271850
+OpenIDE-Module-Implementation-Version: 1.0-20130930
+OpenIDE-Module-Build-Version: 201309301100
 OpenIDE-Module: org.jreserve.gui.wrapper.jrlib
 OpenIDE-Module-Public-Packages: org.jreserve.jrlib.**
 OpenIDE-Module-Requires: org.openide.modules.ModuleFormat1

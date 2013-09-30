@@ -23,6 +23,7 @@ import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
+import org.jreserve.jrlib.util.MathUtil;
 import org.jreserve.jrlib.util.NormalUtil;
 
 /**
@@ -176,11 +177,16 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         }
         testValue = testValue/testSigma;
         testSigma = Math.sqrt(1d/testSigma);
-        lowerBound = NormalUtil.invNormCDF(0.5-alpha/2d) * testSigma;
-        double norm = NormalUtil.normCDF(testValue / testSigma);
-        pValue = (testValue<0d)?
-                2d * norm :
-                2d * (1d - norm);
+        if(isValidNumber(testValue) && isValidNumber(testSigma)) {
+            lowerBound = NormalUtil.invNormCDF(0.5-alpha/2d) * testSigma;
+            double norm = NormalUtil.normCDF(testValue / testSigma);
+            pValue = (testValue<0d)?
+                    2d * norm :
+                    2d * (1d - norm);
+        } else {
+            lowerBound = Double.NaN;
+            pValue = Double.NaN;
+        }
     }
     
     private RankHelper[] createHelpers() {
@@ -189,6 +195,10 @@ public class UncorrelatedDevelopmentFactorsTest extends AbstractCalculationData<
         for(int d=0; d<developments; d++)
             helpers[d] = new RankHelper(d, source);
         return helpers;
+    }
+    
+    private boolean isValidNumber(double value) {
+        return !(Double.isNaN(value) || Double.isInfinite(value));
     }
     
     static class RankHelper {

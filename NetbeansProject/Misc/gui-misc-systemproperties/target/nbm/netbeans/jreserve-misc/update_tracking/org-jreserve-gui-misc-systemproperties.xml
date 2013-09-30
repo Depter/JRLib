@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.systemproperties">
-    <module_version install_time="1380307778196" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1380538724352" last="true" origin="installer" specification_version="1.0">
         <file crc="4244891595" name="config/Modules/org-jreserve-gui-misc-systemproperties.xml"/>
-        <file crc="3278760771" name="modules/org-jreserve-gui-misc-systemproperties.jar"/>
+        <file crc="2783168182" name="modules/org-jreserve-gui-misc-systemproperties.jar"/>
     </module_version>
 </module>
