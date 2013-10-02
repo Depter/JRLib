@@ -44,17 +44,17 @@
     </folder>
     <folder name="Actions">
         <folder name="File">
-            <file name="org-jreserve-gui-data-inport-ImportDataAction.instance">
-                <!--org.jreserve.gui.data.inport.ImportDataAction-->
-                <attr
-                    bundlevalue="org.jreserve.gui.data.inport.Bundle#CTL.ImportDataAction" name="displayName"/>
-                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.inport.ImportDataAction"/>
-            </file>
             <file name="org-jreserve-gui-data-binary-CreateBinaryDataSourceAction.instance">
                 <!--org.jreserve.gui.data.binary.CreateBinaryDataSourceAction-->
                 <attr
                     bundlevalue="org.jreserve.gui.data.binary.Bundle#LBL.CreateBinaryDataSourceAction.Name" name="displayName"/>
                 <attr name="instanceCreate" newvalue="org.jreserve.gui.data.binary.CreateBinaryDataSourceAction"/>
+            </file>
+            <file name="org-jreserve-gui-data-inport-ImportDataAction.instance">
+                <!--org.jreserve.gui.data.inport.ImportDataAction-->
+                <attr
+                    bundlevalue="org.jreserve.gui.data.inport.Bundle#CTL.ImportDataAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="org.jreserve.gui.data.inport.ImportDataAction"/>
             </file>
         </folder>
     </folder>
@@ -84,6 +84,51 @@
                     <!--org.jreserve.gui.data.inport.ImportDataAction-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
                     <attr intvalue="350" name="position"/>
+                </file>
+            </folder>
+        </folder>
+        <folder name="DataFolderNode">
+            <folder name="Actions">
+                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
+                    <attr intvalue="100" name="position"/>
+                </file>
+                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu-separatorAfter.instance">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                    <attr intvalue="150" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-misc-renameable-action-RenameAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-renameable-action-RenameAction.instance"/>
+                    <attr intvalue="400" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-actions-CopyAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CopyAction.instance"/>
+                    <attr intvalue="400" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-actions-CutAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CutAction.instance"/>
+                    <attr intvalue="500" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-actions-PasteAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-PasteAction.instance"/>
+                    <attr intvalue="600" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-actions-PasteAction-separatorAfter.instance">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
+                    <attr intvalue="650" name="position"/>
+                </file>
+                <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
+                    <attr intvalue="700" name="position"/>
                 </file>
             </folder>
         </folder>
@@ -136,51 +181,6 @@
                 </file>
             </folder>
         </folder>
-        <folder name="DataFolderNode">
-            <folder name="Actions">
-                <file name="org-jreserve-gui-misc-renameable-action-RenameAction.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-renameable-action-RenameAction.instance"/>
-                    <attr intvalue="300" name="position"/>
-                </file>
-                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
-                    <attr intvalue="100" name="position"/>
-                </file>
-                <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu-separatorAfter.instance">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="150" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-misc-utils-actions-CopyAction.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CopyAction.instance"/>
-                    <attr intvalue="400" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-misc-utils-actions-CutAction.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CutAction.instance"/>
-                    <attr intvalue="500" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-misc-utils-actions-PasteAction.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-PasteAction.instance"/>
-                    <attr intvalue="600" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-misc-utils-actions-PasteAction-separatorAfter.instance">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="650" name="position"/>
-                </file>
-                <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
-                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
-                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
-                    <attr intvalue="700" name="position"/>
-                </file>
-            </folder>
-        </folder>
     </folder>
     <folder name="OptionsDialog">
         <file name="ImportDataSettings.instance">
@@ -202,19 +202,6 @@
         <folder name="text">
             <folder name="jreserve-data-source-triangle">
                 <folder name="MultiView">
-                    <file name="org-jreserve-gui-data-editor-DataSourceTableMultiviewElement.instance">
-                        <!--org.jreserve.gui.data.editor.DataSourceTableMultiviewElement-->
-                        <attr
-                            methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
-                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
-                        <attr name="class" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
-                        <attr
-                            bundlevalue="org.jreserve.gui.data.editor.Bundle#LBL.DataSourceTableMultiviewElement.Title" name="displayName"/>
-                        <attr name="iconBase" stringvalue="org/jreserve/gui/data/icons/database.png"/>
-                        <attr name="preferredID" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
-                        <attr intvalue="2" name="persistenceType"/>
-                        <attr intvalue="100" name="position"/>
-                    </file>
                     <file name="org-jreserve-gui-data-dataobject-DataSourceDataObject-createAuditElement.instance">
                         <!--org.jreserve.gui.data.dataobject.DataSourceDataObject.createAuditElement(org.openide.util.Lookup)-->
                         <attr
@@ -227,6 +214,19 @@
                         <attr intvalue="2" name="persistenceType"/>
                         <attr intvalue="1000" name="position"/>
                         <attr name="method" stringvalue="createAuditElement"/>
+                    </file>
+                    <file name="org-jreserve-gui-data-editor-DataSourceTableMultiviewElement.instance">
+                        <!--org.jreserve.gui.data.editor.DataSourceTableMultiviewElement-->
+                        <attr
+                            methodvalue="org.netbeans.core.spi.multiview.MultiViewFactory.createMultiViewDescription" name="instanceCreate"/>
+                        <attr name="instanceClass" stringvalue="org.netbeans.core.multiview.ContextAwareDescription"/>
+                        <attr name="class" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
+                        <attr
+                            bundlevalue="org.jreserve.gui.data.editor.Bundle#LBL.DataSourceTableMultiviewElement.Title" name="displayName"/>
+                        <attr name="iconBase" stringvalue="org/jreserve/gui/data/icons/database.png"/>
+                        <attr name="preferredID" stringvalue="org.jreserve.gui.data.editor.DataSourceTableMultiviewElement"/>
+                        <attr intvalue="2" name="persistenceType"/>
+                        <attr intvalue="100" name="position"/>
                     </file>
                 </folder>
             </folder>
@@ -264,12 +264,6 @@
         <folder name="TaskPanes">
             <folder name="Edit">
                 <folder name="Data">
-                    <file name="org-jreserve-gui-data-inport-ImportDataAction.shadow">
-                        <!--org.jreserve.gui.data.inport.ImportDataAction-->
-                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-inport-ImportDataAction.instance"/>
-                        <attr intvalue="200" name="position"/>
-                        <attr name="priority" stringvalue="medium"/>
-                    </file>
                     <folder name="NewDataSource">
                         <file name="org-jreserve-gui-data-binary-CreateBinaryDataSourceAction.shadow">
                             <!--org.jreserve.gui.data.binary.CreateBinaryDataSourceAction-->
@@ -278,6 +272,12 @@
                             <attr name="priority" stringvalue="medium"/>
                         </file>
                     </folder>
+                    <file name="org-jreserve-gui-data-inport-ImportDataAction.shadow">
+                        <!--org.jreserve.gui.data.inport.ImportDataAction-->
+                        <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-data-inport-ImportDataAction.instance"/>
+                        <attr intvalue="200" name="position"/>
+                        <attr name="priority" stringvalue="medium"/>
+                    </file>
                 </folder>
             </folder>
         </folder>

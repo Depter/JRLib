@@ -18,6 +18,7 @@ package org.jreserve.gui.misc.utils.actions;
 
 import java.awt.Image;
 import java.beans.BeanInfo;
+import java.util.List;
 import javax.swing.Icon;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;

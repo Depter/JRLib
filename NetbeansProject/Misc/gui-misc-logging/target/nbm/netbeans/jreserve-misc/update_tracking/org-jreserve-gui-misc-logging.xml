@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module codename="org.jreserve.gui.misc.logging">
-    <module_version install_time="1380538721633" last="true" origin="installer" specification_version="1.0">
+    <module_version install_time="1380738007394" last="true" origin="installer" specification_version="1.0">
         <file crc="5840852" name="config/Modules/org-jreserve-gui-misc-logging.xml"/>
         <file crc="2505761265" name="logging/logging.properties"/>
-        <file crc="1330370008" name="modules/org-jreserve-gui-misc-logging.jar"/>
+        <file crc="2888056713" name="modules/org-jreserve-gui-misc-logging.jar"/>
     </module_version>
 </module>

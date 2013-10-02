@@ -28,6 +28,7 @@ import org.jreserve.gui.data.dataobject.DataSourceDataObject;
 import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.renameable.RenameUtil;
 import org.jreserve.gui.misc.renameable.Renameable;
+import org.jreserve.gui.misc.utils.actions.AbstractDeletableDataObject;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
@@ -107,7 +108,7 @@ class DataFolderNode extends FilterNode {
             
         this.isRoot = isRoot;
         if(!isRoot) {
-            ic.add(new FolderDeletable(this));
+            ic.add(new FolderDeletable(folder));
             ic.add(ClipboardUtil.createCopiable(folder));
             ic.add(ClipboardUtil.createCutable(folder));
             ic.add(new RenameableFolder());
@@ -217,17 +218,21 @@ class DataFolderNode extends FilterNode {
         return rootFile.equals(client) || FileUtil.isParentOf(rootFile, client);
     }
         
-    private static class FolderDeletable extends Deletable.NodeDeletable {
+    private static class FolderDeletable extends AbstractDeletableDataObject {
         
-        private FolderDeletable(DataFolderNode node) {
-            super(node);
+        private FolderDeletable(DataFolder folder) {
+            super(folder);
         }
-        
+
         @Override
-        public void delete() throws Exception {
-            DataFolder folder = node.getLookup().lookup(DataFolder.class);
-            folder.delete();
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(IMG_PATH, false);
         }
+
+        @Override
+        public String getDisplayName() {
+            return Displayable.Utils.displayProjectPath(getDataObject().getPrimaryFile());
+        }        
     }
     
     private class RenameableFolder implements Renameable {

@@ -59,8 +59,8 @@ abstract class AbstractWorker extends SwingWorker<Void, Object> {
         return tasks;
     }
     
-    private void addTasks(DataObject obj, List<RenameTask> tasks, RenameClient[] clinets) {
-        for(RenameClient client : getClients())
+    private void addTasks(DataObject obj, List<RenameTask> tasks, RenameClient[] clients) {
+        for(RenameClient client : clients)
             tasks.addAll(client.renamed(obj));
         
         if(obj instanceof DataFolder) {
@@ -68,7 +68,7 @@ abstract class AbstractWorker extends SwingWorker<Void, Object> {
             Enumeration<DataObject> children = folder.children(true);
             while(children.hasMoreElements()) {
                 DataObject child = children.nextElement();
-                for(RenameClient client : getClients())
+                for(RenameClient client : clients)
                     tasks.addAll(client.renamed(child));
             }
         }

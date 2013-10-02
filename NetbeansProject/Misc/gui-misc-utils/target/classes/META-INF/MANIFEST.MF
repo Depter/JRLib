@@ -4,7 +4,7 @@ OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/misc/utils/Bundle.p
  roperties
 OpenIDE-Module-Specification-Version: 1.0
 OpenIDE-Module-Implementation-Version: 1.0-20131002
-OpenIDE-Module-Build-Version: 201310021445
+OpenIDE-Module-Build-Version: 201310021923
 OpenIDE-Module: org.jreserve.gui.misc.utils
 OpenIDE-Module-Public-Packages: org.jreserve.gui.misc.utils.actions.*,
   org.jreserve.gui.misc.utils.dataobject.*, org.jreserve.gui.misc.util

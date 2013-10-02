@@ -74,6 +74,22 @@ class Bundle {
     }
     /**
      * @param path path
+     * @return <i>Unable to delete file ''</i>{@code path}<i>''!</i>
+     * @see AbstractDeletableDataObject
+     */
+    static String MSG_AbstractDeletableDataObject_ErrorDelete(Object path) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.AbstractDeletableDataObject.ErrorDelete", path);
+    }
+    /**
+     * @param path path
+     * @return <i>Unable process deletion of file ''</i>{@code path}<i>''!</i>
+     * @see AbstractDeletableDataObject
+     */
+    static String MSG_AbstractDeletableDataObject_ErrorTask(Object path) {
+        return org.openide.util.NbBundle.getMessage(Bundle.class, "MSG.AbstractDeletableDataObject.ErrorTask", path);
+    }
+    /**
+     * @param path path
      * @return <i>Unable to copy '</i>{@code path}<i>'</i>
      * @see ClipboardUtil
      */

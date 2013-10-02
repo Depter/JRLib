@@ -17,19 +17,11 @@
 package org.jreserve.gui.calculations.claimtriangle.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.renameable.RenameClient;
 import org.jreserve.gui.misc.renameable.RenameTask;
 import org.netbeans.api.actions.Savable;
-import org.netbeans.api.project.FileOwnerQuery;
-import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileObject;
-import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -39,47 +31,18 @@ import org.openide.util.lookup.ServiceProvider;
  * @version 1.0
  */
 @ServiceProvider(service = RenameClient.class)
-public class DataSourceRenameClient implements RenameClient {
+public class DataSourceRenameClient 
+    extends AbstractDataSourceClient<RenameTask>
+    implements RenameClient {
     
     @Override
     public List<RenameTask> renamed(DataObject obj) {
-        DataSource ds = obj.getLookup().lookup(DataSource.class);
-        if(ds == null)
-            return Collections.EMPTY_LIST;
-        
-        DataFolder root = getCalculationRoot(obj);
-        if(root == null)
-            return Collections.EMPTY_LIST;
-        
-        List<RenameTask> result = new ArrayList<RenameTask>();
-        Enumeration<DataObject> children = root.children(true);
-        while(children.hasMoreElements()) {
-            DataObject child = children.nextElement();
-            if(hasDataSource(obj, ds))
-                result.add(new TriangleRenameTask(child, ds));
-        }
-        
-        return result;
+        return super.createTasks(obj);
     }
-    
-    private DataFolder getCalculationRoot(DataObject obj) {
-        FileObject file = obj.getPrimaryFile();
-        Project project = FileOwnerQuery.getOwner(file);
-        if(project == null)
-            return null;
-        
-        CalculationObjectProvider cop = project.getLookup().lookup(CalculationObjectProvider.class);
-        if(cop == null)
-            return null;
-        
-        return cop.getRootFolder();
-    }
-    
-    private boolean hasDataSource(DataObject obj, DataSource ds) {
-        ClaimTriangleCalculationImpl calc = obj.getLookup().lookup(ClaimTriangleCalculationImpl.class);
-        if(calc == null)
-            return false;
-        return ds == calc.getDataSource();
+
+    @Override
+    protected RenameTask createTask(DataObject calcObj, DataSource ds) {
+        return new TriangleRenameTask(calcObj, ds);
     }
     
     private class TriangleRenameTask implements RenameTask {
