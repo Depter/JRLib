@@ -19,7 +19,6 @@ package org.jreserve.gui.misc.utils.actions;
 
 import java.awt.Component;
 import java.awt.Graphics;
-import java.io.IOException;
 import javax.swing.Icon;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.spi.actions.AbstractSavable;

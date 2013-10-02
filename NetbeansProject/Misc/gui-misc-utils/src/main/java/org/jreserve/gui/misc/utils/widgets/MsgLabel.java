@@ -78,7 +78,7 @@ public class MsgLabel extends JLabel {
     }
     
     public void showInfo(String msg) {
-        showMsg(State.ERROR, msg);
+        showMsg(State.INFO, msg);
     }
     
     public void clearMessage() {

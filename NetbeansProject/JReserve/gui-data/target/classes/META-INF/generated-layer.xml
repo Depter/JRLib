@@ -117,27 +117,33 @@
                 <file name="org-jreserve-gui-misc-utils-actions-CopyAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CopyAction.instance"/>
-                    <attr intvalue="400" name="position"/>
+                    <attr intvalue="500" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-actions-CutAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CutAction.instance"/>
-                    <attr intvalue="500" name="position"/>
+                    <attr intvalue="600" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-actions-CutAction-separatorAfter.instance">
                     <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="550" name="position"/>
+                    <attr intvalue="650" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
                     <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
-                    <attr intvalue="600" name="position"/>
+                    <attr intvalue="700" name="position"/>
                 </file>
             </folder>
         </folder>
         <folder name="DataFolderNode">
             <folder name="Actions">
+                <file name="org-jreserve-gui-misc-renameable-action-RenameAction.shadow">
+                    <!--org.jreserve.gui.data.dataobject.node.DataSourceNode-->
+                    <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
+                    <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-renameable-action-RenameAction.instance"/>
+                    <attr intvalue="300" name="position"/>
+                </file>
                 <file name="org-netbeans-modules-project-ui-NewFile$WithSubMenu.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
                     <attr name="originalFile" stringvalue="Actions/Project/org-netbeans-modules-project-ui-NewFile$WithSubMenu.instance"/>
@@ -151,27 +157,27 @@
                 <file name="org-jreserve-gui-misc-utils-actions-CopyAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CopyAction.instance"/>
-                    <attr intvalue="300" name="position"/>
+                    <attr intvalue="400" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-actions-CutAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-CutAction.instance"/>
-                    <attr intvalue="400" name="position"/>
+                    <attr intvalue="500" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-actions-PasteAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
                     <attr name="originalFile" stringvalue="Actions/Edit/org-jreserve-gui-misc-utils-actions-PasteAction.instance"/>
-                    <attr intvalue="500" name="position"/>
+                    <attr intvalue="600" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-actions-PasteAction-separatorAfter.instance">
                     <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
                     <attr name="instanceCreate" newvalue="javax.swing.JSeparator"/>
-                    <attr intvalue="550" name="position"/>
+                    <attr intvalue="650" name="position"/>
                 </file>
                 <file name="org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.shadow">
                     <!--org.jreserve.gui.data.dataobject.node.DataFolderNode-->
                     <attr name="originalFile" stringvalue="Actions/File/org-jreserve-gui-misc-utils-notifications-actions-DeleteAction.instance"/>
-                    <attr intvalue="600" name="position"/>
+                    <attr intvalue="700" name="position"/>
                 </file>
             </folder>
         </folder>

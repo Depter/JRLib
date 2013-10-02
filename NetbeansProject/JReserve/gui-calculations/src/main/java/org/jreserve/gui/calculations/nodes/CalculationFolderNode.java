@@ -41,7 +41,6 @@ import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.LoaderTransfer;
 import org.openide.nodes.FilterNode;
-import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
@@ -91,15 +90,17 @@ class CalculationFolderNode extends FilterNode {
     private final boolean isRoot;
     private final DataFolder folder;
     
-    public CalculationFolderNode(Node original, DataObjectProvider doProvider, boolean isRoot) {
-        this(original, doProvider, isRoot, new InstanceContent());
+    public CalculationFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot) {
+        this(folder, doProvider, isRoot, new InstanceContent());
     }
     
-    private CalculationFolderNode(Node original, DataObjectProvider doProvider, boolean isRoot, InstanceContent ic) {
-        super(original, new CalculationsFolderChildren(original, doProvider), 
-              new ProxyLookup(original.getLookup(), new AbstractLookup(ic))
-                );
-        this.folder = getLookup().lookup(DataFolder.class);
+    private CalculationFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot, InstanceContent ic) {
+        super(folder.getNodeDelegate(),
+              Children.create(new CFChildren(folder, doProvider), true),
+              new ProxyLookup(folder.getLookup(), new AbstractLookup(ic))
+        );
+        
+        this.folder = folder;
         ic.add(doProvider);
         ic.add(ClipboardUtil.createPasteable(this));
         

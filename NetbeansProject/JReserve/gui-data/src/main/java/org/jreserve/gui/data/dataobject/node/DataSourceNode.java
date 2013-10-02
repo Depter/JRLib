@@ -21,8 +21,10 @@ import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.Icon;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
+import org.jreserve.gui.misc.renameable.Renameable;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.actions.OpenAction;
@@ -33,6 +35,8 @@ import org.openide.loaders.DataNode;
 import org.openide.nodes.Children;
 import org.openide.util.Utilities;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.Node;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
@@ -57,17 +61,21 @@ import org.openide.util.lookup.ProxyLookup;
         id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
         position = 300, separatorAfter = 350),
     @ActionReference(
-        path = DataSourceNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
+        path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "File", id = "org.jreserve.gui.misc.renameable.action.RenameAction"),
         position = 400),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
+        position = 500),
+    @ActionReference(
+        path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
-        position = 500, separatorAfter = 550),
+        position = 600, separatorAfter = 650),
     @ActionReference(
         path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "File", id = "org.jreserve.gui.misc.utils.notifications.actions.DeleteAction"), 
-        position = 600)
+        position = 700)
 })
 public class DataSourceNode extends DataNode {
 
@@ -89,6 +97,7 @@ public class DataSourceNode extends DataNode {
         this.ic = ic;
         ic.add(ClipboardUtil.createCopiable(obj));
         ic.add(ClipboardUtil.createCutable(obj));
+        ic.add(new DSRenameable());
         
         super.setDisplayName(obj.getName());
         if(getLookup().lookup(DataSource.class).getDataType() == DataType.TRIANGLE) {
@@ -115,6 +124,11 @@ public class DataSourceNode extends DataNode {
     }
     
     @Override
+    public boolean canRename() {
+        return false;
+    }
+    
+    @Override
     public boolean canCut() {
         return true;
     }
@@ -133,5 +147,26 @@ public class DataSourceNode extends DataNode {
     public void setName(String name) {
         super.setName(name);
         setDisplayName(name);
+    }
+    
+    private class DSRenameable implements Renameable {
+        @Override
+        public DataObject getObject() {
+            return getLookup().lookup(DataObject.class);
+        }
+
+        private Displayable getDelegate() {
+            return getLookup().lookup(Displayable.class);
+        }
+        
+        @Override
+        public Icon getIcon() {
+            return getDelegate().getIcon();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return getDelegate().getDisplayName();
+        }
     }
 }

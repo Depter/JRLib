@@ -41,7 +41,7 @@ public class CalculationRootNodeProvider implements NodeFactory {
         DataFolder df = dsop.getRootFolder();
         if(df == null)
             return NodeFactorySupport.fixedNodeList();
-        CalculationFolderNode root = new CalculationFolderNode(df.getNodeDelegate(), dsop, true);
+        CalculationFolderNode root = new CalculationFolderNode(df, dsop, true);
         return NodeFactorySupport.fixedNodeList(root);
     }
 }

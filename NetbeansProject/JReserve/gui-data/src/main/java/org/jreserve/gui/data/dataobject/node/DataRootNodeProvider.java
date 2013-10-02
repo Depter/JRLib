@@ -42,7 +42,7 @@ public class DataRootNodeProvider implements NodeFactory {
         DataFolder df = getRootFolder(p);
         if(df == null)
             return NodeFactorySupport.fixedNodeList();
-        DataFolderNode root = new DataFolderNode(df.getNodeDelegate(), dsop, true);
+        DataFolderNode root = new DataFolderNode(df, dsop, true);
         return NodeFactorySupport.fixedNodeList(root);
     }
     

@@ -3,8 +3,8 @@ OpenIDE-Module-Layer: org/jreserve/gui/data/layer.xml
 OpenIDE-Module-Localizing-Bundle: org/jreserve/gui/data/Bundle.propert
  ies
 OpenIDE-Module-Specification-Version: 1.0
-OpenIDE-Module-Implementation-Version: 1.0-20130930
-OpenIDE-Module-Build-Version: 201309301101
+OpenIDE-Module-Implementation-Version: 1.0-20131002
+OpenIDE-Module-Build-Version: 201310021556
 OpenIDE-Module: org.jreserve.gui.data
 OpenIDE-Module-Public-Packages: org.jreserve.gui.data.api.*, org.jrese
  rve.gui.data.api.wizard.*, org.jreserve.gui.data.spi.*, org.jreserve.
@@ -25,6 +25,7 @@ OpenIDE-Module-Module-Dependencies: org.netbeans.api.annotations.commo
  ders > 7.37.1, org.jreserve.gui.project > 1.0, org.jreserve.gui.misc.
  annotations > 1.0, org.jreserve.gui.misc.audit > 1.0, org.jreserve.gu
  i.misc.eventbus > 1.0, org.jreserve.gui.misc.utils > 1.0, org.jreserv
- e.gui.wrapper.jrlib > 1.0, org.jreserve.gui.trianglewidget > 1.0, org
- .jreserve.gui.localesettings > 1.0
+ e.gui.misc.renameable > 1.0, org.jreserve.gui.wrapper.jrlib > 1.0, or
+ g.jreserve.gui.trianglewidget > 1.0, org.jreserve.gui.localesettings 
+ > 1.0
 

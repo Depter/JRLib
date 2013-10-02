@@ -23,11 +23,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.Icon;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
 import org.jreserve.gui.data.api.DataSourceObjectProvider;
+import org.jreserve.gui.misc.renameable.RenameUtil;
+import org.jreserve.gui.misc.renameable.Renameable;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.openide.awt.ActionID;
@@ -39,7 +43,6 @@ import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.LoaderTransfer;
 import org.openide.nodes.FilterNode;
-import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Utilities;
 import org.openide.util.datatransfer.PasteType;
@@ -59,20 +62,24 @@ import org.openide.util.lookup.ProxyLookup;
         position = 100, separatorAfter = 150),
     @ActionReference(
         path = DataFolderNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
+        id = @ActionID(category = "File", id = "org.jreserve.gui.misc.renameable.action.RenameAction"),
         position = 300),
     @ActionReference(
         path = DataFolderNode.ACTION_PATH,
-        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
         position = 400),
     @ActionReference(
         path = DataFolderNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
+        position = 500),
+    @ActionReference(
+        path = DataFolderNode.ACTION_PATH,
         id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.PasteAction"),
-        position = 500, separatorAfter = 550),
+        position = 600, separatorAfter = 650),
     @ActionReference(
         path = DataFolderNode.ACTION_PATH,
         id = @ActionID(category = "File", id = "org.jreserve.gui.misc.utils.notifications.actions.DeleteAction"), 
-        position = 600)
+        position = 700)
 })
 class DataFolderNode extends FilterNode {
     
@@ -85,23 +92,25 @@ class DataFolderNode extends FilterNode {
     private final boolean isRoot;
     private final DataFolder folder;
     
-    public DataFolderNode(Node original, DataObjectProvider doProvider, boolean isRoot) {
-        this(original, doProvider, isRoot, new InstanceContent());
+    public DataFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot) {
+        this(folder, doProvider, isRoot, new InstanceContent());
     }
     
-    private DataFolderNode(Node original, DataObjectProvider doProvider, boolean isRoot, InstanceContent ic) {
-        super(original, new DataFolderChildren(original, doProvider), 
-              new ProxyLookup(original.getLookup(), new AbstractLookup(ic))
-                );
+    private DataFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot, InstanceContent ic) {
+        super(folder.getNodeDelegate(), 
+              Children.create(new DFChildren(folder, doProvider), true),
+              new ProxyLookup(folder.getLookup(), new AbstractLookup(ic))
+        );
         this.folder = getLookup().lookup(DataFolder.class);
         ic.add(doProvider);
         ic.add(ClipboardUtil.createPasteable(this));
-        
+            
         this.isRoot = isRoot;
         if(!isRoot) {
             ic.add(new FolderDeletable(this));
             ic.add(ClipboardUtil.createCopiable(folder));
             ic.add(ClipboardUtil.createCutable(folder));
+            ic.add(new RenameableFolder());
         }
     }
 
@@ -123,7 +132,7 @@ class DataFolderNode extends FilterNode {
 
     @Override
     public boolean canRename() {
-        return !isRoot;
+        return false;
     }
 
     @Override
@@ -139,14 +148,7 @@ class DataFolderNode extends FilterNode {
     @Override
     public PasteType getDropType(Transferable t, int action, int index) {
         List<DataObject> objs = getPastedObjects(t, LoaderTransfer.CLIPBOARD_CUT);
-        if(objs.isEmpty())
-            return null;
-        
-        List<PasteType> pts = new ArrayList<PasteType>(objs.size());
-        for(DataObject obj : objs)
-            pts.add(ClipboardUtil.movePasteType(folder, obj));
-
-        return ClipboardUtil.multiPasteType(pts);
+        return RenameUtil.movePasteType(folder, objs);
     }
     
     @Override
@@ -184,6 +186,7 @@ class DataFolderNode extends FilterNode {
         FileObject file = obj.getPrimaryFile();
         if(folder.getPrimaryFile().getFileObject(file.getNameExt()) != null)
             return false;
+        
         return true;
     }
     
@@ -224,6 +227,23 @@ class DataFolderNode extends FilterNode {
         public void delete() throws Exception {
             DataFolder folder = node.getLookup().lookup(DataFolder.class);
             folder.delete();
+        }
+    }
+    
+    private class RenameableFolder implements Renameable {
+        @Override
+        public DataObject getObject() {
+            return folder;
+        }
+
+        @Override
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(IMG_PATH, false);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Displayable.Utils.displayProjectPath(folder.getPrimaryFile());
         }
     }
 }
