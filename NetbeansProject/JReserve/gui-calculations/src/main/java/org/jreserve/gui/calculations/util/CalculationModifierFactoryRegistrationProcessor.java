@@ -23,6 +23,7 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import org.jreserve.gui.calculations.api.CalculationModifierFactory;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
+import org.jreserve.jrlib.CalculationData;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
 import org.openide.util.lookup.ServiceProvider;

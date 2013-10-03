@@ -20,9 +20,11 @@ package org.jreserve.gui.calculations.api;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Icon;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.utils.actions.AbstractDisplayableSavable;
-import org.jreserve.gui.misc.utils.actions.Deletable;
+import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
+import org.jreserve.gui.misc.utils.actions.deletable.Deletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.netbeans.api.actions.Savable;
@@ -219,15 +221,23 @@ public abstract class CalculationDataObject extends MultiDataObject {
         }
     }
     
-    private class CalculationDeletable extends Deletable.DisplayableDeletable {
+    private class CalculationDeletable extends DataObjectDeletable {
+        
+        private Displayable displayable;
         
         private CalculationDeletable() {
-            super(getDisplayable());
+            super(CalculationDataObject.this);
+            displayable = getDisplayable();
         }
-        
+
         @Override
-        public void delete() throws Exception {
-            CalculationDataObject.this.delete();
+        public Icon getIcon() {
+            return displayable.getIcon();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return displayable.getDisplayName();
         }
     }
     

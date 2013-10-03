@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.trianglewidget;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -26,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.Box;
+import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.trianglewidget.model.DevelopmentTriangleModel;
@@ -59,6 +61,7 @@ public class TriangleWidget extends JPanel {
     private TriangleGeometry geometry;
     private LocaleSettings.DecimalFormatter df = LocaleSettings.createDecimalFormatter();
     private SelectionListener selectionListener = new SelectionListener();
+    private TriangleEditController editController;
     
     //Components
     private LayerTriangleRenderer renderer;
@@ -163,6 +166,18 @@ public class TriangleWidget extends JPanel {
         this.selectionModel = selectionModel;
         this.selectionModel.addTriangleSelectionListener(selectionListener);
         resizeAndRepaint();
+    }
+    
+    public boolean isEditable() {
+        return editController != null;
+    }
+    
+    public TriangleEditController getEditController() {
+        return editController;
+    }
+    
+    public void setEditController(TriangleEditController editController) {
+        this.editController = editController;
     }
     
     public LocaleSettings.DecimalFormatter getDecimalFormatter() {
@@ -362,7 +377,7 @@ public class TriangleWidget extends JPanel {
         int h = xSize.height + xSize.height;
         return new Dimension(w, h);
     }
-    
+        
     private class ModelListener implements ChangeListener {
         @Override
         public void stateChanged(ChangeEvent e) {

@@ -126,6 +126,7 @@
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.misc.utils.actions</publicPackage>
                         <publicPackage>org.jreserve.gui.misc.utils.dataobject</publicPackage>
+                        <publicPackage>org.jreserve.gui.misc.utils.actions.deletable</publicPackage>
                         <publicPackage>org.jreserve.gui.misc.utils.notifications</publicPackage>
                         <publicPackage>org.jreserve.gui.misc.utils.tasks</publicPackage>
                         <publicPackage>org.jreserve.gui.misc.utils.widgets</publicPackage>

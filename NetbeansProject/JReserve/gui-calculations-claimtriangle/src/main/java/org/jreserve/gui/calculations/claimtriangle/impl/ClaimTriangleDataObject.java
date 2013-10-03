@@ -23,6 +23,7 @@ import javax.swing.Icon;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.CalculationDataObject;
 import org.jreserve.gui.misc.audit.api.AuditableMultiview;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.netbeans.core.spi.multiview.MultiViewElement;
@@ -64,6 +65,8 @@ public class ClaimTriangleDataObject extends CalculationDataObject {
         super.registerEditor(MIME_TYPE, true);
         
         calculation = loadCalculation();
+        EventBusManager.getDefault().subscribe(calculation);
+        
         super.ic.add(new ClaimTriangleDisplayable());
         super.ic.add(calculation);
         super.setDeleteAllowed(true);
@@ -79,6 +82,12 @@ public class ClaimTriangleDataObject extends CalculationDataObject {
             logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         }
+    }
+
+    @Override
+    protected void handleDelete() throws IOException {
+        super.handleDelete();
+        EventBusManager.getDefault().unsubscribe(calculation);
     }
     
     public Node createNodeDelegate() {

@@ -38,7 +38,6 @@ import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelAdapter;
 import org.jreserve.gui.trianglewidget.model.registration.TriangleModelRegistry;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
-import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.TriangleUtil;
 
 /**
@@ -52,6 +51,10 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
     
     public TriangleWidgetPanel() {
         initComponents();
+    }
+    
+    public TriangleWidget getTriangleWidget() {
+        return triangleWidget;
     }
     
     public void setCummulated(boolean cummulated) {
@@ -118,6 +121,17 @@ public class TriangleWidgetPanel extends javax.swing.JPanel {
     public void setSelectedLayer(TriangleLayer layer) {
         int index = this.layers.indexOf(layer);
         layerCombo.setSelectedIndex(index);
+    }
+    
+    public TriangleLayer getSelectedLayer() {
+        Object o = layerCombo.getSelectedItem();
+        if(o instanceof TriangleLayer)
+            return (TriangleLayer) o;
+        return null;
+    }
+    
+    public int getSelectedLayerIndex() {
+        return layerCombo.getSelectedIndex();
     }
     
     public List<TriangleLayer> getLayers() {

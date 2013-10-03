@@ -29,6 +29,7 @@ import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
+import javax.lang.model.util.Types;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -143,7 +144,10 @@ public abstract class AbstractRegistrationProcessor<A extends Annotation, I> ext
     }
     
     private boolean isAssignable(TypeMirror from, TypeMirror to) {
-        return processingEnv.getTypeUtils().isAssignable(from, to);
+        Types types = processingEnv.getTypeUtils();
+        from = types.erasure(from);
+        to = types.erasure(to);
+        return types.isAssignable(from, to);
     }
     
     private boolean hasGoodConstructor(TypeElement clazz ) {

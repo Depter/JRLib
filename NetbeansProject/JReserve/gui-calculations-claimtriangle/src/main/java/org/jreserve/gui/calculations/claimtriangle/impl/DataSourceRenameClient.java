@@ -39,7 +39,7 @@ public class DataSourceRenameClient
     public List<RenameTask> renamed(DataObject obj) {
         return super.createTasks(obj);
     }
-
+    
     @Override
     protected RenameTask createTask(DataObject calcObj, DataSource ds) {
         return new TriangleRenameTask(calcObj, ds);

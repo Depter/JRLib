@@ -14,25 +14,27 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.misc.utils.actions.deletable;
 
-import org.jdom2.Element;
-import org.jreserve.jrlib.CalculationData;
+import java.util.List;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifierFactory<C extends CalculationData> {
+public interface Deletable extends Displayable {
     
-    public CalculationModifier<C> fromXml(Element element) throws Exception;
+    public void delete() throws Exception;
     
-    public static @interface Registration {
-        //The Category, to which factory belongs (exclusion, correction, smoothing)
-        String category();
-        //The xml root name for the factory
-        String rootName();
-        int position() default Integer.MAX_VALUE;
+    public Object getDeletedObject();
+    
+    public static interface Client {
+        public List<Task> getTasks(Object obj);
+    }
+    
+    public static interface Task {
+        public void objectDeleted() throws Exception;
     }
 }

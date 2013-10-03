@@ -14,25 +14,16 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
-
-import org.jdom2.Element;
-import org.jreserve.jrlib.CalculationData;
+package org.jreserve.gui.trianglewidget;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifierFactory<C extends CalculationData> {
+public interface TriangleEditController {
     
-    public CalculationModifier<C> fromXml(Element element) throws Exception;
+    public boolean allowsEdit(TriangleWidget widget, int accident, int development);
     
-    public static @interface Registration {
-        //The Category, to which factory belongs (exclusion, correction, smoothing)
-        String category();
-        //The xml root name for the factory
-        String rootName();
-        int position() default Integer.MAX_VALUE;
-    }
+    public void processEdit(TriangleWidget widget, int accident, int development, double value);
 }

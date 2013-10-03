@@ -24,11 +24,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.Icon;
 import org.jreserve.gui.calculations.api.CalculationObjectProvider;
 import org.jreserve.gui.calculations.api.CalculationProvider;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
-import org.jreserve.gui.misc.utils.actions.Deletable;
+import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -106,7 +108,7 @@ class CalculationFolderNode extends FilterNode {
         
         this.isRoot = isRoot;
         if(!isRoot) {
-            ic.add(new FolderDeletable(this));
+            ic.add(new FolderDeletable(folder));
             ic.add(ClipboardUtil.createCopiable(folder));
             ic.add(ClipboardUtil.createCutable(folder));
         }
@@ -220,17 +222,21 @@ class CalculationFolderNode extends FilterNode {
             return false;
         return true;
     }
+
+    private static class FolderDeletable extends DataObjectDeletable {
         
-    private static class FolderDeletable extends Deletable.NodeDeletable {
-        
-        private FolderDeletable(CalculationFolderNode node) {
-            super(node);
+        private FolderDeletable(DataFolder folder) {
+            super(folder);
         }
-        
+
         @Override
-        public void delete() throws Exception {
-            DataFolder folder = node.getLookup().lookup(DataFolder.class);
-            folder.delete();
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(IMG_PATH, false);
         }
+
+        @Override
+        public String getDisplayName() {
+            return Displayable.Utils.displayProjectPath(getDeletedObject().getPrimaryFile());
+        }        
     }
 }

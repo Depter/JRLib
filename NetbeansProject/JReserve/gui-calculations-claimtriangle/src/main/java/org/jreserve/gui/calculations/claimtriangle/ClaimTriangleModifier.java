@@ -25,7 +25,7 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ClaimTriangleModifier extends CalculationModifier {
+public interface ClaimTriangleModifier extends CalculationModifier<ClaimTriangle> {
     
     public TriangleLayer createLayer(ClaimTriangle input);
 }

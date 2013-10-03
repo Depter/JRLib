@@ -49,8 +49,8 @@ import org.jreserve.gui.data.inport.ImportDataAction;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.ScaleSpinner;
 import org.jreserve.gui.localesettings.TableToClipboardRenderers;
-import org.jreserve.gui.misc.utils.actions.Deletable;
-import org.jreserve.gui.misc.utils.actions.DeleteAction;
+import org.jreserve.gui.misc.utils.actions.deletable.Deletable;
+import org.jreserve.gui.misc.utils.actions.deletable.DeleteAction;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.tasks.SwingCallback;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
@@ -318,6 +318,11 @@ class DataSourceTablePanel extends JPanel {
         public String getDisplayName() {
             String msg = "%d records from %s";
             return String.format(msg, entries.size(), ds.getPath());
+        }
+
+        @Override
+        public Object getDeletedObject() {
+            return entries;
         }
     }
 }

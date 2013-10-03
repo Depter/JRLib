@@ -63,6 +63,7 @@ public class ClaimTriangleCalculationImpl
     extends AbstractModifiableCalculationProvider<ClaimTriangle> 
     implements ClaimTriangleCalculation, AuditedObject {
     
+    public final static String CATEGORY = "ClaimTriangle";
     public final static String CT_ELEMENT = "claimTriangle";
     public final static String DS_ELEMENT = "dataSource";
     public final static String AUDIT_ID_ELEMENT = "auditId";
@@ -79,7 +80,7 @@ public class ClaimTriangleCalculationImpl
     private ClaimTriangle claimTriangle;
     
     ClaimTriangleCalculationImpl(ClaimTriangleDataObject dObj, Element root) throws Exception {
-        super(dObj, ClaimTriangle.class);
+        super(dObj, CATEGORY);
         this.dObj = dObj;
         
         FileObject pf = dObj.getPrimaryFile();
@@ -116,6 +117,11 @@ public class ClaimTriangleCalculationImpl
         synchronized(lock) {
             events.fireCreated();
         }
+    }
+
+    @Override
+    public Class<ClaimTriangle> getCalculationClass() {
+        return ClaimTriangle.class;
     }
     
     @Override
@@ -219,17 +225,6 @@ public class ClaimTriangleCalculationImpl
     public String getAuditName() {
         return getPath();
     }
-
-    @EventBusListener(forceEDT = true)
-    public void dataSourcePathChanged(DataEvent.Deleted evt) {
-        synchronized(lock) {
-            DataSource ds = evt.getDataSource();
-            if(ds == dataSource) {
-                recalculate();
-                events.fireChange();
-            }
-        }
-    }
     
     public List<TriangleLayer> createLayers() {
         synchronized(lock) {
@@ -264,6 +259,19 @@ public class ClaimTriangleCalculationImpl
     private TriangleLayer createBaseLayer(ClaimTriangle input) {
         String name = Bundle.LBL_ClaimTriangleCalculationImpl_Layer_Base();
         return new DefaultTriangleLayer(input, name);
+    }
+    
+    @EventBusListener
+    public synchronized void dataEvent(DataEvent evt) {
+        if(isDataChanged(evt)) {
+            recalculate();
+            events.fireChange();
+        }
+    }
+    
+    private boolean isDataChanged(DataEvent evt) {
+        return dataSource == evt.getDataSource() &&
+               (evt instanceof DataEvent.DataChange);
     }
     
     private class GeometryListener implements ChangeListener {

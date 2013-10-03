@@ -18,9 +18,10 @@
 package org.jreserve.gui.calculations.claimtriangle.impl;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.misc.utils.actions.DeletableDataObject;
+import org.jreserve.gui.misc.utils.actions.deletable.Deletable;
 import org.netbeans.api.actions.Savable;
 import org.openide.loaders.DataObject;
 import org.openide.util.lookup.ServiceProvider;
@@ -30,31 +31,33 @@ import org.openide.util.lookup.ServiceProvider;
  * @author Peter Decsi
  * @version 1.0
  */
-@ServiceProvider(service = DeletableDataObject.Client.class)
+@ServiceProvider(service = Deletable.Client.class)
 public class DataSourceDeleteClient
-    extends AbstractDataSourceClient<DeletableDataObject.Task>
-    implements DeletableDataObject.Client {
+    extends AbstractDataSourceClient<Deletable.Task>
+    implements Deletable.Client {
 
     @Override
-    public List<DeletableDataObject.Task> getTasks(DataObject deleted) {
-        return super.createTasks(deleted);
+    public List<Deletable.Task> getTasks(Object deleted) {
+        if(deleted instanceof DataObject)
+            return super.createTasks((DataObject) deleted);
+        return Collections.EMPTY_LIST;
     }
 
     @Override
-    protected DeletableDataObject.Task createTask(DataObject calcObj, DataSource ds) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected Deletable.Task createTask(DataObject calcObj, DataSource ds) {
+        return new DeletedTask(calcObj);
     }
     
-    private class DeletedTask implements DeletableDataObject.Task {
+    private class DeletedTask implements Deletable.Task {
         
         private final DataObject calcObj;
         
         private DeletedTask(DataObject calcObj) {
             this.calcObj = calcObj;
         }
-        
+
         @Override
-        public void deleted() throws IOException {
+        public void objectDeleted() throws Exception {
             updateFile();
             saveObject();
         }

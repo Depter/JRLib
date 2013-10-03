@@ -21,10 +21,13 @@ import javax.swing.BorderFactory;
 import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
+import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleCorrectionModifier;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
+import org.jreserve.gui.trianglewidget.TriangleEditController;
+import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
@@ -83,6 +86,7 @@ public class LayerEditor extends AbstractExpandableElement {
             panel.setTriangleGeometry(calculation.getGeometry());
             panel.setLayers(calculation.createLayers());
             panel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
+            panel.getTriangleWidget().setEditController(new LayerEditController());
         }
         ic.add(panel.createCopiable());
         return panel;
@@ -103,7 +107,6 @@ public class LayerEditor extends AbstractExpandableElement {
     }
     
     private class SelectionListener implements TriangleSelectionListener {
-
         @Override
         public void selectionChanged(TriangleSelectionEvent event) {
             TriangleSelection ts = lkp.lookup(TriangleSelection.class);
@@ -111,6 +114,24 @@ public class LayerEditor extends AbstractExpandableElement {
                 ic.remove(ts);
             ts = panel.getTriangleSelectionModel().createSelection();
             ic.add(ts);
+        }
+    }
+    
+    private class LayerEditController implements TriangleEditController {
+
+        @Override
+        public boolean allowsEdit(TriangleWidget widget, int accident, int development) {
+            return true;
+        }
+
+        @Override
+        public void processEdit(TriangleWidget widget, int accident, int development, double value) {
+            ClaimTriangleCorrectionModifier m = new ClaimTriangleCorrectionModifier(accident, development, value);
+            int index = panel.getSelectedLayerIndex();
+            if(index < 0 || panel.getLayers().size() == (index+1))
+                calculation.addModification(m);
+            else
+                calculation.addModification(index, m);
         }
     
     }

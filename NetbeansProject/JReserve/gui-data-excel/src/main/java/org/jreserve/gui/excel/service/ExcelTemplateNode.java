@@ -26,7 +26,7 @@ import org.jreserve.gui.excel.template.ExcelTemplateManager;
 import org.jreserve.gui.excel.template.TemplateEvent;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.jreserve.gui.misc.utils.actions.Deletable;
+import org.jreserve.gui.misc.utils.actions.deletable.Deletable;
 import org.netbeans.api.actions.Editable;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.nodes.AbstractNode;
@@ -134,6 +134,11 @@ class ExcelTemplateNode extends AbstractNode {
         @Override
         public String getDisplayName() {
             return template.getName();
+        }
+
+        @Override
+        public Object getDeletedObject() {
+            return template;
         }
     }
 }

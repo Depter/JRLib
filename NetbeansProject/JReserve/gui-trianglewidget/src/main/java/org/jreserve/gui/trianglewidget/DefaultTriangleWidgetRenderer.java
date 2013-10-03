@@ -20,12 +20,10 @@ package org.jreserve.gui.trianglewidget;
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
-import javax.swing.table.DefaultTableCellRenderer;
 import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 
 /**
@@ -38,7 +36,6 @@ import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWidgetRenderer {
     
     private DecimalFormatter df;
-    private DefaultListCellRenderer renderer = new DefaultListCellRenderer();
     
     private Color background;
     private Color foreground;
@@ -84,8 +81,8 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
             setBackground(selectionBackground);
             setForeground(selectionForeground);
         } else {
-            setForeground(foreground);
-            setBackground(background);
+            setForeground(Color.BLACK);
+            setBackground(Color.WHITE);
         }
         
         return this;

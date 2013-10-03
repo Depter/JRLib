@@ -27,7 +27,7 @@ import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.gui.misc.audit.api.AuditableMultiview;
 import org.jreserve.gui.misc.audit.api.AuditableObject;
-import org.jreserve.gui.misc.utils.actions.AbstractDeletableDataObject;
+import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.jrlib.gui.data.DataEntryFilter;
@@ -238,7 +238,7 @@ public class DataSourceDataObject extends MultiDataObject {
         }
     } 
     
-    private class DataSourceDeletable extends AbstractDeletableDataObject {
+    private class DataSourceDeletable extends DataObjectDeletable {
 
         private DataSourceDeletable() {
             super(DataSourceDataObject.this);

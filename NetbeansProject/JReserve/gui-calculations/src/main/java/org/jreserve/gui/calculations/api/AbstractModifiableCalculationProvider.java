@@ -37,18 +37,18 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     public final static String MODIFICATIONS_ELEMENT = "modifications";
     
     private List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
-    private final Class<C> clazz;
+    private final String category;
     private final ModificationListener cmListener = new ModificationListener();
     //private C calculation;
     
-    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Class<C> clazz) {
+    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, String category) {
         super(obj);
-        this.clazz = clazz;
+        this.category = category;
     }
     
-    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Element parent, Class<C> category) throws Exception {
+    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Element parent, String category) throws Exception {
         super(obj);
-        this.clazz = category;
+        this.category = category;
         Element mr = JDomUtil.getExistingChild(parent, MODIFICATIONS_ELEMENT);
         for(Element me : mr.getChildren()) {
             String rootName = me.getName();
@@ -59,11 +59,6 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
                 modifications.add(cm);
             }
         }
-    }
-    
-    @Override
-    public Class<C> getCalculationClass() {
-        return clazz;
     }
     
     @Override

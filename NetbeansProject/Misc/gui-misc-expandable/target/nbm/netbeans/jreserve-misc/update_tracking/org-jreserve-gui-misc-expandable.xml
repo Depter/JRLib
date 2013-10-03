@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<module codename="org.jreserve.gui.misc.expandable">
-    <module_version install_time="1380738007393" last="true" origin="installer" specification_version="1.0">
-        <file crc="2321536797" name="config/Modules/org-jreserve-gui-misc-expandable.xml"/>
-        <file crc="203202546" name="modules/org-jreserve-gui-misc-expandable.jar"/>
-    </module_version>
-</module>

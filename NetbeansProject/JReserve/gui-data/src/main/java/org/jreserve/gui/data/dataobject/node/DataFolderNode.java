@@ -28,9 +28,8 @@ import org.jreserve.gui.data.dataobject.DataSourceDataObject;
 import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.renameable.RenameUtil;
 import org.jreserve.gui.misc.renameable.Renameable;
-import org.jreserve.gui.misc.utils.actions.AbstractDeletableDataObject;
+import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
-import org.jreserve.gui.misc.utils.actions.Deletable;
 import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -218,7 +217,7 @@ class DataFolderNode extends FilterNode {
         return rootFile.equals(client) || FileUtil.isParentOf(rootFile, client);
     }
         
-    private static class FolderDeletable extends AbstractDeletableDataObject {
+    private static class FolderDeletable extends DataObjectDeletable {
         
         private FolderDeletable(DataFolder folder) {
             super(folder);
@@ -231,7 +230,7 @@ class DataFolderNode extends FilterNode {
 
         @Override
         public String getDisplayName() {
-            return Displayable.Utils.displayProjectPath(getDataObject().getPrimaryFile());
+            return Displayable.Utils.displayProjectPath(getDeletedObject().getPrimaryFile());
         }        
     }
     

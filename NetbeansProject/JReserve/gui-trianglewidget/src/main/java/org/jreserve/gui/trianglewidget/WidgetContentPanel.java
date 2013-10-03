@@ -17,14 +17,24 @@
 
 package org.jreserve.gui.trianglewidget;
 
+import org.jreserve.gui.trianglewidget.editing.TriangleEditor;
+import org.jreserve.gui.trianglewidget.editing.TriangleEditorListener;
+import org.jreserve.gui.trianglewidget.editing.AbstractTriangleEditor;
+import java.applet.Applet;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ChangeEvent;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
 import org.jreserve.jrlib.triangle.Triangle;
@@ -40,6 +50,14 @@ class WidgetContentPanel extends JComponent {
     private TriangleWidgetRenderer renderer;
     private Rectangle cellBounds = new Rectangle();
     private boolean isCummulated = true;
+    
+    //Editing
+    private TriangleEditor editor = new AbstractTriangleEditor();
+    private Component editorComp;
+    private TriangleEditorListener editorListener = new EditorListener();
+    private EditorRemover editorRemover;
+    private int editingRow = -1;
+    private int editingColumn = -1;
     
     //Init before painting
     private TriangleModel model;
@@ -166,23 +184,151 @@ class WidgetContentPanel extends JComponent {
 	c.setBounds(-cellBounds.width, -cellBounds.height, 0, 0);    
     }
     
+    boolean editCellAt(int row, int column) {
+        if(!widget.isEditable() || !model.hasValueAt(row, column))
+            return true;
+        
+        if (editor != null && !editor.stopEditing())
+            return false;
+
+        if(!model.hasValueAt(row, column))
+            return false;
+
+        if (editorRemover == null) {
+            KeyboardFocusManager fm =
+                KeyboardFocusManager.getCurrentKeyboardFocusManager();
+            editorRemover = new EditorRemover(fm);
+            fm.addPropertyChangeListener("permanentFocusOwner", editorRemover);
+        }
+
+        int accident = model.getAccidentIndex(row, column);
+        int development = model.getDevelopmentIndex(row, column);
+        TriangleEditController editController = widget.getEditController();
+        if (editor != null && editController != null && editController.allowsEdit(widget, accident, development)) {
+	    editorComp = prepareEditor(row, column);
+	    if (editorComp == null) {
+		removeEditor();
+		return false;
+	    }
+            
+            initCellBounds(row, column);
+            editorComp.setBounds(cellBounds);
+	    add(editorComp);
+	    editorComp.validate();
+            editorComp.repaint();
+
+	    editor.addTriangleEditorListener(editorListener);
+            editingRow = row;
+            editingColumn = column;
+            
+	    return true;
+        }
+        return false;
+    }
+    
+    private Component prepareEditor(int row, int column) {
+        double value = model.getValueAt(row, column);
+        boolean isSelected = isSelected(row, column);
+        int accident = model.getAccidentIndex(row, column);
+        int development = model.getDevelopmentIndex(row, column);
+        Component comp = editor.getEditorComponent(widget, value, accident, development, isSelected);
+        
+        if (comp instanceof JComponent) {
+	    JComponent jComp = (JComponent)comp;
+	    if (jComp.getNextFocusableComponent() == null) {
+		jComp.setNextFocusableComponent(this);
+	    }
+	}
+	return comp;
+    }
+    
+    private void removeEditor() {
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().
+            removePropertyChangeListener("permanentFocusOwner", editorRemover);
+	editorRemover = null;
+
+        if(editor != null) {
+            editor.removeTriangleEditorListener(editorListener);
+            if (editorComp != null) {
+                Component focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+                boolean isFocusOwnerInTheTable = focusOwner != null?   
+                        SwingUtilities.isDescendingFrom(focusOwner, this):false;                    
+                remove(editorComp);
+                if(isFocusOwnerInTheTable)
+                    requestFocusInWindow();
+	    }
+            
+            initCellBounds(editingRow, editingColumn);
+            editingRow = -1;
+            editingColumn = -1;
+            editorComp = null;
+
+            repaint(cellBounds);
+        }
+    }
+    
+    private class EditorListener implements TriangleEditorListener {
+
+        @Override
+        public void editingStopped(ChangeEvent evt) {
+            if(editor != null) {
+                Double value = editor.getEditorValue();
+                int accident = widget.getModel().getAccidentIndex(editingRow, editingColumn);
+                int development = widget.getModel().getDevelopmentIndex(editingRow, editingColumn);
+                removeEditor();
+                
+                TriangleEditController editController = widget.getEditController();
+                if(value != null && editController != null)
+                    editController.processEdit(widget, accident, development, value);
+            }
+        }
+
+        @Override
+        public void editingCancelled(ChangeEvent evt) {
+            removeEditor();
+        }
+    }
     
     private class MouseSelectionListener extends MouseAdapter {
 
         @Override
-        public void mousePressed(MouseEvent e) {
+        public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() == 2) {
+                int[] cell = getCell(e);
+                if(cell != null)
+                    editCellAt(cell[0], cell[1]);
+            }
+        }
+        
+        private int[] getCell(MouseEvent evt) {
             if(cellBounds.width == 0 || cellBounds.height == 0)
-                return;
+                return null;
             
-            Point p = e.getPoint();
+            Point p = evt.getPoint();
             int r = p.y / cellBounds.height;
             int c = p.x / cellBounds.width;
             
             if(!widget.getModel().hasValueAt(r, c))
+                return null;
+            
+            return new int[]{r, c};
+        }
+        
+        @Override
+        public void mousePressed(MouseEvent e) {
+            int[] cell = getCell(e);
+            if(cell == null)
                 return;
             
-            int a = model.getAccidentIndex(r, c);
-            int d = model.getDevelopmentIndex(r, c);
+            if(editingRow >= 0 && editingColumn >= 0) {
+                if(editingRow == cell[0] && editingColumn == cell[1])
+                    return;
+                else
+                    editor.cancelEditing();
+            }
+            
+            int a = model.getAccidentIndex(cell[0], cell[1]);
+            int d = model.getDevelopmentIndex(cell[0], cell[1]);
             if(e.isControlDown()) {
                 switchSelection(a, d);
             } else {
@@ -206,4 +352,37 @@ class WidgetContentPanel extends JComponent {
             selectionModel.setValueAdjusting(false);
         }
     }
+    
+    private class EditorRemover implements PropertyChangeListener {
+        private KeyboardFocusManager focusManager;
+
+        private EditorRemover(KeyboardFocusManager fm) {
+            this.focusManager = fm;
+        }
+        
+        @Override
+        public void propertyChange(PropertyChangeEvent ev) {
+            if (editingRow < 0 || editingColumn < 0 || 
+                getClientProperty("terminateEditOnFocusLost") != Boolean.TRUE)
+                return;
+
+            Component c = focusManager.getPermanentFocusOwner();
+            while (c != null) {
+                if (c == widget) {
+                    // focus remains inside the table
+                    return;
+                } else if ((c instanceof Window) ||
+                           (c instanceof Applet && c.getParent() == null)) {
+                    if (c == SwingUtilities.getRoot(widget)) {
+                        if (!editor.stopEditing()) {
+                            editor.cancelEditing();
+                        }
+                    }
+                    break;
+                }
+                c = c.getParent();
+            }
+        }
+    }
+    
 }
