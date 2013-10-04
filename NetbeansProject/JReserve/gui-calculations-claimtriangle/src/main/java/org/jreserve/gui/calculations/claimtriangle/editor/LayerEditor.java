@@ -17,17 +17,10 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
-import javax.swing.BorderFactory;
-import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
-import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleCorrectionModifier;
-import org.jreserve.gui.misc.eventbus.EventBusListener;
-import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
-import org.jreserve.gui.trianglewidget.TriangleEditController;
-import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
@@ -57,7 +50,7 @@ import org.openide.util.lookup.ProxyLookup;
 })
 public class LayerEditor extends AbstractExpandableElement {
     
-    private TriangleWidgetPanel panel;
+    private LayerEditorPanel panel;
     private ClaimTriangleCalculationImpl calculation;
     private final Lookup lkp;
     private final InstanceContent ic = new InstanceContent();
@@ -69,7 +62,6 @@ public class LayerEditor extends AbstractExpandableElement {
     public LayerEditor(Lookup context) {
         calculation = context.lookup(ClaimTriangleCalculationImpl.class);
         lkp = new ProxyLookup(new AbstractLookup(ic));
-        EventBusManager.getDefault().subscribe(this);
     }
 
     @Override
@@ -79,30 +71,18 @@ public class LayerEditor extends AbstractExpandableElement {
     
     @Override
     protected Component createVisualComponent() {
-        panel = new TriangleWidgetPanel();
-        panel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        panel.setFocusable(true);
-        if(calculation != null) {
-            panel.setTriangleGeometry(calculation.getGeometry());
-            panel.setLayers(calculation.createLayers());
-            panel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
-            panel.getTriangleWidget().setEditController(new LayerEditController());
-        }
-        ic.add(panel.createCopiable());
+        panel = new LayerEditorPanel(calculation);
+        
+        TriangleWidgetPanel wPanel = panel.getWidgetPanel();
+        wPanel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
+        ic.add(wPanel.createCopiable());
         return panel;
     }
     
-    @EventBusListener(forceEDT = true)
-    public void calculationChanged(CalculationEvent.Change evt) {
-        if(panel!=null && calculation == evt.getCalculationProvider()) {
-            panel.setTriangleGeometry(calculation.getGeometry());
-            panel.setLayers(calculation.createLayers());
-        }
-    }
-
     @Override
     public void componentClosed() {
-        EventBusManager.getDefault().unsubscribe(this);
+        if(panel != null)
+            panel.componentClosed();
         super.componentClosed();
     }
     
@@ -112,27 +92,8 @@ public class LayerEditor extends AbstractExpandableElement {
             TriangleSelection ts = lkp.lookup(TriangleSelection.class);
             if(ts != null)
                 ic.remove(ts);
-            ts = panel.getTriangleSelectionModel().createSelection();
+            ts = panel.getWidgetPanel().getTriangleSelectionModel().createSelection();
             ic.add(ts);
         }
     }
-    
-    private class LayerEditController implements TriangleEditController {
-
-        @Override
-        public boolean allowsEdit(TriangleWidget widget, int accident, int development) {
-            return true;
-        }
-
-        @Override
-        public void processEdit(TriangleWidget widget, int accident, int development, double value) {
-            ClaimTriangleCorrectionModifier m = new ClaimTriangleCorrectionModifier(accident, development, value);
-            int index = panel.getSelectedLayerIndex();
-            if(index < 0 || panel.getLayers().size() == (index+1))
-                calculation.addModification(m);
-            else
-                calculation.addModification(index, m);
-        }
-    
-    }
-}
+ }

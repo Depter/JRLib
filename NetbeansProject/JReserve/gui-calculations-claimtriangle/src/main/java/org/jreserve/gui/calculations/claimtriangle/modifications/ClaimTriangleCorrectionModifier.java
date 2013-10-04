@@ -16,16 +16,16 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.modifications;
 
+import javax.swing.Icon;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractCalculationModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
-import org.openide.nodes.AbstractNode;
-import org.openide.nodes.Children;
-import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -79,16 +79,28 @@ public class ClaimTriangleCorrectionModifier extends AbstractCalculationModifier
     }
 
     @Override
-    protected Node createNodeDelegate() {
-        AbstractNode node = new AbstractNode(Children.LEAF);
-        node.setDisplayName(Bundle.LBL_ClaimTriangleCorrectionModifier_Name());
-        node.setShortDescription(getDescription());
-        //TODO icon
-        return node;
+    protected Displayable createDisplayable() {
+        return new CorrectionDisplayable();
     }
 
     @Override
     public TriangleLayer createLayer(ClaimTriangle input) {
         return new CorrectionLayer(input);
+    }
+    
+    private static class CorrectionDisplayable implements Displayable {
+        
+        private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/correction.png";
+        private final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
+        
+        @Override
+        public Icon getIcon() {
+            return ICON;
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Bundle.LBL_CorrectionLayer_Name();
+        }
     }
 }

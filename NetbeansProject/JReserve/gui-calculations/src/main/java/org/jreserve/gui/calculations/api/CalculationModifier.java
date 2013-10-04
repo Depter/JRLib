@@ -18,6 +18,7 @@ package org.jreserve.gui.calculations.api;
 
 import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
 import org.openide.nodes.Node;
 
@@ -34,9 +35,9 @@ public interface CalculationModifier<C extends CalculationData> {
     
     public Element toXml();
     
-    public Node getNodeDelegate();
-    
     public String getDescription();
+    
+    public Displayable getDisplayable();
     
     public void addChangeListener(ChangeListener changeListener);
     

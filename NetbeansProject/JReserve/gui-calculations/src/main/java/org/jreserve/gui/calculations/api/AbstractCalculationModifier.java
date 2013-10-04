@@ -17,8 +17,8 @@
 package org.jreserve.gui.calculations.api;
 
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
-import org.openide.nodes.Node;
 import org.openide.util.ChangeSupport;
 
 /**
@@ -30,7 +30,7 @@ public abstract class AbstractCalculationModifier<C extends CalculationData> imp
 
     private final ChangeSupport cs = new ChangeSupport(this);
     private final Class<C> clazz;
-    private Node node;
+    private Displayable displayable;
     
     protected AbstractCalculationModifier(Class<C> clazz) {
         this.clazz = clazz;
@@ -42,13 +42,13 @@ public abstract class AbstractCalculationModifier<C extends CalculationData> imp
     }
 
     @Override
-    public synchronized Node getNodeDelegate() {
-        if(node == null)
-            node = createNodeDelegate();
-        return node;
+    public synchronized Displayable getDisplayable() {
+        if(displayable == null)
+            displayable = createDisplayable();
+        return displayable;
     }
     
-    protected abstract Node createNodeDelegate();
+    protected abstract Displayable createDisplayable();
 
     @Override
     public void addChangeListener(ChangeListener changeListener) {

@@ -37,18 +37,14 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     public final static String MODIFICATIONS_ELEMENT = "modifications";
     
     private List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
-    private final String category;
     private final ModificationListener cmListener = new ModificationListener();
-    //private C calculation;
     
-    protected AbstractModifiableCalculationProvider(CalculationDataObject obj, String category) {
+    protected AbstractModifiableCalculationProvider(CalculationDataObject obj) {
         super(obj);
-        this.category = category;
     }
     
     protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Element parent, String category) throws Exception {
         super(obj);
-        this.category = category;
         Element mr = JDomUtil.getExistingChild(parent, MODIFICATIONS_ELEMENT);
         for(Element me : mr.getChildren()) {
             String rootName = me.getName();

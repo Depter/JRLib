@@ -80,7 +80,7 @@ public class ClaimTriangleCalculationImpl
     private ClaimTriangle claimTriangle;
     
     ClaimTriangleCalculationImpl(ClaimTriangleDataObject dObj, Element root) throws Exception {
-        super(dObj, CATEGORY);
+        super(dObj, root, CATEGORY);
         this.dObj = dObj;
         
         FileObject pf = dObj.getPrimaryFile();
@@ -194,6 +194,8 @@ public class ClaimTriangleCalculationImpl
     @Override
     protected void modificationsChanged() {
         recalculate();
+        events.fireChange();
+        this.dObj.setModified(true);
     }
     
     @Override
