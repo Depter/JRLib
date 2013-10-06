@@ -17,12 +17,17 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import javax.swing.Icon;
-import javax.swing.JSpinner;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.undo.AbstractUndoableEdit;
+import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
+import org.openide.awt.UndoRedo;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
@@ -41,10 +46,11 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
     private InputListener inputListener = new InputListener();
     private ClaimTriangleCalculationImpl calculation;
     private boolean myChange = false;
+    private UndoRedo.Manager undo;
     
     public GeometryEditorPanel() {
         initComponents();
-        
+        EventBusManager.getDefault().subscribe(this);
     }
 
     void setCalculation(ClaimTriangleCalculationImpl calculation) {
@@ -77,8 +83,14 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
             developmentLengthSpinner.setEnabled(true);
     }
     
+    void setUndo(UndoRedo.Manager undo) {
+        this.undo = undo;
+    }
+    
     void componentClosed() {
         this.calculation = null;
+        this.undo = null;
+        EventBusManager.getDefault().unsubscribe(this);
     }
     
     private void updateFromGUI() {
@@ -90,7 +102,11 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         synchronized(cg) {
             if(cg.equals(geometry))
                 return;
+            GeometryEdit edit = new GeometryEdit();
             calculation.setGeometry(geometry);
+            edit.editied();
+            
+            //TODO unduable edit
         }
     }
     
@@ -104,6 +120,15 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         int al = (Integer) accidentLengthSpinner.getValue();
         int dl = (Integer) developmentLengthSpinner.getValue();
         return new TriangleGeometry(start, end, al, dl);
+    }
+    
+    @EventBusListener(forceEDT = true)
+    public void calculationChanged(CalculationEvent.Change evt) {
+        if(this.calculation == evt.getCalculationProvider()) {
+            myChange = true;
+            updateFromGeometry(calculation.getGeometry());
+            myChange = false;
+        }
     }
     
     /**
@@ -298,11 +323,6 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
     private javax.swing.JLabel startLabel;
     private javax.swing.JToggleButton symmetricButton;
     // End of variables declaration//GEN-END:variables
-
-    private void disableTextField(JSpinner spinner) {
-        JSpinner.DefaultEditor editor = (JSpinner.DefaultEditor) spinner.getEditor();
-        editor.getTextField().setEditable(false);
-    }
     
     private class InputListener implements ChangeListener {
 
@@ -310,6 +330,43 @@ public class GeometryEditorPanel extends javax.swing.JPanel {
         public void stateChanged(ChangeEvent e) {
             if(!myChange)
                 updateFromGUI();
+        }
+    }
+    
+    private class GeometryEdit extends AbstractUndoableEdit {
+        
+        private TriangleGeometry preState;
+        private TriangleGeometry postState;
+        
+        GeometryEdit() {
+            preState = copyCalculation();
+        }
+        
+        private TriangleGeometry copyCalculation() {
+            TriangleGeometry original = calculation.getGeometry();
+            MonthDate start = original.getStartDate();
+            MonthDate end = original.getEndDate();
+            int al = original.getAccidentLength();
+            int dl = original.getDevelopmentLength();
+            return new TriangleGeometry(start, end, al, dl);
+        }
+        
+        void editied() {
+            postState = copyCalculation();
+            if(undo != null)
+                undo.undoableEditHappened(new UndoableEditEvent(GeometryEditorPanel.this, this));
+        }
+        
+        @Override
+        public void undo() {
+            super.undo();
+            calculation.setGeometry(preState);
+        }
+        
+        @Override
+        public void redo() {
+            super.redo();
+            calculation.setGeometry(postState);
         }
     }
 }

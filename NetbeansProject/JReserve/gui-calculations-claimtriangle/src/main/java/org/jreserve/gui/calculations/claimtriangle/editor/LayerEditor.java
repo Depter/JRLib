@@ -17,14 +17,18 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
+import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
+import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionListener;
+import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
@@ -64,6 +68,14 @@ public class LayerEditor extends AbstractExpandableElement {
         lkp = new ProxyLookup(new AbstractLookup(ic));
     }
 
+    @Override
+    public void setHandler(ExpandableComponentHandler handler) {
+        super.setHandler(handler);
+        UndoRedo.Manager manager = handler.getContainer().getUndoRedo();
+        UndoUtil<ClaimTriangle> undo = new UndoUtil<ClaimTriangle>(manager, calculation);
+        panel.setUndoUtil(undo);
+    }
+    
     @Override
     public Lookup getLookup() {
         return lkp;

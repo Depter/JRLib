@@ -22,7 +22,6 @@ import org.jreserve.gui.calculations.api.CalculationModifierFactory;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
 
 /**
  *

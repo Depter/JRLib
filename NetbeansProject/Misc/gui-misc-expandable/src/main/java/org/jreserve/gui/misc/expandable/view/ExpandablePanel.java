@@ -17,12 +17,16 @@
 package org.jreserve.gui.misc.expandable.view;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.BorderFactory;
@@ -61,6 +65,7 @@ public class ExpandablePanel extends JPanel {
     private boolean docked = true;
     private boolean opened = true;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
+    private SelectListener selectListener = new SelectListener();
     
     public ExpandablePanel(ExpandableContainerHandler container, ExpandableElementDescription description) {
         this.container = container;
@@ -87,6 +92,7 @@ public class ExpandablePanel extends JPanel {
         setBorder(ExpandablePanelBorder.getInstance());
         add(createTitlePanel(), BorderLayout.NORTH);
         add(createContentPanel(), BorderLayout.CENTER);
+        addSelectListener(this);
     }
     
     private JPanel createTitlePanel() {
@@ -148,6 +154,13 @@ public class ExpandablePanel extends JPanel {
         contentPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 2, 2, getBackground()));
         
         return contentPanel;
+    }
+    
+    private void addSelectListener(Component c) {
+        c.addMouseListener(selectListener);
+        if(c instanceof Container)
+            for(Component child : ((Container)c).getComponents())
+                addSelectListener(child);
     }
     
     ExpandableElementDescription getDescription() {
@@ -236,6 +249,13 @@ public class ExpandablePanel extends JPanel {
         @Override
         public void removePropertyChangeListener(PropertyChangeListener listener) {
             pcs.removePropertyChangeListener(listener);
+        }
+    }
+    
+    private class SelectListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            container.setSelected(description);
         }
     }
     

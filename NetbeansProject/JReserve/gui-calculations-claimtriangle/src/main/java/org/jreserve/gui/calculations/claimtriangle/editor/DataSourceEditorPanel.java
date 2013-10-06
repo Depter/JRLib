@@ -16,7 +16,11 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleEvent;
+import javax.swing.event.UndoableEditEvent;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotRedoException;
+import javax.swing.undo.CannotUndoException;
+import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.DataSourceController;
 import org.jreserve.gui.data.api.DataEvent;
@@ -28,6 +32,7 @@ import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.netbeans.api.project.Project;
+import org.openide.awt.UndoRedo;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -45,6 +50,7 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
     private ClaimTriangleCalculationImpl calculation;
     private DataSourceObjectProvider dop;
     private ProjectObjectLookup pol;
+    private UndoRedo.Manager undo;
     
     DataSourceEditorPanel() {
         initComponents();
@@ -54,6 +60,7 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
     
     void componentClosed() {
         EventBusManager.getDefault().unsubscribe(this);
+        undo = null;
     }
     
     void setCalculation(ClaimTriangleCalculationImpl calculation) {
@@ -72,6 +79,10 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
         }
     }
 
+    void setUndo(UndoRedo.Manager undo) {
+        this.undo = undo;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -154,9 +165,15 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
         DataSource ds = DataSourceController.selectOne(dop);
         if(ds != null)
-            calculation.setDataSource(ds);
+            setDataSource(ds);
     }//GEN-LAST:event_browseButtonActionPerformed
 
+    private void setDataSource(DataSource ds) {
+        DataSourceEdit edit = new DataSourceEdit();
+        calculation.setDataSource(ds);
+        edit.initPostState();
+    }
+    
     private void sourceTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sourceTextActionPerformed
         String path = sourceText.getText();
         if(path == null || path.length() == 0) {
@@ -170,7 +187,7 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
             return;
         }
         
-        calculation.setDataSource(ds);
+        setDataSource(ds);
     }//GEN-LAST:event_sourceTextActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -182,9 +199,12 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     @EventBusListener(forceEDT = true)
-    public void dataSourceChanged(ClaimTriangleEvent.SourceChange evt) {
-        if(calculation == evt.getCalculationProvider())
-            sourceText.setText(calculation.getDataSource().getPath());
+    public void dataSourceChanged(CalculationEvent.Change evt) {
+        if(calculation == evt.getCalculationProvider()) {
+            String path = sourceText.getText();
+            if(path==null || path.length()==0 || !path.equals(calculation.getDataSource().getPath()))
+                sourceText.setText(calculation.getDataSource().getPath());
+        }
     }
     
     @EventBusListener(forceEDT = true)
@@ -201,6 +221,41 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
         } else {
             errLabel.setIcon(CommonIcons.error());
             errLabel.setText(msg);
+        }
+    }
+    
+    private class DataSourceEdit extends AbstractUndoableEdit {
+        
+        private DataSource preEdit;
+        private DataSource postEdit;
+
+        DataSourceEdit() {
+            preEdit = calculation.getDataSource();
+        }
+        
+        void initPostState() {
+            postEdit = calculation.getDataSource();
+            if(undo != null)
+                undo.undoableEditHappened(new UndoableEditEvent(DataSourceEditorPanel.this, this));
+        }
+
+        @Override
+        public void die() {
+            preEdit = null;
+            postEdit = null;
+            super.die();
+        }
+
+        @Override
+        public void undo() throws CannotUndoException {
+            super.undo();
+            calculation.setDataSource(preEdit);
+        }
+
+        @Override
+        public void redo() throws CannotRedoException {
+            super.redo();
+            calculation.setDataSource(postEdit);
         }
     }
 }

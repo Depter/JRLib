@@ -124,11 +124,25 @@ class EventBus {
         }
     }
     
+//    private List<Method> getAnnotatedMethods(Object listener) {
+//        List<Method> result = new ArrayList<Method>();
+//        for(Method method : listener.getClass().getMethods())
+//            if(isListenerMethod(method))
+//                result.add(method);
+//        return result;
+//    }
+    
     private List<Method> getAnnotatedMethods(Object listener) {
         List<Method> result = new ArrayList<Method>();
-        for(Method method : listener.getClass().getMethods())
-            if(isListenerMethod(method))
-                result.add(method);
+        Class clazz = listener.getClass();
+        
+        while(clazz != null) {
+            for(Method method : clazz.getDeclaredMethods())
+                if(isListenerMethod(method))
+                    result.add(method);
+            clazz = clazz.getSuperclass();
+        }
+        
         return result;
     }
     

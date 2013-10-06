@@ -17,16 +17,20 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
+import java.util.Arrays;
 import javax.swing.DefaultListModel;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleCorrectionModifier;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.jreserve.gui.misc.utils.actions.ClipboardUtil.Copiable;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.gui.trianglewidget.TriangleEditController;
@@ -43,6 +47,7 @@ class LayerEditorPanel extends javax.swing.JPanel {
 
     private ClaimTriangleCalculationImpl calculation;
     private DefaultListModel modificationModel = new DefaultListModel();
+    private UndoUtil undo;
     
     LayerEditorPanel(ClaimTriangleCalculationImpl calculation) {
         this.calculation = calculation;
@@ -73,6 +78,10 @@ class LayerEditorPanel extends javax.swing.JPanel {
     
     void componentClosed() {
         EventBusManager.getDefault().unsubscribe(this);
+    }
+    
+    void setUndoUtil(UndoUtil undoUtil) {
+        this.undo = undoUtil;
     }
     
     @EventBusListener(forceEDT = true)
@@ -118,6 +127,7 @@ class LayerEditorPanel extends javax.swing.JPanel {
         upButton.setIcon(CommonIcons.arrowUp());
         org.openide.awt.Mnemonics.setLocalizedText(upButton, null);
         upButton.setToolTipText(org.openide.util.NbBundle.getMessage(LayerEditorPanel.class, "LayerEditorPanel.upButton.toolTipText")); // NOI18N
+        upButton.setEnabled(false);
         upButton.setFocusable(false);
         upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         upButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -126,6 +136,7 @@ class LayerEditorPanel extends javax.swing.JPanel {
         downButton.setIcon(CommonIcons.arrowDown());
         org.openide.awt.Mnemonics.setLocalizedText(downButton, null);
         downButton.setToolTipText(org.openide.util.NbBundle.getMessage(LayerEditorPanel.class, "LayerEditorPanel.downButton.toolTipText")); // NOI18N
+        downButton.setEnabled(false);
         downButton.setFocusable(false);
         downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         downButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -134,15 +145,22 @@ class LayerEditorPanel extends javax.swing.JPanel {
         deleteButton.setIcon(CommonIcons.delete());
         org.openide.awt.Mnemonics.setLocalizedText(deleteButton, null);
         deleteButton.setToolTipText(org.openide.util.NbBundle.getMessage(LayerEditorPanel.class, "LayerEditorPanel.deleteButton.toolTipText")); // NOI18N
+        deleteButton.setEnabled(false);
         deleteButton.setFocusable(false);
         deleteButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         deleteButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
         layerToolBar.add(deleteButton);
 
         layerPanel.add(layerToolBar, java.awt.BorderLayout.PAGE_START);
 
         layerList.setModel(modificationModel);
         layerList.setCellRenderer(new ModificationRenderer());
+        layerList.addListSelectionListener(new ListListener());
         layerScroll.setViewportView(layerList);
 
         layerPanel.add(layerScroll, java.awt.BorderLayout.CENTER);
@@ -151,6 +169,14 @@ class LayerEditorPanel extends javax.swing.JPanel {
 
         add(splitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        for(Object o : layerList.getSelectedValues()) {
+            CalculationModifier m = (CalculationModifier) o;
+            undo.deleteModification(m);
+        }
+    }//GEN-LAST:event_deleteButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton downButton;
@@ -164,15 +190,50 @@ class LayerEditorPanel extends javax.swing.JPanel {
     private org.jreserve.gui.trianglewidget.TriangleWidgetPanel widgetPanel;
     // End of variables declaration//GEN-END:variables
 
+    private class ListListener implements ListSelectionListener {
+        @Override
+        public void valueChanged(ListSelectionEvent e) {
+            int[] indices = layerList.getSelectedIndices();
+            deleteButton.setEnabled(indices.length > 0);
+            boolean continuous = isContinuous(indices);
+            if(continuous) {
+                upButton.setEnabled(layerList.getMinSelectionIndex() > 0);
+                downButton.setEnabled(layerList.getMaxSelectionIndex() < layerList.getModel().getSize()-1);
+            } else {
+                upButton.setEnabled(false);
+                downButton.setEnabled(false);
+            }
+        }
+        
+        private boolean isContinuous(int[] indices) {
+            int size = indices.length;
+            if(size < 1)
+                return false;
+            
+            Arrays.sort(indices);
+            for(int i=1; i<size; i++)
+                if(indices[i] - indices[i-1] != 1)
+                    return false;
+            return false;
+        }
+    }
+    
     private class ModificationRenderer implements ListCellRenderer {
         
         private ListCellRenderer delegate = WidgetUtils.displayableListRenderer();
 
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            if(value instanceof CalculationModifier)
-                value = ((CalculationModifier)value).getDisplayable();
-            return delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            CalculationModifier cm = null;
+            if(value instanceof CalculationModifier) {
+                cm = (CalculationModifier) value;
+                value = cm.getDisplayable();
+            }
+            JComponent c = (JComponent) delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+            if(cm != null)
+                c.setToolTipText(cm.getDescription());
+            
+            return c;
         }
     }
     
@@ -194,9 +255,9 @@ class LayerEditorPanel extends javax.swing.JPanel {
             ClaimTriangleCorrectionModifier m = new ClaimTriangleCorrectionModifier(accident, development, value);
             int index = widgetPanel.getSelectedLayerIndex();
             if(index < 0 || widgetPanel.getLayers().size() == (index+1))
-                calculation.addModification(m);
+                undo.addModification(m);
             else
-                calculation.addModification(index, m);
+                undo.addModification(index, m);
         }
         
         private double getValue(TriangleWidget widget, int accident, int development, double value) {
@@ -213,4 +274,5 @@ class LayerEditorPanel extends javax.swing.JPanel {
         }
     }
 
+   
 }

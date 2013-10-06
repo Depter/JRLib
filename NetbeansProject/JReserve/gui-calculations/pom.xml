@@ -185,6 +185,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.calculations.api</publicPackage>
+                        <publicPackage>org.jreserve.gui.calculations.api.edit</publicPackage>
                     </publicPackages>
                 </configuration>
             </plugin>

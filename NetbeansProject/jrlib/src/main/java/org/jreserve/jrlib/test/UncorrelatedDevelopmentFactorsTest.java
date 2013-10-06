@@ -23,7 +23,6 @@ import org.jreserve.jrlib.triangle.TriangleUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
-import org.jreserve.jrlib.util.MathUtil;
 import org.jreserve.jrlib.util.NormalUtil;
 
 /**

@@ -20,6 +20,7 @@ import java.awt.Component;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
+import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
@@ -71,6 +72,12 @@ public class DataSourceEditor extends AbstractExpandableElement {
         panel = new DataSourceEditorPanel();
         panel.setCalculation(calculation);
         return panel;
+    }
+
+    @Override
+    public void setHandler(ExpandableComponentHandler handler) {
+        super.setHandler(handler);
+        panel.setUndo(handler.getContainer().getUndoRedo());
     }
 
     @Override

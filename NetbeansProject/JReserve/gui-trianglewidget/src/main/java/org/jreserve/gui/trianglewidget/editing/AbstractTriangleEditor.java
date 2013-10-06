@@ -29,6 +29,7 @@ import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
+import org.jreserve.gui.trianglewidget.model.TriangleModel;
 
 /**
  *
@@ -116,10 +117,22 @@ public class AbstractTriangleEditor implements TriangleEditor {
     
     @Override
     public Component getEditorComponent(TriangleWidget widget, double value, int accident, int development, boolean isSelected) {
+        value = escapeValue(widget, value, accident, development);
         editor.setText(toString(value));
         editor.selectAll();
         isEditing = true;
         return editor;
+    }
+    
+    private double escapeValue(TriangleWidget widget, double value, int accident, int development) {
+        if(widget.isCummulated() || development == 0)
+            return value;
+        
+        TriangleModel model = widget.getModel();
+        int row = model.getRowIndex(accident, development-1);
+        int column = model.getColumnIndex(accident, development-1);
+        double prev = widget.getModel().getValueAt(row, column);
+        return value - prev;
     }
     
     protected String toString(double value) {
@@ -127,8 +140,38 @@ public class AbstractTriangleEditor implements TriangleEditor {
             return nan;
         if(Double.isInfinite(value))
             return value<0d? "-" + inf : inf;
-        String result = ""+value;
+        String result = stripZeros(""+value);
         return result.replace('.', decimal);
+    }
+    
+    private final static int MAX_ZERO_COUNT = 4;
+    
+    private String stripZeros(String str) {
+        int length = str.length();
+        StringBuilder sb = new StringBuilder();
+        
+        boolean isDecimal = false;
+        int zeroCount = 0;
+        for(int i=0; i<length; i++) {
+            char c = str.charAt(i);
+            if(isDecimal) {
+                if(c == '0') {
+                    zeroCount++;
+                    if(zeroCount > MAX_ZERO_COUNT)
+                        return sb.toString();
+                } else {
+                    while(zeroCount-- > 0)
+                        sb.append('0');
+                    sb.append(c);
+                }
+            } else {
+                sb.append(c);
+                if(c == '.')
+                    isDecimal = true;
+            }
+        }
+        
+        return sb.toString();
     }
     
     protected Double toValue(String str) {
