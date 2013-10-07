@@ -20,7 +20,7 @@ package org.jreserve.gui.trianglewidget.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import org.jreserve.gui.trianglewidget.model.DefaultTriangleSelectionModel.Cell;
+import org.jreserve.jrlib.triangle.Cell;
 
 /**
  *
@@ -60,25 +60,10 @@ class TriangleSelectionImpl implements TriangleSelection {
     public int getCellCount() {
         return cells.size();
     }
-
+    
     @Override
-    public int getAccident(int index) {
-        return cells.get(index).getAccident();
-    }
-
-    @Override
-    public int getDevelopment(int index) {
-        return cells.get(index).getDevelopment();
-    }
-
-    @Override
-    public int getAccident() {
-        return accident;
-    }
-
-    @Override
-    public int getDevelopment() {
-        return development;
+    public List<Cell> getCells() {
+        return new ArrayList<Cell>(cells);
     }
     
     @Override

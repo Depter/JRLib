@@ -39,34 +39,29 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "# {0} - accident",
     "# {1} - development",
-    "# {2} - value",
-    "LBL.ClaimTriangleCorrectionModifier.Description=Correction [{0}; {1}] = {2}",
-    "LBL.ClaimTriangleCorrectionModifier.Name=Correction"
+    "LBL.ClaimTriangleExcludeModifier.Description=Exclusion [{0}; {1}]",
+    "LBL.ClaimTriangleExcludeModifier.Name=Exclusion"
 })
-public class ClaimTriangleCorrectionModifier extends AbstractCalculationModifier<ClaimTriangle> implements ClaimTriangleModifier {
-    
-    final static String ROOT_ELEMENT = "claimTriangleCorrection";
+public class ClaimTriangleExcludeModifier extends AbstractCalculationModifier<ClaimTriangle> implements ClaimTriangleModifier {
+    final static String ROOT_ELEMENT = "claimTriangleExclusion";
     final static String ACCIDENT_ELEMENT = "accident";
     final static String DEVELOPMENT_ELEMENT = "development";
-    final static String VALUE_ELEMENT = "value";
-        
-    private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/correction.png";
+
+    private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/exclude.png";   //NOI18
     final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
     
     private int accident;
     private int development;
-    private double value;
 
-    public ClaimTriangleCorrectionModifier(int accident, int development, double value) {
+    public ClaimTriangleExcludeModifier(int accident, int development) {
         super(ClaimTriangle.class);
         this.accident = accident;
         this.development = development;
-        this.value = value;
-    }
+    }    
     
     @Override
     public ClaimTriangle createCalculation(ClaimTriangle sourceCalculation) {
-        return new ClaimTriangleCorrection(sourceCalculation, accident, development, value);
+        return new ClaimTriangleCorrection(sourceCalculation, accident, development, Double.NaN);
     }
 
     @Override
@@ -74,24 +69,23 @@ public class ClaimTriangleCorrectionModifier extends AbstractCalculationModifier
         Element root = new Element(ROOT_ELEMENT);
         JDomUtil.addElement(root, ACCIDENT_ELEMENT, accident);
         JDomUtil.addElement(root, DEVELOPMENT_ELEMENT, development);
-        JDomUtil.addElement(root, VALUE_ELEMENT, value);
         return root;
     }
 
     @Override
     public String getDescription() {
-        return Bundle.LBL_ClaimTriangleCorrectionModifier_Description(
-                accident+1, development+1, value);
+        return Bundle.LBL_ClaimTriangleExcludeModifier_Description(
+                accident+1, development+1);
     }
 
     @Override
     protected Displayable createDisplayable() {
-        return new CorrectionDisplayable();
+        return new ExclusionDisplayable();
     }
 
     @Override
     public TriangleLayer createLayer(ClaimTriangle input) {
-        return new CorrectionLayer(input);
+        return new ExclusionLayer(input);
     }
 
     @Override
@@ -99,7 +93,7 @@ public class ClaimTriangleCorrectionModifier extends AbstractCalculationModifier
         return Collections.singletonList(new Cell(accident, development));
     }
     
-    private static class CorrectionDisplayable implements Displayable {
+    private static class ExclusionDisplayable implements Displayable {
         
         @Override
         public Icon getIcon() {
@@ -108,7 +102,7 @@ public class ClaimTriangleCorrectionModifier extends AbstractCalculationModifier
 
         @Override
         public String getDisplayName() {
-            return Bundle.LBL_CorrectionLayer_Name();
+            return Bundle.LBL_ClaimTriangleExcludeModifier_Name();
         }
     }
 }

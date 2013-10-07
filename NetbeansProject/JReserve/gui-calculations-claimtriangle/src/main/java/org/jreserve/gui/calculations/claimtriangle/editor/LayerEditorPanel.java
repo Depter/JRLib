@@ -18,25 +18,33 @@ package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
 import java.util.Arrays;
+import java.util.concurrent.Callable;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
+import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleCorrectionModifier;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.gui.trianglewidget.TriangleEditController;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
+import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
+import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -66,10 +74,27 @@ class LayerEditorPanel extends javax.swing.JPanel {
     }
     
     private void resetModificationList() {
+        Object[] selected = layerList.getSelectedValues();
+        reloadModificationModel();
+        reselectModifications(selected);
+    }
+    
+    private void reloadModificationModel() {
         modificationModel.removeAllElements();
         int count = calculation.getModificationCount();
         for(int i=0; i<count; i++)
             modificationModel.addElement(calculation.getModificationAt(i));
+    }
+    
+    private void reselectModifications(Object[] selected) {
+        ListSelectionModel sModel = layerList.getSelectionModel();
+        sModel.setValueIsAdjusting(true);
+        for(Object o : selected) {
+            int index = modificationModel.indexOf(o);
+            if(index >= 0)
+                sModel.addSelectionInterval(index, index);
+        }
+        sModel.setValueIsAdjusting(false);
     }
     
     TriangleWidgetPanel getWidgetPanel() {
@@ -131,6 +156,11 @@ class LayerEditorPanel extends javax.swing.JPanel {
         upButton.setFocusable(false);
         upButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         upButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        upButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                upButtonActionPerformed(evt);
+            }
+        });
         layerToolBar.add(upButton);
 
         downButton.setIcon(CommonIcons.arrowDown());
@@ -140,6 +170,11 @@ class LayerEditorPanel extends javax.swing.JPanel {
         downButton.setFocusable(false);
         downButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         downButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        downButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downButtonActionPerformed(evt);
+            }
+        });
         layerToolBar.add(downButton);
 
         deleteButton.setIcon(CommonIcons.delete());
@@ -177,6 +212,14 @@ class LayerEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
+    private void upButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_upButtonActionPerformed
+        ReplaceModification.moveUp(calculation, layerList);
+    }//GEN-LAST:event_upButtonActionPerformed
+
+    private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
+        ReplaceModification.moveDown(calculation, layerList);
+    }//GEN-LAST:event_downButtonActionPerformed
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton downButton;
@@ -203,6 +246,8 @@ class LayerEditorPanel extends javax.swing.JPanel {
                 upButton.setEnabled(false);
                 downButton.setEnabled(false);
             }
+            
+            highlightIndices(indices);
         }
         
         private boolean isContinuous(int[] indices) {
@@ -214,7 +259,23 @@ class LayerEditorPanel extends javax.swing.JPanel {
             for(int i=1; i<size; i++)
                 if(indices[i] - indices[i-1] != 1)
                     return false;
-            return false;
+            return true;
+        }
+        
+        private void highlightIndices(int[] indices) {
+            TriangleSelectionModel model = widgetPanel.getTriangleWidget().getTriangleSelectionModel();
+            model.setValueAdjusting(true);
+            model.clearSelection();
+            for(int i : indices) {
+                ClaimTriangleModifier modifier = (ClaimTriangleModifier) layerList.getModel().getElementAt(i);
+                highLight(model, modifier);
+            }
+            model.setValueAdjusting(false);
+        }
+        
+        private void highLight(TriangleSelectionModel model, ClaimTriangleModifier modifier) {
+            for(Cell cell : modifier.getAffectedCells())
+                model.setSelected(cell.getAccident(), cell.getDevelopment());
         }
     }
     
@@ -274,5 +335,52 @@ class LayerEditorPanel extends javax.swing.JPanel {
         }
     }
 
-   
+    @Messages({
+        "# {0} - from",
+        "# {1} - to",
+        "MSG.ReplaceModification.PH.Title=Replaceing modification {0} -> {1}"
+    })
+    private static class ReplaceModification implements Callable<Void> {
+        
+        static void moveUp(ClaimTriangleCalculationImpl calc, JList list) {
+            int from = list.getMinSelectionIndex()-1;
+            int to = list.getSelectedIndices().length + from;
+            
+            ReplaceModification task = new ReplaceModification(calc, from, to);
+            String title = Bundle.MSG_ReplaceModification_PH_Title(from+1, to+1);
+            TaskUtil.execute(task, null, title);
+        }
+        
+        static void moveDown(ClaimTriangleCalculationImpl calc, JList list) {
+            int from = list.getMaxSelectionIndex()+1;
+            int to = from - list.getSelectedIndices().length;
+            
+            ReplaceModification task = new ReplaceModification(calc, from, to);
+            String title = Bundle.MSG_ReplaceModification_PH_Title(from+1, to+1);
+            TaskUtil.execute(task, null, title);
+        }
+        
+        private final ClaimTriangleCalculationImpl calc;
+        private final int fromIndex;
+        private final int toIndex;
+        
+        private ReplaceModification(ClaimTriangleCalculationImpl calc, int fromIndex, int toIndex) {
+            this.calc = calc;
+            this.fromIndex = fromIndex;
+            this.toIndex = toIndex;
+        }
+        
+        @Override
+        public Void call() throws Exception {
+            synchronized(calc) {
+                CalculationModifier<ClaimTriangle> modifier = calc.getModificationAt(fromIndex);
+                calc.deleteModification(fromIndex);
+                if(toIndex == calc.getModificationCount())
+                    calc.addModification(modifier);
+                else
+                    calc.addModification(toIndex, modifier);
+            }
+            return null;
+        }
+    }
 }

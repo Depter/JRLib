@@ -39,6 +39,8 @@ import java.util.Arrays;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.JComponent;
+import org.jreserve.gui.misc.flamingo.api.ActionCommandButton;
+import org.jreserve.gui.misc.flamingo.api.ActionMenuButton;
 import org.jreserve.gui.misc.flamingo.api.ResizableIcons;
 import org.jreserve.gui.misc.flamingo.api.RibbonPresenter;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
@@ -254,50 +256,50 @@ class RibbonComponentFactory {
         return p;
     }
 
-    private static class ActionCommandButton extends JCommandButton {
-
-        public ActionCommandButton(ResizableIcon icon, String text, final Action action,
-                CommandButtonKind type) {
-            super(text, icon);
-            setCommandButtonKind(type);
-            if (action != null) {
-                addActionListener(action);
-                action.addPropertyChangeListener(new PropertyChangeListener() {
-
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) {
-                            setEnabled(action.isEnabled());
-                        }
-                    }
-                });
-                setEnabled(action.isEnabled());
-            }
-        }
-    }
-
-    private static class ActionMenuButton extends JCommandMenuButton {
-
-        public ActionMenuButton(ResizableIcon icon, String text, final Action action,
-                CommandButtonKind type) {
-            super(text, icon);
-            setCommandButtonKind(type);
-            if (action != null) {
-                addActionListener(action);
-
-                action.addPropertyChangeListener(new PropertyChangeListener() {
-
-                    @Override
-                    public void propertyChange(PropertyChangeEvent evt) {
-                        if ("enabled".equals(evt.getPropertyName())) {
-                            setEnabled(action.isEnabled());
-                        }
-                    }
-                });
-                setEnabled(action.isEnabled());
-            }
-        }
-    }
+//    private static class ActionCommandButton extends JCommandButton {
+//
+//        public ActionCommandButton(ResizableIcon icon, String text, final Action action,
+//                CommandButtonKind type) {
+//            super(text, icon);
+//            setCommandButtonKind(type);
+//            if (action != null) {
+//                addActionListener(action);
+//                action.addPropertyChangeListener(new PropertyChangeListener() {
+//
+//                    @Override
+//                    public void propertyChange(PropertyChangeEvent evt) {
+//                        if ("enabled".equals(evt.getPropertyName())) {
+//                            setEnabled(action.isEnabled());
+//                        }
+//                    }
+//                });
+//                setEnabled(action.isEnabled());
+//            }
+//        }
+//    }
+//
+//    private static class ActionMenuButton extends JCommandMenuButton {
+//
+//        public ActionMenuButton(ResizableIcon icon, String text, final Action action,
+//                CommandButtonKind type) {
+//            super(text, icon);
+//            setCommandButtonKind(type);
+//            if (action != null) {
+//                addActionListener(action);
+//
+//                action.addPropertyChangeListener(new PropertyChangeListener() {
+//
+//                    @Override
+//                    public void propertyChange(PropertyChangeEvent evt) {
+//                        if ("enabled".equals(evt.getPropertyName())) {
+//                            setEnabled(action.isEnabled());
+//                        }
+//                    }
+//                });
+//                setEnabled(action.isEnabled());
+//            }
+//        }
+//    }
 
     private static class PrimaryMenuItem extends RibbonApplicationMenuEntryPrimary {
 

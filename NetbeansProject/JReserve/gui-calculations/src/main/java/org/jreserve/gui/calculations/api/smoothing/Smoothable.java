@@ -14,28 +14,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.smoothing;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import org.jdom2.Element;
-import org.jreserve.jrlib.CalculationData;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifierFactory<C extends CalculationData> {
+public interface Smoothable {
     
-    public CalculationModifier<C> fromXml(Element element) throws Exception;
+    public boolean canSmooth(Lookup context);
     
-    @Retention(RetentionPolicy.SOURCE)
+    public void smooth(Lookup context);
+    
     public static @interface Registration {
-        //The Category, to which factory belongs (exclusion, correction, smoothing)
-        String category();
-        //The xml root name for the factory
-        String rootName();
-        int position() default Integer.MAX_VALUE;
+        public String category();
+        
+        public String displayName();
+        
+        public String iconBase() default "";
+        
+        public int position() default Integer.MAX_VALUE;
     }
 }

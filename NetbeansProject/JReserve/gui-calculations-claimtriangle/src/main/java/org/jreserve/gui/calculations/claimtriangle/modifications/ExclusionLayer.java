@@ -31,17 +31,17 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.CorrectionLayer.Name=Correction"
+    "LBL.ExclusionLayer.Name=Exclusion"
 })
-class CorrectionLayer extends DefaultTriangleLayer {
+class ExclusionLayer extends DefaultTriangleLayer {
     
     private int accident;
     private int development;
     
-    CorrectionLayer(Triangle triangle) {
-        super(triangle, Bundle.LBL_CorrectionLayer_Name(), 
-                ClaimTriangleCorrectionModifier.ICON, 
-                new CorrectionRenderer());
+    ExclusionLayer(Triangle triangle) {
+        super(triangle, Bundle.LBL_ExclusionLayer_Name(), 
+                ClaimTriangleExcludeModifier.ICON, 
+                new ExclusionRenderer());
         if(triangle instanceof ClaimTriangleCorrection) {
             ClaimTriangleCorrection correction = (ClaimTriangleCorrection) triangle;
             accident = correction.getCorrigatedAccident();
@@ -58,15 +58,14 @@ class CorrectionLayer extends DefaultTriangleLayer {
                this.development == development;
     }
     
-    private static class CorrectionRenderer extends DefaultTriangleWidgetRenderer {
+    private static class ExclusionRenderer extends DefaultTriangleWidgetRenderer {
 
         @Override
         public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
             super.getComponent(widget, value, row, column, selected);
             if(!selected)
-                setBackground(Color.ORANGE);
+                setBackground(Color.RED);
             return this;
         }
-        
     }
 }

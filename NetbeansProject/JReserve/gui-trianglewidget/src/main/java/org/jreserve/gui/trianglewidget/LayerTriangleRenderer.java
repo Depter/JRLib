@@ -50,6 +50,4 @@ class LayerTriangleRenderer implements TriangleWidgetRenderer {
         
         return baseRenderer.getComponent(widget, value, row, column, selected);
     }
-    
-    
 }

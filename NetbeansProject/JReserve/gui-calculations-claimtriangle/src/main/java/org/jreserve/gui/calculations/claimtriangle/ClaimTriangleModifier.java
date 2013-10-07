@@ -16,8 +16,10 @@
  */
 package org.jreserve.gui.calculations.claimtriangle;
 
+import java.util.List;
 import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
+import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
@@ -28,4 +30,6 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 public interface ClaimTriangleModifier extends CalculationModifier<ClaimTriangle> {
     
     public TriangleLayer createLayer(ClaimTriangle input);
+    
+    public List<Cell> getAffectedCells();
 }

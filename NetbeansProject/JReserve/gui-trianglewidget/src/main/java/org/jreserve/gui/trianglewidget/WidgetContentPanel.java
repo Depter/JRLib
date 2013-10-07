@@ -136,17 +136,13 @@ class WidgetContentPanel extends JComponent {
             return;
         
         double value = getScaledValue(row, column);
+        int accident = model.getAccidentIndex(row, column);
+        int development = model.getDevelopmentIndex(row, column);
+        boolean selected = selectionModel.isSelected(accident, development);
         
-        boolean selected = isSelected(row, column);
         Component c = renderer.getComponent(widget, value, row, column, selected);
         initCellBounds(row, column);
         paintCell(c, g);
-    }
-    
-    private boolean isSelected(int row, int column) {
-        int accident = model.getAccidentIndex(row, column);
-        int development = model.getDevelopmentIndex(row, column);
-        return selectionModel.isSelected(accident, development);
     }
     
     private double getScaledValue(int row, int column) {
@@ -228,9 +224,9 @@ class WidgetContentPanel extends JComponent {
     
     private Component prepareEditor(int row, int column) {
         double value = model.getValueAt(row, column);
-        boolean isSelected = isSelected(row, column);
         int accident = model.getAccidentIndex(row, column);
         int development = model.getDevelopmentIndex(row, column);
+        boolean isSelected = selectionModel.isSelected(accident, development);
         Component comp = editor.getEditorComponent(widget, value, accident, development, isSelected);
         
         if (comp instanceof JComponent) {

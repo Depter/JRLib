@@ -36,11 +36,15 @@ import org.jreserve.gui.localesettings.LocaleSettings.DecimalFormatter;
 public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWidgetRenderer {
     
     private DecimalFormatter df;
+    private final static Border BASE_BORDER = BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK), 
+                BorderFactory.createEmptyBorder(1, 2, 1, 2));
     
     private Color background;
     private Color foreground;
     private Color selectionBackground;
     private Color selectionForeground;
+    private Color highlightColor = new Color(255, 204, 0);
     
     public DefaultTriangleWidgetRenderer() {
         this(null);
@@ -49,8 +53,8 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
     public DefaultTriangleWidgetRenderer(DecimalFormatter df) {
         this.df = df;
         initColors();
-        setBorder(createBorder());
         setOpaque(true);
+        setBorder(BASE_BORDER);
         setHorizontalAlignment(SwingConstants.RIGHT);
     }
     
@@ -60,12 +64,6 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
         foreground = list.getForeground();
         selectionBackground = list.getSelectionBackground();
         selectionForeground = list.getSelectionForeground();
-    }
-    
-    private Border createBorder() {
-        return BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 0, 1, 1, Color.BLACK), 
-                BorderFactory.createEmptyBorder(0, 2, 0, 2));
     }
     
     public void setDecimalCount(int decimalcount) {

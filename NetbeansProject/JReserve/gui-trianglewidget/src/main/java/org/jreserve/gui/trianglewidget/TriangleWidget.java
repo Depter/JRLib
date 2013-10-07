@@ -43,6 +43,7 @@ import org.jreserve.gui.trianglewidget.model.TriangleSelectionListener;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
+import org.jreserve.jrlib.triangle.Cell;
 
 /**
  *
@@ -57,6 +58,7 @@ public class TriangleWidget extends JPanel {
     private List<TriangleLayer> layers;
     private TriangleModel model;
     private TriangleSelectionModel selectionModel = new DefaultTriangleSelectionModel();
+    
     private ModelListener modelListener = new ModelListener();
     private TriangleGeometry geometry;
     private LocaleSettings.DecimalFormatter df = LocaleSettings.createDecimalFormatter();
@@ -211,9 +213,9 @@ public class TriangleWidget extends JPanel {
         
         selectionModel.clearSelection();
         int count = selection.getCellCount();
-        for(int i=0; i<count; i++) {
-            int accident = selection.getAccident(i);
-            int development = selection.getDevelopment(i);
+        for(Cell cell : selection.getCells()) {
+            int accident = cell.getAccident();
+            int development = cell.getDevelopment();
             if(isCellSelected(accident, development))
                 selectionModel.setSelected(accident, development);
         }

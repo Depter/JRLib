@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import org.jreserve.jrlib.triangle.Cell;
 
 /**
  *
@@ -98,46 +99,46 @@ public class DefaultTriangleSelectionModel implements TriangleSelectionModel {
         listeners.remove(listener);
     }
 
-    static class Cell implements Comparable<Cell> {
-        private final int accident;
-        private final int development;
-
-        private Cell(int accident, int development) {
-            this.accident = accident;
-            this.development = development;
-        }
-        
-        int getAccident() {
-            return accident;
-        }
-
-        int getDevelopment() {
-            return development;
-        }
-        
-        @Override
-        public int compareTo(Cell o) {
-            int dif = accident - o.accident;
-            if(dif == 0)
-                return development - o.development;
-            return dif;
-        }
-        
-        @Override
-        public boolean equals(Object o) {
-            return (o instanceof Cell) &&
-                   compareTo((Cell)o) == 0;
-        }
-        
-        @Override
-        public int hashCode() {
-            int hash = 31 + accident;
-            return 17 * hash + development;
-        }
-        
-        @Override
-        public String toString() {
-            return String.format("Cell [%d; %d]", accident, development);
-        }
-    }
+//    static class Cell implements Comparable<Cell> {
+//        private final int accident;
+//        private final int development;
+//
+//        private Cell(int accident, int development) {
+//            this.accident = accident;
+//            this.development = development;
+//        }
+//        
+//        int getAccident() {
+//            return accident;
+//        }
+//
+//        int getDevelopment() {
+//            return development;
+//        }
+//        
+//        @Override
+//        public int compareTo(Cell o) {
+//            int dif = accident - o.accident;
+//            if(dif == 0)
+//                return development - o.development;
+//            return dif;
+//        }
+//        
+//        @Override
+//        public boolean equals(Object o) {
+//            return (o instanceof Cell) &&
+//                   compareTo((Cell)o) == 0;
+//        }
+//        
+//        @Override
+//        public int hashCode() {
+//            int hash = 31 + accident;
+//            return 17 * hash + development;
+//        }
+//        
+//        @Override
+//        public String toString() {
+//            return String.format("Cell [%d; %d]", accident, development);
+//        }
+//    }
 }

@@ -21,7 +21,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import org.jreserve.gui.calculations.api.CalculationModifierFactory;
+import org.jreserve.gui.calculations.api.smoothing.Smoothable;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -34,19 +34,19 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.gui.calculations.api.CalculationModifierFactory.Registration")
-public class CalculationModifierFactoryRegistrationProcessor extends AbstractRegistrationProcessor<CalculationModifierFactory.Registration, CalculationModifierFactory> {
-
-    final static String LAYER_PATH = "JReserve/CalculationModifierFactory/%s/";
-    final static String ROOT_NAME = "rootName";
-
-    public CalculationModifierFactoryRegistrationProcessor() {
-        super(CalculationModifierFactory.Registration.class, CalculationModifierFactory.class);
+@SupportedAnnotationTypes("org.jreserve.gui.calculations.api.smoothing.Smoothable.Registration")
+public class SmoothableRegistrationProcessor extends AbstractRegistrationProcessor<Smoothable.Registration, Smoothable> {
+    final static String LAYER_PATH = "JReserve/Smoothable/%s/";
+    final static String ICON_BASE = "iconBase";
+    final static String DISPLAY_NAME = "displayName";
+    
+    public SmoothableRegistrationProcessor() {
+        super(Smoothable.Registration.class, Smoothable.class);
     }
 
     @Override
     protected String getFolder(Element element) throws LayerGenerationException {
-        CalculationModifierFactory.Registration an = getAnnotation(element);
+        Smoothable.Registration an = getAnnotation(element);
         String category = an.category();
         if(category == null || category.length() == 0)
             throw new LayerGenerationException("Category not set!", element, processingEnv, an, "category");
@@ -55,12 +55,16 @@ public class CalculationModifierFactoryRegistrationProcessor extends AbstractReg
     
     @Override
     protected void initAttributes(LayerBuilder.File file, Element element) throws LayerGenerationException {
-        CalculationModifierFactory.Registration an = getAnnotation(element);
+        Smoothable.Registration an = getAnnotation(element);
         
-        String rootName = an.rootName();
-        if(rootName==null || rootName.length() == 0)
-            throw new LayerGenerationException("RootName not set!", element, processingEnv, an, "rootName");
-        file.bundlevalue(ROOT_NAME, rootName);
+        String icon = an.iconBase();
+        if(icon != null && icon.length() > 0)
+            file.stringvalue(ICON_BASE, icon);
+        
+        String name = an.displayName();
+        if(name == null || name.length() == 0)
+            throw new LayerGenerationException("DisplayName not set!", element, processingEnv, an, "displayName");
+        file.bundlevalue(DISPLAY_NAME, name, an, "displayName");
         
         file.position(an.position());
     }

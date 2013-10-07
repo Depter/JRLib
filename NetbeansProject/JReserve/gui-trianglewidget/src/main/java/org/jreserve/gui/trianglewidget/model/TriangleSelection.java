@@ -17,6 +17,9 @@
 
 package org.jreserve.gui.trianglewidget.model;
 
+import java.util.List;
+import org.jreserve.jrlib.triangle.Cell;
+
 /**
  *
  * @author Peter Decsi
@@ -26,11 +29,5 @@ public interface TriangleSelection {
     
     public int getCellCount();
     
-    public int getAccident(int index);
-    
-    public int getDevelopment(int index);
-    
-    public int getAccident();
-    
-    public int getDevelopment();
+    public List<Cell> getCells();
 }

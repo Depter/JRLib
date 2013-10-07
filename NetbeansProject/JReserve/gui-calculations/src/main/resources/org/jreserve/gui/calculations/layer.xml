@@ -6,4 +6,14 @@
             <attr name="position" intvalue="200"/>
         </folder>
     </folder>
+    
+    <folder name="Ribbon">
+        <folder name="TaskPanes">
+            <folder name="Edit">
+                <folder name="Calculation">
+                    <attr name="position" intvalue="200"/>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
 </filesystem>

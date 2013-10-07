@@ -18,8 +18,10 @@ package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
+import org.jreserve.gui.calculations.api.smoothing.SmoothableCategory;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
+import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleExcludeable;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
@@ -66,6 +68,13 @@ public class LayerEditor extends AbstractExpandableElement {
     public LayerEditor(Lookup context) {
         calculation = context.lookup(ClaimTriangleCalculationImpl.class);
         lkp = new ProxyLookup(new AbstractLookup(ic));
+        ic.add(new ClaimTriangleExcludeable());
+        ic.add(new SmoothableCategory() {
+            @Override
+            public String getCategory() {
+                return ClaimTriangleCalculationImpl.CATEGORY;
+            }
+        });
     }
 
     @Override

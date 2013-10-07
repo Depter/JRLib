@@ -50,10 +50,12 @@ class CallableExecutor<T> implements Runnable {
         }
         
         hideProgressBar();
-        if(exception == null)
-            swingFinnished(result);
-        else
-            swingException(exception);
+        if(swingCallBack != null) {
+            if(exception == null)
+                swingFinnished(result);
+            else
+                swingException(exception);
+        }
     }
     
     private void showProgressBar() {
