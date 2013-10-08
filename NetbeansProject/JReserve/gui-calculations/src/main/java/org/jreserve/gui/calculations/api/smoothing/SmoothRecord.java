@@ -43,25 +43,31 @@ public class SmoothRecord {
         MonthDate accident = geometry.getAccidentDate(cell.getAccident());
         int development = cell.getDevelopment();
         double value = triangle.getValue(cell);
-        return new SmoothRecord(accident, development, value);
+        return new SmoothRecord(accident, cell.getAccident(), development, value);
     }
     
-    private final MonthDate accident;
+    private final int accident;
+    private final MonthDate accidentDate;
     private final int development;
     private boolean used;
     private double original;
     private double smoothed;
     
-    private SmoothRecord(MonthDate accident, int development, double value) {
+    private SmoothRecord(MonthDate accidentDate, int accident, int development, double value) {
         this.accident = accident;
+        this.accidentDate = accidentDate;
         this.development = development;
         this.used = false;
         this.original = value;
         this.smoothed = value;
     }
     
-    public MonthDate getAccident() {
+    public int getAccident() {
         return accident;
+    }
+    
+    public MonthDate getAccidentDate() {
+        return accidentDate;
     }
     
     public int getDevelopment() {

@@ -19,6 +19,7 @@ package org.jreserve.gui.calculations.api.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import org.jreserve.jrlib.gui.data.MonthDate;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -77,13 +78,31 @@ class SmoothTableModel extends AbstractTableModel {
     }
 
     @Override
+    public Class<?> getColumnClass(int column) {
+        switch(column) {
+            case COLUMN_ACCIDENT:
+                return MonthDate.class;
+            case COLUMN_DEVELOPMENT:
+                return Integer.class;
+            case COLUMN_APPLY:
+                return Boolean.class;
+            case COLUMN_ORIGINAL:
+                return Double.class;
+            case COLUMN_SMOOTHED:
+                return Double.class;
+            default:
+                throw new IllegalArgumentException("Unknown column index: "+column);
+        }
+    }
+
+    @Override
     public Object getValueAt(int row, int column) {
         SmoothRecord record = records.get(row);
         switch(column) {
             case COLUMN_ACCIDENT:
-                return record.getAccident();
+                return record.getAccidentDate();
             case COLUMN_DEVELOPMENT:
-                return record.getDevelopment();
+                return record.getDevelopment()+1;
             case COLUMN_APPLY:
                 return record.isUsed();
             case COLUMN_ORIGINAL:

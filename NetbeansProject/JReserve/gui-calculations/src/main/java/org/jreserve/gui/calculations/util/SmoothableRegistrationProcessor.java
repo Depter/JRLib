@@ -39,7 +39,9 @@ public class SmoothableRegistrationProcessor extends AbstractRegistrationProcess
     final static String LAYER_PATH = "JReserve/Smoothable/%s/";
     final static String ICON_BASE = "iconBase";
     final static String DISPLAY_NAME = "displayName";
-    
+    final static String SEPARATOR_BEFORE = "separatorBefore";
+    final static String SEPARATOR_AFTER = "separatorAfter";
+
     public SmoothableRegistrationProcessor() {
         super(Smoothable.Registration.class, Smoothable.class);
     }
@@ -65,6 +67,9 @@ public class SmoothableRegistrationProcessor extends AbstractRegistrationProcess
         if(name == null || name.length() == 0)
             throw new LayerGenerationException("DisplayName not set!", element, processingEnv, an, "displayName");
         file.bundlevalue(DISPLAY_NAME, name, an, "displayName");
+        
+        file.boolvalue(SEPARATOR_BEFORE, an.separatorBefore());
+        file.boolvalue(SEPARATOR_AFTER, an.separatorAfter());
         
         file.position(an.position());
     }

@@ -100,6 +100,7 @@ public abstract class AbstractChart {
     protected void formatLegend(LegendTitle legend) {
         legend.setBackgroundPaint(format.getBackgroundColor());
         legend.setItemPaint(format.getForeColor());
+        legend.setPosition(format.getLegendPosition());
     }
 
     protected void formatRangeAxis(double min, double max) {

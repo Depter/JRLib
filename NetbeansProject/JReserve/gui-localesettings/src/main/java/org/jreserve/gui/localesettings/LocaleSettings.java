@@ -207,6 +207,68 @@ public class LocaleSettings {
         }
     }
     
+    public static String getExactString(double value) {
+        if(Double.isNaN(value))
+            return getNaN();
+        if(Double.isInfinite(value)) {
+            String inf = getInfinity();
+            return value<0d? "-" + inf : inf;
+        }
+        String result = stripZeros(""+value);
+        return result.replace('.', getDecimalSeparator());
+    }
+    
+    private final static int MAX_ZERO_COUNT = 4;
+    
+    private static String stripZeros(String str) {
+        int length = str.length();
+        StringBuilder sb = new StringBuilder();
+        
+        boolean isDecimal = false;
+        int zeroCount = 0;
+        for(int i=0; i<length; i++) {
+            char c = str.charAt(i);
+            if(isDecimal) {
+                if(c == '0') {
+                    zeroCount++;
+                    if(zeroCount > MAX_ZERO_COUNT)
+                        return sb.toString();
+                } else {
+                    while(zeroCount-- > 0)
+                        sb.append('0');
+                    sb.append(c);
+                }
+            } else {
+                sb.append(c);
+                if(c == '.')
+                    isDecimal = true;
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    public static Double toDouble(String str) {
+        if(str == null || str.length() == 0)
+            return null;
+        
+        if(str.equalsIgnoreCase(getNaN()))
+            return Double.NaN;
+        
+        String inf = getInfinity();
+        if(str.equalsIgnoreCase(inf))
+            return Double.POSITIVE_INFINITY;
+        if(str.equalsIgnoreCase("-"+inf))
+            return Double.NEGATIVE_INFINITY;
+        
+        str = str.replace(getDecimalSeparator(), '.');
+        try {
+            return Double.parseDouble(str);
+        } catch (Exception ex) {
+            return null;
+        }        
+    }
+    
     private LocaleSettings() {}
     
     public final static class DecimalFormatter {

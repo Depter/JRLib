@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.Triangle;
 
 /**
  *
@@ -84,8 +85,8 @@ public class DefaultTriangleSelectionModel implements TriangleSelectionModel {
     }
 
     @Override
-    public TriangleSelection createSelection() {
-        return new TriangleSelectionImpl(this.selection);
+    public TriangleSelection createSelection(Triangle triangle) {
+        return new TriangleSelectionImpl(this.selection, triangle);
     }
     
     @Override

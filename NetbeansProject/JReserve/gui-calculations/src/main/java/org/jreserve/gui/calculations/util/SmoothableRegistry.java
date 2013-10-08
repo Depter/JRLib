@@ -19,6 +19,7 @@ package org.jreserve.gui.calculations.util;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jreserve.gui.misc.annotations.CachedLayerRegistrationLoader;
 import org.openide.filesystems.FileObject;
@@ -60,6 +61,12 @@ public class SmoothableRegistry extends CachedLayerRegistrationLoader<Smoothable
 
     @Override
     protected SmoothableAdapter getValue(FileObject file) throws Exception {
-        return new SmoothableAdapter(file);
+        try {
+            return new SmoothableAdapter(file);
+        } catch (Exception ex) {
+            String msg = String.format("Unable to load Smoothable from file '%s'", file.getPath());
+            logger.log(Level.SEVERE, msg, ex);
+            throw ex;
+        }
     }
 }

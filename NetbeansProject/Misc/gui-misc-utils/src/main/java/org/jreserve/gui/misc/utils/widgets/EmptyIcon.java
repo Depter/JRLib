@@ -28,6 +28,7 @@ import javax.swing.Icon;
 public class EmptyIcon implements Icon {
     
     public final static Icon EMPTY_16 = new EmptyIcon(16, 16);
+    public final static Icon EMPTY_32 = new EmptyIcon(32, 32);
     
     private final int width;
     private final int height;

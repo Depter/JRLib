@@ -166,6 +166,11 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>gui-wrapper-jfreechart</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>gui-project</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -182,6 +187,11 @@
         <dependency>
             <groupId>org.jreserve</groupId>
             <artifactId>gui-plot</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>gui-localesettings</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>

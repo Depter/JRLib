@@ -198,7 +198,7 @@ public class TriangleWidget extends JPanel {
     }
     
     public void setTriangleGeometry(TriangleGeometry geometry) {
-        TriangleSelection selection = selectionModel.createSelection();
+        TriangleSelection selection = createSelection();
         if(this.geometry != null)
             this.geometry.removeChangeListener(modelListener);
         this.geometry = geometry;
@@ -206,6 +206,11 @@ public class TriangleWidget extends JPanel {
             this.geometry.addChangeListener(modelListener);
         resizeAndRepaint();
         updateSelection(selection);
+    }
+    
+    public TriangleSelection createSelection() {
+        Triangle triangle = getModel().getTriangle();
+        return selectionModel.createSelection(triangle);
     }
     
     private void updateSelection(TriangleSelection selection) {

@@ -37,5 +37,9 @@ public interface Smoothable {
         public String iconBase() default "";
         
         public int position() default Integer.MAX_VALUE;
+        
+        public boolean separatorBefore() default false;
+        
+        public boolean separatorAfter() default false;
     }
 }

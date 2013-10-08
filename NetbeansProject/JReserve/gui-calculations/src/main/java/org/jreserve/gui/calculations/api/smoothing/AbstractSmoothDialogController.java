@@ -20,6 +20,7 @@ import java.awt.Component;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
 
 /**
@@ -27,23 +28,36 @@ import org.openide.util.HelpCtx;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface SmoothDialogController<C extends CalculationModifier> {
+public abstract class AbstractSmoothDialogController<C extends CalculationModifier> implements SmoothDialogController<C> {
+
+    private String title;
+    private final ChangeSupport cs = new ChangeSupport(this);
     
-    public String getDialogTitle();
+    protected AbstractSmoothDialogController(String title) {
+        this.title = title;
+    }
     
-    public Component getParameterComponent();
+    @Override
+    public String getDialogTitle() {
+        return title;
+    }
     
-    public HelpCtx getHelpContext();
+    @Override
+    public HelpCtx getHelpContext() {
+        return HelpCtx.DEFAULT_HELP;
+    }
     
-    public List<SmoothRecord> getRecords();
+    @Override
+    public void addChangeListener(ChangeListener listener) {
+        cs.addChangeListener(listener);
+    }
+
+    @Override
+    public void removeChangeListener(ChangeListener listener) {
+        cs.removeChangeListener(listener);
+    }
     
-    public boolean isValid();
-    
-    public C createModifier();
-    
-    public void updateRecords(List<SmoothRecord> records);
-    
-    public void addChangeListener(ChangeListener listener);
-    
-    public void removeChangeListener(ChangeListener listener);
+    protected final void fireChange() {
+        cs.fireChange();
+    }
 }

@@ -19,13 +19,13 @@ package org.jreserve.gui.calculations.api.smoothing;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+import org.jfree.ui.RectangleEdge;
 import org.jreserve.gui.plot.ChartWrapper;
 import org.jreserve.gui.plot.ColorGenerator;
 import org.jreserve.gui.plot.PlotFactory;
 import org.jreserve.gui.plot.PlotFormat;
 import org.jreserve.gui.plot.PlotLabel;
 import org.jreserve.gui.plot.PlotSerie;
-import org.jreserve.gui.plot.colors.ListColorGenerator;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -41,7 +41,7 @@ import org.openide.util.NbBundle.Messages;
 })
 class SmoothChartUtil {
     
-    private final static ColorGenerator COLORS = new ListColorGenerator(Color.RED, Color.BLUE);
+    private final static ColorGenerator COLORS = PlotFactory.createColorGenerator(Color.RED, Color.BLUE);
     private final static int ID_ORIGINAL = 0;
     private final static int ID_SMOOTHED = 1;
     
@@ -61,11 +61,11 @@ class SmoothChartUtil {
         for(SmoothRecord record : records) {
             if(prev != null) {
                 if(prev.getDevelopment() != record.getDevelopment())
-                    return false;
+                    return true;
             }
             prev = record;
         }
-        return true;
+        return false;
     }
     
     private static PlotSerie createOriginalSerie(List<SmoothRecord> records, boolean horizontal) {
@@ -95,6 +95,8 @@ class SmoothChartUtil {
     private static PlotFormat createFormat(boolean horizontal) {
         return new PlotFormat()
                 .setXTitle(getPlotTitle(horizontal))
+                .setLegendVisible(true)
+                .setLegendPosition(RectangleEdge.RIGHT)
                 .setColors(COLORS);
     }
     

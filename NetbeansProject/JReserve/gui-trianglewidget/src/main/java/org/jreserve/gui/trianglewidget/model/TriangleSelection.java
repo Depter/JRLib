@@ -19,6 +19,7 @@ package org.jreserve.gui.trianglewidget.model;
 
 import java.util.List;
 import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.Triangle;
 
 /**
  *
@@ -30,4 +31,6 @@ public interface TriangleSelection {
     public int getCellCount();
     
     public List<Cell> getCells();
+    
+    public Triangle getTriangle();
 }

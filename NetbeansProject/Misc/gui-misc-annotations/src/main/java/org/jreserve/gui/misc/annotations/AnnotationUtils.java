@@ -19,7 +19,9 @@ package org.jreserve.gui.misc.annotations;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
+import org.openide.cookies.InstanceCookie;
 import org.openide.filesystems.FileObject;
+import org.openide.loaders.DataObject;
 import org.openide.util.Lookup;
 
 /**
@@ -139,6 +141,12 @@ public class AnnotationUtils {
         return defaultValue;
     }
     
+    public static Object loadInstance(FileObject file) throws Exception {
+        DataObject obj = DataObject.find(file);
+        InstanceCookie ic = obj.getLookup().lookup(InstanceCookie.class);
+        return ic.instanceCreate();
+    }
+    
     public static Object instantiate(FileObject file, Object... parameters) {
         return instantiate(file, parameters, getTypes(parameters));
     }
@@ -153,6 +161,8 @@ public class AnnotationUtils {
     
     public static Object instantiate(FileObject file, Object[] parameters, Class[] paramTypes) {
         String className = stringAttribute("class", file, null);
+        if(className == null)
+            className = stringAttribute("instanceCreate", file, null);
         if(className == null)
             className = stringAttribute("instanceClass", file, null);
         

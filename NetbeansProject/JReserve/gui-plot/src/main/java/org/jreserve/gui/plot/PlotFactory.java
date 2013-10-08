@@ -16,12 +16,13 @@
  */
 package org.jreserve.gui.plot;
 
-import java.awt.Component;
+import java.awt.Paint;
 import java.util.List;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
 import org.jreserve.gui.plot.charts.AbstractBarChart;
 import org.jreserve.gui.plot.charts.AbstractLineChart;
+import org.jreserve.gui.plot.colors.ListColorGenerator;
 
 /**
  *
@@ -43,5 +44,9 @@ public class PlotFactory {
     public static ChartWrapper createBarPlot(PlotFormat format, List<PlotSerie> series) {
         AbstractBarChart plot = new AbstractBarChart(format, series);
         return createWrapper(plot.buildChart());
+    }
+    
+    public static ColorGenerator createColorGenerator(Paint... paints) {
+        return new ListColorGenerator(paints);
     }
 }

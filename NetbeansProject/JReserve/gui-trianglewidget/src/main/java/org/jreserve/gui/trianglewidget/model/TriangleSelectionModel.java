@@ -17,6 +17,8 @@
 
 package org.jreserve.gui.trianglewidget.model;
 
+import org.jreserve.jrlib.triangle.Triangle;
+
 /**
  *
  * @author Peter Decsi
@@ -36,7 +38,7 @@ public interface TriangleSelectionModel {
     
     public void clearSelection();
     
-    public TriangleSelection createSelection();
+    public TriangleSelection createSelection(Triangle triangle);
     
     public void addTriangleSelectionListener(TriangleSelectionListener listener);
     

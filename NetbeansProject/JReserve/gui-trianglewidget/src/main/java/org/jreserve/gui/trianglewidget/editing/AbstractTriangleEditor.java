@@ -58,7 +58,7 @@ public class AbstractTriangleEditor implements TriangleEditor {
     @Override
     public Double getEditorValue() {
         String str = editor.getText();
-        return toValue(str);
+        return LocaleSettings.toDouble(str);
     }
 
     @Override
@@ -136,60 +136,7 @@ public class AbstractTriangleEditor implements TriangleEditor {
     }
     
     protected String toString(double value) {
-        if(Double.isNaN(value))
-            return nan;
-        if(Double.isInfinite(value))
-            return value<0d? "-" + inf : inf;
-        String result = stripZeros(""+value);
-        return result.replace('.', decimal);
-    }
-    
-    private final static int MAX_ZERO_COUNT = 4;
-    
-    private String stripZeros(String str) {
-        int length = str.length();
-        StringBuilder sb = new StringBuilder();
-        
-        boolean isDecimal = false;
-        int zeroCount = 0;
-        for(int i=0; i<length; i++) {
-            char c = str.charAt(i);
-            if(isDecimal) {
-                if(c == '0') {
-                    zeroCount++;
-                    if(zeroCount > MAX_ZERO_COUNT)
-                        return sb.toString();
-                } else {
-                    while(zeroCount-- > 0)
-                        sb.append('0');
-                    sb.append(c);
-                }
-            } else {
-                sb.append(c);
-                if(c == '.')
-                    isDecimal = true;
-            }
-        }
-        
-        return sb.toString();
-    }
-    
-    protected Double toValue(String str) {
-        if(str == null || str.length() == 0)
-            return null;
-        if(str.equalsIgnoreCase(nan))
-            return Double.NaN;
-        if(str.equalsIgnoreCase(inf))
-            return Double.POSITIVE_INFINITY;
-        if(str.equalsIgnoreCase("-"+inf))
-            return Double.NEGATIVE_INFINITY;
-        
-        str = str.replace(decimal, '.');
-        try {
-            return Double.parseDouble(str);
-        } catch (Exception ex) {
-            return null;
-        }
+        return LocaleSettings.getExactString(value);
     }
     
     private class EditorFocusListener extends FocusAdapter {

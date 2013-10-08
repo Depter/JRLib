@@ -64,11 +64,11 @@ public abstract class AbstractSmoothable<C extends CalculationData> implements S
             prev = cell;
         }
         
-        if(!horizontal && !vertical)
-            return false;
-        
-        return (handlesVertical() && vertical) ||
-               (handlesHorizontal() && horizontal);
+        if(vertical && handlesVertical())
+            return true;
+        if(horizontal && handlesHorizontal())
+            return true;
+        return false;
     }
     
     protected abstract ModifiableCalculationProvider<C> getCalculation(Lookup context);
@@ -82,9 +82,8 @@ public abstract class AbstractSmoothable<C extends CalculationData> implements S
     @Override
     public void smooth(Lookup context) {
         ModifiableCalculationProvider<C> calculation = getCalculation(context);
-        List<Cell> cells = context.lookup(TriangleSelection.class).getCells();
         
-        CalculationModifier<C> modifier = createSmoothing(calculation, cells);
+        CalculationModifier<C> modifier = createSmoothing(context);
         if(modifier != null) {
             AddTask task = new AddTask(calculation, modifier);
             String title = Bundle.MSG_AbstractSmoothable_PH_Title();
@@ -92,7 +91,7 @@ public abstract class AbstractSmoothable<C extends CalculationData> implements S
         }
     }
     
-    protected abstract CalculationModifier<C> createSmoothing(ModifiableCalculationProvider<C> calculation, List<Cell> cells);
+    protected abstract CalculationModifier<C> createSmoothing(Lookup context);
 
     
     private class AddTask implements Callable<Void> {

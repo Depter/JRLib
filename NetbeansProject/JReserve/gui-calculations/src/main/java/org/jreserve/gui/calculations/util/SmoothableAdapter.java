@@ -30,11 +30,15 @@ public class SmoothableAdapter {
     private final Smoothable delegate;
     private final String name;
     private final String iconBase;
+    private final boolean separatorBefore;
+    private final boolean separatorAfter;
     
-    SmoothableAdapter(FileObject file) {
-        delegate = (Smoothable) AnnotationUtils.instantiate(file);
+    SmoothableAdapter(FileObject file) throws Exception {
+        delegate = (Smoothable) AnnotationUtils.loadInstance(file);
         name = AnnotationUtils.stringAttribute(SmoothableRegistrationProcessor.DISPLAY_NAME, file);
         iconBase = AnnotationUtils.stringAttribute(SmoothableRegistrationProcessor.ICON_BASE, file);
+        separatorBefore = AnnotationUtils.booleanAttribute(SmoothableRegistrationProcessor.SEPARATOR_BEFORE, file, false);
+        separatorAfter = AnnotationUtils.booleanAttribute(SmoothableRegistrationProcessor.SEPARATOR_AFTER, file, false);
     }
     
     public String getIconBase() {
@@ -43,6 +47,14 @@ public class SmoothableAdapter {
 
     public String getName() {
         return name;
+    }
+    
+    public boolean separatorBefore() {
+        return separatorBefore;
+    }
+    
+    public boolean separatorAfter() {
+        return separatorAfter;
     }
     
     public Smoothable getSmoothable() {

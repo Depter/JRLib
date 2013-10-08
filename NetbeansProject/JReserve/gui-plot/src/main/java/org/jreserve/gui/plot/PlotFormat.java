@@ -17,6 +17,7 @@
 package org.jreserve.gui.plot;
 
 import java.awt.Color;
+import org.jfree.ui.RectangleEdge;
 import org.jreserve.gui.plot.settings.PlotSettings;
 
 /**
@@ -36,6 +37,7 @@ public class PlotFormat {
     private Color gridColor = PlotSettings.getBackground();
     private Color foreColor = PlotSettings.getForeground();
     private String[] seriesNames = new String[0];
+    private RectangleEdge legendPosition = RectangleEdge.BOTTOM;
     
     public String getTitle() {
         return title;
@@ -85,6 +87,15 @@ public class PlotFormat {
     public PlotFormat setLegendVisible(boolean visible) {
         this.legendVisible = visible;
         return this;
+    }
+    
+    public PlotFormat setLegendPosition(RectangleEdge position) {
+        this.legendPosition = position==null? RectangleEdge.BOTTOM : position;
+        return this;
+    }
+    
+    public RectangleEdge getLegendPosition() {
+        return legendPosition;
     }
     
     public boolean isTooltipsVisible() {

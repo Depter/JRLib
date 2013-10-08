@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.Triangle;
 
 /**
  *
@@ -32,8 +33,9 @@ class TriangleSelectionImpl implements TriangleSelection {
     private List<Cell> cells = new ArrayList<Cell>();
     private int accident = -1;
     private int development = -1;
+    private Triangle triangle;
     
-    TriangleSelectionImpl(Set<Cell> cells) {
+    TriangleSelectionImpl(Set<Cell> cells, Triangle triangle) {
         for(Cell cell : cells) {
             if(this.cells.isEmpty()) {
                 initBounds(cell);
@@ -42,6 +44,7 @@ class TriangleSelectionImpl implements TriangleSelection {
             }
             this.cells.add(cell);
         }
+        this.triangle = triangle;
     }
     
     private void initBounds(Cell cell) {
@@ -54,6 +57,10 @@ class TriangleSelectionImpl implements TriangleSelection {
             accident = -1;
         if(development != -1 && development != cell.getDevelopment())
             development = -1;
+    }
+    
+    public Triangle getTriangle() {
+        return triangle;
     }
     
     @Override

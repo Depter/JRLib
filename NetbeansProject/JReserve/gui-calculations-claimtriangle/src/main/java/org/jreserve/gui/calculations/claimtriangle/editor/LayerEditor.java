@@ -113,7 +113,7 @@ public class LayerEditor extends AbstractExpandableElement {
             TriangleSelection ts = lkp.lookup(TriangleSelection.class);
             if(ts != null)
                 ic.remove(ts);
-            ts = panel.getWidgetPanel().getTriangleSelectionModel().createSelection();
+            ts = panel.getWidgetPanel().getTriangleWidget().createSelection();
             ic.add(ts);
         }
     }

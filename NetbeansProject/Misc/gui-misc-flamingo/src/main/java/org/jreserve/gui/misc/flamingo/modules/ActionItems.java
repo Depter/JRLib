@@ -52,7 +52,7 @@ import org.openide.loaders.DataObject;
  *
  * @author Chris
  */
-class ActionItems {
+public class ActionItems {
 
     private ActionItems() {
     }

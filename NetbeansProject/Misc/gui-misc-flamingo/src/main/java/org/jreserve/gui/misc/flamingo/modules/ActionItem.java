@@ -48,7 +48,7 @@ import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
  *
  * @author Chris
  */
-abstract class ActionItem {
+public abstract class ActionItem {
 
     public static final String MENU_TEXT = "menuText";
     public static final String DESCRIPTION = "description";
