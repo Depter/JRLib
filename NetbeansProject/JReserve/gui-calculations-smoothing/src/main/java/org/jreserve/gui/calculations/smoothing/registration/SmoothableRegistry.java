@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.util;
+package org.jreserve.gui.calculations.smoothing.registration;
 
 import java.util.HashMap;
 import java.util.List;

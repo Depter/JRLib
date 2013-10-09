@@ -22,6 +22,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -342,6 +343,26 @@ public class TriangleWidget extends JPanel {
      */
     public int getColumnCount() {
         return model==null? 0 : model.getColumnCount();
+    }
+    
+    public int getRowIndex(Point point) {
+        point = getContentPoint(point);
+        return content.getRowIndex(point);
+    }
+    
+    private Point getContentPoint(Point p) {
+        Point l = content.getLocation();
+        return new Point(p.x - l.x, p.y - l.y);
+    }
+    
+    public int getColumnIndex(Point point) {
+        point = getContentPoint(point);
+        return content.getColumnIndex(point);
+    }
+    
+    public Cell getCellAt(Point point) {
+        point = getContentPoint(point);
+        return content.getCellAt(point);
     }
     
     WidgetContentPanel getContentPanel() {

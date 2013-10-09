@@ -202,6 +202,12 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
+            <artifactId>gui-calculations-smoothing</artifactId>
+            <version>${project.version}</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
             <artifactId>gui-calculations-claimtriangle</artifactId>
             <version>${project.version}</version>
             <type>jar</type>

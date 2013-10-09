@@ -14,14 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.util;
+package org.jreserve.gui.calculations.smoothing.registration;
 
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import org.jreserve.gui.calculations.api.smoothing.Smoothable;
+import org.jreserve.gui.calculations.smoothing.Smoothable;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -34,7 +34,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.gui.calculations.api.smoothing.Smoothable.Registration")
+@SupportedAnnotationTypes("org.jreserve.gui.calculations.smoothing.Smoothable.Registration")
 public class SmoothableRegistrationProcessor extends AbstractRegistrationProcessor<Smoothable.Registration, Smoothable> {
     final static String LAYER_PATH = "JReserve/Smoothable/%s/";
     final static String ICON_BASE = "iconBase";

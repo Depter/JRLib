@@ -37,6 +37,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
+import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
 
 /**
@@ -92,7 +93,12 @@ class WidgetContentPanel extends JComponent {
         for(int r=0; r<rCount; r++) {
             for(int c=0; c<cCount; c++) {
                 if(tm.hasValueAt(r, c)) {
-                    Component comp = renderer.getComponent(widget, tm.getValueAt(r, c), r, c, false);
+                    int accident = tm.getAccidentIndex(r, c);
+                    int development = tm.getDevelopmentIndex(r, c);
+                    
+                    Component comp = renderer.getComponent(
+                            widget, tm.getValueAt(r, c), 
+                            accident, development, false);
                     Dimension size = comp.getPreferredSize();
                     wPref = Math.max(wPref, size.width);
                     hPref = Math.max(hPref, size.height);
@@ -140,7 +146,7 @@ class WidgetContentPanel extends JComponent {
         int development = model.getDevelopmentIndex(row, column);
         boolean selected = selectionModel.isSelected(accident, development);
         
-        Component c = renderer.getComponent(widget, value, row, column, selected);
+        Component c = renderer.getComponent(widget, value, accident, development, selected);
         initCellBounds(row, column);
         paintCell(c, g);
     }
@@ -263,6 +269,44 @@ class WidgetContentPanel extends JComponent {
         }
     }
     
+    int getRowIndex(Point point) {
+        if(contains(point))
+            return point.y / cellBounds.height;
+        return -1;
+    }
+    
+    int getColumnIndex(Point point) {
+        if(contains(point))
+            return point.x / cellBounds.width;
+        return -1;
+    }
+    
+    boolean hasValueAt(Point point) {
+        if(contains(point)) {
+            int r = point.y / cellBounds.height;
+            int c = point.x / cellBounds.width;
+            return widget.getModel().hasValueAt(r, c);
+        } else {
+            return false;
+        }
+    }
+    
+    Cell getCellAt(Point point) {
+        if(!contains(point))
+            return null;
+        
+        int r = point.y / cellBounds.height;
+        int c = point.x / cellBounds.width;
+            
+        TriangleModel tm = widget.getModel();
+        if(!tm.hasValueAt(r, c))
+            return null;
+        
+        int accident = tm.getAccidentIndex(r, c);
+        int development = tm.getDevelopmentIndex(r, c);
+        return new Cell(accident, development);
+    }
+    
     private class EditorListener implements TriangleEditorListener {
 
         @Override
@@ -289,7 +333,7 @@ class WidgetContentPanel extends JComponent {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if(e.getClickCount() == 2) {
+            if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1) {
                 int[] cell = getCell(e);
                 if(cell != null)
                     editCellAt(cell[0], cell[1]);
@@ -301,8 +345,8 @@ class WidgetContentPanel extends JComponent {
                 return null;
             
             Point p = evt.getPoint();
-            int r = p.y / cellBounds.height;
-            int c = p.x / cellBounds.width;
+            int r = getRowIndex(p);
+            int c = getColumnIndex(p);
             
             if(!widget.getModel().hasValueAt(r, c))
                 return null;
@@ -312,6 +356,9 @@ class WidgetContentPanel extends JComponent {
         
         @Override
         public void mousePressed(MouseEvent e) {
+            if(e.isPopupTrigger() || e.getButton() != MouseEvent.BUTTON1)
+                return;
+            
             int[] cell = getCell(e);
             if(cell == null)
                 return;

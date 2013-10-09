@@ -14,17 +14,17 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.actions;
+package org.jreserve.gui.calculations.smoothing.action;
 
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import org.jreserve.gui.calculations.api.smoothing.Smoothable;
-import org.jreserve.gui.calculations.api.smoothing.SmoothableCategory;
-import org.jreserve.gui.calculations.util.SmoothableAdapter;
-import org.jreserve.gui.calculations.util.SmoothableRegistry;
+import org.jreserve.gui.calculations.smoothing.Smoothable;
+import org.jreserve.gui.calculations.smoothing.SmoothableCategory;
+import org.jreserve.gui.calculations.smoothing.registration.SmoothableAdapter;
+import org.jreserve.gui.calculations.smoothing.registration.SmoothableRegistry;
 import org.jreserve.gui.misc.flamingo.api.ActionCommandButton;
 import org.jreserve.gui.misc.flamingo.api.ActionMenuButton;
 import org.jreserve.gui.misc.flamingo.api.ResizableIcons;
@@ -32,6 +32,7 @@ import org.jreserve.gui.misc.flamingo.api.RibbonPresenter;
 import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
@@ -68,7 +69,7 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 })
 public class SmoothAction extends AbstractContextAwareAction implements RibbonPresenter.Button {
     
-    private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/smoothing.png";
+    @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/smoothing/smoothing.png";
     
     private final ActionCommandButton button;
     

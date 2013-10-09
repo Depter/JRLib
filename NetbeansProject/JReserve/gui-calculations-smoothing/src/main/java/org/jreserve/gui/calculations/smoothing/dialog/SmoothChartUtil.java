@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing.dialog;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -36,20 +36,25 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.SmoothChartUtil.Original=Original",
     "LBL.SmoothChartUtil.Smoothed=Smoothed",
+    "LBL.SmoothChartUtil.Output=Output",
     "LBL.SmoothChartUtil.Accident=Accident",
     "LBL.SmoothChartUtil.Development=Development"
 })
 class SmoothChartUtil {
     
-    private final static ColorGenerator COLORS = PlotFactory.createColorGenerator(Color.RED, Color.BLUE);
+    private final static ColorGenerator COLORS = PlotFactory.createColorGenerator(
+        Color.RED, Color.BLUE, new Color(0, 153, 51)
+    );
     private final static int ID_ORIGINAL = 0;
     private final static int ID_SMOOTHED = 1;
+    private final static int ID_OUTPUT = 2;
     
     static ChartWrapper createChart(List<SmoothRecord> records) {
         boolean horizontal = isHorizontal(records);
         List<PlotSerie> series = new ArrayList<PlotSerie>();
         series.add(createOriginalSerie(records, horizontal));
         series.add(createSmoothedSerie(records, horizontal));
+        series.add(createOutputSerie(records, horizontal));
         
         PlotFormat format = createFormat(horizontal);
         
@@ -92,6 +97,16 @@ class SmoothChartUtil {
         return serie;
     }
     
+    private static PlotSerie createOutputSerie(List<SmoothRecord> records, boolean horizontal) {
+        PlotSerie serie = new PlotSerie(new PlotLabel(ID_OUTPUT, Bundle.LBL_SmoothChartUtil_Output()));
+        for(SmoothRecord record : records) {
+            Comparable key = getKey(record, horizontal);
+            double value = record.isUsed()? record.getSmoothed() : record.getOriginal();
+            serie.addEntry(key, value);
+        }
+        return serie;
+    }
+    
     private static PlotFormat createFormat(boolean horizontal) {
         return new PlotFormat()
                 .setXTitle(getPlotTitle(horizontal))
@@ -102,8 +117,8 @@ class SmoothChartUtil {
     
     private static String getPlotTitle(boolean horizontal) {
         if(horizontal)
-            return Bundle.LBL_SmoothChartUtil_Development();
-        return Bundle.LBL_SmoothChartUtil_Accident();
+            return Bundle.LBL_SmoothChartUtil_Accident();
+        return Bundle.LBL_SmoothChartUtil_Development();
     }
     
     private SmoothChartUtil() {}

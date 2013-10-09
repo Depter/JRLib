@@ -25,6 +25,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeListener;
@@ -63,12 +65,14 @@ public class ExpandablePanel extends JPanel {
     private UndockedTopComponent tc;
     private ExpandableContainerHandler container;
     private boolean docked = true;
-    private boolean opened = true;
+    private boolean opened = false;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
-    private SelectListener selectListener = new SelectListener();
+    //private SelectListener selectListener = new SelectListener();
+    private ContainerSelectAdapter selectAdapter = new ContainerSelectAdapter();
     
     public ExpandablePanel(ExpandableContainerHandler container, ExpandableElementDescription description) {
         this.container = container;
+        super.addContainerListener(selectAdapter);
         initElement(description);
         initSuperProperties();
         initPanel();
@@ -92,7 +96,6 @@ public class ExpandablePanel extends JPanel {
         setBorder(ExpandablePanelBorder.getInstance());
         add(createTitlePanel(), BorderLayout.NORTH);
         add(createContentPanel(), BorderLayout.CENTER);
-        addSelectListener(this);
     }
     
     private JPanel createTitlePanel() {
@@ -150,17 +153,8 @@ public class ExpandablePanel extends JPanel {
     private JPanel createContentPanel() {
         contentPanel = new JPanel(new BorderLayout());
         this.docked = true;
-        contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
         contentPanel.setBorder(BorderFactory.createMatteBorder(0, 2, 2, 2, getBackground()));
-        
         return contentPanel;
-    }
-    
-    private void addSelectListener(Component c) {
-        c.addMouseListener(selectListener);
-        if(c instanceof Container)
-            for(Component child : ((Container)c).getComponents())
-                addSelectListener(child);
     }
     
     ExpandableElementDescription getDescription() {
@@ -170,10 +164,22 @@ public class ExpandablePanel extends JPanel {
     private void setOpened(boolean opened) {
         if(this.opened != opened) {
             this.opened = opened;
+            createContent();
+            
             contentPanel.setVisible(opened);
             if(opened)
                 container.setSelected(description);
             pcs.firePropertyChange(ExpandableComponentHandler.OPENED, !opened, opened);
+        }
+    }
+    
+    private boolean contentCreated = false;
+    
+    private void createContent() {
+        if(!contentCreated) {
+            Component c = element.getVisualComponent();
+            contentPanel.add(c, BorderLayout.CENTER);
+            contentCreated = true;
         }
     }
     
@@ -229,7 +235,8 @@ public class ExpandablePanel extends JPanel {
         public void undock() {
             if(docked) {
                 String title = description.getDisplayName();
-                contentPanel.remove(element.getVisualComponent());
+                if(contentCreated)
+                    contentPanel.remove(element.getVisualComponent());
                 tc = UndockedTopComponent.create(title, element, tcCallback);
                 setDocked(false);
             }
@@ -252,7 +259,38 @@ public class ExpandablePanel extends JPanel {
         }
     }
     
-    private class SelectListener extends MouseAdapter {
+    private class ContainerSelectAdapter extends MouseAdapter implements ContainerListener {
+        
+        @Override
+        public void componentAdded(ContainerEvent e) {
+            register(e.getChild());
+        }
+
+        private void register(Component c) {
+            if(c instanceof Container) {
+                Container container = (Container) c;
+                for(Component child : container.getComponents())
+                    register(child);
+                container.addContainerListener(this);
+            }
+            c.addMouseListener(this);
+        }
+        
+        @Override
+        public void componentRemoved(ContainerEvent e) {
+            unregister(e.getChild());
+        }
+
+        private void unregister(Component c) {
+            if(c instanceof Container) {
+                Container container = (Container) c;
+                for(Component child : container.getComponents())
+                    unregister(child);
+                container.removeContainerListener(this);
+            }
+            c.removeMouseListener(this);
+        }
+        
         @Override
         public void mouseClicked(MouseEvent e) {
             container.setSelected(description);
@@ -264,7 +302,10 @@ public class ExpandablePanel extends JPanel {
         @Override
         public void tcClosed() {
             tc = null;
-            contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
+            if(opened) {
+                contentPanel.add(element.getVisualComponent(), BorderLayout.CENTER);
+                contentCreated = true;
+            }
             setDocked(true);
         }
     }

@@ -39,7 +39,7 @@ public class ClaimTriangleExcludeable implements Excludeable {
     @Override
     public boolean canExclude(Lookup context) {
         TriangleSelection selection = context.lookup(TriangleSelection.class);
-        if(selection.getCellCount() == 0)
+        if(selection == null || selection.getCellCount() == 0)
             return false;
         
         return context.lookup(ClaimTriangleCalculationImpl.class) != null;

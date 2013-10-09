@@ -14,36 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing;
 
-import java.awt.Component;
-import java.util.List;
-import javax.swing.event.ChangeListener;
-import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.openide.util.HelpCtx;
+import org.openide.util.Lookup;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface SmoothDialogController<C extends CalculationModifier> {
+public interface Smoothable {
     
-    public String getDialogTitle();
+    public boolean canSmooth(Lookup context);
     
-    public Component getParameterComponent();
+    public void smooth(Lookup context);
     
-    public HelpCtx getHelpContext();
-    
-    public List<SmoothRecord> getRecords();
-    
-    public boolean isValid();
-    
-    public C createModifier();
-    
-    public void updateRecords(List<SmoothRecord> records);
-    
-    public void addChangeListener(ChangeListener listener);
-    
-    public void removeChangeListener(ChangeListener listener);
+    public static @interface Registration {
+        public String category();
+        
+        public String displayName();
+        
+        public String iconBase() default "";
+        
+        public int position() default Integer.MAX_VALUE;
+        
+        public boolean separatorBefore() default false;
+        
+        public boolean separatorAfter() default false;
+    }
 }

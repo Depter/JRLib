@@ -141,8 +141,8 @@ public abstract class AbstractExpandableElement implements ExpandableElement {
     }
 
     private void initHandler() {
-        if (!openMaximized())
-            handler.minimize();
+        if (openMaximized())
+            handler.maximize();
         if (dockButton != null)
             handler.addPropertyChangeListener(undockListenr);
     }

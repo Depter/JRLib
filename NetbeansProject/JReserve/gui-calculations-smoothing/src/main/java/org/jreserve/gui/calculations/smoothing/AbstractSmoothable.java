@@ -14,16 +14,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing;
 
-import java.util.List;
 import java.util.concurrent.Callable;
 import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialog;
+import org.jreserve.gui.calculations.smoothing.dialog.SmoothDialogController;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.Triangle;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -35,7 +37,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.AbstractSmoothable.PH.Title=Apply smoothing"
 })
-public abstract class AbstractSmoothable<C extends CalculationData> implements Smoothable {
+public abstract class AbstractSmoothable<T extends Triangle> implements Smoothable {
 
     @Override
     public boolean canSmooth(Lookup context) {
@@ -71,19 +73,23 @@ public abstract class AbstractSmoothable<C extends CalculationData> implements S
         return false;
     }
     
-    protected abstract ModifiableCalculationProvider<C> getCalculation(Lookup context);
+    protected abstract ModifiableCalculationProvider<T> getCalculation(Lookup context);
     
     protected abstract int getMinCellCount();
     
-    protected abstract boolean handlesVertical();
+    protected boolean handlesVertical() {
+        return true;
+    }
     
-    protected abstract boolean handlesHorizontal();
+    protected boolean handlesHorizontal() {
+        return false;
+    }
     
     @Override
     public void smooth(Lookup context) {
-        ModifiableCalculationProvider<C> calculation = getCalculation(context);
+        ModifiableCalculationProvider<T> calculation = getCalculation(context);
         
-        CalculationModifier<C> modifier = createSmoothing(context);
+        CalculationModifier<T> modifier = createSmoothing(context);
         if(modifier != null) {
             AddTask task = new AddTask(calculation, modifier);
             String title = Bundle.MSG_AbstractSmoothable_PH_Title();
@@ -91,15 +97,19 @@ public abstract class AbstractSmoothable<C extends CalculationData> implements S
         }
     }
     
-    protected abstract CalculationModifier<C> createSmoothing(Lookup context);
+    protected CalculationModifier<T> createSmoothing(Lookup context) {
+        SmoothDialogController<T> controller = createController(context);
+        return AbstractSmoothDialog.createModifier(controller);
+    }
 
+    protected abstract SmoothDialogController<T> createController(Lookup context);
     
     private class AddTask implements Callable<Void> {
         
-        private final ModifiableCalculationProvider<C> calc;
-        private final CalculationModifier<C> mod;
+        private final ModifiableCalculationProvider<T> calc;
+        private final CalculationModifier<T> mod;
         
-        private AddTask(ModifiableCalculationProvider<C> calc, CalculationModifier<C> mod) {
+        private AddTask(ModifiableCalculationProvider<T> calc, CalculationModifier<T> mod) {
             this.calc = calc;
             this.mod = mod;
         }

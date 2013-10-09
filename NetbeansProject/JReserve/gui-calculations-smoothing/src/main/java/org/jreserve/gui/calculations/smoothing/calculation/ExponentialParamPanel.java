@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
+package org.jreserve.gui.calculations.smoothing.calculation;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -64,7 +64,7 @@ class ExponentialParamPanel extends javax.swing.JPanel {
         filler = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
         msgLabel = new org.jreserve.gui.misc.utils.widgets.MsgLabel();
 
-        setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 0, 10));
         setLayout(new java.awt.GridBagLayout());
 
         org.openide.awt.Mnemonics.setLocalizedText(alphaLabel, org.openide.util.NbBundle.getMessage(ExponentialParamPanel.class, "ExponentialParamPanel.alphaLabel.text")); // NOI18N
@@ -73,11 +73,11 @@ class ExponentialParamPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 5);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
         add(alphaLabel, gridBagConstraints);
 
         alphaText.setColumns(10);
-        alphaText.setHorizontalAlignment(javax.swing.JTextField.TRAILING);
+        alphaText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         alphaText.setText(null);
         alphaText.getDocument().addDocumentListener(new TextListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -85,7 +85,7 @@ class ExponentialParamPanel extends javax.swing.JPanel {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 20, 0);
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
         add(alphaText, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;

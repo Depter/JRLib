@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing.dialog;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -23,17 +23,22 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
@@ -44,6 +49,7 @@ import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.ScaleSpinner;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.plot.ChartWrapper;
+import org.jreserve.jrlib.triangle.Triangle;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
@@ -63,15 +69,15 @@ import org.openide.util.NbBundle.Messages;
     "LBL.AbstractSmoothDialog.Ok=ok",
     "LBL.AbstractSmoothDialog.Help=Help"
 })
-public class AbstractSmoothDialog<C extends CalculationModifier> extends JPanel {
+public class AbstractSmoothDialog<T extends Triangle> extends JPanel {
     
     private final static boolean MODAL = true;
     private final static Dimension TABS_SIZE = new Dimension(400, 400);
     private final static Dimension TAB_PANEL_SIZE = new Dimension(100, 100);
     private final static Dimension PLOT_SIZE = new Dimension(300, 300);
     
-    public static <C extends CalculationModifier> C createModifier(SmoothDialogController<C> controller) {
-        AbstractSmoothDialog<C> content = new AbstractSmoothDialog<C>(controller);
+    public static <T extends Triangle> CalculationModifier<T> createModifier(SmoothDialogController<T> controller) {
+        AbstractSmoothDialog<T> content = new AbstractSmoothDialog<T>(controller);
         DialogDescriptor dd = new DialogDescriptor(
             content, controller.getDialogTitle(), MODAL, 
             new Object[0], null, DialogDescriptor.DEFAULT_ALIGN, 
@@ -82,21 +88,22 @@ public class AbstractSmoothDialog<C extends CalculationModifier> extends JPanel 
         return content.modifier;
     }
     
-    private SmoothDialogController<C> controller;
+    private SmoothDialogController<T> controller;
     private JButton okButton;
     private JButton cancelButton;
     private JButton helpButton;
     private SmoothTableModel tableModel;
+    private JTable table;
     private JScrollPane plotScroll;
     private Component plotComponent;
     private ScaleSpinner scaleSpinner;
     private List<SmoothRecord> records;
     private boolean myChnage = false;
     private Dialog dialog;
-    private C modifier = null;
+    private CalculationModifier<T> modifier = null;
     private LocaleSettings.DecimalFormatter df;
     
-    public AbstractSmoothDialog(SmoothDialogController<C> controller) {
+    public AbstractSmoothDialog(SmoothDialogController<T> controller) {
         this.controller = controller;
         initComponents();
         this.controller.addChangeListener(new ControllerListener());
@@ -161,8 +168,10 @@ public class AbstractSmoothDialog<C extends CalculationModifier> extends JPanel 
         
         tableModel = new SmoothTableModel(records);
         tableModel.addTableModelListener(new TableListener());
-        JTable table = new JTable(tableModel);
+        table = new JTable(tableModel);
         table.setDefaultRenderer(Double.class, new DoubleRenderer());
+        table.setDefaultRenderer(Boolean.class, new BooleanRenderer());
+        table.addMouseListener(new AppliedListener());
         gc.gridx=0; gc.gridy=1; 
         gc.weighty=1d; gc.gridwidth=3;
         gc.fill = GridBagConstraints.BOTH;
@@ -258,6 +267,42 @@ public class AbstractSmoothDialog<C extends CalculationModifier> extends JPanel 
             return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         }
     }
+    
+    private class BooleanRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, null, isSelected, hasFocus, row, column);
+            setIcon(getIcon(value));
+            setHorizontalAlignment(SwingConstants.CENTER);
+            return this;
+        }
+        
+        private Icon getIcon(Object value) {
+            if(value instanceof Boolean)
+                return ((Boolean)value).booleanValue()?
+                        CommonIcons.ok() : CommonIcons.cancel();
+            return CommonIcons.cancel();
+        }
+    }
+    
+    private class AppliedListener extends MouseAdapter {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Point p = e.getPoint();
+            int row = table.rowAtPoint(p);
+            int column = table.columnAtPoint(p);
+            if(row < 0 || SmoothTableModel.COLUMN_APPLY != column)
+                return;
+            
+            Boolean v = (Boolean) tableModel.getValueAt(row, column);
+            if(v==null || !v.booleanValue())
+                tableModel.setValueAt(true, row, column);
+            else
+                tableModel.setValueAt(false, row, column);
+        }
+        
+    } 
     
     private class ButtonListener implements ActionListener {
 

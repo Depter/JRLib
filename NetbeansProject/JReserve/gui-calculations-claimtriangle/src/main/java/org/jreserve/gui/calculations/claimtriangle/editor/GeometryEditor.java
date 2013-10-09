@@ -23,6 +23,7 @@ import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
+import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -46,6 +47,7 @@ public class GeometryEditor extends AbstractExpandableElement {
 
     private GeometryEditorPanel panel;
     private ClaimTriangleCalculationImpl calculation;
+    private UndoRedo.Manager undo;
     
     public GeometryEditor() {
         this(Lookup.EMPTY);
@@ -59,13 +61,20 @@ public class GeometryEditor extends AbstractExpandableElement {
     protected Component createVisualComponent() {
         panel = new GeometryEditorPanel();
         panel.setCalculation(calculation);
+        setPanelUndo();
         return panel;
     }
 
     @Override
     public void setHandler(ExpandableComponentHandler handler) {
         super.setHandler(handler);
-        panel.setUndo(handler.getContainer().getUndoRedo());        
+        undo = handler.getContainer().getUndoRedo();
+        setPanelUndo();
+    }
+    
+    private void setPanelUndo() {
+        if(panel != null && undo != null)
+            panel.setUndo(undo);
     }
 
     @Override

@@ -17,17 +17,17 @@
 package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 
 import java.util.List;
-import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
-import org.jreserve.gui.calculations.api.smoothing.AbstractSmoothDialog;
-import org.jreserve.gui.calculations.api.smoothing.AbstractSmoothable;
-import org.jreserve.gui.calculations.api.smoothing.Smoothable;
+import org.jreserve.gui.calculations.smoothing.Smoothable;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
+import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothable;
+import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothingDialogController;
+import org.jreserve.gui.calculations.smoothing.dialog.SmoothDialogController;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -44,9 +44,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.ExponentialSmoothable.Name=Exponential Smoothing"
 })
-public class ExponentialSmoothable extends AbstractSmoothable<ClaimTriangle> {
-
-    private final static int MIN_CELL_COUNT = 2;
+public class ExponentialClaimTriangleSmoothable extends ExponentialSmoothable<ClaimTriangle> {
     
     @Override
     protected ClaimTriangleCalculationImpl getCalculation(Lookup context) {
@@ -54,22 +52,7 @@ public class ExponentialSmoothable extends AbstractSmoothable<ClaimTriangle> {
     }
 
     @Override
-    protected int getMinCellCount() {
-        return MIN_CELL_COUNT;
-    }
-
-    @Override
-    protected boolean handlesVertical() {
-        return true;
-    }
-
-    @Override
-    protected boolean handlesHorizontal() {
-        return false;
-    }
-
-    @Override
-    protected CalculationModifier<ClaimTriangle> createSmoothing(Lookup context) {
+    protected SmoothDialogController<ClaimTriangle> createController(Lookup context) {
         ClaimTriangleCalculationImpl calc = getCalculation(context);
         TriangleGeometry geometry = calc.getGeometry();
         
@@ -77,7 +60,20 @@ public class ExponentialSmoothable extends AbstractSmoothable<ClaimTriangle> {
         List<Cell> cells = selection.getCells();
         Triangle triangle = selection.getTriangle();
         
-        ExponentialSmoothingDialogController controller = new ExponentialSmoothingDialogController(triangle, geometry, cells);
-        return AbstractSmoothDialog.createModifier(controller);
+        return new DialogController(triangle, geometry, cells);
+    }
+    
+    private static class DialogController extends ExponentialSmoothingDialogController<ClaimTriangle> {
+
+        public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
+            super(triangle, geometry, cells);
+        }
+        
+        @Override
+        public ExponentialModifier createModifier() {
+            List<SmoothingCell> cells = createCells();
+            double alpha = getAlpha();
+            return new ExponentialModifier(cells, alpha);
+        }
     }
 }

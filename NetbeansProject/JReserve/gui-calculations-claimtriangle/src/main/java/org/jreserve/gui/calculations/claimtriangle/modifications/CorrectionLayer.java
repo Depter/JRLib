@@ -61,8 +61,8 @@ class CorrectionLayer extends DefaultTriangleLayer {
     private static class CorrectionRenderer extends DefaultTriangleWidgetRenderer {
 
         @Override
-        public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
-            super.getComponent(widget, value, row, column, selected);
+        public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
+            super.getComponent(widget, value, accident, development, selected);
             if(!selected)
                 setBackground(Color.ORANGE);
             return this;

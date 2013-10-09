@@ -33,9 +33,9 @@ public interface TriangleWidgetRenderer {
      * 
      * @param widget the widget being rendered.
      * @param value the value, to render.
-     * @param row the row index of the value.
-     * @param column the column index of the value.
+     * @param accident the accident index of the value.
+     * @param development the development index of the value.
      * @param selected *true* if the cell is selected.
      */
-    public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected);
+    public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected);
 }

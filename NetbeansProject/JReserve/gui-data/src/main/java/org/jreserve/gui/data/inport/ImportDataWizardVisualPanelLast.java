@@ -404,14 +404,9 @@ public class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     private class TriangleRenderer extends DefaultTriangleWidgetRenderer {
         
         @Override
-        public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
-            super.getComponent(widget, value, row, column, selected);
-            
-            TriangleModel model = widget.getModel();
-            int accident = model.getAccidentIndex(row, column);
-            int development = model.getDevelopmentIndex(row, column);
+        public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
+            super.getComponent(widget, value, accident, development, selected);
             setBackground(getBgColor(accident, development));
-            
             return this;
         }
         

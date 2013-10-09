@@ -20,7 +20,6 @@ package org.jreserve.gui.trianglewidget;
 import java.awt.Component;
 import java.util.List;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
-import org.jreserve.gui.trianglewidget.model.TriangleModel;
 
 /**
  *
@@ -35,19 +34,15 @@ class LayerTriangleRenderer implements TriangleWidgetRenderer {
     }
     
     @Override
-    public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
-        TriangleModel model = widget.getModel();
-        int accident = model.getAccidentIndex(row, column);
-        int development = model.getDevelopmentIndex(row, column);
-        
+    public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
         List<TriangleLayer> layers = widget.getLayers();
         int size = layers.size();
         for(int i=(size-1); i>=0; i--) {
             TriangleLayer layer = layers.get(i);
             if(layer.rendersCell(accident, development))
-                return layer.getCellRenderer().getComponent(widget, value, row, column, selected);
+                return layer.getCellRenderer().getComponent(widget, value, accident, development, selected);
         }
         
-        return baseRenderer.getComponent(widget, value, row, column, selected);
+        return baseRenderer.getComponent(widget, value, accident, development, selected);
     }
 }

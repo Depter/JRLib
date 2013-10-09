@@ -14,13 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
+package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.awt.Component;
-import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.gui.calculations.api.smoothing.AbstractSmoothDialogController;
-import org.jreserve.gui.calculations.api.smoothing.SmoothRecord;
+import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialogController;
+import org.jreserve.gui.calculations.smoothing.dialog.SmoothRecord;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
@@ -35,9 +34,13 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.ExponentialSmoothingDialogController.Title=Exponential Smoothing"
+    "LBL.ExponentialSmoothingDialogController.Title=Exponential Smoothing",
+    "MSG.ExponentialSmoothingDialogController.Alpha.Empty=Alpha not set!",
+    "MSG.ExponentialSmoothingDialogController.Alpha.NotNumeric=Alpha is not a number!",
+    "MSG.ExponentialSmoothingDialogController.Alpha.Invalid=Alpha must be within [0; 1]"
 })
-class ExponentialSmoothingDialogController extends AbstractSmoothDialogController<ExponentialModifier>{
+public abstract class ExponentialSmoothingDialogController<T extends Triangle> 
+    extends AbstractSmoothDialogController<T> {
     
     private List<SmoothRecord> records;
     private double alpha = 0d;
@@ -74,25 +77,6 @@ class ExponentialSmoothingDialogController extends AbstractSmoothDialogControlle
     }
 
     @Override
-    public ExponentialModifier createModifier() {
-        return new ExponentialModifier(createCells(), alpha);
-    }
-    
-    private List<SmoothingCell> createCells() {
-        List<SmoothingCell> cells = new ArrayList<SmoothingCell>(records.size());
-        for(SmoothRecord record : records)
-            cells.add(createCell(record));
-        return cells;
-    }
-    
-    private SmoothingCell createCell(SmoothRecord record) {
-        int accident = record.getAccident();
-        int development = record.getDevelopment();
-        boolean applied = record.isUsed();
-        return new SmoothingCell(accident, development, applied);
-    }
-
-    @Override
     public void updateRecords(List<SmoothRecord> records) {
         double[] smoothed = new double[original.length];
         System.arraycopy(original, 0, smoothed, 0, original.length);
@@ -117,19 +101,19 @@ class ExponentialSmoothingDialogController extends AbstractSmoothDialogControlle
     private boolean isAlphaValid() {
         String str = panel.getAlpha();
         if(str == null || str.length() == 0) {
-            panel.showError("Alpha not set!");
+            panel.showError(Bundle.MSG_ExponentialSmoothingDialogController_Alpha_Empty());
             return false;
         }
         
         Double value = LocaleSettings.toDouble(str);
         if(value == null) {
-            panel.showError("Alpha is not a number!");
+            panel.showError(Bundle.MSG_ExponentialSmoothingDialogController_Alpha_NotNumeric());
             return false;
         }
         
         double dv = value.doubleValue();
         if(dv < 0d || dv > 1d) {
-            panel.showError("Alpha must be within [0; 1]");
+            panel.showError(Bundle.MSG_ExponentialSmoothingDialogController_Alpha_Invalid());
             return false;
         }
         
@@ -137,4 +121,7 @@ class ExponentialSmoothingDialogController extends AbstractSmoothDialogControlle
         return true;
     }
     
+    protected final double getAlpha() {
+        return alpha;
+    }
 }

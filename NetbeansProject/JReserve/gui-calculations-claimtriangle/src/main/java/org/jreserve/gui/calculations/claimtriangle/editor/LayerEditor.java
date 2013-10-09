@@ -18,7 +18,7 @@ package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
-import org.jreserve.gui.calculations.api.smoothing.SmoothableCategory;
+import org.jreserve.gui.calculations.smoothing.SmoothableCategory;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleExcludeable;
@@ -60,6 +60,7 @@ public class LayerEditor extends AbstractExpandableElement {
     private ClaimTriangleCalculationImpl calculation;
     private final Lookup lkp;
     private final InstanceContent ic = new InstanceContent();
+    private UndoUtil<ClaimTriangle> undo;
     
     public LayerEditor() {
         this(Lookup.EMPTY);
@@ -81,8 +82,13 @@ public class LayerEditor extends AbstractExpandableElement {
     public void setHandler(ExpandableComponentHandler handler) {
         super.setHandler(handler);
         UndoRedo.Manager manager = handler.getContainer().getUndoRedo();
-        UndoUtil<ClaimTriangle> undo = new UndoUtil<ClaimTriangle>(manager, calculation);
-        panel.setUndoUtil(undo);
+        undo = new UndoUtil<ClaimTriangle>(manager, calculation);
+        initPanelUndo();
+    }
+    
+    private void initPanelUndo() {
+        if(undo != null && panel != null)
+            panel.setUndoUtil(undo);
     }
     
     @Override
@@ -97,6 +103,8 @@ public class LayerEditor extends AbstractExpandableElement {
         TriangleWidgetPanel wPanel = panel.getWidgetPanel();
         wPanel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
         ic.add(wPanel.createCopiable());
+        
+        initPanelUndo();
         return panel;
     }
     

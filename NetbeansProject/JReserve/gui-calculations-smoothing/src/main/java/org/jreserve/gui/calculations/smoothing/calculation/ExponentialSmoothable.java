@@ -14,14 +14,23 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing.calculation;
+
+import org.jreserve.gui.calculations.smoothing.AbstractSmoothable;
+import org.jreserve.jrlib.triangle.Triangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface SmoothableCategory {
+public abstract class ExponentialSmoothable<T extends Triangle>
+    extends AbstractSmoothable<T>{
+
+    private final static int MIN_CELL_COUNT = 2;
     
-    public String getCategory();
+    @Override
+    protected int getMinCellCount() {
+        return MIN_CELL_COUNT;
+    }
 }

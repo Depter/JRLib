@@ -31,7 +31,7 @@ public class DefaultTriangleLayer implements TriangleLayer {
     private Triangle triangle;
     private String displayName;
     private Icon icon;
-    private DefaultTriangleWidgetRenderer renderer;
+    private TriangleWidgetRenderer renderer;
     
     public DefaultTriangleLayer(Triangle triangle) {
         this(triangle, triangle.toString());
@@ -45,10 +45,13 @@ public class DefaultTriangleLayer implements TriangleLayer {
         this(triangle, displayName, icon, new DefaultTriangleWidgetRenderer());
     }
 
-    public DefaultTriangleLayer(Triangle triangle, String displayName, Icon icon, DefaultTriangleWidgetRenderer renderer) {
+    public DefaultTriangleLayer(Triangle triangle, String displayName, Icon icon, TriangleWidgetRenderer renderer) {
         this.triangle = triangle;
         this.displayName = displayName;
         this.icon = icon;
+        
+        if(renderer == null)
+            renderer = new DefaultTriangleWidgetRenderer();
         this.renderer = renderer;
     }
     
@@ -70,6 +73,12 @@ public class DefaultTriangleLayer implements TriangleLayer {
         return renderer;
     }
 
+    protected void setCellRenderer(TriangleWidgetRenderer renderer) {
+        if(renderer == null)
+            renderer = new DefaultTriangleWidgetRenderer();
+        this.renderer = renderer;
+    }
+    
     @Override
     public Icon getIcon() {
         return icon;

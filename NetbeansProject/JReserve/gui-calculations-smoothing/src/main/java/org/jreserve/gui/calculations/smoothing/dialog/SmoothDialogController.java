@@ -14,13 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing.dialog;
 
 import java.awt.Component;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.openide.util.ChangeSupport;
+import org.jreserve.jrlib.triangle.Triangle;
 import org.openide.util.HelpCtx;
 
 /**
@@ -28,36 +28,23 @@ import org.openide.util.HelpCtx;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractSmoothDialogController<C extends CalculationModifier> implements SmoothDialogController<C> {
-
-    private String title;
-    private final ChangeSupport cs = new ChangeSupport(this);
+public interface SmoothDialogController<T extends Triangle> {
     
-    protected AbstractSmoothDialogController(String title) {
-        this.title = title;
-    }
+    public String getDialogTitle();
     
-    @Override
-    public String getDialogTitle() {
-        return title;
-    }
+    public Component getParameterComponent();
     
-    @Override
-    public HelpCtx getHelpContext() {
-        return HelpCtx.DEFAULT_HELP;
-    }
+    public HelpCtx getHelpContext();
     
-    @Override
-    public void addChangeListener(ChangeListener listener) {
-        cs.addChangeListener(listener);
-    }
-
-    @Override
-    public void removeChangeListener(ChangeListener listener) {
-        cs.removeChangeListener(listener);
-    }
+    public List<SmoothRecord> getRecords();
     
-    protected final void fireChange() {
-        cs.fireChange();
-    }
+    public boolean isValid();
+    
+    public CalculationModifier<T> createModifier();
+    
+    public void updateRecords(List<SmoothRecord> records);
+    
+    public void addChangeListener(ChangeListener listener);
+    
+    public void removeChangeListener(ChangeListener listener);
 }

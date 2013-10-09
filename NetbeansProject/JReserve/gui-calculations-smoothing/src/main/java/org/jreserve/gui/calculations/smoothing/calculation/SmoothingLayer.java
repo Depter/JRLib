@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
+package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.awt.Color;
 import java.awt.Component;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
+import org.jreserve.jrlib.triangle.SmoothedTriangle;
 import org.jreserve.jrlib.triangle.Triangle;
-import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 
 /**
@@ -31,19 +31,22 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  * @version 1.0
  */
 class SmoothingLayer extends DefaultTriangleLayer {
-
+    
+    private final static Color BACKGROUND = new Color(153, 204, 255);
+    private final static Color APPLIED_BACKGROUND = new Color(102, 153, 255);
+    
     private SmoothingCell[] cells;
     
     SmoothingLayer(Triangle triangle, String name) {
-        super(triangle, name, AbstractSmoothingModifier.ICON, 
-                new SmoothingRenderer());
-        if(triangle instanceof SmoothedClaimTriangle) {
-            cells = ((SmoothedClaimTriangle)triangle).getSmoothing().getSmoothingCells();
+        super(triangle, name, AbstractSmoothingModifier.ICON);
+        super.setCellRenderer(new Renderer());
+        if(triangle instanceof SmoothedTriangle) {
+            cells = ((SmoothedTriangle)triangle).getSmoothing().getSmoothingCells();
         } else {
             cells = new SmoothingCell[0];
         }
     }
-
+    
     @Override
     public boolean rendersCell(int accident, int development) {
         for(SmoothingCell cell : cells)
@@ -52,18 +55,21 @@ class SmoothingLayer extends DefaultTriangleLayer {
         return false;
     }
     
-    private static class SmoothingRenderer extends DefaultTriangleWidgetRenderer {
+    private class Renderer extends DefaultTriangleWidgetRenderer {
 
-        private final static Color BACKGROUND = new Color(157, 222, 255);
-        
         @Override
-        public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
-            super.getComponent(widget, value, row, column, selected);
+        public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
+            super.getComponent(widget, value, accident, development, selected);
             if(!selected)
-                setBackground(BACKGROUND);
+                setBackground(isApplied(accident, development)? APPLIED_BACKGROUND : BACKGROUND);
             return this;
         }
         
+        private boolean isApplied(int accident, int development) {
+            for(SmoothingCell cell : cells)
+                if(cell.equals(accident, development))
+                    return cell.isApplied();
+            return false;
+        }
     }
-    
 }

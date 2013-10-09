@@ -215,7 +215,14 @@ public class LocaleSettings {
             return value<0d? "-" + inf : inf;
         }
         String result = stripZeros(""+value);
-        return result.replace('.', getDecimalSeparator());
+        char decimal = getDecimalSeparator();
+        result = result.replace('.', decimal);
+        
+        int length = result.length();
+        if(length> 1 && result.charAt(length-1) == decimal)
+            result = result.substring(0, length-1);
+        
+        return result;
     }
     
     private final static int MAX_ZERO_COUNT = 4;

@@ -16,12 +16,14 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 
+import java.util.ArrayList;
 import java.util.List;
-import org.jdom2.Element;
-import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.smoothing.ExponentialSmoothing;
+import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothingModifier;
+import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
-import org.jreserve.jrlib.triangle.smoothing.TriangleSmoothing;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -35,60 +37,21 @@ import org.openide.util.NbBundle.Messages;
     "# {1} - cells",
     "LBL.ExponentialModifier.Description=Exponential Smoothing [alpha={0}], [{1}]"
 })
-public class ExponentialModifier extends AbstractSmoothingModifier {
-    
-    final static String ROOT_TAG = "exponentialSmoothing";
-    final static String ALPHA_TAG = "alpha";
-    
-    private double alpha;
-    
+public class ExponentialModifier 
+    extends ExponentialSmoothingModifier<ClaimTriangle>
+    implements ClaimTriangleModifier {
+
     public ExponentialModifier(List<SmoothingCell> cells, double alpha) {
-        super(cells);
-        if(cells.size() < 2)
-            throw new IllegalArgumentException("There must be at least to cells, but there was only "+cells.size());
-        if(alpha < 0d || alpha > 1d)
-            throw new IllegalArgumentException("Alpha must be within [0;1] but was "+alpha);
-        this.alpha = alpha;
-    }
-    
-    public void setAlpha(double alpha) {
-        if(alpha < 0d || alpha > 1d)
-            throw new IllegalArgumentException("Alpha must be within [0;1] but was "+alpha);
-        this.alpha = alpha;
-        fireChange();
-    }
-    
-    public double getAlpha() {
-        return alpha;
+        super(cells, ClaimTriangle.class, alpha);
     }
     
     @Override
-    public void setCells(List<SmoothingCell> cells) {
-        if(cells.size() < 2)
-            throw new IllegalArgumentException("There must be at least to cells, but there was only "+cells.size());
-        super.setCells(cells);
+    public ClaimTriangle createCalculation(ClaimTriangle sourceCalculation) {
+        return new SmoothedClaimTriangle(sourceCalculation, createSmoothing());        
     }
 
     @Override
-    protected String getDisplayName() {
-        return Bundle.LBL_ExponentialModifier_Name();
-    }
-    
-    @Override
-    protected TriangleSmoothing createSmoothing() {
-        return new ExponentialSmoothing(getCellsAsArray(), alpha);
-    }
-
-    @Override
-    public Element toXml() {
-        Element root = new Element(ROOT_TAG);
-        JDomUtil.addElement(root, ALPHA_TAG, alpha);
-        root.addContent(cellsToXml());
-        return root;
-    }
-
-    @Override
-    public String getDescription() {
-        return Bundle.LBL_ExponentialModifier_Description(alpha, getCellsAsString());
+    public List<Cell> getAffectedCells() {
+        return new ArrayList<Cell>(getCells());
     }
 }

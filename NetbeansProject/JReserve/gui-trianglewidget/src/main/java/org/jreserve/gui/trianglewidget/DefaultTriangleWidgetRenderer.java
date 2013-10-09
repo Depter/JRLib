@@ -71,7 +71,7 @@ public class DefaultTriangleWidgetRenderer extends JLabel implements TriangleWid
     }
     
     @Override
-    public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
+    public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
         DecimalFormatter wdf = widget.getDecimalFormatter();
         setText(format(df!=null? df : wdf, value));
         

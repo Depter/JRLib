@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.smoothing;
+package org.jreserve.gui.calculations.smoothing.dialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +36,12 @@ import org.openide.util.NbBundle.Messages;
 })
 class SmoothTableModel extends AbstractTableModel {
 
-    private final static int COLUMN_ACCIDENT = 0;
-    private final static int COLUMN_DEVELOPMENT = 1;
-    private final static int COLUMN_APPLY = 2;
-    private final static int COLUMN_ORIGINAL = 3;
-    private final static int COLUMN_SMOOTHED = 4;
-    private final static int COLUMN_COUNT = 5;
+    final static int COLUMN_ACCIDENT = 0;
+    final static int COLUMN_DEVELOPMENT = 1;
+    final static int COLUMN_APPLY = 2;
+    final static int COLUMN_ORIGINAL = 3;
+    final static int COLUMN_SMOOTHED = 4;
+    final static int COLUMN_COUNT = 5;
     
     private final List<SmoothRecord> records;
 
@@ -116,7 +116,7 @@ class SmoothTableModel extends AbstractTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return column == COLUMN_APPLY;
+        return false;
     }
 
     @Override
