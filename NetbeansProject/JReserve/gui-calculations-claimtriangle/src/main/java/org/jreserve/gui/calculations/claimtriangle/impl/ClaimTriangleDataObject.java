@@ -93,6 +93,11 @@ public class ClaimTriangleDataObject extends CalculationDataObject {
     public Node createNodeDelegate() {
         return new ClaimTriangleNode(this);
     }
+
+    @Override
+    public String getName() {
+        return getPrimaryFile().getName();
+    }
     
     @MultiViewElement.Registration(
         displayName = "#LBL.ClaimTriangleAudit",

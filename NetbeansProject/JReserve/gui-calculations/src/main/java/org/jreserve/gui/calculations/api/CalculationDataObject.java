@@ -109,7 +109,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
             if(isModified())
                 saveCalculation();
             CalculationDataObject result = (CalculationDataObject) super.handleCopy(df);
-            result.getCalculation().events.fireDeleted();
+            result.getCalculation().events.fireCreated();
             return result;
         }
     }

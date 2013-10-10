@@ -18,8 +18,12 @@ package org.jreserve.gui.misc.utils.widgets;
 
 import java.awt.Component;
 import java.awt.Toolkit;
+import java.util.List;
+import javax.swing.Action;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -27,6 +31,8 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.JTextComponent;
+import org.openide.util.Utilities;
+import org.openide.util.actions.Presenter;
 
 /**
  *
@@ -35,6 +41,31 @@ import javax.swing.text.JTextComponent;
  */
 public class WidgetUtils {
     
+    public static JPopupMenu createPopupMenu(String path) {
+        JPopupMenu popUp = new JPopupMenu();
+        
+        List<? extends Action> actions = Utilities.actionsForPath(path);
+        if(actions.isEmpty())
+            return null;
+        
+        for(Action action : actions) {
+            if(action instanceof Presenter.Popup) {
+                popUp.add(((Presenter.Popup)action).getPopupPresenter());
+            } else if (action == null) {
+                popUp.addSeparator();
+            } else {
+                popUp.add(createActionPopUpItem(action));
+            }
+        }
+        
+        return popUp;
+    }
+    
+    private static JMenuItem createActionPopUpItem(Action action) {
+        JMenuItem item = new JMenuItem(action);
+        item.setIcon(null);
+        return item;
+    }
     
     public static ListCellRenderer displayableListRenderer() {
         return new DisplayableListRenderer();

@@ -61,7 +61,7 @@ import org.openide.util.lookup.ProxyLookup;
         id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
         position = 300, separatorAfter = 350),
     @ActionReference(
-        path = DataFolderNode.ACTION_PATH,
+        path = DataSourceNode.ACTION_PATH,
         id = @ActionID(category = "File", id = "org.jreserve.gui.misc.renameable.action.RenameAction"),
         position = 400),
     @ActionReference(

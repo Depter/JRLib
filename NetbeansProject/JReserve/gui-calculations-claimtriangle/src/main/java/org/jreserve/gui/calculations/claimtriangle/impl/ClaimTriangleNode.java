@@ -21,10 +21,17 @@ import java.awt.datatransfer.Transferable;
 import java.io.IOException;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.Icon;
+import org.jreserve.gui.misc.renameable.Renameable;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.actions.OpenAction;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.loaders.DataNode;
+import org.openide.loaders.DataObject;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
 import org.openide.util.Utilities;
@@ -37,6 +44,28 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  * @version 1.0
  */
+@ActionReferences({
+    @ActionReference(
+        path = ClaimTriangleNode.ACTION_PATH,
+        id = @ActionID(category = "System", id = "org.openide.actions.OpenAction"),
+        position = 300, separatorAfter = 350),
+    @ActionReference(
+        path = ClaimTriangleNode.ACTION_PATH,
+        id = @ActionID(category = "File", id = "org.jreserve.gui.misc.renameable.action.RenameAction"),
+        position = 400),
+    @ActionReference(
+        path = ClaimTriangleNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
+        position = 500),
+    @ActionReference(
+        path = ClaimTriangleNode.ACTION_PATH,
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CutAction"),
+        position = 600, separatorAfter = 650),
+    @ActionReference(
+        path = ClaimTriangleNode.ACTION_PATH,
+        id = @ActionID(category = "File", id = "org.jreserve.gui.misc.utils.notifications.actions.DeleteAction"), 
+        position = 700)
+})
 class ClaimTriangleNode extends DataNode {
 
     @StaticResource final static String IMG = "org/jreserve/gui/calculations/claimtriangle/triangle.png";
@@ -56,6 +85,7 @@ class ClaimTriangleNode extends DataNode {
         this.ic = ic;
         ic.add(ClipboardUtil.createCopiable(obj));
         ic.add(ClipboardUtil.createCutable(obj));
+        ic.add(new ClaimTriangleRenameable());
         
         super.setDisplayName(obj.getName());
         super.setIconBaseWithExtension(IMG);
@@ -78,6 +108,11 @@ class ClaimTriangleNode extends DataNode {
     }
     
     @Override
+    public boolean canRename() {
+        return false;
+    }
+    
+    @Override
     public boolean canCut() {
         return true;
     }
@@ -91,10 +126,38 @@ class ClaimTriangleNode extends DataNode {
     public Transferable drag() throws IOException {
         return clipboardCut();
     }
-
+    
+    @Override
+    public String getDisplayName() {
+        return super.getDataObject().getName();
+    }
+    
     @Override
     public void setName(String name) {
         super.setName(name);
         setDisplayName(name);
     }
+    
+    
+    private class ClaimTriangleRenameable implements Renameable {
+        @Override
+        public DataObject getObject() {
+            return getLookup().lookup(DataObject.class);
+        }
+
+        private Displayable getDelegate() {
+            return getLookup().lookup(Displayable.class);
+        }
+        
+        @Override
+        public Icon getIcon() {
+            return getDelegate().getIcon();
+        }
+
+        @Override
+        public String getDisplayName() {
+            return getDelegate().getDisplayName();
+        }
+    }
+    
 }

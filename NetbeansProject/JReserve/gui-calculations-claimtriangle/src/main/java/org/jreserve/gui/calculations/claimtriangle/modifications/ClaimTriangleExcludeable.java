@@ -16,13 +16,17 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.modifications;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import org.jreserve.gui.calculations.api.edit.Excludeable;
+import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
+import org.jreserve.gui.misc.utils.tasks.SwingCallback;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -36,6 +40,12 @@ import org.openide.util.NbBundle.Messages;
 })
 public class ClaimTriangleExcludeable implements Excludeable {
 
+    private UndoUtil<ClaimTriangle> undo;
+    
+    public synchronized void setUndo(UndoUtil<ClaimTriangle> undo) {
+        this.undo = undo;
+    }
+    
     @Override
     public boolean canExclude(Lookup context) {
         TriangleSelection selection = context.lookup(TriangleSelection.class);
@@ -52,7 +62,7 @@ public class ClaimTriangleExcludeable implements Excludeable {
         TaskUtil.execute(task, null, title);
     }
     
-    private static class ExcludeTask implements Callable<Void> {
+    private class ExcludeTask implements Callable<Void> {
         
         private final ClaimTriangleCalculationImpl calculation;
         private final List<Cell> cells;
@@ -65,10 +75,11 @@ public class ClaimTriangleExcludeable implements Excludeable {
         @Override
         public Void call() throws Exception {
             synchronized(calculation) {
+                
                 for(Cell cell : cells) {
                     int accident = cell.getAccident();
                     int development = cell.getDevelopment();
-                    calculation.addModification(new ClaimTriangleExcludeModifier(accident, development));
+                    undo.addModification(new ClaimTriangleExcludeModifier(accident, development));
                 }
             }
             return null;

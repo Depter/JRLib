@@ -23,12 +23,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.swing.Box;
-import javax.swing.JComponent;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.trianglewidget.model.DevelopmentTriangleModel;
@@ -111,6 +112,7 @@ public class TriangleWidget extends JPanel {
     private void initComponents() {
         renderer = new LayerTriangleRenderer();
         content = new WidgetContentPanel(this, renderer);
+        content.addMouseListener(new ContentMouseAdapter());
         xHeader = new WidgetHeader(this, WidgetHeader.X_AXIS);
         yHeader = new WidgetHeader(this, WidgetHeader.Y_AXIS);
         corner = new WidgetCorner(this);
@@ -405,6 +407,16 @@ public class TriangleWidget extends JPanel {
         int h = xSize.height + xSize.height;
         return new Dimension(w, h);
     }
+    
+//    @Override
+//    public void addMouseListener(MouseListener listener) {
+//        this.addMouseListener(listener);
+//    }
+//    
+//    @Override
+//    public void removeMouseListener(MouseListener listener) {
+//        content.removeMouseListener(listener);
+//    }
         
     private class ModelListener implements ChangeListener {
         @Override
@@ -418,6 +430,60 @@ public class TriangleWidget extends JPanel {
         public void selectionChanged(TriangleSelectionEvent event) {
             if(!event.isAdjusting())
                 resizeAndRepaint();
+        }
+    }
+    
+    
+    private class ContentMouseAdapter implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            MouseEvent evt = null;
+            for(MouseListener l : getMouseListeners()) {
+                if(evt == null)
+                    evt = mirrorEvent(e);
+                l.mouseClicked(evt);
+            }
+        }
+        
+        private MouseEvent mirrorEvent(MouseEvent original) {
+            Point l = content.getLocation();
+            int x = l.x + original.getX();
+            int y = l.y + original.getY();
+            return new MouseEvent(
+                    TriangleWidget.this, original.getID(), original.getWhen(), 
+                    original.getModifiers(), x, y, 
+                    original.getXOnScreen(), original.getYOnScreen(), 
+                    original.getClickCount(), original.isPopupTrigger(), 
+                    original.getButton());
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            MouseEvent evt = null;
+            for(MouseListener l : getMouseListeners()) {
+                if(evt == null)
+                    evt = mirrorEvent(e);
+                l.mousePressed(evt);
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            MouseEvent evt = null;
+            for(MouseListener l : getMouseListeners()) {
+                if(evt == null)
+                    evt = mirrorEvent(e);
+                l.mouseReleased(evt);
+            }
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
         }
     }
 }

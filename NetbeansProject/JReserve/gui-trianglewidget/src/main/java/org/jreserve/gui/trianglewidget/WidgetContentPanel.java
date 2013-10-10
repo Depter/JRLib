@@ -30,6 +30,7 @@ import java.awt.Rectangle;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.JComponent;
@@ -372,6 +373,7 @@ class WidgetContentPanel extends JComponent {
             
             int a = model.getAccidentIndex(cell[0], cell[1]);
             int d = model.getDevelopmentIndex(cell[0], cell[1]);
+
             if(e.isControlDown()) {
                 switchSelection(a, d);
             } else {

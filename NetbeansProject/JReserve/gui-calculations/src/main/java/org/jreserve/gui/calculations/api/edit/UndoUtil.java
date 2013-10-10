@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.calculations.api.edit;
 
+import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoableEdit;
 import org.jreserve.gui.calculations.api.CalculationModifier;
@@ -49,9 +50,19 @@ public class UndoUtil<C extends CalculationData> {
         }
     }
     
-    public void addEdit(UndoableEdit edit) {
-        UndoableEditEvent evt = new UndoableEditEvent(this, edit);
-        manager.undoableEditHappened(evt);
+    public void addEdit(final UndoableEdit edit) {
+        if(SwingUtilities.isEventDispatchThread()) {
+            UndoableEditEvent evt = new UndoableEditEvent(this, edit);
+            manager.undoableEditHappened(evt);
+        } else {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    UndoableEditEvent evt = new UndoableEditEvent(this, edit);
+                    manager.undoableEditHappened(evt);
+                }
+            });
+        }
     }
     
     public void addModification(CalculationModifier<C> modifier) {

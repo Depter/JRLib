@@ -59,7 +59,7 @@ public class ExcludeAction extends AbstractContextAwareAction {
     }
     
     public ExcludeAction(Lookup context) {
-        super(context, Excludeable.class);
+        super(context, Object.class);
         super.setDisplayName(Bundle.LBL_ExcludeAction_Name());
         super.setSmallIconPath(ICON_16);
         super.setLargeIconPath(ICON_32);

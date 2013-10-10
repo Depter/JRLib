@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import org.jreserve.gui.calculations.smoothing.Smoothable;
 import org.jreserve.gui.calculations.smoothing.SmoothableCategory;
 import org.jreserve.gui.calculations.smoothing.registration.SmoothableAdapter;
@@ -35,9 +37,11 @@ import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import org.openide.util.Utilities;
+import org.openide.util.actions.Presenter;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
@@ -67,11 +71,12 @@ import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 @Messages({
     "LBL.SmoothAction.Name=Smooth"
 })
-public class SmoothAction extends AbstractContextAwareAction implements RibbonPresenter.Button {
+public class SmoothAction extends AbstractContextAwareAction 
+    implements RibbonPresenter.Button, Presenter.Popup {
     
     @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/smoothing/smoothing.png";
     
-    private final ActionCommandButton button;
+    private ActionCommandButton button;
     
     public SmoothAction() {
         this(Utilities.actionsGlobalContext());
@@ -79,10 +84,6 @@ public class SmoothAction extends AbstractContextAwareAction implements RibbonPr
     
     public SmoothAction(Lookup context) {
         super(context, Object.class);
-        button = new ActionCommandButton(
-                IMG_PATH, Bundle.LBL_SmoothAction_Name(), 
-                this, JCommandButton.CommandButtonKind.POPUP_ONLY);
-        button.setPopupCallback(new PopUpCallback());
     }
     
     @Override
@@ -100,11 +101,21 @@ public class SmoothAction extends AbstractContextAwareAction implements RibbonPr
         for(SmoothableAdapter adapter : getAdapters(context)) {
             if(adapter.separatorBefore())
                 menu.addMenuSeparator();
-            menu.addMenuButton(createPopupMenuPresenter(adapter));
+            menu.addMenuButton(createPopupMenuPresenter(adapter, context));
             if(adapter.separatorAfter())
                 menu.addMenuSeparator();
         }
-        button.setPopupCallback(new PopUpCallback(menu));
+        initButton().setPopupCallback(new PopUpCallback(menu));
+    }
+    
+    private ActionCommandButton initButton() {
+        if(button == null) {
+            button = new ActionCommandButton(
+                    IMG_PATH, Bundle.LBL_SmoothAction_Name(), 
+                    this, JCommandButton.CommandButtonKind.POPUP_ONLY);
+            button.setPopupCallback(new PopUpCallback());
+        }
+        return button;
     }
     
     private List<SmoothableAdapter> getAdapters(Lookup context) {
@@ -114,10 +125,10 @@ public class SmoothAction extends AbstractContextAwareAction implements RibbonPr
         return SmoothableRegistry.getAdapters(category.getCategory());
     }
     
-    private JCommandMenuButton createPopupMenuPresenter(SmoothableAdapter adapter) {
+    private JCommandMenuButton createPopupMenuPresenter(SmoothableAdapter adapter, Lookup ctx) {
         ResizableIcon icon = createIcon(adapter.getIconBase());
         String name = adapter.getName();
-        Action action = new AdapterAction(adapter);
+        Action action = new AdapterAction(adapter, ctx);
         return new ActionMenuButton(icon, name, action, JCommandButton.CommandButtonKind.ACTION_ONLY);
     }
     
@@ -144,7 +155,23 @@ public class SmoothAction extends AbstractContextAwareAction implements RibbonPr
 
     @Override
     public AbstractCommandButton getRibbonButtonPresenter() {
-        return button;
+        return initButton();
+    }
+
+    @Override
+    public JMenuItem getPopupPresenter() {
+        JMenu menu = new JMenu(Bundle.LBL_SmoothAction_Name());
+        Lookup ctx = getContext();
+        List<SmoothableAdapter> adapters = getAdapters(ctx);
+        menu.setEnabled(!adapters.isEmpty());
+        
+        for(SmoothableAdapter adapter : adapters) {
+            JMenuItem item = new JMenuItem(new AdapterAction(adapter, ctx));
+            item.setText(adapter.getName());
+            menu.add(item);
+        }
+        
+        return menu;
     }
     
     private class PopUpCallback implements PopupPanelCallback {
@@ -170,10 +197,14 @@ public class SmoothAction extends AbstractContextAwareAction implements RibbonPr
         
         private Smoothable smoothable;
         
-        private AdapterAction(SmoothableAdapter adapter) {
+        private AdapterAction(SmoothableAdapter adapter, Lookup context) {
             this.smoothable = adapter.getSmoothable();
-            boolean enabled = smoothable.canSmooth(getContext());
-            super.setEnabled(enabled);
+            super.putValue(NAME, adapter.getName());
+            super.setEnabled(smoothable.canSmooth(context));
+            
+            String iconBase = adapter.getIconBase();
+            if(iconBase != null && iconBase.length() > 0)
+                super.putValue(SMALL_ICON, ImageUtilities.loadImageIcon(iconBase, false));
         }
         
         @Override

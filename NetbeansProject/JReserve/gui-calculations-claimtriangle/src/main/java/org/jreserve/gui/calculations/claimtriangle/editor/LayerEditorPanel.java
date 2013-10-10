@@ -17,11 +17,15 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Arrays;
 import java.util.concurrent.Callable;
 import javax.swing.DefaultListModel;
 import javax.swing.JComponent;
 import javax.swing.JList;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
@@ -44,6 +48,9 @@ import org.jreserve.gui.trianglewidget.model.TriangleSelectionModel;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -51,8 +58,22 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
+@ActionReferences({
+    @ActionReference(
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.calculations.actions.ExcludeAction"),
+        path = LayerEditorPanel.POPUP_PATH,
+        position = 100
+    ),
+    @ActionReference(
+        id = @ActionID(category = "Edit", id = "org.jreserve.gui.calculations.actions.SmoothAction"),
+        path = LayerEditorPanel.POPUP_PATH,
+        position = 200
+    )
+})
 class LayerEditorPanel extends javax.swing.JPanel {
 
+    final static String POPUP_PATH = "JReserve/ClaimTriangle/LayerEditor/Popup";
+    
     private ClaimTriangleCalculationImpl calculation;
     private DefaultListModel modificationModel = new DefaultListModel();
     private UndoUtil undo;
@@ -127,7 +148,6 @@ class LayerEditorPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        triangleWidgetPanel1 = new org.jreserve.gui.trianglewidget.TriangleWidgetPanel();
         splitPane = new javax.swing.JSplitPane();
         widgetPanel = new org.jreserve.gui.trianglewidget.TriangleWidgetPanel();
         layerPanel = new javax.swing.JPanel();
@@ -142,6 +162,8 @@ class LayerEditorPanel extends javax.swing.JPanel {
 
         splitPane.setResizeWeight(1.0);
         splitPane.setOneTouchExpandable(true);
+
+        widgetPanel.getTriangleWidget().addMouseListener(new TrianglePopUpListener());
         splitPane.setLeftComponent(widgetPanel);
 
         layerPanel.setLayout(new java.awt.BorderLayout());
@@ -228,11 +250,38 @@ class LayerEditorPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane layerScroll;
     private javax.swing.JToolBar layerToolBar;
     private javax.swing.JSplitPane splitPane;
-    private org.jreserve.gui.trianglewidget.TriangleWidgetPanel triangleWidgetPanel1;
     private javax.swing.JButton upButton;
     private org.jreserve.gui.trianglewidget.TriangleWidgetPanel widgetPanel;
     // End of variables declaration//GEN-END:variables
 
+    private class TrianglePopUpListener extends MouseAdapter {
+        
+        @Override
+        public void mousePressed(MouseEvent evt) {
+            if(evt.isPopupTrigger())
+                showPopUp(evt);
+        }
+        
+        private void showPopUp(MouseEvent evt) {
+            Point p = evt.getPoint();
+            
+            if(widgetPanel.getTriangleWidget().getCellAt(p) == null)
+                return;
+            
+            JPopupMenu popup = WidgetUtils.createPopupMenu(POPUP_PATH);
+            if(popup == null)
+                return;
+            
+            popup.show(widgetPanel.getTriangleWidget(), p.x, p.y);
+        }
+        
+        @Override
+        public void mouseReleased(MouseEvent evt) {
+            if(evt.isPopupTrigger())
+                showPopUp(evt);
+        }
+    }
+    
     private class ListListener implements ListSelectionListener {
         @Override
         public void valueChanged(ListSelectionEvent e) {

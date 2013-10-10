@@ -83,6 +83,7 @@ public class LayerEditor extends AbstractExpandableElement {
         super.setHandler(handler);
         UndoRedo.Manager manager = handler.getContainer().getUndoRedo();
         undo = new UndoUtil<ClaimTriangle>(manager, calculation);
+        lkp.lookup(ClaimTriangleExcludeable.class).setUndo(undo);
         initPanelUndo();
     }
     
