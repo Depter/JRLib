@@ -33,16 +33,17 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  */
 @CalculationModifierFactory.Registration(
     category = ClaimTriangleCalculationImpl.CATEGORY,
-    rootName = ExponentialModifier.ROOT_TAG, 
-    position = 100
+    rootName = ExponentialModifier.ROOT_TAG,
+    position = 200
 )
-public class ExponentialModifierFactory implements CalculationModifierFactory<ClaimTriangle> {
+public class DoubleExponentialModifierFactory implements CalculationModifierFactory<ClaimTriangle> {
 
     @Override
     public CalculationModifier<ClaimTriangle> fromXml(Element root) throws Exception {
-        double alpha = JDomUtil.getExistingDouble(root, ExponentialModifier.ALPHA_TAG);
+        double alpha = JDomUtil.getExistingDouble(root, DoubleExponentialModifier.ALPHA_TAG);
+        double beta = JDomUtil.getExistingDouble(root, DoubleExponentialModifier.BETA_TAG);
         List<SmoothingCell> cells = SmoothingModifierUtil.readCells(root);
-        return new ExponentialModifier(cells, alpha);
+        return new DoubleExponentialModifier(cells, alpha, beta);
     }
     
 }

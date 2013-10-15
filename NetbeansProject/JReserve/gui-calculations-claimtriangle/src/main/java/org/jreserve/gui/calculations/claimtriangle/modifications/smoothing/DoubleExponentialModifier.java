@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
-import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothingModifier;
+import org.jreserve.gui.calculations.smoothing.calculation.DoubleExponentialSmoothingModifier;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
@@ -31,18 +31,19 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
-//@Messages({
-//    "LBL.ExponentialModifier.Name=Exponential Smoothing",
-//    "# {0} - alpha",
-//    "# {1} - cells",
-//    "LBL.ExponentialModifier.Description=Exponential Smoothing [alpha={0}], [{1}]"
-//})
-public class ExponentialModifier 
-    extends ExponentialSmoothingModifier<ClaimTriangle>
+@Messages({
+    "LBL.DoubleExponentialModifier.Name=Double Exp. Smoothing",
+    "# {0} - alpha",
+    "# {1} - beta",
+    "# {2} - cells",
+    "LBL.DoubleExponentialModifier.Description=Double Exponential Smoothing [alpha={0}, beta={1}], [{2}]"
+})
+public class DoubleExponentialModifier 
+    extends DoubleExponentialSmoothingModifier<ClaimTriangle>
     implements ClaimTriangleModifier {
 
-    public ExponentialModifier(List<SmoothingCell> cells, double alpha) {
-        super(cells, ClaimTriangle.class, alpha);
+    public DoubleExponentialModifier(List<SmoothingCell> cells, double alpha, double beta) {
+        super(cells, ClaimTriangle.class, alpha, beta);
     }
     
     @Override
@@ -53,5 +54,5 @@ public class ExponentialModifier
     @Override
     public List<Cell> getAffectedCells() {
         return new ArrayList<Cell>(getCells());
-    }
+    }    
 }

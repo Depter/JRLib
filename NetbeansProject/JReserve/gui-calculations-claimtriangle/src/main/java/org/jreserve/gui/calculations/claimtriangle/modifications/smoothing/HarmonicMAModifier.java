@@ -19,35 +19,27 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
-import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothingModifier;
+import org.jreserve.gui.calculations.smoothing.calculation.HarmonicMASmoothingModifier;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-//@Messages({
-//    "LBL.ExponentialModifier.Name=Exponential Smoothing",
-//    "# {0} - alpha",
-//    "# {1} - cells",
-//    "LBL.ExponentialModifier.Description=Exponential Smoothing [alpha={0}], [{1}]"
-//})
-public class ExponentialModifier 
-    extends ExponentialSmoothingModifier<ClaimTriangle>
+public class HarmonicMAModifier extends HarmonicMASmoothingModifier<ClaimTriangle>
     implements ClaimTriangleModifier {
 
-    public ExponentialModifier(List<SmoothingCell> cells, double alpha) {
-        super(cells, ClaimTriangle.class, alpha);
+    public HarmonicMAModifier(List<SmoothingCell> cells, int length) {
+        super(cells, ClaimTriangle.class, length);
     }
-    
+
     @Override
     public ClaimTriangle createCalculation(ClaimTriangle sourceCalculation) {
-        return new SmoothedClaimTriangle(sourceCalculation, createSmoothing());        
+        return new SmoothedClaimTriangle(sourceCalculation, createSmoothing());
     }
 
     @Override

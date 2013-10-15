@@ -24,7 +24,7 @@ import org.jreserve.jrlib.triangle.Triangle;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class ExponentialSmoothable<T extends Triangle>
+public abstract class DoubleExponentialSmoothable<T extends Triangle>
     extends AbstractSmoothable<T> {
 
     private final static int MIN_CELL_COUNT = 2;

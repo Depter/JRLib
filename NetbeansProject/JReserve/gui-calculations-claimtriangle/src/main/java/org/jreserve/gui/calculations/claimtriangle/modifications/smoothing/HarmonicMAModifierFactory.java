@@ -21,6 +21,7 @@ import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.api.CalculationModifierFactory;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
+import org.jreserve.gui.calculations.smoothing.calculation.HarmonicMASmoothingModifier;
 import org.jreserve.gui.calculations.smoothing.calculation.SmoothingModifierUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
@@ -33,16 +34,15 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  */
 @CalculationModifierFactory.Registration(
     category = ClaimTriangleCalculationImpl.CATEGORY,
-    rootName = ExponentialModifier.ROOT_TAG, 
-    position = 100
+    rootName = HarmonicMASmoothingModifier.ROOT_TAG,
+    position = 500
 )
-public class ExponentialModifierFactory implements CalculationModifierFactory<ClaimTriangle> {
+public class HarmonicMAModifierFactory implements CalculationModifierFactory<ClaimTriangle> {
 
     @Override
     public CalculationModifier<ClaimTriangle> fromXml(Element root) throws Exception {
-        double alpha = JDomUtil.getExistingDouble(root, ExponentialModifier.ALPHA_TAG);
+        int length = JDomUtil.getExistingInt(root, HarmonicMASmoothingModifier.LENGTH_TAG);
         List<SmoothingCell> cells = SmoothingModifierUtil.readCells(root);
-        return new ExponentialModifier(cells, alpha);
+        return new HarmonicMAModifier(cells, length);
     }
-    
 }
