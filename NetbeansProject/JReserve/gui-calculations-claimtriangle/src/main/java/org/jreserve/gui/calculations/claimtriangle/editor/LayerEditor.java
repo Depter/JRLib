@@ -76,15 +76,21 @@ public class LayerEditor extends AbstractExpandableElement {
                 return ClaimTriangleCalculationImpl.CATEGORY;
             }
         });
+        
     }
 
     @Override
     public void setHandler(ExpandableComponentHandler handler) {
         super.setHandler(handler);
-        UndoRedo.Manager manager = handler.getContainer().getUndoRedo();
-        undo = new UndoUtil<ClaimTriangle>(manager, calculation);
+        initUndoUtil(handler);
         lkp.lookup(ClaimTriangleExcludeable.class).setUndo(undo);
         initPanelUndo();
+    }
+    
+    private void initUndoUtil(ExpandableComponentHandler handler) {
+        UndoRedo.Manager manager = handler.getContainer().getUndoRedo();
+        undo = new UndoUtil<ClaimTriangle>(manager, calculation);
+        ic.add(undo);
     }
     
     private void initPanelUndo() {

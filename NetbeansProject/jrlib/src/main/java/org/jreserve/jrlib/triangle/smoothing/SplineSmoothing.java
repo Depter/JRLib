@@ -14,36 +14,19 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.jrlib.triangle.smoothing;
 
-import javax.swing.event.ChangeListener;
-import org.jdom2.Element;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.jreserve.jrlib.CalculationData;
-import org.openide.nodes.Node;
+import org.jreserve.jrlib.vector.smoothing.SplineSmoothingMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifier<C extends CalculationData> {
+public class SplineSmoothing extends AbstractVectorSmoothing {
     
-    public C createCalculation(C sourceCalculation);
-    
-    public Class<? extends C> getCalculationClass();
-    
-    public Element toXml();
-    
-    public String getDescription();
-    
-    public Displayable getDisplayable();
-    
-    public void addChangeListener(ChangeListener changeListener);
-    
-    public void removeChangeListener(ChangeListener changeListener);
-    
-    public boolean isEditable();
-    
-    public void edit(C sourceCalculation);
+    public SplineSmoothing(SmoothingCell[] cells, double lambda) {
+        super(cells, new SplineSmoothingMethod(lambda));
+    }
+
 }

@@ -129,6 +129,7 @@ public class AbstractSmoothDialog<T extends Triangle> extends JPanel {
         JTabbedPane tabs = new JTabbedPane();
         
         records = controller.getRecords();
+        controller.updateRecords(records);
         tabs.addTab(Bundle.LBL_AbstractSmoothDialog_Tab_Table(), createTablePanel());
         
         ChartWrapper wrapper = SmoothChartUtil.createChart(records);

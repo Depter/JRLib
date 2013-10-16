@@ -19,6 +19,7 @@ package org.jreserve.gui.calculations.smoothing;
 import java.util.concurrent.Callable;
 import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialog;
 import org.jreserve.gui.calculations.smoothing.dialog.SmoothDialogController;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
@@ -89,9 +90,10 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
     public void smooth(Lookup context) {
         ModifiableCalculationProvider<T> calculation = getCalculation(context);
         
+        UndoUtil<T> undoUtil = context.lookup(UndoUtil.class);
         CalculationModifier<T> modifier = createSmoothing(context);
-        if(modifier != null) {
-            AddTask task = new AddTask(calculation, modifier);
+        if(modifier != null && (calculation != null || undoUtil != null)) {
+            AddTask task = new AddTask(calculation, modifier, undoUtil);
             String title = Bundle.MSG_AbstractSmoothable_PH_Title();
             TaskUtil.execute(task, null, title);
         }
@@ -108,18 +110,22 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
         
         private final ModifiableCalculationProvider<T> calc;
         private final CalculationModifier<T> mod;
+        private final UndoUtil<T> undoUtil;
         
-        private AddTask(ModifiableCalculationProvider<T> calc, CalculationModifier<T> mod) {
+        private AddTask(ModifiableCalculationProvider<T> calc, CalculationModifier<T> mod, UndoUtil<T> undoUtil) {
             this.calc = calc;
             this.mod = mod;
+            this.undoUtil = undoUtil;
         }
         
         @Override
         public Void call() throws Exception {
-            synchronized(calc) {
+            if(undoUtil != null) {
+                undoUtil.addModification(mod);
+            } else {
                 calc.addModification(mod);
-                return null;
             }
+            return null;
         }
     
     }

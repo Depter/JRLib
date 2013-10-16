@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
-import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothingModifier;
+import org.jreserve.gui.calculations.smoothing.calculation.SplineSmoothingModifier;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
@@ -30,12 +30,12 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  * @author Peter Decsi
  * @version 1.0
  */
-public class ExponentialModifier 
-    extends ExponentialSmoothingModifier<ClaimTriangle>
+public class SplineModifier
+    extends SplineSmoothingModifier<ClaimTriangle>
     implements ClaimTriangleModifier {
 
-    public ExponentialModifier(List<SmoothingCell> cells, double alpha) {
-        super(cells, ClaimTriangle.class, alpha);
+    public SplineModifier(List<SmoothingCell> cells, double lambda) {
+        super(cells, ClaimTriangle.class, lambda);
     }
     
     @Override
@@ -47,4 +47,5 @@ public class ExponentialModifier
     public List<Cell> getAffectedCells() {
         return new ArrayList<Cell>(getCells());
     }
+    
 }

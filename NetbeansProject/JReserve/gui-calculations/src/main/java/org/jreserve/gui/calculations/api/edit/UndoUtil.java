@@ -20,8 +20,11 @@ package org.jreserve.gui.calculations.api.edit;
 import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoableEdit;
+import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.jrlib.CalculationData;
 import org.openide.awt.UndoRedo;
 
@@ -38,6 +41,7 @@ public class UndoUtil<C extends CalculationData> {
     public UndoUtil(UndoRedo.Manager manager, ModifiableCalculationProvider<C> calculation) {
         this.manager = manager;
         this.calculation = calculation;
+        EventBusManager.getDefault().subscribe(this);
     }
     
     public void setModification(int index, CalculationModifier<C> modifier) {
@@ -89,5 +93,11 @@ public class UndoUtil<C extends CalculationData> {
             if(calculation.getModificationAt(i) == modifier)
                 return i;
         return -1;
+    }
+    
+    @EventBusListener(forceEDT = true)
+    public void calculationSaved(CalculationEvent.Saved evt) {
+        if(this.calculation == evt.getCalculationProvider())
+            manager.discardAllEdits();
     }
 }

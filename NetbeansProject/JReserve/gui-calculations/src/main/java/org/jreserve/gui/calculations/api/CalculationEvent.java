@@ -30,6 +30,8 @@ public interface CalculationEvent {
     
     public static interface Deleted extends CalculationEvent {}
     
+    public static interface Saved extends CalculationEvent {}
+    
     public static interface Renamed extends CalculationEvent {
         public String getOldPath();
     }

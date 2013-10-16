@@ -39,7 +39,7 @@ import org.openide.util.NbBundle.Messages;
 public abstract class DoubleExponentialSmoothingModifier<T extends Triangle> 
     extends AbstractSmoothingModifier<T> {
 
-    public final static String ROOT_TAG = "exponentialSmoothing";
+    public final static String ROOT_TAG = "doubleExponentialSmoothing";
     public final static String ALPHA_TAG = "alpha";
     public final static String BETA_TAG = "beta";
     

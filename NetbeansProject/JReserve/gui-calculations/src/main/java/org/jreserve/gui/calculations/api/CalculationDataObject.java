@@ -121,6 +121,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
             Element e = calculation.toXml();
             JDomUtil.save(pf, e);
             calculation.events.flushAuditCache();
+            calculation.events.fireSave();
             setModified(false);
         } catch (IOException ex) {
             String msg = String.format("Unabel to save calculation to file ''%s''.", pf.getPath());

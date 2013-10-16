@@ -63,4 +63,16 @@ public abstract class AbstractCalculationModifier<C extends CalculationData> imp
     protected void fireChange() {
         cs.fireChange();
     }
+    
+    @Override
+    public boolean isEditable() {
+        return false;
+    }
+    
+    @Override
+    public void edit(C sourceCalculation) {
+        String msg = "Should not call edit on an uneditable CalculationModifier!";
+        throw new IllegalStateException(msg);
+    }
+    
 }

@@ -107,6 +107,10 @@ public class CalculationEventUtil {
             fireEvent(evt);
     }
     
+    public void fireSave() {
+        fireEvent(new Saved());
+    }
+    
     private class Event implements CalculationEvent {
         @Override
         public CalculationProvider getCalculationProvider() {
@@ -117,6 +121,7 @@ public class CalculationEventUtil {
     private class Created extends Event implements CalculationEvent.Created {}
     private class Deleted extends Event implements CalculationEvent.Deleted {}
     private class Changed extends Event implements CalculationEvent.Change {}
+    private class Saved extends Event implements CalculationEvent.Saved {}
     private class Renamed extends Event implements CalculationEvent.Renamed {
         private final String oldPath;
 

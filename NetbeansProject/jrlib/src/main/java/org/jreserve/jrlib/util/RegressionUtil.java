@@ -82,7 +82,7 @@ public class RegressionUtil {
      *     b = --------
      *         sum(x^2)
      * 
-     * @return am array with langth of 2, the first element containing
+     * @return am array with length of 2, the first element containing
      * the intercept, the second containing the slope.
      */
     public static double[] linearRegression(double[] x, double[] y, boolean withIntercept) {
@@ -236,7 +236,7 @@ public class RegressionUtil {
      * 
      * @throws NullPointerException if x is null.
      */
-    public static double[] predic(double intercept, double slope, double[] x) {
+    public static double[] predict(double intercept, double slope, double[] x) {
         int size = x.length;
         double[] result = new double[size];
         for(int i=0; i<size; i++)
