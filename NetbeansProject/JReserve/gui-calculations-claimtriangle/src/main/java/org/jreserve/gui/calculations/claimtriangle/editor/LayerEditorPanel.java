@@ -230,7 +230,9 @@ class LayerEditorPanel extends javax.swing.JPanel {
     private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
         for(Object o : layerList.getSelectedValues()) {
             CalculationModifier m = (CalculationModifier) o;
-            undo.deleteModification(m);
+            int index = calculation.indexOfModification(m);
+            if(index >= 0)
+                calculation.deleteModification(index);
         }
     }//GEN-LAST:event_deleteButtonActionPerformed
 
@@ -364,10 +366,11 @@ class LayerEditorPanel extends javax.swing.JPanel {
             
             ClaimTriangleCorrectionModifier m = new ClaimTriangleCorrectionModifier(accident, development, value);
             int index = widgetPanel.getSelectedLayerIndex();
-            if(index < 0 || widgetPanel.getLayers().size() == (index+1))
+            if(index < 0 || widgetPanel.getLayers().size() == (index+1)) {
                 undo.addModification(m);
-            else
+            } else {
                 undo.addModification(index, m);
+            }
         }
         
         private double getValue(TriangleWidget widget, int accident, int development, double value) {

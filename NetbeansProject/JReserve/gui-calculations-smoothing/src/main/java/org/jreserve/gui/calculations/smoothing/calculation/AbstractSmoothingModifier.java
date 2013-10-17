@@ -17,10 +17,13 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.Icon;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.AbstractCalculationModifier;
+import org.jreserve.gui.calculations.api.AbstractEditableCalculationModifier;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.jrlib.triangle.Triangle;
@@ -34,7 +37,7 @@ import org.openide.util.ImageUtilities;
  * @version 1.0
  */
 public abstract class AbstractSmoothingModifier<T extends Triangle> 
-    extends AbstractCalculationModifier<T>{
+    extends AbstractEditableCalculationModifier<T>{
 
     @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/smoothing/smoothing.png";
     protected final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
@@ -47,10 +50,28 @@ public abstract class AbstractSmoothingModifier<T extends Triangle>
     }
     
     public synchronized void setCells(List<SmoothingCell> cells) {
+        Map preState = super.isChangeFired()? createState() : Collections.EMPTY_MAP;
         this.cells = new ArrayList<SmoothingCell>(cells);
-        fireChange();
+        fireChange(preState);
     }
-
+    
+    protected final Map createState() {
+        Map map = new HashMap();
+        getState(map);
+        return map;
+    }
+    
+    @Override
+    public synchronized void getState(Map state) {
+        state.put(SmoothingModifierUtil.CELLS_TAG, getCells());
+    }
+    
+    @Override
+    public synchronized void loadState(Map state) {
+        List<SmoothingCell> newCells = (List<SmoothingCell>) state.get(SmoothingModifierUtil.CELLS_TAG);
+        setCells(newCells);
+    }
+    
     public synchronized List<SmoothingCell> getCells() {
         return new ArrayList<SmoothingCell>(cells);
     }

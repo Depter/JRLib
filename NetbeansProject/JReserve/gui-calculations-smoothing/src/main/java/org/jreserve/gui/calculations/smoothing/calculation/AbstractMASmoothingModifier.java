@@ -17,6 +17,7 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
+import java.util.Map;
 import org.jdom2.Element;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
@@ -62,8 +63,24 @@ public abstract class AbstractMASmoothingModifier<T extends Triangle>
     
     public synchronized void setLength(int length) {
         checkLength(length);
+        Map preState = createState();
         this.length = length;
-        fireChange();
+        fireChange(preState);
+    }
+    
+    @Override
+    public synchronized void getState(Map state) {
+        super.getState(state);
+        state.put(LENGTH_TAG, length);
+    }
+    
+    @Override
+    public synchronized void loadState(Map state) {
+        super.setChangeFired(false);
+        super.loadState(state);
+        super.setChangeFired(true);
+        int nl = getInt(state, LENGTH_TAG);
+        setLength(nl);
     }
 
     @Override

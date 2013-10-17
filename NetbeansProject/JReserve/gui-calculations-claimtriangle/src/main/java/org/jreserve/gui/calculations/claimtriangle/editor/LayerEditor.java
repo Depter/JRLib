@@ -83,7 +83,6 @@ public class LayerEditor extends AbstractExpandableElement {
     public void setHandler(ExpandableComponentHandler handler) {
         super.setHandler(handler);
         initUndoUtil(handler);
-        lkp.lookup(ClaimTriangleExcludeable.class).setUndo(undo);
         initPanelUndo();
     }
     

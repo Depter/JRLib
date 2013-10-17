@@ -17,13 +17,15 @@
 
 package org.jreserve.gui.calculations.api;
 
+import java.util.Map;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
 public interface CalculationEvent {
-
+    
     public CalculationProvider getCalculationProvider();
     
     public static interface Created extends CalculationEvent {}
@@ -39,10 +41,21 @@ public interface CalculationEvent {
     public static interface Change extends CalculationEvent {}
     
     public static interface ModificationChange extends Change {
+        public int getModifiedIndex();
         public CalculationModifier getModifier();
     }
     
-    public static interface ModificationAdded extends ModificationChange {}
-    public static interface ModificationDeleted extends ModificationChange {}
-    public static interface ModificationChanged extends ModificationChange {}
+    public static interface ModificationAdded extends ModificationChange {
+        public CalculationModifier getRemovedModifier();
+    }
+    
+    public static interface ModificationDeleted extends ModificationChange {
+    }
+    
+    public static interface ModificationChanged extends ModificationChange {
+        @Override
+        public EditableCalculationModifier getModifier();
+        
+        public Map getPreState();
+    }
 }

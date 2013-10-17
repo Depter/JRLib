@@ -18,6 +18,7 @@
 package org.jreserve.gui.calculations.api;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Queue;
 import org.jreserve.gui.misc.audit.event.AbstractAuditEvent;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
@@ -34,12 +35,19 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - oldPath",
     "# {1} - newPath",
     "LBL.CalculationEventUtil2.Renamed=Renamed from ''{0}'' to ''{1}''.",
-    "# {0} - modification",
-    "LBL.CalculationEventUtil2.Modification.Added=Modification added. {0}.",
-    "# {0} - modification",
-    "LBL.CalculationEventUtil2.Modification.Deleted=Modification deleted. {0}.",
-    "# {0} - modification",
-    "LBL.CalculationEventUtil2.Modification.Changed=Modification changed. {0}."
+    "# {0} - index",
+    "# {1} - modification",
+    "LBL.CalculationEventUtil2.Modification.Added=Modification added at index {0}. {1}.",
+    "# {0} - index",
+    "# {1} - removed",
+    "# {2} - added",
+    "LBL.CalculationEventUtil2.Modification.Replaced=Modification added at index {0}. {1} => {2}.",
+    "# {0} - index",
+    "# {1} - modification",
+    "LBL.CalculationEventUtil2.Modification.Deleted=Modification deleted from index {0}. {1}.",
+    "# {0} - index",
+    "# {1} - modification",
+    "LBL.CalculationEventUtil2.Modification.Changed=Modification changed at position {0}. {1}."
 })
 public class CalculationEventUtil {
 
@@ -79,22 +87,29 @@ public class CalculationEventUtil {
         auditCache.add(new AbstractAuditEvent(calculation, change));
     }
     
-    public void fireModificationAdded(CalculationModifier modifier) {
-        fireEvent(new ModificationAdded(modifier));
-        String description = modifier.getDescription();
-        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Added(description)));
+    public void fireModificationAdded(int index, CalculationModifier modifier) {
+        fireModificationAdded(index, modifier, null);
     }
     
-    public void fireModificationDeleted(CalculationModifier modifier) {
-        fireEvent(new ModificationDeleted(modifier));
+    public void fireModificationAdded(int index, CalculationModifier modifier, CalculationModifier removed) {
+        fireEvent(new ModificationAdded(index, modifier, removed));
         String description = modifier.getDescription();
-        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Deleted(description)));
+        if(removed == null)
+            auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Added(index+1, description)));
+        else
+            auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Replaced(index+1, removed.getDescription(), description)));
     }
     
-    public void fireModificationChanged(CalculationModifier modifier) {
-        fireEvent(new ModificationChanged(modifier));
+    public void fireModificationDeleted(int index, CalculationModifier modifier) {
+        fireEvent(new ModificationDeleted(index, modifier));
         String description = modifier.getDescription();
-        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Changed(description)));
+        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Deleted(index+1, description)));
+    }
+    
+    public void fireModificationChanged(int index, EditableCalculationModifier modifier, Map preState) {
+        fireEvent(new ModificationChanged(index, modifier, preState));
+        String description = modifier.getDescription();
+        auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Changed(index+1, description)));
     }
     
     public void clearAuditCache() {
@@ -138,32 +153,62 @@ public class CalculationEventUtil {
     private class ModificationChange extends Event implements CalculationEvent.ModificationChange {
         
         private final CalculationModifier modifier;
-
-        private ModificationChange(CalculationModifier modifier) {
+        private final int index;
+        
+        private ModificationChange(int index, CalculationModifier modifier) {
             this.modifier = modifier;
+            this.index = index;
         }
         
         @Override
         public CalculationModifier getModifier() {
             return modifier;
         }
+
+        @Override
+        public int getModifiedIndex() {
+            return index;
+        }
     }
     
     private class ModificationAdded extends ModificationChange implements CalculationEvent.ModificationAdded {
-        private ModificationAdded(CalculationModifier modifier) {
-            super(modifier);
+        
+        private final CalculationModifier removed;
+        
+        private ModificationAdded(int index, CalculationModifier modifier, CalculationModifier removed) {
+            super(index, modifier);
+            this.removed = removed;
+        }
+
+        @Override
+        public CalculationModifier getRemovedModifier() {
+            return removed;
         }
     }
     
     private class ModificationDeleted extends ModificationChange implements CalculationEvent.ModificationDeleted {
-        private ModificationDeleted(CalculationModifier modifier) {
-            super(modifier);
+        private ModificationDeleted(int index, CalculationModifier modifier) {
+            super(index, modifier);
         }
     }
     
     private class ModificationChanged extends ModificationChange implements CalculationEvent.ModificationChanged {
-        private ModificationChanged(CalculationModifier modifier) {
-            super(modifier);
+        
+        private final Map preState;
+
+        private ModificationChanged(int index, EditableCalculationModifier modifier, Map preState) {
+            super(index, modifier);
+            this.preState = preState;
+        }
+
+        @Override
+        public Map getPreState() {
+            return preState;
+        }
+
+        @Override
+        public EditableCalculationModifier getModifier() {
+            return (EditableCalculationModifier) super.getModifier();
         }
     }
 }

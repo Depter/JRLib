@@ -34,15 +34,13 @@ import org.openide.util.NbBundle.Messages;
     "# {2} - at",
     "MSG.SetCalculationModificationEdit.Operation=Change ''{0}'' to ''{1}'' at {2}."
 })
-public class SetCalculationModificationEdit<C extends ModifiableCalculationProvider, M extends CalculationModifier>
+class SetCalculationModificationEdit<C extends ModifiableCalculationProvider, M extends CalculationModifier>
     extends AbstractCalculationModificationEdit<C, M> {
 
-    private final int index;
     private final M original;
 
-    public SetCalculationModificationEdit(int index, C calculation, M original, M modifier) {
-        super(calculation, modifier);
-        this.index = index;
+    SetCalculationModificationEdit(C calculation, int index, M original, M modifier) {
+        super(calculation, index, modifier);
         this.original = original;
     }
     

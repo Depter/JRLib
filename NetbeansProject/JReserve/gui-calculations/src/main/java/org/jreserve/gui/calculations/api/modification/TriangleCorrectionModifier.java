@@ -16,9 +16,11 @@
  */
 package org.jreserve.gui.calculations.api.modification;
 
+import java.util.Collections;
+import java.util.Map;
 import javax.swing.Icon;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.AbstractCalculationModifier;
+import org.jreserve.gui.calculations.api.AbstractEditableCalculationModifier;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
@@ -31,7 +33,7 @@ import org.openide.util.ImageUtilities;
  * @version 1.0
  */
 public abstract class TriangleCorrectionModifier<T extends Triangle> 
-    extends AbstractCalculationModifier<T>{
+    extends AbstractEditableCalculationModifier<T>{
     
     public final static String ROOT_ELEMENT = "triangleCorrection";
     public final static String ACCIDENT_ELEMENT = "accident";
@@ -65,8 +67,23 @@ public abstract class TriangleCorrectionModifier<T extends Triangle>
     }
     
     public synchronized void setValue(double value) {
+        Map preState = getState() ;
         this.value = value;
-        fireChange();
+        fireChange(preState);
+    }
+
+    @Override
+    public void getState(Map state) {
+        state.put(VALUE_ELEMENT, value);
+    }
+    
+    private Map getState() {
+        return Collections.singletonMap(VALUE_ELEMENT, this.value);
+    }
+    
+    @Override
+    public void loadState(Map state) {
+        setValue(getInt(state, VALUE_ELEMENT));
     }
 
     @Override

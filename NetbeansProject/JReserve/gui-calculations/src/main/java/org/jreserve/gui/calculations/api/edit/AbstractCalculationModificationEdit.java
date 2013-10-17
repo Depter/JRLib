@@ -26,12 +26,14 @@ import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractCalculationModificationEdit<C extends ModifiableCalculationProvider, M extends CalculationModifier> implements UndoableEdit {
+abstract class AbstractCalculationModificationEdit<C extends ModifiableCalculationProvider, M extends CalculationModifier> implements UndoableEdit {
 
     protected final C calculation;
     protected final M modifier;
+    protected final int index;
     
-    public AbstractCalculationModificationEdit(C calculation, M modifier) {
+    AbstractCalculationModificationEdit(C calculation, int index, M modifier) {
+        this.index = index;
         this.calculation = calculation;
         this.modifier = modifier;
     }
@@ -39,14 +41,6 @@ public abstract class AbstractCalculationModificationEdit<C extends ModifiableCa
     @Override
     public boolean canUndo() {
         return true;
-    }
-    
-    protected int indexOf() {
-        int count = calculation.getModificationCount();
-        for(int i=0; i<count; i++)
-            if(modifier == calculation.getModificationAt(i))
-                return i;
-        return -1;
     }
 
     @Override
@@ -57,12 +51,12 @@ public abstract class AbstractCalculationModificationEdit<C extends ModifiableCa
     @Override
     public void die() {
     }
-
+    
     @Override
     public boolean addEdit(UndoableEdit anEdit) {
         return false;
     }
-
+    
     @Override
     public boolean replaceEdit(UndoableEdit anEdit) {
         return false;

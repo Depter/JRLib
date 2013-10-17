@@ -34,30 +34,27 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - description",
     "MSG.AddCalculationModificationEdit.Remove=Remove: {0}"
 })
-public class AddCalculationModificationEdit<C extends ModifiableCalculationProvider, M extends CalculationModifier>
+class AddCalculationModificationEdit<C extends ModifiableCalculationProvider, M extends CalculationModifier>
     extends AbstractCalculationModificationEdit<C, M> {
-
-    private int originalIndex;
     
-    public AddCalculationModificationEdit(C calculation, M modifier) {
-        super(calculation, modifier);
-        originalIndex = super.indexOf();
+    public AddCalculationModificationEdit(C calculation, int index, M modifier) {
+        super(calculation, index, modifier);
     }
 
     @Override
     public void undo() throws CannotUndoException {
         synchronized(calculation) {
-            calculation.deleteModification(originalIndex);
+            calculation.deleteModification(index);
         }
     }
 
     @Override
     public void redo() throws CannotRedoException {
         synchronized(calculation) {
-            if(originalIndex == calculation.getModificationCount())
+            if(index == calculation.getModificationCount())
                 calculation.addModification(modifier);
             else
-                calculation.setModification(originalIndex, modifier);
+                calculation.addModification(index, modifier);
         }
     }
 

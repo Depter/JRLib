@@ -17,6 +17,7 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
+import java.util.Map;
 import org.jdom2.Element;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
@@ -59,8 +60,23 @@ public abstract class SplineSmoothingModifier<T extends Triangle> extends Abstra
     }
     
     public synchronized void setLambda(double lambda) {
+        Map preState = createState();
         this.lambda = lambda;
-        fireChange();
+        fireChange(preState);
+    }
+    
+    @Override
+    public synchronized void getState(Map state) {
+        super.getState(state);
+        state.put(LAMBDA_TAG, lambda);
+    }
+    
+    @Override
+    public synchronized void loadState(Map state) {
+        super.setChangeFired(false);
+        super.loadState(state);
+        super.setChangeFired(true);
+        setLambda(getDouble(state, LAMBDA_TAG));
     }
 
     @Override

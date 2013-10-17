@@ -16,13 +16,11 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.modifications;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import org.jreserve.gui.calculations.api.edit.Excludeable;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
-import org.jreserve.gui.misc.utils.tasks.SwingCallback;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.jrlib.triangle.Cell;
@@ -39,12 +37,6 @@ import org.openide.util.NbBundle.Messages;
     "LBL.ClaimTriangleExcludeable.Progress.Title=Excluding cells"
 })
 public class ClaimTriangleExcludeable implements Excludeable {
-
-    private UndoUtil<ClaimTriangle> undo;
-    
-    public synchronized void setUndo(UndoUtil<ClaimTriangle> undo) {
-        this.undo = undo;
-    }
     
     @Override
     public boolean canExclude(Lookup context) {
@@ -52,7 +44,12 @@ public class ClaimTriangleExcludeable implements Excludeable {
         if(selection == null || selection.getCellCount() == 0)
             return false;
         
-        return context.lookup(ClaimTriangleCalculationImpl.class) != null;
+        ClaimTriangleCalculationImpl calculation = context.lookup(ClaimTriangleCalculationImpl.class);
+        if(calculation == null)
+            return false;
+        
+        UndoUtil undo = context.lookup(UndoUtil.class);
+        return undo != null && calculation == undo.getCalculation();
     }
 
     @Override
@@ -64,25 +61,27 @@ public class ClaimTriangleExcludeable implements Excludeable {
     
     private class ExcludeTask implements Callable<Void> {
         
-        private final ClaimTriangleCalculationImpl calculation;
+        private final UndoUtil<ClaimTriangle> undo;
         private final List<Cell> cells;
         
         private ExcludeTask(Lookup context) {
-            calculation = context.lookup(ClaimTriangleCalculationImpl.class);
+            undo = context.lookup(UndoUtil.class);
             cells = context.lookup(TriangleSelection.class).getCells();
         }
 
         @Override
         public Void call() throws Exception {
-            synchronized(calculation) {
-                
-                for(Cell cell : cells) {
-                    int accident = cell.getAccident();
-                    int development = cell.getDevelopment();
-                    undo.addModification(new ClaimTriangleExcludeModifier(accident, development));
-                }
+            synchronized(undo) {
+                for(Cell cell : cells)
+                    undo.addModification(createModifier(cell));
             }
             return null;
+        }
+        
+        private ClaimTriangleExcludeModifier createModifier(Cell cell) {
+            int a = cell.getAccident();
+            int d = cell.getDevelopment();
+            return new ClaimTriangleExcludeModifier(a, d);
         }
     }
     

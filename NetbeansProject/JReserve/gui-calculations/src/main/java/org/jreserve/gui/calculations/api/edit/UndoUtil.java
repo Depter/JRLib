@@ -17,11 +17,13 @@
 
 package org.jreserve.gui.calculations.api.edit;
 
+import java.util.Map;
 import javax.swing.SwingUtilities;
 import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.UndoableEdit;
 import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.EditableCalculationModifier;
 import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
@@ -35,7 +37,7 @@ import org.openide.awt.UndoRedo;
  */
 public class UndoUtil<C extends CalculationData> {
 
-    private UndoRedo.Manager manager;
+    private final UndoRedo.Manager manager;
     private ModifiableCalculationProvider<C> calculation;
 
     public UndoUtil(UndoRedo.Manager manager, ModifiableCalculationProvider<C> calculation) {
@@ -44,17 +46,88 @@ public class UndoUtil<C extends CalculationData> {
         EventBusManager.getDefault().subscribe(this);
     }
     
-    public void setModification(int index, CalculationModifier<C> modifier) {
-        if(index == calculation.getModificationCount()) {
-            addModification(modifier);
-        } else {
-            CalculationModifier<C> original = calculation.getModificationAt(index);
-            calculation.setModification(index, original);
-            addEdit(new SetCalculationModificationEdit(index, calculation, original, modifier));
-        }
+    public ModifiableCalculationProvider<C> getCalculation() {
+        return calculation;
     }
     
-    public void addEdit(final UndoableEdit edit) {
+    public void setModification(int index, CalculationModifier<C> modifier) {
+        CalculationModifier<C> original = calculation.getModificationAt(index);
+        calculation.setModification(index, original);
+        addEdit(new SetCalculationModificationEdit(calculation, index, original, modifier));
+    }
+//    
+//    public void addEdit(final UndoableEdit edit) {
+//        if(SwingUtilities.isEventDispatchThread()) {
+//            UndoableEditEvent evt = new UndoableEditEvent(this, edit);
+//            manager.undoableEditHappened(evt);
+//        } else {
+//            SwingUtilities.invokeLater(new Runnable() {
+//                @Override
+//                public void run() {
+//                    UndoableEditEvent evt = new UndoableEditEvent(this, edit);
+//                    manager.undoableEditHappened(evt);
+//                }
+//            });
+//        }
+//    }
+//    
+    public void addModification(CalculationModifier<C> modifier) {
+        addModification(calculation.getModificationCount(), modifier);
+    }
+    
+    public void addModification(int index, CalculationModifier<C> modifier) {
+        calculation.addModification(index, modifier);
+        addEdit(new AddCalculationModificationEdit(calculation, index, modifier));
+    }
+    
+    public void deleteModification(CalculationModifier<C> modifier) {
+        int index = calculation.indexOfModification(modifier);
+        if(index < 0)
+            throw new IllegalArgumentException("Modification is not added to the calculation!");
+        calculation.deleteModification(index);
+        addEdit(new DeleteCalculationModificationEdit(calculation, index, modifier));
+    }
+    
+    public void modificationChanged(EditableCalculationModifier<C> modifier, Map preState) {
+        addEdit(new ModificationEdit(modifier, preState));
+    }
+    
+    @EventBusListener(forceEDT = true)
+    public void calculationSaved(CalculationEvent.Saved evt) {
+        synchronized(manager) {
+            if(this.calculation == evt.getCalculationProvider())
+                manager.discardAllEdits();
+        }
+    }
+//    
+//    @EventBusListener
+//    public void modificationChange(CalculationEvent.ModificationChange evt) {
+//        synchronized(manager) {
+//            if(this.calculation != evt.getCalculationProvider())
+//                return;
+//            
+//            if(evt instanceof CalculationEvent.ModificationAdded) {
+//                CalculationEvent.ModificationAdded e = (CalculationEvent.ModificationAdded) evt;
+//                modificationAdded(e.getModifiedIndex(), e.getModifier(), e.getRemovedModifier());
+//            } else if(evt instanceof CalculationEvent.ModificationDeleted) {
+//                CalculationEvent.ModificationDeleted e = (CalculationEvent.ModificationDeleted) evt;
+//                addEdit(new DeleteCalculationModificationEdit(calculation, e.getModifiedIndex(), e.getModifier()));
+//            } else if(evt instanceof CalculationEvent.ModificationChanged) {
+//                CalculationEvent.ModificationChanged e = (CalculationEvent.ModificationChanged) evt;
+//                addEdit(new ModificationEdit(e.getModifier(), e.getPreState()));
+//            }
+//        }
+//    }
+//    
+//    private void modificationAdded(int index, CalculationModifier added, CalculationModifier removed) {
+//        if(removed == null) {
+//            addEdit(new AddCalculationModificationEdit(calculation, index, added));
+//        } else {
+//            addEdit(new SetCalculationModificationEdit(calculation, index, added, removed));
+//        }
+//    }
+
+    private void addEdit(final UndoableEdit edit) {
         if(SwingUtilities.isEventDispatchThread()) {
             UndoableEditEvent evt = new UndoableEditEvent(this, edit);
             manager.undoableEditHappened(evt);
@@ -67,37 +140,5 @@ public class UndoUtil<C extends CalculationData> {
                 }
             });
         }
-    }
-    
-    public void addModification(CalculationModifier<C> modifier) {
-        calculation.addModification(modifier);
-        addEdit(new AddCalculationModificationEdit(calculation, modifier));
-    }
-    
-    public void addModification(int index, CalculationModifier<C> modifier) {
-        calculation.addModification(index, modifier);
-        addEdit(new AddCalculationModificationEdit(calculation, modifier));
-    }
-    
-    public void deleteModification(CalculationModifier<C> modifier) {
-        int index = indexOf(modifier);
-        if(index < 0)
-            throw new IllegalArgumentException("Modification is not added to the calculation!");
-        calculation.deleteModification(index);
-        addEdit(new DeleteCalculationModificationEdit(calculation, modifier, index));
-    }
-    
-    private int indexOf(CalculationModifier<C> modifier) {
-        int size = calculation.getModificationCount();
-        for(int i=0; i<size; i++)
-            if(calculation.getModificationAt(i) == modifier)
-                return i;
-        return -1;
-    }
-    
-    @EventBusListener(forceEDT = true)
-    public void calculationSaved(CalculationEvent.Saved evt) {
-        if(this.calculation == evt.getCalculationProvider())
-            manager.discardAllEdits();
     }
 }

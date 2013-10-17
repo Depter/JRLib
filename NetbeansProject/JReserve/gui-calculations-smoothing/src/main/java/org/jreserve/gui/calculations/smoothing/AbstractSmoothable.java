@@ -42,7 +42,12 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
 
     @Override
     public boolean canSmooth(Lookup context) {
-        if(getCalculation(context) == null)
+        UndoUtil undo = context.lookup(UndoUtil.class);
+        if(undo == null)
+            return false;
+        
+        ModifiableCalculationProvider calculation = getCalculation(context);
+        if(calculation == null || calculation != undo.getCalculation())
             return false;
         
         TriangleSelection selection = context.lookup(TriangleSelection.class);
@@ -88,12 +93,11 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
     
     @Override
     public void smooth(Lookup context) {
-        ModifiableCalculationProvider<T> calculation = getCalculation(context);
-        
-        UndoUtil<T> undoUtil = context.lookup(UndoUtil.class);
         CalculationModifier<T> modifier = createSmoothing(context);
-        if(modifier != null && (calculation != null || undoUtil != null)) {
-            AddTask task = new AddTask(calculation, modifier, undoUtil);
+        UndoUtil undo = context.lookup(UndoUtil.class);
+        
+        if(modifier != null && undo != null) {
+            AddTask task = new AddTask(undo, modifier);
             String title = Bundle.MSG_AbstractSmoothable_PH_Title();
             TaskUtil.execute(task, null, title);
         }
@@ -108,23 +112,17 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
     
     private class AddTask implements Callable<Void> {
         
-        private final ModifiableCalculationProvider<T> calc;
+        private final UndoUtil<T> undo;
         private final CalculationModifier<T> mod;
-        private final UndoUtil<T> undoUtil;
         
-        private AddTask(ModifiableCalculationProvider<T> calc, CalculationModifier<T> mod, UndoUtil<T> undoUtil) {
-            this.calc = calc;
+        private AddTask(UndoUtil<T> undo, CalculationModifier<T> mod) {
+            this.undo = undo;
             this.mod = mod;
-            this.undoUtil = undoUtil;
         }
         
         @Override
         public Void call() throws Exception {
-            if(undoUtil != null) {
-                undoUtil.addModification(mod);
-            } else {
-                calc.addModification(mod);
-            }
+            undo.addModification(mod);
             return null;
         }
     

@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.calculations.api;
 
+import java.util.Map;
 import org.jreserve.jrlib.CalculationData;
 
 /**
@@ -23,19 +24,7 @@ import org.jreserve.jrlib.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ModifiableCalculationProvider<C extends CalculationData> extends CalculationProvider<C> {
+public interface CalculationModifierListener<C extends CalculationData> {
     
-    public int getModificationCount();
-    
-    public CalculationModifier<C> getModificationAt(int index);
-    
-    public void setModification(int index, CalculationModifier<C> cm);
-    
-    public void addModification(CalculationModifier<C> cm);
-    
-    public void addModification(int index, CalculationModifier<C> cm);
-    
-    public void deleteModification(int index);
-    
-    public int indexOfModification(CalculationModifier cm);
+    public void modificationChanged(EditableCalculationModifier<C> source, Map<Object, Object> preState);
 }

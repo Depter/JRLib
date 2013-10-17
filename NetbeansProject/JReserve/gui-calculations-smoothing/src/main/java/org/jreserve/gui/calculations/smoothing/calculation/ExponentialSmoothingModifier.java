@@ -17,6 +17,7 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
+import java.util.Map;
 import org.jdom2.Element;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
@@ -67,8 +68,24 @@ public abstract class ExponentialSmoothingModifier<T extends Triangle>
     
     public synchronized void setAlpha(double alpha) {
         checkAlpha(alpha);
+        Map preState = createState();
         this.alpha = alpha;
-        fireChange();
+        fireChange(preState);
+    }
+    
+    @Override
+    public synchronized void getState(Map state) {
+        super.getState(state);
+        state.put(ALPHA_TAG, alpha);
+    }
+    
+    @Override
+    public synchronized void loadState(Map state) {
+        super.setChangeFired(false);
+        super.loadState(state);
+        super.setChangeFired(true);
+        double a = getDouble(state, ALPHA_TAG);
+        setAlpha(a);
     }
 
     @Override

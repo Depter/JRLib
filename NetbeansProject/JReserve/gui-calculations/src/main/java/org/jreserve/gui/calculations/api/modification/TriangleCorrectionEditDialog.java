@@ -16,15 +16,27 @@
  */
 package org.jreserve.gui.calculations.api.modification;
 
+import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.jrlib.triangle.Triangle;
+
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class TriangleCorrectionEditDialog extends javax.swing.JPanel {
+class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPanel {
 
-    private TriangleCorrectionEditDialog() {
+    
+    private Triangle source;
+    private ModifiableCalculationProvider<? extends Triangle> calculation;
+    
+    private TriangleCorrectionEditDialog(boolean canCummulate) {
         initComponents();
+        
+        if(!canCummulate) {
+            cummulateLabel.setVisible(false);
+            cummulateCheck.setVisible(false);
+        }
     }
 
     /**

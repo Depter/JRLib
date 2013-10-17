@@ -16,10 +16,8 @@
  */
 package org.jreserve.gui.calculations.api;
 
-import javax.swing.event.ChangeListener;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
-import org.openide.util.ChangeSupport;
 
 /**
  *
@@ -28,7 +26,6 @@ import org.openide.util.ChangeSupport;
  */
 public abstract class AbstractCalculationModifier<C extends CalculationData> implements CalculationModifier<C>{
 
-    private final ChangeSupport cs = new ChangeSupport(this);
     private final Class<C> clazz;
     private Displayable displayable;
     
@@ -48,31 +45,5 @@ public abstract class AbstractCalculationModifier<C extends CalculationData> imp
         return displayable;
     }
     
-    protected abstract Displayable createDisplayable();
-
-    @Override
-    public void addChangeListener(ChangeListener changeListener) {
-        cs.addChangeListener(changeListener);
-    }
-
-    @Override
-    public void removeChangeListener(ChangeListener changeListener) {
-        cs.removeChangeListener(changeListener);
-    }
-    
-    protected void fireChange() {
-        cs.fireChange();
-    }
-    
-    @Override
-    public boolean isEditable() {
-        return false;
-    }
-    
-    @Override
-    public void edit(C sourceCalculation) {
-        String msg = "Should not call edit on an uneditable CalculationModifier!";
-        throw new IllegalStateException(msg);
-    }
-    
+    protected abstract Displayable createDisplayable();    
 }

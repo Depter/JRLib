@@ -18,8 +18,7 @@ package org.jreserve.gui.calculations.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import java.util.Map;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.util.CalculationModifierFactoryRegistry;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -51,9 +50,16 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
             CalculationModifierFactory<C> factory = CalculationModifierFactoryRegistry.getFactory(category, rootName);
             if(factory != null) {
                 CalculationModifier cm = factory.fromXml(me);
-                cm.addChangeListener(cmListener);
+                registerListener(cm);
                 modifications.add(cm);
             }
+        }
+    }
+    
+    private void registerListener(CalculationModifier cm) {
+        if(cm instanceof EditableCalculationModifier) {
+            EditableCalculationModifier ecm = (EditableCalculationModifier) cm;
+            ecm.addCalculationModifierListener(cmListener);
         }
     }
     
@@ -63,7 +69,18 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
             return modifications.size();
         }
     }
-
+    
+    @Override
+    public int indexOfModification(CalculationModifier cm) {
+        synchronized(lock) {
+            int size = modifications.size();
+            for(int i=0; i<size; i++)
+                if(cm == modifications.get(i))
+                    return i;
+            return -1;
+        }
+    }
+    
     @Override
     public CalculationModifier<C> getModificationAt(int index) {
         synchronized(lock) {
@@ -77,14 +94,10 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
             if(cm == null)
                 throw new NullPointerException("ModificationFactory is null!");
             CalculationModifier removed = modifications.set(index, cm);
-            cm.addChangeListener(cmListener);
+            registerListener(cm);
             modificationsChanged();
             
-            if(removed != null) {
-                removed.removeChangeListener(cmListener);
-                super.events.fireModificationDeleted(removed);
-            }
-            super.events.fireModificationAdded(cm);
+            super.events.fireModificationAdded(index, cm, removed);
         }
     }
     
@@ -103,9 +116,9 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
             if(cm == null)
                 throw new NullPointerException("ModificationFactory is null!");
             modifications.add(index, cm);
-            cm.addChangeListener(cmListener);
+            registerListener(cm);
             modificationsChanged();
-            super.events.fireModificationAdded(cm);
+            super.events.fireModificationAdded(index, cm);
         }
     }
 
@@ -113,9 +126,16 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     public void deleteModification(int index) {
         synchronized(lock) {
             CalculationModifier cm = modifications.remove(index);
-            cm.removeChangeListener(cmListener);
+            deregisterListener(cm);
             modificationsChanged();
-            super.events.fireModificationDeleted(cm);
+            super.events.fireModificationDeleted(index, cm);
+        }
+    }
+    
+    private void deregisterListener(CalculationModifier cm) {
+        if(cm instanceof EditableCalculationModifier) {
+            EditableCalculationModifier ecm = (EditableCalculationModifier) cm;
+            ecm.removeCalculationModifierListener(cmListener);
         }
     }
 
@@ -132,13 +152,25 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
         return root;
     }
     
-    private class ModificationListener implements ChangeListener {
+    private class ModificationListener implements CalculationModifierListener<C> {
 
         @Override
-        public void stateChanged(ChangeEvent e) {
+        public void modificationChanged(EditableCalculationModifier<C> source, Map<Object, Object> preState) {
             synchronized(AbstractModifiableCalculationProvider.super.obj.lock) {
                 modificationsChanged();
+                
+                int index = indexOf(source);
+                if(index >= 0)
+                    events.fireModificationChanged(index, source, preState);
             }
+        }
+        
+        private int indexOf(CalculationModifier cm) {
+            int size = modifications.size();
+            for(int i=0; i<size; i++)
+                if(cm == modifications.get(i))
+                    return i;
+            return -1;
         }
     }
 }
