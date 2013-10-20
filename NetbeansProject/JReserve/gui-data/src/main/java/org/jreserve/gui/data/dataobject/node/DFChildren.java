@@ -20,7 +20,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.nodes.ChildFactory;
@@ -35,10 +35,10 @@ import org.openide.util.WeakListeners;
 class DFChildren extends ChildFactory<DataObject>{
 
     private final DataFolder folder;
-    private final DataObjectProvider doProvider;
+    private final NamedDataSourceProvider doProvider;
     private final ChildListener cl = new ChildListener();
     
-    DFChildren(DataFolder folder, DataObjectProvider doProvider) {
+    DFChildren(DataFolder folder, NamedDataSourceProvider doProvider) {
         this.folder = folder;
         this.doProvider = doProvider;
         folder.addPropertyChangeListener(WeakListeners.propertyChange(cl, folder));

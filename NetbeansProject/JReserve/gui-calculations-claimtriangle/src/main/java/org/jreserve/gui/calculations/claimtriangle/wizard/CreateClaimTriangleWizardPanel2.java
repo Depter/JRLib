@@ -18,8 +18,8 @@
 package org.jreserve.gui.calculations.claimtriangle.wizard;
 
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
+import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.wizard.AbstractWizardPanel;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
@@ -69,9 +69,9 @@ class CreateClaimTriangleWizardPanel2 extends AbstractWizardPanel<CreateClaimTri
     }
     
     private DataSource getDataSource() {
-        ProjectObjectLookup pol = panel.getProjectObjectLookup();
+        ProjectContentProvider pol = panel.getProjectObjectLookup();
         String path = panel.getDataSourcePath();
-        return pol.lookupOne(path, DataSource.class);
+        return pol.getContent(path, DataSource.class);
     }
 
     @Override
@@ -80,7 +80,7 @@ class CreateClaimTriangleWizardPanel2 extends AbstractWizardPanel<CreateClaimTri
     }
     
     private boolean isStorageValid() {
-        DataSourceObjectProvider dop = panel.getDataSourceProvider();
+        NamedDataSourceProvider dop = panel.getDataSourceProvider();
         if(dop == null) {
             showError(Bundle.MSG_CreateClaimTriangleWizardPanel2_DOP_NotFound());
             return false;
@@ -92,8 +92,8 @@ class CreateClaimTriangleWizardPanel2 extends AbstractWizardPanel<CreateClaimTri
             return false;
         }
         
-        ProjectObjectLookup pol = panel.getProjectObjectLookup();
-        if(pol == null || pol.lookupOne(path, DataSource.class) == null) {
+        ProjectContentProvider pol = panel.getProjectObjectLookup();
+        if(pol == null || pol.getContent(path, DataSource.class) == null) {
             showError(Bundle.MSG_CreateClaimTriangleWizardPanel2_DataSource_NotFound());
             return false;
         }

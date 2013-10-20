@@ -24,13 +24,12 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.Icon;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.misc.renameable.RenameUtil;
 import org.jreserve.gui.misc.renameable.Renameable;
 import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -92,11 +91,11 @@ class DataFolderNode extends FilterNode {
     private final boolean isRoot;
     private final DataFolder folder;
     
-    public DataFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot) {
+    public DataFolderNode(DataFolder folder, NamedDataSourceProvider doProvider, boolean isRoot) {
         this(folder, doProvider, isRoot, new InstanceContent());
     }
     
-    private DataFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot, InstanceContent ic) {
+    private DataFolderNode(DataFolder folder, NamedDataSourceProvider doProvider, boolean isRoot, InstanceContent ic) {
         super(folder.getNodeDelegate(), 
               Children.create(new DFChildren(folder, doProvider), true),
               new ProxyLookup(folder.getLookup(), new AbstractLookup(ic))
@@ -206,15 +205,14 @@ class DataFolderNode extends FilterNode {
         Project p = FileOwnerQuery.getOwner(client);
         if(p == null)
             return false;
-        DataSourceObjectProvider dsop = p.getLookup().lookup(DataSourceObjectProvider.class);
+        NamedDataSourceProvider dsop = p.getLookup().lookup(NamedDataSourceProvider.class);
         if(dsop == null)
             return false;
-        DataFolder dataRoot = dsop.getRootFolder();
+        FileObject dataRoot = dsop.getRootFolder();
         if(dataRoot == null)
             return false;
         
-        FileObject rootFile = dataRoot.getPrimaryFile();
-        return rootFile.equals(client) || FileUtil.isParentOf(rootFile, client);
+        return dataRoot.equals(client) || FileUtil.isParentOf(dataRoot, client);
     }
         
     private static class FolderDeletable extends DataObjectDeletable {

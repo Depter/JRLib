@@ -18,8 +18,8 @@ package org.jreserve.gui.calculations.claimtriangle.wizard;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
+import org.jreserve.gui.calculations.api.NamedCalculationProvider;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.netbeans.api.project.Project;
@@ -42,7 +42,7 @@ import org.openide.util.NbBundle.Messages;
 class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
 
     private final CreateClaimTriangleWizardPanel1 controller;
-    private CalculationObjectProvider cop;
+    private NamedCalculationProvider cop;
     private TextListener textListener = new TextListener();
             
     CreateClaimTriangleVisualPanel1(CreateClaimTriangleWizardPanel1 controller) {
@@ -61,7 +61,7 @@ class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
             cop = null;
         } else {
             projectText.setText(ProjectUtils.getInformation(project).getDisplayName());
-            cop = project.getLookup().lookup(CalculationObjectProvider.class);
+            cop = project.getLookup().lookup(NamedCalculationProvider.class);
         }
         
         boolean enabled = cop != null;
@@ -72,13 +72,13 @@ class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
     
     void setFolder(DataFolder folder) {
         if(cop != null) {
-            DataFolder root = cop.getRootFolder();
-            String path = FileUtil.getRelativePath(root.getPrimaryFile(), folder.getPrimaryFile());
+            FileObject root = cop.getRootFolder();
+            String path = FileUtil.getRelativePath(root, folder.getPrimaryFile());
             folderText.setText(path);
         }        
     }
     
-    CalculationObjectProvider getObjectProvider() {
+    NamedCalculationProvider getObjectProvider() {
         return cop;
     }
 
@@ -222,9 +222,9 @@ class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        DataFolder folder = DataObjectChooser.selectOneFolder(cop);
+        DataFolder folder = NamedContentUtil.userSelectFolder(cop);
         if(folder != null) {
-            FileObject root = cop.getRootFolder().getPrimaryFile();
+            FileObject root = cop.getRootFolder();
             FileObject child = folder.getPrimaryFile();
             String path = FileUtil.getRelativePath(root, child);
             if(path != null)
@@ -272,7 +272,7 @@ class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
         private String calculatePath() {
             if(cop == null)
                 return null;
-            String path = cop.getDisplayName()+"/";
+            String path = "";
             
             String folder = folderText.getText();
             if(folder != null && folder.length() > 0) {

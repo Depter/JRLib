@@ -21,13 +21,14 @@ import java.awt.event.ActionListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
+import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
+import org.netbeans.api.project.FileOwnerQuery;
+import org.netbeans.api.project.Project;
 import org.netbeans.api.project.ProjectUtils;
-import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObject;
+import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -42,8 +43,8 @@ import org.openide.util.NbBundle.Messages;
 class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     
     private final ImportDataWizardPanel1 controller;
-    private DataObjectProvider dop;
-    private ProjectObjectLookup pol;
+    private NamedDataSourceProvider dop;
+    private ProjectContentProvider pol;
     
     ImportDataWizardVisualPanel1(ImportDataWizardPanel1 controller) {
         this.controller = controller;
@@ -55,19 +56,25 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
         return Bundle.LBL_ImportDataWizardVisualPanel1_Title();
     }
     
-    void setDataObjectProvider(DataObjectProvider dop) {
+    void setDataObjectProvider(NamedDataSourceProvider dop) {
         if(dop != null) {
             this.dop = dop;
-            pol = dop.getProject().getLookup().lookup(ProjectObjectLookup.class);
-            projectText.setText(getProjectName());
+            
+            Project p = getProject();
+            pol = p==null? null : NamedContentUtil.getContentProvider(p);
+            
+            String pName = p==null? null : ProjectUtils.getInformation(p).getDisplayName();
+            projectText.setText(pName);
+            
             storageText.setEnabled(true);
             storageButton.setEnabled(true);
             providerCombo.setEnabled(true);
         }
     }
     
-    private String getProjectName() {
-        return ProjectUtils.getInformation(dop.getProject()).getDisplayName();
+    private Project getProject() {
+        FileObject root = dop==null? null : dop.getRootFolder();
+        return root==null? null : FileOwnerQuery.getOwner(root);
     }
     
     void setDataSource(DataSource ds) {
@@ -84,9 +91,10 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     
     DataSource getSelectedDataSource() {
         String path = storageText.getText();
-        if(path==null || path.length() == 0 || pol == null)
+        if(path==null || path.length() == 0 || dop == null)
             return null;
-        return pol.lookupOne(path, DataSource.class);
+        
+        return pol.getContent(path, DataSource.class);
     }
     
     ImportDataProviderAdapter getImportDataProvider() {
@@ -197,8 +205,8 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void storageButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storageButtonActionPerformed
-        DataObject obj = DataObjectChooser.selectOne(new DataSourceController());
-        DataSource ds = obj.getLookup().lookup(DataSource.class);
+        DataSource ds = NamedContentUtil.userSelect(dop, DataSource.class, 
+                Bundle.LBL_ImportDataWizardVisualPanel1_SelectTitle());
         if(ds != null)
             storageText.setText(ds.getPath());
     }//GEN-LAST:event_storageButtonActionPerformed
@@ -213,25 +221,7 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     private javax.swing.JLabel storageLabel;
     private javax.swing.JTextField storageText;
     // End of variables declaration//GEN-END:variables
-    
-    private class DataSourceController extends DataObjectChooser.DefaultController {
-
-        public DataSourceController() {
-            super(Bundle.LBL_ImportDataWizardVisualPanel1_SelectTitle(), dop.getRootFolder());
-        }
-
-        @Override
-        public boolean showDataObject(DataObject obj) {
-            return (obj instanceof DataFolder) ||
-                   obj.getLookup().lookup(DataSource.class) != null;
-        }
-
-        @Override
-        public boolean canSelectObject(DataObject obj) {
-            return obj.getLookup().lookup(DataSource.class) != null;
-        }
-    }
-    
+        
     private class StorageListener implements DocumentListener {
 
         @Override

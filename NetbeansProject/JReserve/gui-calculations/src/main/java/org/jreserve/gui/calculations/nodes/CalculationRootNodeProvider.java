@@ -17,12 +17,17 @@
 
 package org.jreserve.gui.calculations.nodes;
 
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
+import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 
 /**
  *
@@ -35,12 +40,33 @@ import org.openide.loaders.DataFolder;
 )
 public class CalculationRootNodeProvider implements NodeFactory {
 
+    private final static Logger logger = Logger.getLogger(CalculationRootNodeProvider.class.getName());
+    
     @Override
     public NodeList<?> createNodes(Project p) {
-        CalculationObjectProvider dsop = p.getLookup().lookup(CalculationObjectProvider.class);
-        DataFolder df = dsop.getRootFolder();
-        if(df == null)
+        NamedCalculationProvider dsop = p.getLookup().lookup(NamedCalculationProvider.class);
+        if(dsop == null) {
+            String msg = "Project '%s' does not contain an instance of '%s'!";
+            logger.log(Level.WARNING, String.format(msg, p.getProjectDirectory().getPath(), NamedCalculationProvider.class));
             return NodeFactorySupport.fixedNodeList();
+        }
+        
+        FileObject rootFile = dsop.getRootFolder();
+        if(rootFile == null) {
+            String msg = "Project '%s' does not contain an data directory!";
+            logger.log(Level.WARNING, String.format(msg, p.getProjectDirectory().getPath()));
+            return NodeFactorySupport.fixedNodeList();
+        }
+        
+        DataFolder df;
+        try {
+            df = (DataFolder) DataObject.find(rootFile);
+        } catch(DataObjectNotFoundException ex) {
+            String msg = "DataFolder can not be loaded from '%s'!";
+            logger.log(Level.WARNING, String.format(msg, rootFile.getPath()));
+            return NodeFactorySupport.fixedNodeList();
+        }
+        
         CalculationFolderNode root = new CalculationFolderNode(df, dsop, true);
         return NodeFactorySupport.fixedNodeList(root);
     }

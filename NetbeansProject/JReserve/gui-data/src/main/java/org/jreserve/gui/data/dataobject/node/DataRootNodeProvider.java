@@ -16,14 +16,17 @@
  */
 package org.jreserve.gui.data.dataobject.node;
 
-import org.jreserve.gui.data.dataobject.DataRootFileProvider;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ui.support.NodeFactory;
 import org.netbeans.spi.project.ui.support.NodeFactorySupport;
 import org.netbeans.spi.project.ui.support.NodeList;
+import org.openide.filesystems.FileObject;
 import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 
 /**
  *
@@ -36,20 +39,34 @@ import org.openide.loaders.DataFolder;
 )
 public class DataRootNodeProvider implements NodeFactory {
 
+    private final static Logger logger = Logger.getLogger(DataRootNodeProvider.class.getName());
+    
     @Override
     public NodeList<?> createNodes(Project p) {
-        DataSourceObjectProvider dsop = p.getLookup().lookup(DataSourceObjectProvider.class);
-        DataFolder df = getRootFolder(p);
-        if(df == null)
+        NamedDataSourceProvider dsop = p.getLookup().lookup(NamedDataSourceProvider.class);
+        if(dsop == null) {
+            String msg = "Project '%s' does not contain an instance of '%s'!";
+            logger.log(Level.WARNING, String.format(msg, p.getProjectDirectory().getPath(), NamedDataSourceProvider.class));
             return NodeFactorySupport.fixedNodeList();
-        DataFolderNode root = new DataFolderNode(df, dsop, true);
-        return NodeFactorySupport.fixedNodeList(root);
-    }
-    
-    private DataFolder getRootFolder(Project p)  {
-        ProjectObjectLookup pol = p.getLookup().lookup(ProjectObjectLookup.class);
-        if(pol == null)
-            return null;
-        return pol.lookupOne(DataRootFileProvider.DATA_FOLDER, DataFolder.class);
+        }
+        
+        FileObject root = dsop.getRootFolder();
+        if(root == null) {
+            String msg = "Project '%s' does not contain an data directory!";
+            logger.log(Level.WARNING, String.format(msg, p.getProjectDirectory().getPath()));
+            return NodeFactorySupport.fixedNodeList();
+        }
+        
+        DataFolder df;
+        try {
+            df = (DataFolder) DataObject.find(root);
+        } catch(DataObjectNotFoundException ex) {
+            String msg = "DataFolder can not be loaded from '%s'!";
+            logger.log(Level.WARNING, String.format(msg, root.getPath()));
+            return NodeFactorySupport.fixedNodeList();
+        }
+
+        DataFolderNode rootNode = new DataFolderNode(df, dsop, true);
+        return NodeFactorySupport.fixedNodeList(rootNode);
     }
 }

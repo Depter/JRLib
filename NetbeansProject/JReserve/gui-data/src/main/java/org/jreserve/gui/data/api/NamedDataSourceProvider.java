@@ -14,18 +14,32 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.misc.utils.dataobject;
 
-import java.util.Collection;
+package org.jreserve.gui.data.api;
+
+import org.jreserve.gui.data.dataobject.DataRootFileProvider;
+import org.jreserve.gui.misc.namedcontent.AbstractNamedContentProvider;
+import org.netbeans.api.project.Project;
+import org.netbeans.spi.project.ProjectServiceProvider;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ProjectObjectLookup {
+@ProjectServiceProvider(
+    service = NamedDataSourceProvider.class,
+    projectType = "org-jreserve-project-jreserve"
+)
+public class NamedDataSourceProvider extends AbstractNamedContentProvider {
     
-    public <T> Collection<? extends T> lookup(String path, Class<T> clazz);
-    
-    public <T> T lookupOne(String path, Class<T> clazz);
+    public NamedDataSourceProvider(Project project) {
+        super(project, DataRootFileProvider.DATA_FOLDER);
+    }
+
+    @Override
+    public FileObject getRootFolder() {
+        return super.getRootFolder();
+    }
 }

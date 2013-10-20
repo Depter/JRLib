@@ -28,12 +28,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.data.dataobject.DataEventUtil;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
 import org.jreserve.gui.data.dataobject.DataSourceUtil;
 import org.jreserve.gui.misc.audit.db.AuditDbManager;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.project.Project;
@@ -66,7 +65,7 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
     public static boolean canInitialize(Lookup context) {
         Project p = context.lookup(Project.class);
         return p!=null &&
-               p.getLookup().lookup(DataSourceObjectProvider.class) != null;
+               p.getLookup().lookup(NamedDataSourceProvider.class) != null;
     }
     
     public final static String PROP_PROJECT = "dataSource.Project";
@@ -86,10 +85,11 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
     private int panelCount;
         
     public void initializeFrom(Lookup lkp) {
-        DataSourceObjectProvider dsop = lkp.lookup(DataSourceObjectProvider.class);
+        Project p = lkp.lookup(Project.class);
+        NamedDataSourceProvider dsop = p.getLookup().lookup(NamedDataSourceProvider.class);
         if(dsop != null) {
             wizard.putProperty(PROP_OBJECT_PROVIDER, dsop);
-            wizard.putProperty(PROP_PROJECT, dsop.getProject());
+            wizard.putProperty(PROP_PROJECT, p);
         }
         
         DataFolder folder = lkp.lookup(DataFolder.class);
@@ -108,7 +108,7 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
         Project p = (Project) wizard.getProperty(ProjectChooserFactory.WIZARD_KEY_PROJECT);
         if(p != null) {
             wizard.putProperty(PROP_PROJECT, p);
-            wizard.putProperty(PROP_OBJECT_PROVIDER, p.getLookup().lookup(DataSourceObjectProvider.class));
+            wizard.putProperty(PROP_OBJECT_PROVIDER, p.getLookup().lookup(NamedDataSourceProvider.class));
         }
         
         DataFolder folder = (DataFolder) wizard.getProperty(ProjectChooserFactory.WIZARD_KEY_TARGET_FOLDER);
@@ -248,15 +248,15 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
     
         private FileObject createPrimaryFile() throws IOException {
             String path = getPath();
-            DataObjectProvider dop = (DataObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
-            DataFolder root = dop.getRootFolder();
-            if(!path.startsWith(root.getName()+"/")) {
-                String msg = "Path '%s' does not start with '%s'/!";
-                throw new IOException(String.format(msg, path, root.getName()));
-            }
-
-            FileObject parent = root.getPrimaryFile().getParent();
-            return FileUtil.createData(parent, path);
+            NamedDataSourceProvider dop = (NamedDataSourceProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
+            FileObject root = dop.getRootFolder();
+//            if(!path.startsWith(root.getName()+"/")) {
+//                String msg = "Path '%s' does not start with '%s'/!";
+//                throw new IOException(String.format(msg, path, root.getName()));
+//            }
+//
+//            FileObject parent = root.getParent();
+            return FileUtil.createData(root, path);
         }
     
         private String getPath() throws IOException {

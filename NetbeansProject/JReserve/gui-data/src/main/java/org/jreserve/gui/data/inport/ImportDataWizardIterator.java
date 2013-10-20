@@ -35,7 +35,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jreserve.jrlib.gui.data.DataEntry;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.data.spi.inport.ImportDataProvider;
 import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.jrlib.gui.data.MonthDate;
@@ -53,7 +53,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     
     private final static Logger logger = Logger.getLogger(ImportDataWizardIterator.class.getName());
     
-    private DataSourceObjectProvider dsop;
+    private NamedDataSourceProvider dsop;
     private DataSource dataSource;
     private WizardDescriptor wizardDesc;
     private ImportWizardListener stListener = new ImportWizardListener();
@@ -64,7 +64,7 @@ public class ImportDataWizardIterator implements WizardDescriptor.ProgressInstan
     private int panelCount;
     private int index;
     
-    public ImportDataWizardIterator(DataSourceObjectProvider dsop, DataSource dataSource) {
+    public ImportDataWizardIterator(NamedDataSourceProvider dsop, DataSource dataSource) {
         this.dsop = dsop;
         this.dataSource = dataSource;
     }

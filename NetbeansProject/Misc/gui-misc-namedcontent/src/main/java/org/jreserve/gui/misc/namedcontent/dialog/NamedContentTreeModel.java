@@ -14,29 +14,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.misc.utils.dataobject.selectdialog;
 
-import java.util.ArrayList;
-import java.util.Collections;
+package org.jreserve.gui.misc.namedcontent.dialog;
+
 import java.util.List;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
-import org.openide.loaders.DataFolder;
-import org.openide.loaders.DataObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-class DataObjecTreeModel implements TreeModel {
+class NamedContentTreeModel implements TreeModel {
 
-    private DataObjectChooser.Controller root;
-    
-    DataObjecTreeModel(DataObjectChooser.Controller controller) {
-        this.root = controller;
+    private TreeFolder root;
+
+    NamedContentTreeModel(TreeFolder root) {
+        this.root = root;
     }
     
     @Override
@@ -46,33 +42,21 @@ class DataObjecTreeModel implements TreeModel {
 
     @Override
     public Object getChild(Object parent, int index) {
-        if(parent == root)
-            return root.getRoots()[index];
-        return getChildren((DataObject)parent).get(index);
+        return getChildren(parent).get(index); 
     }
     
-    private List<DataObject> getChildren(DataObject obj) {
-        if(obj instanceof DataFolder) {
-            List<DataObject> result = new ArrayList<DataObject>();
-            for(DataObject child : ((DataFolder)obj).getChildren())
-                if(root.showDataObject(child))
-                    result.add(child);
-            return result;
-        } else {
-            return Collections.EMPTY_LIST;
-        }
+    private List<? extends TreeItem> getChildren(Object parent) {
+        return ((TreeItem) parent).getChildren();
     }
 
     @Override
     public int getChildCount(Object parent) {
-        if(parent == root)
-            return root.getRoots().length;
-        return getChildren((DataObject)parent).size();
+        return getChildren(parent).size();
     }
 
     @Override
     public boolean isLeaf(Object node) {
-        return node != root && !(node instanceof DataFolder);
+        return getChildren(node).isEmpty();
     }
 
     @Override
@@ -82,19 +66,7 @@ class DataObjecTreeModel implements TreeModel {
 
     @Override
     public int getIndexOfChild(Object parent, Object child) {
-        if(parent == root) {
-            DataObject[] roots = root.getRoots();
-            for(int i=0; i<roots.length; i++)
-                if(roots[i] == child)
-                    return i;
-            return -1;
-        }
-        
-        List<DataObject> children = getChildren((DataObject)parent);
-        for(int i=0; i<children.size(); i++)
-            if(children.get(i) == child)
-                return i;
-        return -1;
+        return getChildren(parent).indexOf(child);
     }
 
     @Override

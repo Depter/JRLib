@@ -25,8 +25,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.jreserve.gui.calculations.claimtriangle.impl.DataSourceController;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
+import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.jreserve.jrlib.gui.data.MonthDate;
@@ -57,8 +57,8 @@ class CreateClaimTriangleVisualPanel2 extends javax.swing.JPanel {
     
     private final CreateClaimTriangleWizardPanel2 controller;
     private final InputListener inputListener = new InputListener();
-    private DataSourceObjectProvider dop;
-    private ProjectObjectLookup pol;
+    private NamedDataSourceProvider dop;
+    private ProjectContentProvider pol;
     
     CreateClaimTriangleVisualPanel2(CreateClaimTriangleWizardPanel2 controller) {
         this.controller = controller;
@@ -101,16 +101,16 @@ class CreateClaimTriangleVisualPanel2 extends javax.swing.JPanel {
     }
     
     void setProject(Project p) {
-        dop = p.getLookup().lookup(DataSourceObjectProvider.class);
-        pol = p.getLookup().lookup(ProjectObjectLookup.class);
+        dop = p.getLookup().lookup(NamedDataSourceProvider.class);
+        pol = p.getLookup().lookup(ProjectContentProvider.class);
         browseSourceButton.setEnabled(dop != null);
     }
     
-    DataSourceObjectProvider getDataSourceProvider() {
+    NamedDataSourceProvider getDataSourceProvider() {
         return dop;
     }
     
-    ProjectObjectLookup getProjectObjectLookup() {
+    ProjectContentProvider getProjectObjectLookup() {
         return pol;
     }
     

@@ -25,10 +25,10 @@ import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculation
 import org.jreserve.gui.calculations.claimtriangle.impl.DataSourceController;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
+import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.netbeans.api.project.Project;
@@ -48,8 +48,8 @@ import org.openide.util.NbBundle.Messages;
 class DataSourceEditorPanel extends javax.swing.JPanel {
 
     private ClaimTriangleCalculationImpl calculation;
-    private DataSourceObjectProvider dop;
-    private ProjectObjectLookup pol;
+    private NamedDataSourceProvider dop;
+    private ProjectContentProvider pol;
     private UndoRedo.Manager undo;
     
     DataSourceEditorPanel() {
@@ -66,8 +66,8 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
     void setCalculation(ClaimTriangleCalculationImpl calculation) {
         this.calculation = calculation;
         Project project = calculation.getProject();
-        pol = project == null? null : project.getLookup().lookup(ProjectObjectLookup.class);
-        dop = project == null? null : project.getLookup().lookup(DataSourceObjectProvider.class);
+        pol = project == null? null : project.getLookup().lookup(ProjectContentProvider.class);
+        dop = project == null? null : project.getLookup().lookup(NamedDataSourceProvider.class);
         
         if(dop != null) {
             sourceText.setEnabled(true);
@@ -181,7 +181,7 @@ class DataSourceEditorPanel extends javax.swing.JPanel {
             return;
         }
         
-        DataSource ds = pol.lookupOne(path, DataSource.class);
+        DataSource ds = pol.getContent(path, DataSource.class);
         if(ds == null) {
             showError("");
             return;

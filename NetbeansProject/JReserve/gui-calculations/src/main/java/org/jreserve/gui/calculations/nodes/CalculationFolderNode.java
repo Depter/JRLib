@@ -25,11 +25,10 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.Action;
 import javax.swing.Icon;
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
 import org.jreserve.gui.calculations.api.CalculationProvider;
+import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.FileOwnerQuery;
@@ -92,11 +91,11 @@ class CalculationFolderNode extends FilterNode {
     private final boolean isRoot;
     private final DataFolder folder;
     
-    public CalculationFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot) {
+    public CalculationFolderNode(DataFolder folder, NamedCalculationProvider doProvider, boolean isRoot) {
         this(folder, doProvider, isRoot, new InstanceContent());
     }
     
-    private CalculationFolderNode(DataFolder folder, DataObjectProvider doProvider, boolean isRoot, InstanceContent ic) {
+    private CalculationFolderNode(DataFolder folder, NamedCalculationProvider doProvider, boolean isRoot, InstanceContent ic) {
         super(folder.getNodeDelegate(),
               Children.create(new CFChildren(folder, doProvider), true),
               new ProxyLookup(folder.getLookup(), new AbstractLookup(ic))
@@ -203,14 +202,11 @@ class CalculationFolderNode extends FilterNode {
         Project p = FileOwnerQuery.getOwner(client);
         if(p == null)
             return false;
-        CalculationObjectProvider dsop = p.getLookup().lookup(CalculationObjectProvider.class);
+        NamedCalculationProvider dsop = p.getLookup().lookup(NamedCalculationProvider.class);
         if(dsop == null)
             return false;
-        DataFolder dataRoot = dsop.getRootFolder();
-        if(dataRoot == null)
-            return false;
         
-        FileObject rootFile = dataRoot.getPrimaryFile();
+        FileObject rootFile = dsop.getRootFolder();
         return rootFile.equals(client) || FileUtil.isParentOf(rootFile, client);
     }
     

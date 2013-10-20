@@ -19,7 +19,7 @@ package org.jreserve.gui.data.api.wizard;
 
 import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
@@ -33,12 +33,12 @@ import org.openide.util.Lookup;
 public abstract class AbstractCreateDataSourceAction extends AbstractContextAwareAction {
 
     protected AbstractCreateDataSourceAction(Lookup context) {
-        super(context, DataSourceObjectProvider.class);
+        super(context, NamedDataSourceProvider.class);
     }
     
     @Override
     protected boolean shouldEnable(Lookup context) {
-        return context.lookup(DataSourceObjectProvider.class) != null;
+        return context.lookup(NamedDataSourceProvider.class) != null;
     }
 
     @Override

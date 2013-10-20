@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
+import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.calculations.claimtriangle.impl.TriangleGeometryUtil;
@@ -201,8 +201,11 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
             path += (String) wizard.getProperty(PROP_NAME);
             path += "."+ClaimTriangleDataObject.EXTENSION;
 
-            CalculationObjectProvider cop = (CalculationObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
-            FileObject root = cop.getRootFolder().getPrimaryFile();
+            Object o = wizard.getProperty(PROP_OBJECT_PROVIDER);
+            NamedCalculationProvider ncp = (NamedCalculationProvider) o;
+            
+//            CalculationObjectProvider cop = (CalculationObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
+            FileObject root = ncp.getRootFolder();
             return FileUtil.createData(root, path);
         }
         

@@ -19,9 +19,9 @@ package org.jreserve.gui.data.inport;
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.data.spi.inport.ImportSettings;
 import org.jreserve.gui.data.spi.inport.ImportDataProvider;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.openide.WizardDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
@@ -72,8 +72,8 @@ class ImportDataWizardPanel1 implements WizardDescriptor.Panel<WizardDescriptor>
         component.setImportProvider(a);
     }
     
-    private DataObjectProvider getSourceProvider() {
-        return (DataObjectProvider) wizard.getProperty(ImportDataProvider.PROP_SOURCE_PROVIDER);
+    private NamedDataSourceProvider getSourceProvider() {
+        return (NamedDataSourceProvider) wizard.getProperty(ImportDataProvider.PROP_SOURCE_PROVIDER);
     }
     
     private DataSource getInitDataSource() {

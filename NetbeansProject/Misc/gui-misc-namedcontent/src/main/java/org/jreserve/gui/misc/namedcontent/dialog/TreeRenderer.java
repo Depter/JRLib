@@ -14,24 +14,31 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.misc.utils.dataobject;
 
-import java.io.IOException;
-import java.util.Collection;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.netbeans.api.project.Project;
-import org.openide.loaders.DataFolder;
+package org.jreserve.gui.misc.namedcontent.dialog;
+
+import java.awt.Component;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface DataObjectProvider extends Displayable {
-    
-    public DataFolder getRootFolder();
-    
-    public DataFolder createFolder(String path) throws IOException;
-    
-    public Project getProject();
+class TreeRenderer extends DefaultTreeCellRenderer {
+
+    @Override
+    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
+        super.getTreeCellRendererComponent(tree, value, sel, expanded, leaf, row, hasFocus);
+        
+        if(value instanceof TreeItem) {
+            TreeItem item = (TreeItem) value;
+            setText(item.getName());
+            setIcon(item.getIcon());
+        }
+        
+        return this;
+    }
+
 }

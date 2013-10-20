@@ -21,7 +21,7 @@ import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
 import javax.swing.Action;
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.misc.utils.actions.AbstractContextAwareAction;
 import org.jreserve.gui.misc.utils.actions.RibbonRegistration;
 import org.netbeans.api.annotations.common.StaticResource;
@@ -74,7 +74,7 @@ public class ImportDataAction extends AbstractContextAwareAction {
     }
     
     private DataSource ds;
-    private DataSourceObjectProvider dsop;
+    private NamedDataSourceProvider dsop;
     
     public ImportDataAction() {
         this(Utilities.actionsGlobalContext());
@@ -90,16 +90,16 @@ public class ImportDataAction extends AbstractContextAwareAction {
     @Override
     protected boolean shouldEnable(Lookup context) {
         ds = context.lookup(DataSource.class);
-        dsop = context.lookup(DataSourceObjectProvider.class);
+        dsop = context.lookup(NamedDataSourceProvider.class);
         if(dsop == null)
             dsop = lookupProvider(context.lookup(Node.class));
         return dsop != null;
     }
     
-    private DataSourceObjectProvider lookupProvider(Node node) {
+    private NamedDataSourceProvider lookupProvider(Node node) {
         if(node == null)
             return null;
-        DataSourceObjectProvider p = node.getLookup().lookup(DataSourceObjectProvider.class);
+        NamedDataSourceProvider p = node.getLookup().lookup(NamedDataSourceProvider.class);
         if(p != null)
             return p;
         return lookupProvider(node.getParentNode());

@@ -19,8 +19,8 @@ package org.jreserve.gui.data.api.wizard;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.jrlib.gui.data.DataType;
@@ -42,7 +42,7 @@ import org.openide.util.NbBundle.Messages;
 public class DataSourceNameVisualPanel extends javax.swing.JPanel {
 
     private final DataSourceNameWizardPanel controller;
-    private DataObjectProvider dop;
+    private NamedDataSourceProvider dop;
     private TextListener textListener = new TextListener();
     
     public DataSourceNameVisualPanel(DataSourceNameWizardPanel controller) {
@@ -59,7 +59,7 @@ public class DataSourceNameVisualPanel extends javax.swing.JPanel {
         projectText.setText(ProjectUtils.getInformation(project).getDisplayName());
     }
     
-    void setObjectProvider(DataObjectProvider dop) {
+    void setObjectProvider(NamedDataSourceProvider dop) {
         if(dop != null) {
             this.dop = dop;
             dataTypeCombo.setEnabled(true);
@@ -71,16 +71,15 @@ public class DataSourceNameVisualPanel extends javax.swing.JPanel {
     }
     
     void setDataFolder(DataFolder folder) {
-        DataFolder root = dop==null? null : dop.getRootFolder();
+        FileObject root = dop==null? null : dop.getRootFolder();
         if(root != null && folder != null) {
-            FileObject parent = root.getPrimaryFile().getParent();
-            String rp = FileUtil.getRelativePath(parent, folder.getPrimaryFile());
+            String rp = FileUtil.getRelativePath(root, folder.getPrimaryFile());
             if(rp != null)
                 folderText.setText(rp);
         }
     }
     
-    DataObjectProvider getObjectProvider() {
+    NamedDataSourceProvider getObjectProvider() {
         return dop;
     }
     
@@ -261,9 +260,9 @@ public class DataSourceNameVisualPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_dataTypeComboActionPerformed
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        DataFolder folder = DataObjectChooser.selectOneFolder(dop.getRootFolder());
+        DataFolder folder = NamedContentUtil.userSelectFolder(dop);
         if(folder != null) {
-            FileObject root = dop.getRootFolder().getPrimaryFile().getParent();
+            FileObject root = dop.getRootFolder().getParent();
             FileObject child = folder.getPrimaryFile();
             folderText.setText(FileUtil.getRelativePath(root, child));
         }

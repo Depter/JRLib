@@ -31,7 +31,7 @@ import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
-import org.jreserve.gui.misc.utils.dataobject.ProjectObjectLookup;
+import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
@@ -105,11 +105,11 @@ public class ClaimTriangleCalculationImpl
         if(p == null) 
             return DataSource.EMPTY_TRIANGLE;
         
-        ProjectObjectLookup pol = p.getLookup().lookup(ProjectObjectLookup.class);
+        ProjectContentProvider pol = p.getLookup().lookup(ProjectContentProvider.class);
         if(pol == null) 
             return DataSource.EMPTY_TRIANGLE;
         
-        DataSource result = pol.lookupOne(dsPath, DataSource.class);
+        DataSource result = pol.getContent(dsPath, DataSource.class);
         return result == null? DataSource.EMPTY_TRIANGLE : result;
     }
     

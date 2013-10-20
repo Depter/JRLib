@@ -18,9 +18,9 @@
 package org.jreserve.gui.calculations.claimtriangle.impl;
 
 import org.jreserve.gui.data.api.DataSource;
-import org.jreserve.gui.data.api.DataSourceObjectProvider;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
-import org.openide.loaders.DataObject;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
+import org.jreserve.gui.misc.namedcontent.DefaultContentChooserController;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -31,27 +31,13 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.DataSourceController.Title=Select Storage"
 })
-public class DataSourceController extends DataObjectChooser.DefaultController {
+public class DataSourceController extends DefaultContentChooserController {
 
-    public static DataSource selectOne(DataSourceObjectProvider dop) {
-        DataObject obj = DataObjectChooser.selectOne(new DataSourceController(dop));
-        if(obj == null)
-            return null;
-        return obj.getLookup().lookup(DataSource.class);
+    public static DataSource selectOne(NamedDataSourceProvider dop) {
+        return NamedContentUtil.userSelect(new DataSourceController(dop), DataSource.class);
     }
     
-    private DataSourceController(DataSourceObjectProvider dop) {
-        super(Bundle.LBL_DataSourceController_Title(), dop.getRootFolder());
-    }
-
-    @Override
-    public boolean showDataObject(DataObject obj) {
-        return super.showDataObject(obj) ||
-                obj.getLookup().lookup(DataSource.class) != null;
-    }
-
-    @Override
-    public boolean canSelectObject(DataObject obj) {
-        return obj.getLookup().lookup(DataSource.class) != null;
+    private DataSourceController(NamedDataSourceProvider dop) {
+        super(dop, DataSource.class, Bundle.LBL_DataSourceController_Title());
     }
 }

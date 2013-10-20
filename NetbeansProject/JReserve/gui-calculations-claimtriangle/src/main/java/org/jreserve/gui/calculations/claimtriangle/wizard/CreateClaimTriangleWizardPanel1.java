@@ -17,7 +17,7 @@
 
 package org.jreserve.gui.calculations.claimtriangle.wizard;
 
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
+import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.misc.utils.wizard.AbstractWizardPanel;
 import org.netbeans.api.project.Project;
@@ -82,8 +82,8 @@ class CreateClaimTriangleWizardPanel1 extends AbstractWizardPanel<CreateClaimTri
     }
     
     private boolean isPathValid() {
-        CalculationObjectProvider cop = panel.getObjectProvider();
-        FileObject root = cop.getRootFolder().getPrimaryFile();
+        NamedCalculationProvider cop = panel.getObjectProvider();
+        FileObject root = cop.getRootFolder();
         if(root.getFileObject(getFilePath()) != null) {
             showError(Bundle.MSG_CreateClaimTriangleWizardPanel1_File_Exists());
             return false;

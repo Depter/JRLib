@@ -18,8 +18,8 @@ package org.jreserve.gui.data.api.wizard;
 
 import java.awt.Component;
 import javax.swing.event.ChangeListener;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.data.dataobject.DataSourceDataObject;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
 import org.netbeans.api.project.Project;
 import org.openide.WizardDescriptor;
 import org.openide.filesystems.FileObject;
@@ -61,7 +61,7 @@ public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardD
     private void initPanel() {
         Project project = (Project) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_PROJECT);
         panel.setProject(project);
-        DataObjectProvider dop = (DataObjectProvider) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_OBJECT_PROVIDER);
+        NamedDataSourceProvider dop = (NamedDataSourceProvider) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_OBJECT_PROVIDER);
         panel.setObjectProvider(dop);
         DataFolder folder = (DataFolder) wiz.getProperty(AbstractDataSourceWizardIterator.PROP_FOLDER);
         panel.setDataFolder(folder);
@@ -145,19 +145,13 @@ public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardD
     }
     
     private boolean isPathValid() {
-        DataObjectProvider dop = panel.getObjectProvider();
+        NamedDataSourceProvider dop = panel.getObjectProvider();
         String path = panel.getDataSourcePath();
         
-        DataFolder root = dop.getRootFolder();
-        String rootName = root.getName();
-        if(!path.startsWith(rootName+"/")) {
-            showError(Bundle.MSG_DataSourceNameWizardPanel_PathNotInRoot(rootName));
-            return false;
-        }
+        FileObject root = dop.getRootFolder();
         
         path += "." + DataSourceDataObject.EXTENSION;
-        FileObject parent = root.getPrimaryFile().getParent();
-        FileObject fo = parent.getFileObject(path);
+        FileObject fo = root.getFileObject(path);
         if(fo != null) {
             showError(Bundle.MSG_DataSourceNameWizardPanel_PathExists());
             return false;

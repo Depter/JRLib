@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.wizard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.MessageFormat;
-import org.jreserve.gui.calculations.api.CalculationObjectProvider;
+import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.openide.DialogDisplayer;
@@ -51,15 +51,15 @@ import org.openide.util.NbBundle.Messages;
     "LBL.CreateClaimTriangleAction.WizardTitle=Create Claim Triangle"
 })
 public class CreateClaimTriangleAction implements ActionListener {
-    private CalculationObjectProvider cop;
+    private NamedCalculationProvider cop;
     
-    public CreateClaimTriangleAction(CalculationObjectProvider cop) {
+    public CreateClaimTriangleAction(NamedCalculationProvider cop) {
         this.cop = cop;
     }
     
     @Override
     public void actionPerformed(ActionEvent evt) {
-        Project p = FileOwnerQuery.getOwner(cop.getRootFolder().getPrimaryFile());
+        Project p = FileOwnerQuery.getOwner(cop.getRootFolder());
         CreateClaimTriangleWizardIterator it = new CreateClaimTriangleWizardIterator(p);
         WizardDescriptor wiz = new WizardDescriptor(it);
         wiz.setTitleFormat(new MessageFormat("{0} ({1})"));

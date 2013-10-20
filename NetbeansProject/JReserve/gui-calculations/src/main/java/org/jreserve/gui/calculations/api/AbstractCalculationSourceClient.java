@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
@@ -32,6 +34,8 @@ import org.openide.loaders.DataObject;
  * @version 1.0
  */
 public abstract class AbstractCalculationSourceClient<T, S> {
+    
+    private final static Logger logger = Logger.getLogger(AbstractCalculationSourceClient.class.getName());
     
     protected List<T> createTasks(DataObject obj) {
         S source = getSource(obj);
@@ -64,11 +68,21 @@ public abstract class AbstractCalculationSourceClient<T, S> {
         if(project == null)
             return null;
         
-        CalculationObjectProvider cop = project.getLookup().lookup(CalculationObjectProvider.class);
+        NamedCalculationProvider cop = project.getLookup().lookup(NamedCalculationProvider.class);
         if(cop == null)
             return null;
         
-        return cop.getRootFolder();
+        FileObject root = cop.getRootFolder();
+        if(root == null)
+            return null;
+        
+        try {
+            return (DataFolder) DataObject.find(root);
+        } catch (Exception ex) {
+            String msg = "Unable to load root folder for calculations!";
+            logger.log(Level.WARNING, msg, ex);
+            return null;
+        }
     }
     
     protected abstract boolean hasSource(DataObject calcObj, S source);

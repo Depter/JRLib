@@ -37,6 +37,7 @@ public class CommonIcons {
     @StaticResource private final static String DELETE = "org/jreserve/gui/misc/utils/delete.png";
     @StaticResource private final static String EDIT = "org/jreserve/gui/misc/utils/edit.png";
     @StaticResource private final static String FILTER = "org/jreserve/gui/misc/utils/filter.png";
+    @StaticResource private final static String FOLDER = "org/jreserve/gui/misc/utils/folder.png";
     @StaticResource private final static String CLEAR_FILTER = "org/jreserve/gui/misc/utils/clear_filter.png";
     @StaticResource private final static String HELP = "org/jreserve/gui/misc/utils/help.png";
     @StaticResource private final static String OK = "org/jreserve/gui/misc/utils/ok.png";
@@ -84,6 +85,10 @@ public class CommonIcons {
     
     public static ImageIcon filter() {
         return getIcon(FILTER);
+    }
+    
+    public static ImageIcon folder() {
+        return getIcon(FOLDER);
     }
     
     public static ImageIcon clearFilter() {
