@@ -30,6 +30,8 @@ interface TreeItem {
     
     public List<? extends TreeItem> getChildren();
     
+    public String getPath();
+    
     public int getChildCount();
     
     public String getName();

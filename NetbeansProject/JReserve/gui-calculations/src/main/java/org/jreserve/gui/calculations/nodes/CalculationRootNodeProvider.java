@@ -51,7 +51,7 @@ public class CalculationRootNodeProvider implements NodeFactory {
             return NodeFactorySupport.fixedNodeList();
         }
         
-        FileObject rootFile = dsop.getRootFolder();
+        FileObject rootFile = dsop.getRoot();
         if(rootFile == null) {
             String msg = "Project '%s' does not contain an data directory!";
             logger.log(Level.WARNING, String.format(msg, p.getProjectDirectory().getPath()));

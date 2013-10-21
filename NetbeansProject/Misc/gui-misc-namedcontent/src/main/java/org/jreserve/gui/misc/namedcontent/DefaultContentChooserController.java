@@ -58,4 +58,9 @@ public class DefaultContentChooserController implements NamedContentChooserContr
     public boolean acceptsContent(NamedContent content) {
         return content.getLookup().lookup(clazz) != null;
     }
+    
+    @Override
+    public boolean acceptsFolder() {
+        return false;
+    }
 }

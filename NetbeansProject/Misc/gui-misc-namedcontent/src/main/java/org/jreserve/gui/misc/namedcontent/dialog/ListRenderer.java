@@ -34,7 +34,7 @@ class ListRenderer extends DefaultListCellRenderer {
         
         if(value instanceof TreeItem) {
             TreeItem item = (TreeItem) value;
-            setText(item.getName());
+            setText(item.getPath());
             setIcon(item.getIcon());
         }
         

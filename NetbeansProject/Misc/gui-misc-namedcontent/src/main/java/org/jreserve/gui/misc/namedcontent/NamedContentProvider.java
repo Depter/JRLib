@@ -18,13 +18,17 @@
 package org.jreserve.gui.misc.namedcontent;
 
 import java.util.List;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface NamedContentProvider {
+public interface NamedContentProvider extends Displayable {
+    
+    public FileObject getRoot();
     
     public List<NamedContent> getContents();
 }

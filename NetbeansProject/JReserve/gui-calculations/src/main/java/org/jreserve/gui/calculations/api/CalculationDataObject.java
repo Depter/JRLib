@@ -22,6 +22,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
 import org.jdom2.Element;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
+import org.jreserve.gui.misc.namedcontent.NamedDataObjectContent;
 import org.jreserve.gui.misc.utils.actions.AbstractDisplayableSavable;
 import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.actions.deletable.Deletable;
@@ -29,6 +31,7 @@ import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.netbeans.api.actions.Savable;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
@@ -55,13 +58,31 @@ public abstract class CalculationDataObject extends MultiDataObject {
     
     public CalculationDataObject(FileObject fo, MultiFileLoader loader) throws DataObjectExistsException {
         super(fo, loader);
+        ic.add(new CalculationNamedContent());
         lkp = new ProxyLookup(super.getLookup(), new AbstractLookup(ic));
     }
     
     protected static String getPath(final FileObject file) {
         synchronized(file) {
-            return Displayable.Utils.displayProjectPath(file);
+            FileObject root = NamedContentUtil.getContentRoot(file);
+            if(root == null)
+                return null;
+            
+            String path = FileUtil.getRelativePath(root, file);
+            return escapeExtension(path);
         }
+    }
+    
+    protected static String escapeExtension(String str) {
+        int length = str==null? 0 :str.length();
+        if(length < 0)
+            return str;
+        
+        int sepIndex = str.lastIndexOf('/');
+        int extIndex = str.lastIndexOf('.');
+        if(extIndex > sepIndex)
+            str = str.substring(0, extIndex);
+        return str;
     }
     
     @Override
@@ -167,7 +188,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
     
     private void addSavable() {
         if(getLookup().lookup(Savable.class) == null)
-            ic.add(new ClaimTriangleSavable());
+            ic.add(new CalculationSavable());
     }
     
     private void removeSavable() {
@@ -242,9 +263,21 @@ public abstract class CalculationDataObject extends MultiDataObject {
         }
     }
     
-    private class ClaimTriangleSavable extends AbstractDisplayableSavable {
+    private class CalculationNamedContent extends NamedDataObjectContent {
 
-        public ClaimTriangleSavable() {
+        public CalculationNamedContent() {
+            super(CalculationDataObject.this);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return obj.getName();
+        }
+    }
+
+    private class CalculationSavable extends AbstractDisplayableSavable {
+
+        public CalculationSavable() {
             super(getDisplayable());
             register();
         }

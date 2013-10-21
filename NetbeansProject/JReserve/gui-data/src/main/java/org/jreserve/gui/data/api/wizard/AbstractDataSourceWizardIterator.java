@@ -35,6 +35,7 @@ import org.jreserve.gui.data.dataobject.DataSourceUtil;
 import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.modules.project.uiapi.ProjectChooserFactory;
 import org.openide.WizardDescriptor;
@@ -85,10 +86,10 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
     private int panelCount;
         
     public void initializeFrom(Lookup lkp) {
-        Project p = lkp.lookup(Project.class);
-        NamedDataSourceProvider dsop = p.getLookup().lookup(NamedDataSourceProvider.class);
+        NamedDataSourceProvider dsop = lkp.lookup(NamedDataSourceProvider.class);
         if(dsop != null) {
             wizard.putProperty(PROP_OBJECT_PROVIDER, dsop);
+            Project p = FileOwnerQuery.getOwner(dsop.getRoot());
             wizard.putProperty(PROP_PROJECT, p);
         }
         
@@ -249,13 +250,7 @@ public abstract class AbstractDataSourceWizardIterator implements WizardDescript
         private FileObject createPrimaryFile() throws IOException {
             String path = getPath();
             NamedDataSourceProvider dop = (NamedDataSourceProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
-            FileObject root = dop.getRootFolder();
-//            if(!path.startsWith(root.getName()+"/")) {
-//                String msg = "Path '%s' does not start with '%s'/!";
-//                throw new IOException(String.format(msg, path, root.getName()));
-//            }
-//
-//            FileObject parent = root.getParent();
+            FileObject root = dop.getRoot();
             return FileUtil.createData(root, path);
         }
     

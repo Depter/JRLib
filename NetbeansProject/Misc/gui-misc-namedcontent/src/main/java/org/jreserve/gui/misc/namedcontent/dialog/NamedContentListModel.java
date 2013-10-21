@@ -31,40 +31,45 @@ import org.jreserve.gui.misc.namedcontent.NamedContentChooserController;
  */
 class NamedContentListModel extends AbstractListModel {
 
-    private Map<String, TreeFile> cache;
-    private List<TreeFile> list = new ArrayList<TreeFile>();
+    private Map<String, TreeItem> cache;
+    private List<TreeItem> list = new ArrayList<TreeItem>();
 
-    NamedContentListModel(TreeFolder root, NamedContentChooserController controller) {
-        cache = new TreeMap<String, TreeFile>();
+    NamedContentListModel(TreeFolder root, NamedContentChooserController controller, boolean isFolder) {
+        cache = new TreeMap<String, TreeItem>();
         for(TreeItem item : root.getChildren())
-            cacheContent("", item, controller);
+            cacheContent(item, controller, isFolder);
     }
     
-    private void cacheContent(String path, TreeItem item, NamedContentChooserController controller) {
-        if(path.length() > 0)
-            path += "/";
-        path += item.getName();
+    private void cacheContent(TreeItem item, NamedContentChooserController controller, boolean isFolder) {
         
-        if(item instanceof TreeFolder) {
-            for(TreeItem child : ((TreeFolder)item).getChildren())
-                cacheContent(path, child, controller);
+        if(isFolder) {
+            if(item instanceof TreeFolder) {
+                cache.put(item.getPath().toLowerCase(), item);
+                for(TreeItem child : ((TreeFolder)item).getChildren())
+                    cacheContent(child, controller, isFolder);
+            }
         } else {
-            TreeFile file = (TreeFile) item;
-            if(controller.acceptsContent(file.getContent()))
-                cache.put(path, file);
+            if(item instanceof TreeFolder) {
+                for(TreeItem child : ((TreeFolder)item).getChildren())
+                    cacheContent(child, controller, isFolder);
+            } else {
+                TreeFile file = (TreeFile) item;
+                if(controller.acceptsContent(file.getContent()))
+                    cache.put(file.getPath().toLowerCase(), file);
             
-            for(TreeItem child : file.getChildren())
-                cacheContent(path, child, controller);
+                for(TreeItem child : file.getChildren())
+                    cacheContent(child, controller, isFolder);
+            }
         }
-        
     }
     
     void setPath(String path) {
         int prevSize = list.size();
         list.clear();
         if(path != null && path.length() > 0) {
+            path = path.toLowerCase();
             for(String key : cache.keySet())
-                if(key.startsWith(path))
+                if(containsPath(key, path))
                     list.add(cache.get(key));
         }
         int newSize = list.size();
@@ -73,6 +78,10 @@ class NamedContentListModel extends AbstractListModel {
             super.fireIntervalRemoved(this, 0, prevSize-1);
         if(newSize > 0)
             super.fireIntervalAdded(this, 0, newSize-1);
+    }
+    
+    private boolean containsPath(String key, String path) {
+        return key.indexOf(path) >= 0;
     }
     
     @Override

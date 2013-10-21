@@ -17,13 +17,18 @@
 
 package org.jreserve.gui.misc.namedcontent;
 
+import java.awt.Image;
+import java.beans.BeanInfo;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.swing.Icon;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 
 /**
@@ -33,12 +38,10 @@ import org.openide.util.Lookup;
  */
 public class NamedDataObjectContent implements NamedContent {
     
-    private final DataObject obj;
-    private final Displayable displayable;
+    protected final DataObject obj;
     
     public NamedDataObjectContent(DataObject obj) {
         this.obj = obj;
-        displayable = obj.getLookup().lookup(Displayable.class);
     }
     
     @Override
@@ -46,19 +49,37 @@ public class NamedDataObjectContent implements NamedContent {
         List<NamedContent> result = new ArrayList<NamedContent>();
         if(obj instanceof DataFolder)
             for(DataObject child : ((DataFolder) obj).getChildren())
-                result.addAll(child.getLookup().lookupAll(NamedContent.class));
+                result.addAll(getContent(child));
         return result;
+    }
+    
+    private Collection<? extends NamedContent> getContent(DataObject obj) {
+        Collection<? extends NamedContent> ncs = obj.getLookup().lookupAll(NamedContent.class);
+        if(ncs.isEmpty())
+            return Collections.singleton(new NamedDataObjectContent(obj));
+        return ncs;
     }
     
     @Override
     public Icon getIcon() {
-        return displayable==null? 
-                CommonIcons.folder() : 
-                displayable.getIcon();
+        Displayable displayable = getDisplayable();
+        if(displayable != null)
+            return displayable.getIcon();
+        
+        if(obj instanceof DataFolder)
+            return CommonIcons.folder();
+        
+        Image img = obj.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
+        return ImageUtilities.image2Icon(img);
+    }
+    
+    private Displayable getDisplayable() {
+        return obj.getLookup().lookup(Displayable.class);
     }
 
     @Override
     public String getDisplayName() {
+        Displayable displayable = getDisplayable();
         return displayable==null?
                 obj.getName() :
                 displayable.getDisplayName();

@@ -23,10 +23,12 @@ import java.util.Properties;
 import java.util.Set;
 import javax.swing.Icon;
 import org.jreserve.gui.data.api.DataSource;
+import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.data.spi.DataProvider;
 import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.gui.misc.audit.api.AuditableMultiview;
 import org.jreserve.gui.misc.audit.api.AuditableObject;
+import org.jreserve.gui.misc.namedcontent.NamedDataObjectContent;
 import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.gui.data.DataEntry;
@@ -36,6 +38,7 @@ import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.DataObjectExistsException;
@@ -94,11 +97,28 @@ public class DataSourceDataObject extends MultiDataObject {
         ic.add(new DataSourceAuditable());
         ic.add(new DataSourceImpl());
         ic.add(new DataSourceDeletable());
+        ic.add(new DataSourceNamedContent());
         lkp = new ProxyLookup(super.getCookieSet().getLookup(), new AbstractLookup(ic));
     }
     
     private void calculatePath() {
-        path = Displayable.Utils.displayProjectPath(getPrimaryFile());
+            FileObject root = getDataRoot();
+            FileObject primary = getPrimaryFile();
+            path = FileUtil.getRelativePath(root, primary);
+            path = escapeExtension(path);
+    }
+    
+    private FileObject getDataRoot() {
+        Project p = FileOwnerQuery.getOwner(getPrimaryFile());
+        NamedDataSourceProvider ndsp = p.getLookup().lookup(NamedDataSourceProvider.class);
+        return ndsp.getRoot();
+    }
+    
+    private String escapeExtension(String str) {
+        int length = str==null? 0 :str.length();
+        if(length > 0 && str.toLowerCase().endsWith("."+EXTENSION))
+            str = str.substring(0, length-EXTENSION.length()-1);
+        return str;
     }
     
     @Override
@@ -237,6 +257,18 @@ public class DataSourceDataObject extends MultiDataObject {
             return false;
         }
     } 
+    
+    private class DataSourceNamedContent extends NamedDataObjectContent {
+
+        public DataSourceNamedContent() {
+            super(DataSourceDataObject.this);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return obj.getName();
+        }
+    }
     
     private class DataSourceDeletable extends DataObjectDeletable {
 

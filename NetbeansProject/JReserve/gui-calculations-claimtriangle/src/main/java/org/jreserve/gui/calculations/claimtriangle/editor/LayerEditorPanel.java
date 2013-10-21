@@ -32,6 +32,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.EditableCalculationModifier;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
@@ -155,6 +156,7 @@ class LayerEditorPanel extends javax.swing.JPanel {
         upButton = new javax.swing.JButton();
         downButton = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
+        editButton = new javax.swing.JButton();
         layerScroll = new javax.swing.JScrollPane();
         layerList = new javax.swing.JList();
 
@@ -213,11 +215,25 @@ class LayerEditorPanel extends javax.swing.JPanel {
         });
         layerToolBar.add(deleteButton);
 
+        editButton.setIcon(CommonIcons.edit());
+        org.openide.awt.Mnemonics.setLocalizedText(editButton, null);
+        editButton.setEnabled(false);
+        editButton.setFocusable(false);
+        editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        editButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        editButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                editButtonActionPerformed(evt);
+            }
+        });
+        layerToolBar.add(editButton);
+
         layerPanel.add(layerToolBar, java.awt.BorderLayout.PAGE_START);
 
         layerList.setModel(modificationModel);
         layerList.setCellRenderer(new ModificationRenderer());
         layerList.addListSelectionListener(new ListListener());
+        layerList.addMouseListener(new ListClickListener());
         layerScroll.setViewportView(layerList);
 
         layerPanel.add(layerScroll, java.awt.BorderLayout.CENTER);
@@ -243,10 +259,23 @@ class LayerEditorPanel extends javax.swing.JPanel {
     private void downButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downButtonActionPerformed
         ReplaceModification.moveDown(calculation, layerList);
     }//GEN-LAST:event_downButtonActionPerformed
+
+    private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
+        editLayer();
+    }//GEN-LAST:event_editButtonActionPerformed
+    
+    private void editLayer() {
+        CalculationModifier<ClaimTriangle> cm = (CalculationModifier<ClaimTriangle>) layerList.getSelectedValue();
+        if(cm instanceof EditableCalculationModifier) {
+            EditableCalculationModifier<ClaimTriangle> ecm = (EditableCalculationModifier<ClaimTriangle>) cm;
+            ecm.edit(calculation);
+        }
+    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton downButton;
+    private javax.swing.JButton editButton;
     private javax.swing.JList layerList;
     private javax.swing.JPanel layerPanel;
     private javax.swing.JScrollPane layerScroll;
@@ -288,7 +317,10 @@ class LayerEditorPanel extends javax.swing.JPanel {
         @Override
         public void valueChanged(ListSelectionEvent e) {
             int[] indices = layerList.getSelectedIndices();
+            
+            editButton.setEnabled(indices.length == 1);
             deleteButton.setEnabled(indices.length > 0);
+            
             boolean continuous = isContinuous(indices);
             if(continuous) {
                 upButton.setEnabled(layerList.getMinSelectionIndex() > 0);
@@ -327,6 +359,14 @@ class LayerEditorPanel extends javax.swing.JPanel {
         private void highLight(TriangleSelectionModel model, ClaimTriangleModifier modifier) {
             for(Cell cell : modifier.getAffectedCells())
                 model.setSelected(cell.getAccident(), cell.getDevelopment());
+        }
+    }
+    
+    private class ListClickListener extends MouseAdapter {
+        public void mouseClicked(MouseEvent evt) {
+            if(evt.getClickCount() == 2) {
+                editLayer();
+            }
         }
     }
     

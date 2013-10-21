@@ -83,7 +83,7 @@ class CreateClaimTriangleWizardPanel1 extends AbstractWizardPanel<CreateClaimTri
     
     private boolean isPathValid() {
         NamedCalculationProvider cop = panel.getObjectProvider();
-        FileObject root = cop.getRootFolder();
+        FileObject root = cop.getRoot();
         if(root.getFileObject(getFilePath()) != null) {
             showError(Bundle.MSG_CreateClaimTriangleWizardPanel1_File_Exists());
             return false;

@@ -30,15 +30,25 @@ import org.jreserve.gui.misc.namedcontent.NamedContentChooserController;
  * @version 1.0
  */
 class TreeFile implements TreeItem {
-
+    
+    private TreeItem parent;
     private NamedContent file;
     private List<TreeFile> children = new ArrayList<TreeFile>();
 
-    TreeFile(NamedContent file) {
+    TreeFile(TreeItem parent, NamedContent file) {
+        this.parent = parent;
         this.file = file;
         
         for(NamedContent child : file.getContents())
-            children.add(new TreeFile(child));
+            children.add(new TreeFile(this, child));
+    }
+    
+    @Override
+    public String getPath() {
+        String path = parent.getPath();
+        if(path.length() > 0)
+            path += "/";
+        return path+file.getDisplayName();
     }
    
     @Override

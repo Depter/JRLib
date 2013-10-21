@@ -204,6 +204,23 @@ public class ClaimTriangleCalculationImpl
     }
     
     @Override
+    public ClaimTriangle getCalculation(int layer) {
+        synchronized(lock) {
+            try {
+                ClaimTriangle result = TriangleGeometryUtil.createTriangle(dataSource, geometry);
+                result = new CummulatedClaimTriangle(result);
+                return super.modifyCalculation(result, layer);
+            } catch (Exception ex) {
+                String msg = "Unable to calculate claim triangle!";
+                logger.log(Level.SEVERE, msg, ex);
+                String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
+                BubbleUtil.showException(title, getPath(), ex);
+                return new InputClaimTriangle(new double[0][0]);
+            }
+        }
+    }
+    
+    @Override
     public synchronized Element toXml() {
         Element root = new Element(CT_ELEMENT);
         JDomUtil.addElement(root, AUDIT_ID_ELEMENT, auditId);

@@ -63,9 +63,9 @@ public class ExponentialClaimTriangleSmoothable extends ExponentialSmoothable<Cl
         return new DialogController(triangle, geometry, cells);
     }
     
-    private static class DialogController extends ExponentialSmoothingDialogController<ClaimTriangle> {
+    static class DialogController extends ExponentialSmoothingDialogController<ClaimTriangle> {
 
-        public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
+        DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells);
         }
         

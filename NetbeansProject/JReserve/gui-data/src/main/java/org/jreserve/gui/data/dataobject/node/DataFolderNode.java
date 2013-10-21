@@ -208,7 +208,7 @@ class DataFolderNode extends FilterNode {
         NamedDataSourceProvider dsop = p.getLookup().lookup(NamedDataSourceProvider.class);
         if(dsop == null)
             return false;
-        FileObject dataRoot = dsop.getRootFolder();
+        FileObject dataRoot = dsop.getRoot();
         if(dataRoot == null)
             return false;
         

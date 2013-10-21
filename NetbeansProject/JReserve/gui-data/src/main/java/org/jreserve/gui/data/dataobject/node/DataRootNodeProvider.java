@@ -50,7 +50,7 @@ public class DataRootNodeProvider implements NodeFactory {
             return NodeFactorySupport.fixedNodeList();
         }
         
-        FileObject root = dsop.getRootFolder();
+        FileObject root = dsop.getRoot();
         if(root == null) {
             String msg = "Project '%s' does not contain an data directory!";
             logger.log(Level.WARNING, String.format(msg, p.getProjectDirectory().getPath()));

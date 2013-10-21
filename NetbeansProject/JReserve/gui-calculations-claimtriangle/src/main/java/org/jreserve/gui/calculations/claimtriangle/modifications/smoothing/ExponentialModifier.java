@@ -18,8 +18,13 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
+import org.jreserve.gui.calculations.claimtriangle.modifications.smoothing.ExponentialClaimTriangleSmoothable.DialogController;
 import org.jreserve.gui.calculations.smoothing.calculation.ExponentialSmoothingModifier;
+import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialog;
+import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.SmoothedClaimTriangle;
@@ -47,4 +52,19 @@ public class ExponentialModifier
     public List<Cell> getAffectedCells() {
         return new ArrayList<Cell>(getCells());
     }
+    
+    @Override
+    public void edit(ModifiableCalculationProvider<ClaimTriangle> calculation) {
+        ClaimTriangle source = super.getSource(calculation);
+        TriangleGeometry geometry = ((ClaimTriangleCalculationImpl) calculation).getGeometry();
+        List<Cell> cells = getAffectedCells();
+        
+        DialogController controller = new DialogController(source, geometry, cells);
+        ExponentialModifier em = (ExponentialModifier) AbstractSmoothDialog.createModifier(controller);
+        
+        if(em != null)
+            super.setAlpha(em.getAlpha());
+    }
+    
+    //TODO worker thread
 }

@@ -206,7 +206,7 @@ class CalculationFolderNode extends FilterNode {
         if(dsop == null)
             return false;
         
-        FileObject rootFile = dsop.getRootFolder();
+        FileObject rootFile = dsop.getRoot();
         return rootFile.equals(client) || FileUtil.isParentOf(rootFile, client);
     }
     

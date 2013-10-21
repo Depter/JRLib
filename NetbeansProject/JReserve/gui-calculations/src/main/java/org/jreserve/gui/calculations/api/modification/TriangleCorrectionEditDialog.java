@@ -16,29 +16,104 @@
  */
 package org.jreserve.gui.calculations.api.modification;
 
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import java.awt.Dialog;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
+import java.util.concurrent.Callable;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.jrlib.triangle.Triangle;
+import org.openide.DialogDescriptor;
+import org.openide.DialogDisplayer;
+import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "MSG.TriangleCorrectionEditDialog.Value.Empty=Corrigated value is not set!",
+    "MSG.TriangleCorrectionEditDialog.Value.Invalid=Corrigated value is not a number!",
+    "LBL.TriangleCorrectionEditDialog.ProgressTitle=Adjusting correction...",
+    "LBL.TriangleCorrectionEditDialog.Title=Edit Correction"
+})
 class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPanel {
 
+    private final static boolean MODAL = true;
     
-    private Triangle source;
-    private ModifiableCalculationProvider<? extends Triangle> calculation;
+    static <T extends Triangle> void editCorrection(
+            TriangleCorrectionModifier<T> modifier, 
+            T source) {
+        
+        boolean canCummulate = modifier.isEditInputCummulated();
+        TriangleCorrectionEditDialog<T> panel = new TriangleCorrectionEditDialog<T>(modifier, source, canCummulate);
+        
+        DialogDescriptor dd = new DialogDescriptor(
+            panel, Bundle.LBL_TriangleCorrectionEditDialog_Title(), MODAL, 
+            new Object[0], null, DialogDescriptor.DEFAULT_ALIGN, 
+            HelpCtx.DEFAULT_HELP, null);
+        
+        Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
+        panel.showDialog(dialog);
+    }
     
-    private TriangleCorrectionEditDialog(boolean canCummulate) {
+    private T source;
+    private TriangleCorrectionModifier<T> modification;
+    
+    private DecimalFormat df = LocaleSettings.createDecimalFormat();
+    private ButtonListener buttonListener = new ButtonListener();
+    
+    private Dialog dialog;
+    
+    private TriangleCorrectionEditDialog(
+            TriangleCorrectionModifier<T> modifier, 
+            T source, 
+            boolean canCummulate) {
+        
+        this.source = source;
+        this.modification = modifier;
         initComponents();
         
         if(!canCummulate) {
             cummulateLabel.setVisible(false);
             cummulateCheck.setVisible(false);
         }
+        
+        recalcOriginal();
+        valueText.setText(LocaleSettings.getExactString(modifier.getValue()));
     }
 
+    private void recalcOriginal() {
+        int accident = modification.getAccident();
+        int development = modification.getDevelopment();
+        
+        double original = source.getValue(accident, development);
+        if(development>0 && cummulateCheck.isVisible() && !cummulateCheck.isSelected()) {
+            double prev = source.getValue(accident, development-1);
+            if(!Double.isNaN(prev))
+                original -= prev;
+        } 
+        
+        originalText.setText(df.format(original));
+    }
+    
+    private void showDialog(Dialog dialog) {
+        this.dialog = dialog;
+        dialog.pack();
+        dialog.setVisible(true);
+    }
+    
+    private void closeDialog() {
+        dialog.setVisible(false);
+        dialog.dispose();
+        dialog = null;
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -76,6 +151,11 @@ class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPane
 
         cummulateCheck.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(cummulateCheck, " ");
+        cummulateCheck.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cummulateCheckActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -115,6 +195,7 @@ class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPane
         valueText.setColumns(15);
         valueText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         valueText.setText(null);
+        valueText.getDocument().addDocumentListener(new InputListener());
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 2;
@@ -151,6 +232,8 @@ class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPane
         buttonPanel.add(filler2, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(okButton, org.openide.util.NbBundle.getMessage(TriangleCorrectionEditDialog.class, "TriangleCorrectionEditDialog.okButton.text")); // NOI18N
+        okButton.setEnabled(false);
+        okButton.addActionListener(buttonListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
@@ -160,6 +243,7 @@ class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPane
         buttonPanel.add(okButton, gridBagConstraints);
 
         org.openide.awt.Mnemonics.setLocalizedText(cancelButton, org.openide.util.NbBundle.getMessage(TriangleCorrectionEditDialog.class, "TriangleCorrectionEditDialog.cancelButton.text")); // NOI18N
+        cancelButton.addActionListener(buttonListener);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
@@ -175,6 +259,11 @@ class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPane
         gridBagConstraints.weightx = 1.0;
         add(buttonPanel, gridBagConstraints);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void cummulateCheckActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cummulateCheckActionPerformed
+        recalcOriginal();
+    }//GEN-LAST:event_cummulateCheckActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JButton cancelButton;
@@ -189,4 +278,90 @@ class TriangleCorrectionEditDialog<T extends Triangle> extends javax.swing.JPane
     private javax.swing.JLabel valueLabel;
     private javax.swing.JTextField valueText;
     // End of variables declaration//GEN-END:variables
+
+    private class InputListener implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            valueChanged();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            valueChanged();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+        }
+        
+        private void valueChanged() {
+            boolean valid = isInputValid();
+            okButton.setEnabled(valid);
+            if(valid)
+                msgLabel.clearMessage();
+        }
+        
+        private boolean isInputValid() {
+            String str = valueText.getText();
+            if(str == null || str.length() == 0) {
+                msgLabel.showError(Bundle.MSG_TriangleCorrectionEditDialog_Value_Empty());
+                return false;
+            }
+            
+            Double value = LocaleSettings.toDouble(str);
+            if(value == null) {
+                msgLabel.showError(Bundle.MSG_TriangleCorrectionEditDialog_Value_Invalid());
+                return false;
+            }
+            
+            return true;
+        }
+    }
+    
+    private class ButtonListener implements ActionListener {
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if(okButton == e.getSource()) {
+                double value = getValue();
+                Callable<T> task = new SwapModificationTask(modification, value);
+                TaskUtil.execute(task, null, Bundle.LBL_TriangleCorrectionEditDialog_ProgressTitle());
+            }
+            closeDialog();
+        }
+        
+        private double getValue() {
+            double value = LocaleSettings.toDouble(valueText.getText());
+            
+            int development = modification.getDevelopment();
+            if(development > 0 && cummulateCheck.isVisible() && !cummulateCheck.isSelected()) {
+                double prev = source.getValue(modification.getAccident(), development-1);
+                if(!Double.isNaN(prev))
+                    value += prev;
+            }
+            
+            return value;
+        }
+    }
+    
+    private static class SwapModificationTask<C extends Triangle> implements Callable<Void> {
+        
+        private final TriangleCorrectionModifier<C> modifier;
+        private final double value;
+        
+        private SwapModificationTask(TriangleCorrectionModifier<C> modifier, double value) {
+            this.modifier = modifier;
+            this.value = value;
+        }
+                
+        @Override
+        public Void call() throws Exception {
+            synchronized(modifier) {
+                modifier.setValue(value);
+            }
+            return null;
+        }
+    
+    }
 }

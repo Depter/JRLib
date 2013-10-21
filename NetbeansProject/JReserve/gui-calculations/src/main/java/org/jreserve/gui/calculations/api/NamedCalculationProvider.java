@@ -17,12 +17,14 @@
 
 package org.jreserve.gui.calculations.api;
 
+import javax.swing.Icon;
 import org.jreserve.gui.calculations.CalculationRootFileProvider;
 import org.jreserve.gui.misc.namedcontent.AbstractNamedContentProvider;
-import org.jreserve.gui.misc.namedcontent.NamedContentProvider;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
-import org.openide.filesystems.FileObject;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -33,14 +35,25 @@ import org.openide.filesystems.FileObject;
     service = NamedCalculationProvider.class,
     projectType = "org-jreserve-project-jreserve"
 )
+@Messages({
+    "LBL.NamedCalculationProvider.Name=Calculations"
+})
 public class NamedCalculationProvider extends AbstractNamedContentProvider {
+    
+    @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/calculator.png";
+    private final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
     
     public NamedCalculationProvider(Project project) {
         super(project, CalculationRootFileProvider.CALCULATIONS_FOLDER);
     }
 
     @Override
-    public FileObject getRootFolder() {
-        return super.getRootFolder();
+    public Icon getIcon() {
+        return ICON;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return Bundle.LBL_NamedCalculationProvider_Name();
     }
 }

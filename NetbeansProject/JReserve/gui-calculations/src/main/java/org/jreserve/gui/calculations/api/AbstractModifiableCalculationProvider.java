@@ -145,6 +145,15 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
         return calculation;
     }
     
+    protected C modifyCalculation(C calculation, int layer) throws Exception {
+        int count = 0;
+        while(count < layer) {
+            CalculationModifier<C> cm = modifications.get(count++);
+            calculation = cm.createCalculation(calculation);
+        }
+        return calculation;
+    }
+    
     protected Element toXml() {
         Element root = new Element(MODIFICATIONS_ELEMENT);
         for(CalculationModifier cm : modifications)

@@ -66,12 +66,12 @@ public class DataSourceNameVisualPanel extends javax.swing.JPanel {
             browseButton.setEnabled(true);
             nameText.setEnabled(true);
             folderText.setEnabled(true);
-            folderText.setText(dop.getRootFolder().getName()+"/");
+            folderText.setText(dop.getRoot().getName()+"/");
         }
     }
     
     void setDataFolder(DataFolder folder) {
-        FileObject root = dop==null? null : dop.getRootFolder();
+        FileObject root = dop==null? null : dop.getRoot();
         if(root != null && folder != null) {
             String rp = FileUtil.getRelativePath(root, folder.getPrimaryFile());
             if(rp != null)
@@ -260,11 +260,9 @@ public class DataSourceNameVisualPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_dataTypeComboActionPerformed
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        DataFolder folder = NamedContentUtil.userSelectFolder(dop);
+        String folder = NamedContentUtil.userSelectFolder(dop);
         if(folder != null) {
-            FileObject root = dop.getRootFolder().getParent();
-            FileObject child = folder.getPrimaryFile();
-            folderText.setText(FileUtil.getRelativePath(root, child));
+            folderText.setText(folder);
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 
@@ -308,6 +306,8 @@ public class DataSourceNameVisualPanel extends javax.swing.JPanel {
         
         private String getEscapedFolder() {
             String folder = folderText.getText();
+            if(folder == null || folder.length()==0)
+                return "";
             if(!folder.endsWith("/"))
                 folder += "/";
             return folder;

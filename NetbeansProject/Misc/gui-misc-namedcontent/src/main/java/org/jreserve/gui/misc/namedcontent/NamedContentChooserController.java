@@ -31,4 +31,6 @@ public interface NamedContentChooserController {
     public boolean showsContent(NamedContent content);
     
     public boolean acceptsContent(NamedContent content);
+    
+    public boolean acceptsFolder();
 }

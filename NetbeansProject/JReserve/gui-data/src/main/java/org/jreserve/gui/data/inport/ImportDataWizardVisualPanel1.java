@@ -73,7 +73,7 @@ class ImportDataWizardVisualPanel1 extends javax.swing.JPanel {
     }
     
     private Project getProject() {
-        FileObject root = dop==null? null : dop.getRootFolder();
+        FileObject root = dop==null? null : dop.getRoot();
         return root==null? null : FileOwnerQuery.getOwner(root);
     }
     

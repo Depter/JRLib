@@ -56,4 +56,8 @@ public class FolderContentChooserController implements NamedContentChooserContro
         return content.getLookup().lookup(DataFolder.class) != null;
     }
 
+    @Override
+    public boolean acceptsFolder() {
+        return true;
+    }
 }

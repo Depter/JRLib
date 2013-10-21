@@ -37,27 +37,58 @@ import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "PROMPT.NamedContentChooserPanel.Search=Search..."
+})
 public class NamedContentChooserPanel extends javax.swing.JPanel {
     
     private final static boolean MODAL = true;
     
-    public static List<NamedContent> selectContent(NamedContentChooserController controller, boolean multiSelect) {
-        NamedContentChooserPanel panel = new NamedContentChooserPanel(controller, multiSelect);
+    public static List<String> selectFolder(NamedContentChooserController controller, boolean multiSelect) {
+        NamedContentChooserPanel panel = new NamedContentChooserPanel(controller, multiSelect, true);
+        showPanel(panel, controller.getTitle());
         
+        if(panel.closedWithOk)
+            return getFolders(panel.selection);
+        return Collections.EMPTY_LIST;
+    }
+    
+    private static void showPanel(NamedContentChooserPanel panel, String title) {
         DialogDescriptor dd = new DialogDescriptor(
-                panel, "title", MODAL, 
-                null, null, DialogDescriptor.DEFAULT_ALIGN, 
+                panel, title, MODAL, 
+                new Object[0], null, DialogDescriptor.DEFAULT_ALIGN, 
                 HelpCtx.DEFAULT_HELP, null);
         Dialog dialog = DialogDisplayer.getDefault().createDialog(dd);
         panel.showDialog(dialog);
-        
-        return panel.closedWithOk? panel.selection : Collections.EMPTY_LIST;
+    }
+    
+    private static List<String> getFolders(List<TreeItem> selection) {
+        List<String> result = new ArrayList<String>(selection.size());
+        for(TreeItem item : selection)
+            result.add(item.getPath());
+        return result;
+    }
+    
+    public static List<NamedContent> selectContent(NamedContentChooserController controller, boolean multiSelect) {
+        NamedContentChooserPanel panel = new NamedContentChooserPanel(controller, multiSelect, false);
+        showPanel(panel, controller.getTitle());
+        if(panel.closedWithOk)
+            return getContents(panel.selection);
+        return Collections.EMPTY_LIST;
+    }
+    
+    private static List<NamedContent> getContents(List<TreeItem> selection) {
+        List<NamedContent> result = new ArrayList<NamedContent>(selection.size());
+        for(TreeItem item : selection)
+            result.add(((TreeFile)item).getContent());
+        return result;
     }
     
     private final static String TREE_CARD = "tree";
@@ -65,6 +96,7 @@ public class NamedContentChooserPanel extends javax.swing.JPanel {
     
     private NamedContentChooserController controller;
     private boolean multiSelect;
+    private boolean isFolder;
     
     private NamedContentTreeModel treeModel;
     private NamedContentListModel listModel;
@@ -72,26 +104,29 @@ public class NamedContentChooserPanel extends javax.swing.JPanel {
     private ButtonListener buttonListener = new ButtonListener();
     private SelectionListener selectionListener = new SelectionListener();
     
-    private List<NamedContent> selection = new ArrayList<NamedContent>();
+    private List<TreeItem> selection = new ArrayList<TreeItem>();
     private boolean closedWithOk = false;
     private Dialog dialog;
     
-    private NamedContentChooserPanel(NamedContentChooserController controller, boolean multiSelect) {
+    private NamedContentChooserPanel(NamedContentChooserController controller, boolean multiSelect, boolean isFolder) {
         this.controller = controller;
         this.multiSelect = multiSelect;
+        this.isFolder = isFolder;
         
-        TreeFolder root = TreeFolder.createRoot(controller);
+        TreeFolder root = isFolder? 
+                TreeFolder.createFolders(controller) : 
+                TreeFolder.createRoot(controller);
         treeModel = new NamedContentTreeModel(root);
-        listModel = new NamedContentListModel(root, controller);
+        listModel = new NamedContentListModel(root, controller, isFolder);
         
         initComponents();
-        TextPrompt.createStandard("", CommonIcons.search(), searchText);
+        TextPrompt.createStandard(Bundle.PROMPT_NamedContentChooserPanel_Search(), CommonIcons.search(), searchText);
         showCard(TREE_CARD);
     }
     
     private void showCard(String name) {
-        CardLayout layout = (CardLayout) searchPanel.getLayout();
-        layout.show(searchPanel, name);
+        CardLayout layout = (CardLayout) selectPanel.getLayout();
+        layout.show(selectPanel, name);
     }
     
     private void showDialog(Dialog dialog) {
@@ -129,6 +164,7 @@ public class NamedContentChooserPanel extends javax.swing.JPanel {
         okButton = new javax.swing.JButton();
         cancelButton = new javax.swing.JButton();
 
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.BorderLayout(10, 10));
 
         searchPanel.setLayout(new java.awt.BorderLayout(5, 0));
@@ -157,7 +193,7 @@ public class NamedContentChooserPanel extends javax.swing.JPanel {
         list.setCellRenderer(new ListRenderer());
         listScroll.setViewportView(list);
 
-        selectPanel.add(listScroll, "card3");
+        selectPanel.add(listScroll, "list");
 
         add(selectPanel, java.awt.BorderLayout.CENTER);
 
@@ -228,9 +264,18 @@ public class NamedContentChooserPanel extends javax.swing.JPanel {
     private void setSelection(Object[] selection) {
         this.selection.clear();
         for(Object item : selection) {
-            NamedContent nc = (NamedContent) item;
-            if(controller.acceptsContent(nc))
-                this.selection.add(nc);
+            TreeItem ti = (TreeItem) item;
+            if(acceptsItem(ti))
+                this.selection.add(ti);
+        }
+    }
+    
+    private boolean acceptsItem(TreeItem item) {
+        if(isFolder) {
+            return (item instanceof TreeFolder);
+        } else {
+            return (item instanceof TreeFile) &&
+                   controller.acceptsContent(((TreeFile)item).getContent());
         }
     }
     
@@ -261,6 +306,7 @@ public class NamedContentChooserPanel extends javax.swing.JPanel {
             if(path == null || path.length() == 0) {
                 showCard(TREE_CARD);
                 setTreeSelection();
+                searchText.repaint();
             } else {
                 showCard(LIST_CARD);
                 setListSelection();

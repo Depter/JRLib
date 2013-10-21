@@ -148,7 +148,7 @@ public class DataSourceNameWizardPanel implements WizardDescriptor.Panel<WizardD
         NamedDataSourceProvider dop = panel.getObjectProvider();
         String path = panel.getDataSourcePath();
         
-        FileObject root = dop.getRootFolder();
+        FileObject root = dop.getRoot();
         
         path += "." + DataSourceDataObject.EXTENSION;
         FileObject fo = root.getFileObject(path);

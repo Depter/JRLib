@@ -72,7 +72,7 @@ class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
     
     void setFolder(DataFolder folder) {
         if(cop != null) {
-            FileObject root = cop.getRootFolder();
+            FileObject root = cop.getRoot();
             String path = FileUtil.getRelativePath(root, folder.getPrimaryFile());
             folderText.setText(path);
         }        
@@ -222,13 +222,9 @@ class CreateClaimTriangleVisualPanel1 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        DataFolder folder = NamedContentUtil.userSelectFolder(cop);
+        String folder = NamedContentUtil.userSelectFolder(cop);
         if(folder != null) {
-            FileObject root = cop.getRootFolder();
-            FileObject child = folder.getPrimaryFile();
-            String path = FileUtil.getRelativePath(root, child);
-            if(path != null)
-                folderText.setText(path);
+            folderText.setText(folder);
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 

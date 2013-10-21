@@ -72,7 +72,7 @@ public abstract class AbstractCalculationSourceClient<T, S> {
         if(cop == null)
             return null;
         
-        FileObject root = cop.getRootFolder();
+        FileObject root = cop.getRoot();
         if(root == null)
             return null;
         

@@ -38,4 +38,6 @@ public interface ModifiableCalculationProvider<C extends CalculationData> extend
     public void deleteModification(int index);
     
     public int indexOfModification(CalculationModifier cm);
+    
+    public C getCalculation(int layer);
 }

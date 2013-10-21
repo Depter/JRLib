@@ -31,7 +31,7 @@ public interface EditableCalculationModifier<C extends CalculationData>
     
     public void removeCalculationModifierListener(CalculationModifierListener<C> listener);
     
-    public void edit(C sourceCalculation);
+    public void edit(ModifiableCalculationProvider<C> calculation);
     
     public void getState(Map state);
     

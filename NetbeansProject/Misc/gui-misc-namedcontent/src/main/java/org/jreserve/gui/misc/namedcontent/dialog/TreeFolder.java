@@ -33,6 +33,21 @@ import org.openide.loaders.DataFolder;
  */
 class TreeFolder implements TreeItem {
 
+    static TreeFolder createFolders(NamedContentChooserController controller) {
+        TreeFolder root = new TreeFolder();
+        for(NamedContent nc : controller.getRoot().getContents())
+            addFolderChildren(root, nc);
+        return root;
+    }
+    
+    private static void addFolderChildren(TreeFolder parent, NamedContent nc) {
+        if(nc.getLookup().lookup(DataFolder.class) != null) {
+            TreeFolder child = (TreeFolder) parent.addItem(nc);
+            for(NamedContent childNc : nc.getContents())
+                addFolderChildren(child, childNc);
+        }
+    }
+    
     static TreeFolder createRoot(NamedContentChooserController controller) {
         TreeFolder root = new TreeFolder();
         for(NamedContent nc : controller.getRoot().getContents())
@@ -52,23 +67,33 @@ class TreeFolder implements TreeItem {
     }
     
     private String name;
+    private TreeItem parent;
     
     private List<TreeFolder> folders = new ArrayList<TreeFolder>();
     private List<TreeFile> files = new ArrayList<TreeFile>();
     
     TreeFolder() {
-        name = "root";
+        name = "";
     }
     
-    private TreeFolder(String name) {
+    private TreeFolder(TreeItem parent, String name) {
         this.name = name;
+        this.parent = parent;
+    }
+    
+    @Override
+    public String getPath() {
+        String path = parent==null? "" : parent.getPath();
+        if(path.length() > 0)
+            path += "/";
+        return path+name;
     }
     
     TreeItem addItem(NamedContent nc) {
         if(nc.getLookup().lookup(DataFolder.class) != null) {
             return getFolder(nc.getDisplayName());
         } else {
-            TreeFile file = new TreeFile(nc);
+            TreeFile file = new TreeFile(this, nc);
             files.add(file);
             return file;
         }
@@ -79,7 +104,7 @@ class TreeFolder implements TreeItem {
             if(name.equals(folder.name))
                 return folder;
         
-        TreeFolder folder = new TreeFolder(name);
+        TreeFolder folder = new TreeFolder(this, name);
         folders.add(folder);
         return folder;
     }
@@ -132,8 +157,13 @@ class TreeFolder implements TreeItem {
         while(fit.hasNext()) {
             TreeFolder folder = fit.next();
             folder.cleanUp(controller);
-            if(folder.getChildCount() == 0)
+            if(folder.getChildCount() == 0 && !controller.acceptsFolder())
                 fit.remove();
         }
+    }
+    
+    @Override
+    public String toString() {
+        return "TreeFolder ["+name+"]";
     }
 }

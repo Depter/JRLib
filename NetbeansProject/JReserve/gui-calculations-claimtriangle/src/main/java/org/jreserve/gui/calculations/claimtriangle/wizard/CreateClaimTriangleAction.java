@@ -59,7 +59,7 @@ public class CreateClaimTriangleAction implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent evt) {
-        Project p = FileOwnerQuery.getOwner(cop.getRootFolder());
+        Project p = FileOwnerQuery.getOwner(cop.getRoot());
         CreateClaimTriangleWizardIterator it = new CreateClaimTriangleWizardIterator(p);
         WizardDescriptor wiz = new WizardDescriptor(it);
         wiz.setTitleFormat(new MessageFormat("{0} ({1})"));

@@ -17,11 +17,14 @@
 
 package org.jreserve.gui.data.api;
 
+import javax.swing.Icon;
 import org.jreserve.gui.data.dataobject.DataRootFileProvider;
 import org.jreserve.gui.misc.namedcontent.AbstractNamedContentProvider;
+import org.netbeans.api.annotations.common.StaticResource;
 import org.netbeans.api.project.Project;
 import org.netbeans.spi.project.ProjectServiceProvider;
-import org.openide.filesystems.FileObject;
+import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
@@ -32,14 +35,25 @@ import org.openide.filesystems.FileObject;
     service = NamedDataSourceProvider.class,
     projectType = "org-jreserve-project-jreserve"
 )
+@Messages({
+    "LBL.NamedDataSourceProvider.Name=Data"
+})
 public class NamedDataSourceProvider extends AbstractNamedContentProvider {
+    
+    @StaticResource private final static String IMG_PATH = "org/jreserve/gui/data/icons/database.png";
+    private final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
     
     public NamedDataSourceProvider(Project project) {
         super(project, DataRootFileProvider.DATA_FOLDER);
     }
 
     @Override
-    public FileObject getRootFolder() {
-        return super.getRootFolder();
+    public Icon getIcon() {
+        return ICON;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return Bundle.LBL_NamedDataSourceProvider_Name();
     }
 }

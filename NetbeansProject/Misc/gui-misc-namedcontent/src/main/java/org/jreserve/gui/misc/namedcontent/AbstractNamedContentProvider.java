@@ -32,7 +32,7 @@ import org.openide.loaders.DataObjectNotFoundException;
  * @author Peter Decsi
  * @version 1.0
  */
-public class AbstractNamedContentProvider implements NamedContentProvider {
+public abstract class AbstractNamedContentProvider implements NamedContentProvider {
     
     private final static Logger logger = Logger.getLogger(AbstractNamedContentProvider.class.getName());
     
@@ -45,7 +45,8 @@ public class AbstractNamedContentProvider implements NamedContentProvider {
         this.rootPath = rootPath;
     }
     
-    protected synchronized FileObject getRootFolder() {
+    @Override
+    public synchronized FileObject getRoot() {
         if(projectDir == null || !projectDir.isValid())
             return null;
         return projectDir.getFileObject(rootPath);

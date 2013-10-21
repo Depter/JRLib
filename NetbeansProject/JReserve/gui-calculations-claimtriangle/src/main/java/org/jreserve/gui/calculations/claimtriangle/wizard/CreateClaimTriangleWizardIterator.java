@@ -204,8 +204,7 @@ public class CreateClaimTriangleWizardIterator extends AbstractWizardIterator im
             Object o = wizard.getProperty(PROP_OBJECT_PROVIDER);
             NamedCalculationProvider ncp = (NamedCalculationProvider) o;
             
-//            CalculationObjectProvider cop = (CalculationObjectProvider) wizard.getProperty(PROP_OBJECT_PROVIDER);
-            FileObject root = ncp.getRootFolder();
+            FileObject root = ncp.getRoot();
             return FileUtil.createData(root, path);
         }
         

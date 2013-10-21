@@ -19,11 +19,12 @@ package org.jreserve.gui.misc.namedcontent;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import org.jreserve.gui.misc.namedcontent.dialog.NamedContentChooserPanel;
+import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.openide.loaders.DataFolder;
+import org.openide.filesystems.FileObject;
+import org.openide.filesystems.FileUtil;
 
 /**
  *
@@ -34,6 +35,22 @@ public class NamedContentUtil {
     
     private final static char PATH_SEPARATOR = '/';
     
+    public static FileObject getContentRoot(final FileObject file) {
+        synchronized(file) {
+            Project p = FileOwnerQuery.getOwner(file);
+            if(p == null)
+                return null;
+            
+            for(NamedContentProvider ncp : p.getLookup().lookupAll(NamedContentProvider.class)) {
+                FileObject root = ncp.getRoot();
+                if(root.equals(file) || FileUtil.isParentOf(root, file))
+                    return root;
+            }
+            
+            return null;
+        }
+    }
+    
     public static NamedContent getContent(Project p, String path) {
         for(NamedContentProvider npc : p.getLookup().lookupAll(NamedContentProvider.class)) {
             NamedContent nc = getContent(npc, path);
@@ -43,76 +60,89 @@ public class NamedContentUtil {
         return null;
     }
     
-    public static NamedContent getContent(NamedContentProvider parent, String path) {
+    public static NamedContent getContent(NamedContentProvider ncp, String path) {
         int index = path.indexOf(PATH_SEPARATOR);
         if(index == 0)
-            return getContent(parent, path.substring(1));
+            return getContent(ncp, path.substring(1));
         
-        if(index < 0)
-            return getChild(parent, path);
+        String name;
+        if(index > 0) {
+            name = path.substring(0, index);
+            path = path.substring(index+1);
+        } else {
+            name = path;
+        }
         
-        String name = path.substring(0, index);
-        path = path.substring(index+1);
-        NamedContent child = getChild(parent, name);
-        return child==null? null : getContent(parent, path);
+        for(NamedContent nc : ncp.getContents()) {
+            if(index < 0) {
+                if(name.equals(nc.getDisplayName()))
+                    return nc;
+            } else {
+                nc = getContent(nc, path);
+                if(nc != null)
+                    return nc;
+            }
+        }
+        
+        return null;
     }
     
-    private static NamedContent getChild(NamedContentProvider parent, String name) {
+    public static NamedContent getContent(NamedContent nc, String path) {
+        int index = path.indexOf(PATH_SEPARATOR);
+        if(index == 0)
+            return getContent(nc, path.substring(1));
+        
+        String name;
+        if(index < 0) {
+            name = path;
+            path = null;
+        } else {
+            name = path.substring(0, index);
+            path = path.substring(index=1);
+        }
+        
+        NamedContent child = getChild(nc, name);
+        if(child == null)
+            return null;
+        
+        return path==null? child : getContent(child, path);
+    }
+    
+    public static NamedContent getChild(NamedContent parent, String name) {
         for(NamedContent child : parent.getContents())
-            if(child.getDisplayName().equalsIgnoreCase(name))
+            if(child.getDisplayName().equals(name))
                 return child;
         return null;
     }
     
     public static <T> T getContent(Project p, String path, Class<T> clazz) {
-        for(NamedContentProvider npc : p.getLookup().lookupAll(NamedContentProvider.class)) {
-            T result = getContent(npc, path, clazz);
-            if(result != null)
-                return result;
-        }
-        return null;
+        NamedContent nc = getContent(p, path);
+        return nc==null? null : nc.getLookup().lookup(clazz);
     }
     
-    public static <T> T getContent(NamedContentProvider parent, String path, Class<T> clazz) {
-        int index = path.indexOf(PATH_SEPARATOR);
-        if(index == 0)
-            return getContent(parent, path.substring(1), clazz);
-        
-        if(index < 0) {
-            NamedContent child = getChild(parent, path);
-            return child==null? null : child.getLookup().lookup(clazz);
-        }
-        
-        String name = path.substring(0, index);
-        path = path.substring(index+1);
-        NamedContent child = getChild(parent, name);
-        return child==null? null : getContent(parent, path, clazz);
+    public static <T> T getContent(NamedContentProvider ncp, String path, Class<T> clazz) { 
+        NamedContent nc = getContent(ncp, path);
+        return nc==null? null : nc.getLookup().lookup(clazz);
     }
     
+    public static <T> T getContent(NamedContent nc, String path, Class<T> clazz) { 
+        nc = getContent(nc, path);
+        return nc==null? null : nc.getLookup().lookup(clazz);
+    }
     
     public static <T> Collection<? extends T> getContents(Project p, String path, Class<T> clazz) {
-        for(NamedContentProvider npc : p.getLookup().lookupAll(NamedContentProvider.class)) {
-            Collection<? extends T> result = getContents(npc, path, clazz);
-            if(result.size() > 0)
-                return result;
-        }
-        return Collections.EMPTY_LIST;
+        NamedContent nc = getContent(p, path);
+        return nc==null? null : nc.getLookup().lookupAll(clazz);
     }
     
-    public static <T> Collection<? extends T> getContents(NamedContentProvider parent, String path, Class<T> clazz) {
-        int index = path.indexOf(PATH_SEPARATOR);
-        if(index == 0)
-            return getContents(parent, path.substring(1), clazz);
-        
-        if(index < 0) {
-            NamedContent child = getChild(parent, path);
-            return child==null? null : child.getLookup().lookupAll(clazz);
-        }
-        
-        String name = path.substring(0, index);
-        path = path.substring(index+1);
-        NamedContent child = getChild(parent, name);
-        return child==null? Collections.EMPTY_LIST : getContents(parent, path, clazz);
+    public static <T> Collection<? extends T> getContents(NamedContentProvider ncp, String path, Class<T> clazz) { 
+        NamedContent nc = getContent(ncp, path);
+        return nc==null? null : nc.getLookup().lookupAll(clazz);
+    }
+    
+    public static <T> Collection<? extends T> getContents(NamedContent nc, String path, Class<T> clazz) { 
+        nc = getContent(nc, path);
+        return nc==null? null : nc.getLookup().lookupAll(clazz);
     }
     
     public static NamedContent userSelect(NamedContentChooserController controller) {
@@ -154,12 +184,15 @@ public class NamedContentUtil {
         return result;
     }
     
-    public static DataFolder userSelectFolder(NamedContentProvider root) {
-        return userSelect(new FolderContentChooserController(root), DataFolder.class);
+    public static String userSelectFolder(NamedContentProvider root) {
+        NamedContentChooserController controller = new FolderContentChooserController(root);
+        List<String> folders = NamedContentChooserPanel.selectFolder(controller, false);
+        return folders.isEmpty()? null : folders.get(0);
     }
     
-    public static List<DataFolder> userSelectFolders(NamedContentProvider root) {
-        return userMultiSelect(new FolderContentChooserController(root), DataFolder.class);
+    public static List<String> userSelectFolders(NamedContentProvider root) {
+        NamedContentChooserController controller = new FolderContentChooserController(root);
+        return NamedContentChooserPanel.selectFolder(controller, true);
     }
     
     public static ProjectContentProvider createContentProvider(Project project) {

@@ -65,9 +65,16 @@ public abstract class AbstractEditableCalculationModifier<C extends CalculationD
     }
     
     @Override
-    public void edit(C sourceCalculation) {
+    public void edit(ModifiableCalculationProvider<C> calculation) {
         String msg = "Should not call edit on an uneditable CalculationModifier!";
         throw new IllegalStateException(msg);
+    }
+    
+    protected C getSource(ModifiableCalculationProvider<C> calculation) {
+        int index = calculation.indexOfModification(this);
+        if(index >= 0)
+            return calculation.getCalculation(index);
+        return null;
     }
     
     protected static int getInt(Map state, Object key, int def) {
