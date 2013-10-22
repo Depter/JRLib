@@ -38,6 +38,8 @@ public interface SmoothDialogController<T extends Triangle> {
     
     public List<SmoothRecord> getRecords();
     
+    public boolean canModifyCells();
+    
     public boolean isValid();
     
     public CalculationModifier<T> createModifier();

@@ -63,7 +63,7 @@ public class CalculationEventUtil {
         fireEvent(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Created()));
     }
     
-    public void fireEvent(Object evt) {
+    private void fireEvent(Object evt) {
         EventBusManager.getDefault().publish(evt);
     }
     

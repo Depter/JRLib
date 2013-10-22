@@ -19,7 +19,9 @@ package org.jreserve.gui.calculations.smoothing.calculation;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import org.jdom2.Element;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
@@ -88,4 +90,29 @@ public abstract class AbstractRegressionSmoothingModifier<T extends Triangle> ex
     
     protected abstract String getRootTag();
     
+    protected final void updateFrom(AbstractRegressionSmoothingModifier<T> modifier) {
+        UpdateTask task = new UpdateTask(this, modifier.hasIntercept);
+        TaskUtil.execute(task, null, getUpdatePHTitle());
+    }
+    
+    protected abstract String getUpdatePHTitle();
+    
+    private static class UpdateTask implements Callable<Void> {
+        
+        private final AbstractRegressionSmoothingModifier sm;
+        private final boolean hasIntercept;
+
+        private UpdateTask(AbstractRegressionSmoothingModifier sm, boolean hasIntercept) {
+            this.sm = sm;
+            this.hasIntercept = hasIntercept;
+        }
+        
+        @Override
+        public Void call() throws Exception {
+            synchronized(sm) {
+                sm.setIntercept(hasIntercept);
+                return null;
+            }
+        }    
+    }
 }

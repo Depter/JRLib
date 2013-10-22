@@ -64,7 +64,7 @@ public class LinearRegressionClaimTriangleSmoothable extends LinearSmoothable<Cl
         return new DialogController(triangle, geometry, cells);
     }
     
-    private static class DialogController extends LinearRegressionDialogController<ClaimTriangle> {
+    static class DialogController extends LinearRegressionDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells);

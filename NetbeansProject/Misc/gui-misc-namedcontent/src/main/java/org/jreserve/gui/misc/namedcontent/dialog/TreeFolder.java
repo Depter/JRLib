@@ -91,7 +91,7 @@ class TreeFolder implements TreeItem {
     
     TreeItem addItem(NamedContent nc) {
         if(nc.getLookup().lookup(DataFolder.class) != null) {
-            return getFolder(nc.getDisplayName());
+            return getFolder(nc.getName());
         } else {
             TreeFile file = new TreeFile(this, nc);
             files.add(file);

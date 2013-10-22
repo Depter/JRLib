@@ -51,11 +51,6 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
     }
 
     @Override
-    public C getCalculation() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public String getPath() {
         synchronized(lock) {
             return path;

@@ -63,7 +63,7 @@ public class SplineClaimTriangleSmoothable extends LinearSmoothable<ClaimTriangl
         return new DialogController(triangle, geometry, cells);
     }
     
-    private static class DialogController extends SplineSmoothingDialogController<ClaimTriangle> {
+    static class DialogController extends SplineSmoothingDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells);

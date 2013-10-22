@@ -62,7 +62,7 @@ public class DoubleExponentialClaimTriangleSmoothable  extends DoubleExponential
         return new DialogController(triangle, geometry, cells);
     }
     
-    private static class DialogController extends DoubleExponentialSmoothingDialogController<ClaimTriangle> {
+    static class DialogController extends DoubleExponentialSmoothingDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells);

@@ -23,6 +23,7 @@ import java.util.List;
 import javax.swing.Icon;
 import org.jreserve.gui.misc.namedcontent.NamedContent;
 import org.jreserve.gui.misc.namedcontent.NamedContentChooserController;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
 
 /**
  *
@@ -48,7 +49,7 @@ class TreeFile implements TreeItem {
         String path = parent.getPath();
         if(path.length() > 0)
             path += "/";
-        return path+file.getDisplayName();
+        return path+file.getName();
     }
    
     @Override
@@ -63,12 +64,12 @@ class TreeFile implements TreeItem {
 
     @Override
     public String getName() {
-        return file.getDisplayName();
+        return file.getName();
     }
 
     @Override
     public Icon getIcon() {
-        return file.getIcon();
+        return NamedContentUtil.getIcon(file);
     }
     
     @Override

@@ -270,7 +270,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
         }
 
         @Override
-        public String getDisplayName() {
+        public String getName() {
             return obj.getName();
         }
     }
@@ -286,6 +286,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
         protected void handleSave() throws IOException {
             synchronized(lock) {
                 saveCalculation();
+                unregister();
             }
         }
 

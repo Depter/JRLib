@@ -47,10 +47,15 @@ public abstract class AbstractRegressionDialogController<T extends Triangle>
         for(int i=0; i<original.length; i++)
             original[i] = records.get(i).getOriginal();
     }
+    
+    public void setHasIntercept(boolean hasIntercept) {
+        this.hasIntercept = hasIntercept;
+    }
 
     @Override
     public Component getParameterComponent() {
         if(panel == null) {
+            updateRecords(records);
             panel = new RegressionParamPanel(this);
             panel.setHasIntercept(hasIntercept);
         }

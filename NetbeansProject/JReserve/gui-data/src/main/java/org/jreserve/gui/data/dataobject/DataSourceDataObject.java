@@ -265,7 +265,7 @@ public class DataSourceDataObject extends MultiDataObject {
         }
 
         @Override
-        public String getDisplayName() {
+        public String getName() {
             return obj.getName();
         }
     }

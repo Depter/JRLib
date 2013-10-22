@@ -290,6 +290,9 @@ public class AbstractSmoothDialog<T extends Triangle> extends JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
+            if(!controller.canModifyCells())
+                return;
+            
             Point p = e.getPoint();
             int row = table.rowAtPoint(p);
             int column = table.columnAtPoint(p);

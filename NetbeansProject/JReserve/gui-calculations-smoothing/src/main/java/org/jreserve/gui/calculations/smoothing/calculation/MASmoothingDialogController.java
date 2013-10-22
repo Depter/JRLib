@@ -55,10 +55,15 @@ public abstract class MASmoothingDialogController<T extends Triangle>
         for(int i=0; i<original.length; i++)
             original[i] = records.get(i).getOriginal();
     }
+    
+    public void setLength(int length) {
+        this.length = length;
+    }
 
     @Override
     public Component getParameterComponent() {
         if(panel == null) {
+            updateRecords(records);
             panel = new MAParamPanel(this);
             panel.setBounds(2, original.length);
         }

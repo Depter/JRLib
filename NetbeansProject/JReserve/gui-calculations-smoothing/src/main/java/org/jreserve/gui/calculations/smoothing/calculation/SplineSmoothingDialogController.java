@@ -55,10 +55,15 @@ public abstract class SplineSmoothingDialogController<T extends Triangle>
         for(int i=0; i<original.length; i++)
             original[i] = records.get(i).getOriginal();
     }
+    
+    public void setLambda(double lambda) {
+        this.lambda = lambda;
+    }
 
     @Override
     public Component getParameterComponent() {
         if(panel == null) {
+            updateRecords(records);
             panel = new SplineParamPanel(this);
             panel.setLambda(LocaleSettings.getExactString(lambda));
         }

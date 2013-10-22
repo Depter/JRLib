@@ -166,6 +166,7 @@ public class ClaimTriangleCalculationImpl
         }    
     }
     
+    @Override
     public TriangleGeometry getGeometry() {
         synchronized(lock) {
             return geometry;
@@ -294,11 +295,47 @@ public class ClaimTriangleCalculationImpl
     }
     
     private class GeometryListener implements ChangeListener {
-
         @Override
         public void stateChanged(ChangeEvent e) {
             geometryChanged();
         }
-        
     }
+    
+//    private class RecalculateTask implements Runnable {
+//        
+//        private final DataSource ds;
+//        private final TriangleGeometry geometry;
+//        private final List<CalculationModifier<ClaimTriangle>> modifications;
+//        
+//        private RecalculateTask() {
+//            synchronized(lock) {
+//                this.ds = ClaimTriangleCalculationImpl.this.dataSource;
+//                this.geometry = new TriangleGeometry(ClaimTriangleCalculationImpl.this.geometry);
+//                this.modifications = new ArrayList<CalculationModifier<ClaimTriangle>>(ClaimTriangleCalculationImpl.this.getModifications());
+//            }
+//        }
+//        
+//        @Override
+//        public void run() {
+//            ClaimTriangle result = calculateResult();
+//            
+//        }
+//        
+//        private ClaimTriangle calculateResult() {
+//            try {
+//                ClaimTriangle result = TriangleGeometryUtil.createTriangle(ds, this.geometry);
+//                result = new CummulatedClaimTriangle(result);
+//                for(CalculationModifier<ClaimTriangle> cm : this.modifications)
+//                    result = cm.createCalculation(result);
+//                return result;
+//            } catch (Exception ex) {
+//                String msg = "Unable to calculate claim triangle!";
+//                logger.log(Level.SEVERE, msg, ex);
+//                String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
+//                BubbleUtil.showException(title, getPath(), ex);
+//                return new InputClaimTriangle(new double[0][0]);
+//            }
+//        }
+//    
+//    }
 }

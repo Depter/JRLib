@@ -66,7 +66,7 @@ public class ArithmeticMAClaimTriangleSmoothable extends AbstractMASmoothable<Cl
         return new DialogController(triangle, geometry, cells);
     }
     
-    private static class DialogController extends MASmoothingDialogController<ClaimTriangle> {
+    static class DialogController extends MASmoothingDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells, Bundle.LBL_ArithmeticMAClaimTriangleSmoothable_Name());

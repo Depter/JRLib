@@ -18,7 +18,9 @@ package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import org.jdom2.Element;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
@@ -98,4 +100,30 @@ public abstract class AbstractMASmoothingModifier<T extends Triangle>
     }
     
     protected abstract String getRootName();
+    
+    protected final void updateFrom(AbstractMASmoothingModifier<T> modifier) {
+        UpdateTask task = new UpdateTask(this, modifier.getLength());
+        TaskUtil.execute(task, null, getUpdatePHTitle());
+    }
+    
+    protected abstract String getUpdatePHTitle();
+    
+    private static class UpdateTask implements Callable<Void> {
+        
+        private final AbstractMASmoothingModifier sm;
+        private final int length;
+
+        private UpdateTask(AbstractMASmoothingModifier sm, int length) {
+            this.sm = sm;
+            this.length = length;
+        }
+        
+        @Override
+        public Void call() throws Exception {
+            synchronized(sm) {
+                sm.setLength(length);
+                return null;
+            }
+        }    
+    }
 }

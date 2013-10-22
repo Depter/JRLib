@@ -33,9 +33,19 @@ public abstract class AbstractSmoothDialogController<T extends Triangle> impleme
 
     private String title;
     private final ChangeSupport cs = new ChangeSupport(this);
+    private boolean canModifyCells = true;
     
     protected AbstractSmoothDialogController(String title) {
         this.title = title;
+    }
+    
+    @Override
+    public boolean canModifyCells() {
+        return canModifyCells;
+    }
+
+    public void setAllowsModifyCells(boolean allow) {
+        this.canModifyCells = allow;
     }
     
     protected final List<SmoothingCell> createCells() {

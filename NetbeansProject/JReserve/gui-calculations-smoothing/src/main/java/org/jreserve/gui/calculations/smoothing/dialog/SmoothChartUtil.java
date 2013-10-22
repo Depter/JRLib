@@ -85,7 +85,7 @@ class SmoothChartUtil {
     private static Comparable getKey(SmoothRecord record, boolean horizontal) {
         if(horizontal)
             return record.getDevelopment()+1;
-        return record.getAccident();
+        return record.getAccidentDate();
     }
     
     private static PlotSerie createSmoothedSerie(List<SmoothRecord> records, boolean horizontal) {
@@ -117,8 +117,8 @@ class SmoothChartUtil {
     
     private static String getPlotTitle(boolean horizontal) {
         if(horizontal)
-            return Bundle.LBL_SmoothChartUtil_Accident();
-        return Bundle.LBL_SmoothChartUtil_Development();
+            return Bundle.LBL_SmoothChartUtil_Development();
+        return Bundle.LBL_SmoothChartUtil_Accident();
     }
     
     private SmoothChartUtil() {}

@@ -31,7 +31,8 @@ import org.openide.util.NbBundle.Messages;
     "LBL.HarmonicMASmoothingModifier.Name=Harmonic MA",
     "# {0} - length",
     "# {1} - cells",
-    "LBL.HarmonicMASmoothingModifier.Description=Harmonic MA [length={0}], [{1}]"
+    "LBL.HarmonicMASmoothingModifier.Description=Harmonic MA [length={0}], [{1}]",
+    "LBL.HarmonicMASmoothingModifier.ProgressName=Harmonic MA Smoothing"
 })
 public abstract class HarmonicMASmoothingModifier<T extends Triangle>
     extends AbstractMASmoothingModifier<T> {
@@ -59,5 +60,10 @@ public abstract class HarmonicMASmoothingModifier<T extends Triangle>
 
     protected final HarmonicMovingAverage createSmoothing() {
         return new HarmonicMovingAverage(getCellsAsArray(), getLength());
+    }
+    
+    @Override
+    protected String getUpdatePHTitle() {
+        return Bundle.LBL_HarmonicMASmoothingModifier_ProgressName();
     }
 }

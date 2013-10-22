@@ -31,7 +31,8 @@ import org.openide.util.NbBundle.Messages;
     "LBL.GeometricMASmoothingModifier.Name=Geometric MA",
     "# {0} - length",
     "# {1} - cells",
-    "LBL.GeometricMASmoothingModifier.Description=Geometric MA [length={0}], [{1}]"
+    "LBL.GeometricMASmoothingModifier.Description=Geometric MA [length={0}], [{1}]",
+    "LBL.GeometricMASmoothingModifier.ProgressName=Geometric MA Smoothing"
 })
 public abstract class GeometricMASmoothingModifier<T extends Triangle>
     extends AbstractMASmoothingModifier<T> {
@@ -59,5 +60,10 @@ public abstract class GeometricMASmoothingModifier<T extends Triangle>
 
     protected final GeometricMovingAverage createSmoothing() {
         return new GeometricMovingAverage(getCellsAsArray(), getLength());
+    }
+    
+    @Override
+    protected String getUpdatePHTitle() {
+        return Bundle.LBL_GeometricMASmoothingModifier_ProgressName();
     }
 }

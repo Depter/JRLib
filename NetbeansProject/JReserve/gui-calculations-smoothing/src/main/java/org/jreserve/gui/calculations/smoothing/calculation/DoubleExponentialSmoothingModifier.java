@@ -18,7 +18,9 @@ package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import org.jdom2.Element;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.DoubleExponentialSmoothing;
@@ -35,7 +37,8 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - alpha",
     "# {1} - beta",
     "# {2} - cells",
-    "LBL.DoubleExponentialSmoothingModifier.Description=Double Exponential Smoothing [alpha={0}, beta={1}], [{2}]"
+    "LBL.DoubleExponentialSmoothingModifier.Description=Double Exponential Smoothing [alpha={0}, beta={1}], [{2}]",
+    "LBL.DoubleExponentialSmoothingModifier.ProgressName=Double Exponential Smoothing"
 })
 public abstract class DoubleExponentialSmoothingModifier<T extends Triangle> 
     extends AbstractSmoothingModifier<T> {
@@ -144,5 +147,34 @@ public abstract class DoubleExponentialSmoothingModifier<T extends Triangle>
 
     protected final DoubleExponentialSmoothing createSmoothing() {
         return new DoubleExponentialSmoothing(getCellsAsArray(), alpha, beta);
+    }
+    
+    protected final void updateFrom(DoubleExponentialSmoothingModifier<T> modifier) {
+        UpdateTask task = new UpdateTask(this, modifier.getAlpha(), modifier.getBeta());
+        TaskUtil.execute(task, null, Bundle.LBL_DoubleExponentialSmoothingModifier_ProgressName());
+    }
+    
+    private static class UpdateTask implements Callable<Void> {
+        
+        private final DoubleExponentialSmoothingModifier desm;
+        private final double alpha;
+        private final double beta;
+        
+        private UpdateTask(DoubleExponentialSmoothingModifier desm, double alpha, double beta) {
+            this.desm = desm;
+            this.alpha = alpha;
+            this.beta = beta;
+        }
+        
+        @Override
+        public Void call() throws Exception {
+            synchronized(desm) {
+                desm.setChangeFired(false);
+                desm.setAlpha(alpha);
+                desm.setChangeFired(true);
+                desm.setBeta(beta);
+                return null;
+            }
+        }    
     }
 }

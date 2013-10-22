@@ -17,14 +17,23 @@
 
 package org.jreserve.gui.misc.namedcontent;
 
+import java.beans.BeanInfo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.swing.Icon;
 import org.jreserve.gui.misc.namedcontent.dialog.NamedContentChooserPanel;
+import org.jreserve.gui.misc.utils.widgets.CommonIcons;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataFolder;
+import org.openide.loaders.DataObject;
+import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 
 /**
  *
@@ -75,7 +84,7 @@ public class NamedContentUtil {
         
         for(NamedContent nc : ncp.getContents()) {
             if(index < 0) {
-                if(name.equals(nc.getDisplayName()))
+                if(name.equals(nc.getName()))
                     return nc;
             } else {
                 nc = getContent(nc, path);
@@ -110,7 +119,7 @@ public class NamedContentUtil {
     
     public static NamedContent getChild(NamedContent parent, String name) {
         for(NamedContent child : parent.getContents())
-            if(child.getDisplayName().equals(name))
+            if(child.getName().equals(name))
                 return child;
         return null;
     }
@@ -204,6 +213,26 @@ public class NamedContentUtil {
         if(pcp == null)
             return new ProjectContentProviderImpl(project);
         return pcp;
+    }
+    
+    public static Icon getIcon(NamedContent nc) {
+        Displayable d = nc.getLookup().lookup(Displayable.class);
+        if(d != null)
+            return d.getIcon();
+        
+        DataObject obj = nc.getLookup().lookup(DataObject.class);
+        if(obj == null)
+            return EmptyIcon.EMPTY_16;
+        
+        if(obj instanceof DataFolder)
+            return CommonIcons.folder();
+        
+        d = obj.getLookup().lookup(Displayable.class);
+        if(d != null)
+            return d.getIcon();
+        
+        Node n = obj.getNodeDelegate();
+        return ImageUtilities.image2Icon(n.getIcon(BeanInfo.ICON_COLOR_16x16));
     }
     
 //  TODO

@@ -18,9 +18,8 @@
 package org.jreserve.gui.misc.eventbus;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,7 +45,8 @@ public class EventBusManager {
     }
     
     private final EventBus root = new EventBus();
-    private final BlockingQueue<Event> eventQue = new LinkedBlockingQueue<Event>();
+    private final List<Event> events = new LinkedList<Event>();
+//    private final BlockingQueue<Event> eventQue = new LinkedBlockingQueue<Event>();
     private final EventDispatcher dispatcher = new EventDispatcher();
     private final Thread dispatcherThread;
     
@@ -56,44 +56,48 @@ public class EventBusManager {
         dispatcherThread.setDaemon(true);
     }
     
-    public synchronized void subscribe(Object listener) {
+    public void subscribe(Object listener) {
         subscribe("", listener);
     }
     
-    public synchronized void subscribe(String busName, Object listener) {
+    public void subscribe(String busName, Object listener) {
         if(listener == null)
             throw new NullPointerException("Listener can not be null!");
         if(busName == null)
             busName = "";
-        root.getChild(busName).subscribe(listener);
+        synchronized(root) {
+            root.getChild(busName).subscribe(listener);
+        }
     }
     
-    public synchronized void unsubscribe(Object listener) {
+    public void unsubscribe(Object listener) {
         unsubscribe("", listener);
     }
     
-    public synchronized void unsubscribe(String busName, Object listener) {
+    public void unsubscribe(String busName, Object listener) {
         if(listener == null)
             return;
         if(busName == null)
             busName = "";
-        root.getChild(busName).unsubscribe(listener);
+        
+        synchronized(root) {
+            root.getChild(busName).unsubscribe(listener);
+        }
     }
     
-    public synchronized void publish(Object event) {
+    public void publish(Object event) {
         publish("", event);
     }
     
-    public synchronized void publish(String busName, Object value) {
+    public void publish(String busName, Object value) {
         if(value == null)
             throw new NullPointerException("Can not publish null events!");
         if(busName == null)
             busName = "";
         
-        try {
-            eventQue.put(new Event(busName, value));
-        } catch (Exception ex) {
-            logger.log(Level.WARNING, "Unable to publish event: "+value, ex);
+        synchronized(events) {
+            events.add(new Event(busName, value));
+            events.notifyAll();
         }
     }
     
@@ -103,27 +107,36 @@ public class EventBusManager {
         @Override
         public void run() {
             try {
-                while(true)
-                    publishEvent(eventQue.take());
+                doEventLoop();
             } catch (InterruptedException ex) {
                 String msg = "EventBus dispatcher thread interrupted!";
                 logger.log(Level.WARNING, msg, ex);
             }
         }
         
-        private void publishEvent(Event event) {
-            synchronized(root) {
-                Object value = event.value;
-                for(Subscription s : getSubscriptons(event.bus, value.getClass()))
-                    s.publish(value);
+        private void doEventLoop() throws InterruptedException {
+            while(true) {
+                synchronized(events) {
+                    while(!events.isEmpty())
+                        publishEvent(events.remove(0));
+                    events.wait();
+                }
             }
         }
         
+        private void publishEvent(Event event) {
+            Object value = event.value;
+            for(Subscription s : getSubscriptons(event.bus, value.getClass()))
+                s.publish(value);
+        }
+        
         private List<Subscription> getSubscriptons(String busName, Class clazz) {
-            EventBus bus = root.getChild(busName);
-            List<Subscription> subscriptions = new ArrayList<Subscription>();
-            bus.fillSubscriptions(subscriptions, clazz);
-            return subscriptions;
+            synchronized(root) {
+                EventBus bus = root.getChild(busName);
+                List<Subscription> subscriptions = new ArrayList<Subscription>();
+                bus.fillSubscriptions(subscriptions, clazz);
+                return subscriptions;
+            }
         }
     }
     

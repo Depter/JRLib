@@ -60,10 +60,19 @@ public abstract class DoubleExponentialSmoothingDialogController<T extends Trian
         for(int i=0; i<original.length; i++)
             original[i] = records.get(i).getOriginal();
     }
+    
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
+    
+    public void setBeta(double beta) {
+        this.beta = beta;
+    }
 
     @Override
     public Component getParameterComponent() {
         if(panel == null) {
+            updateRecords(records);
             panel = new DoubleExponentialParamPanel(this);
             panel.setAlpha(LocaleSettings.getExactString(alpha));
             panel.setBeta(LocaleSettings.getExactString(beta));

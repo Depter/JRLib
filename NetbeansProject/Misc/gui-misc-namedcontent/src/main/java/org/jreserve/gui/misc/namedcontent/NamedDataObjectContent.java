@@ -17,18 +17,13 @@
 
 package org.jreserve.gui.misc.namedcontent;
 
-import java.awt.Image;
-import java.beans.BeanInfo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.Icon;
-import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
-import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 
 /**
@@ -59,27 +54,23 @@ public class NamedDataObjectContent implements NamedContent {
             return Collections.singleton(new NamedDataObjectContent(obj));
         return ncs;
     }
-    
-    @Override
-    public Icon getIcon() {
-        Displayable displayable = getDisplayable();
-        if(displayable != null)
-            return displayable.getIcon();
-        
-        if(obj instanceof DataFolder)
-            return CommonIcons.folder();
-        
-        Image img = obj.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
-        return ImageUtilities.image2Icon(img);
-    }
-    
-    private Displayable getDisplayable() {
-        return obj.getLookup().lookup(Displayable.class);
-    }
+//    
+//    @Override
+//    public Icon getIcon() {
+//        Displayable displayable = getDisplayable();
+//        if(displayable != null)
+//            return displayable.getIcon();
+//        
+//        if(obj instanceof DataFolder)
+//            return CommonIcons.folder();
+//        
+//        Image img = obj.getNodeDelegate().getIcon(BeanInfo.ICON_COLOR_16x16);
+//        return ImageUtilities.image2Icon(img);
+//    }
 
     @Override
-    public String getDisplayName() {
-        Displayable displayable = getDisplayable();
+    public String getName() {
+        Displayable displayable = getLookup().lookup(Displayable.class);
         return displayable==null?
                 obj.getName() :
                 displayable.getDisplayName();

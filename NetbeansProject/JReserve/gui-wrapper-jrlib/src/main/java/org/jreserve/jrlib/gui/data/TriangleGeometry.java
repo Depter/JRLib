@@ -56,6 +56,13 @@ public class TriangleGeometry {
         checkLengths();
     }
     
+    public TriangleGeometry(TriangleGeometry original) {
+        this.end = original.end;
+        this.start = original.start;
+        this.accidentLength = original.accidentLength;
+        this.developmentLength = original.developmentLength;
+    }
+    
     private void checkDates() {
         if(start == null)
             throw new NullPointerException("Start date is null!");

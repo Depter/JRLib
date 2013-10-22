@@ -31,7 +31,8 @@ import org.openide.util.NbBundle.Messages;
     "LBL.LogLinearSmoothingModifier.Name=Log-Linear Regression",
     "# {0} - hasIntercept",
     "# {1} - cells",
-    "LBL.LogLinearSmoothingModifier.Description=Log-Linear Regression [hasIntercept={0}], [{1}]"
+    "LBL.LogLinearSmoothingModifier.Description=Log-Linear Regression [hasIntercept={0}], [{1}]",
+    "LBL.LogLinearSmoothingModifier.ProgressName=Log-Linear Smoothing"
 })
 public abstract class LogLinearSmoothingModifier<T extends Triangle> extends AbstractRegressionSmoothingModifier<T> {
 
@@ -58,5 +59,10 @@ public abstract class LogLinearSmoothingModifier<T extends Triangle> extends Abs
 
     protected final LogLinearRegressionSmoothing createSmoothing() {
         return new LogLinearRegressionSmoothing(getCellsAsArray(), hasIntercept());
+    }
+
+    @Override
+    protected String getUpdatePHTitle() {
+        return Bundle.LBL_LogLinearSmoothingModifier_ProgressName();
     }
 }

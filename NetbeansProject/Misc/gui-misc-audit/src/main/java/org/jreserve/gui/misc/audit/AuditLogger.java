@@ -16,6 +16,8 @@
  */
 package org.jreserve.gui.misc.audit;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
@@ -34,7 +36,9 @@ class AuditLogger implements Runnable {
 
     private final static Logger logger = Logger.getLogger(AuditLogger.class.getName());
     private final static String THREAD_NAME = "AuditLoggerThread";
-    private final static BlockingQueue<AuditEvent> events = new LinkedBlockingQueue<AuditEvent>();
+    
+    private final static List<AuditEvent> events = new LinkedList<AuditEvent>();
+//    private final static BlockingQueue<AuditEvent> events = new LinkedBlockingQueue<AuditEvent>();
     private static Thread auditThread;
     private static AuditLogger instance;
 
@@ -67,8 +71,8 @@ class AuditLogger implements Runnable {
     
     private final EventListener eventListener = new EventListener();
     private final ProviderListener providerListener = new ProviderListener();
-    private final Object stopLock = new Object();
-    private boolean isStopped = false;
+//    private final Object stopLock = new Object();
+//    private boolean isStopped = false;
     
     private AuditLogger() {
     }
@@ -76,20 +80,36 @@ class AuditLogger implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
-                logEvent(events.take());
-            }
+            doLoop();
         } catch (InterruptedException ex) {
             flushEvents();
             logger.info("Audit logger thread stopped.");
+        }
+//        try {
+//            while (true) {
+//                logEvent(events.take());
+//            }
+//        } catch (InterruptedException ex) {
+//            flushEvents();
+//            logger.info("Audit logger thread stopped.");
+//        }
+    }
+    
+    private void doLoop() throws InterruptedException {
+        while(true) {
+            synchronized(events) {
+                while(!events.isEmpty())
+                    logEvent(events.remove(0));
+                events.wait();
+            }
         }
     }
     
     private void flushEvents() {
         logger.log(Level.INFO, "Flushing audit event queu...");
-        synchronized (events) {
-            while (!events.isEmpty())
-                logEvent(events.poll());
+        synchronized(events) {
+            while(!events.isEmpty())
+                logEvent(events.remove(0));
         }
     }
 
@@ -109,7 +129,10 @@ class AuditLogger implements Runnable {
         @EventBusListener
         public void auditEventPublished(AuditEvent evt) {
             try {
-                events.put(evt);
+                synchronized(events) {
+                    events.add(evt);
+                    events.notifyAll();
+                }
             } catch (Exception ex) {
                 logger.log(Level.WARNING, "Unable to publish event: " + evt, ex);
             }
@@ -127,7 +150,10 @@ class AuditLogger implements Runnable {
                 AuditEvent evt = provider.getAuditEvent();
                 if(evt == null)
                     throw new NullPointerException("AuditEvent.Provider '"+provider+"' provided a null AuditEvent!");
-                events.put(evt);
+                synchronized(events) {
+                    events.add(evt);
+                    events.notifyAll();
+                }
             } catch (Exception ex) {
                 logger.log(Level.WARNING, "Unable to publish event: " + provider, ex);
             }

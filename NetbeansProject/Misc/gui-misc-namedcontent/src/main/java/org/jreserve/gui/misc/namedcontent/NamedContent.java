@@ -18,7 +18,6 @@
 package org.jreserve.gui.misc.namedcontent;
 
 import java.util.List;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.openide.util.Lookup;
 
 /**
@@ -26,8 +25,9 @@ import org.openide.util.Lookup;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface NamedContent extends Displayable, Lookup.Provider {
+public interface NamedContent extends Lookup.Provider {
     
     public List<NamedContent> getContents();
 
+    public String getName();
 }

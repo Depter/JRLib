@@ -31,7 +31,8 @@ import org.jreserve.jrlib.triangle.smoothing.ArithmeticMovingAverage;
     "LBL.ArithmeticMASmoothingModifier.Name=Arithmetic MA",
     "# {0} - length",
     "# {1} - cells",
-    "LBL.ArithmeticMASmoothingModifier.Description=Arithmetic MA [length={0}], [{1}]"
+    "LBL.ArithmeticMASmoothingModifier.Description=Arithmetic MA [length={0}], [{1}]",
+    "LBL.ArithmeticMASmoothingModifier.ProgressName=Arithmetic MA Smoothing"
 })
 public abstract class ArithmeticMASmoothingModifier<T extends Triangle>
     extends AbstractMASmoothingModifier<T> {
@@ -59,5 +60,10 @@ public abstract class ArithmeticMASmoothingModifier<T extends Triangle>
 
     protected final ArithmeticMovingAverage createSmoothing() {
         return new ArithmeticMovingAverage(getCellsAsArray(), getLength());
+    }
+
+    @Override
+    protected String getUpdatePHTitle() {
+        return Bundle.LBL_ArithmeticMASmoothingModifier_ProgressName();
     }
 }

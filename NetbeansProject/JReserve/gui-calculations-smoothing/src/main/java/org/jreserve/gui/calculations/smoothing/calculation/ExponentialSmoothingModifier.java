@@ -18,7 +18,9 @@ package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import org.jdom2.Element;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.ExponentialSmoothing;
@@ -34,7 +36,8 @@ import org.openide.util.NbBundle.Messages;
     "LBL.ExponentialSmoothingModifier.Name=Exponential Smoothing",
     "# {0} - alpha",
     "# {1} - cells",
-    "LBL.ExponentialSmoothingModifier.Description=Exponential Smoothing [alpha={0}], [{1}]"
+    "LBL.ExponentialSmoothingModifier.Description=Exponential Smoothing [alpha={0}], [{1}]",
+    "LBL.ExponentialSmoothingModifier.ProgressName=Exponential Smoothing"
 })
 public abstract class ExponentialSmoothingModifier<T extends Triangle> 
     extends AbstractSmoothingModifier<T> {
@@ -114,5 +117,29 @@ public abstract class ExponentialSmoothingModifier<T extends Triangle>
 
     protected final ExponentialSmoothing createSmoothing() {
         return new ExponentialSmoothing(getCellsAsArray(), alpha);
+    }
+    
+    protected final void updateFrom(ExponentialSmoothingModifier<T> modifier) {
+        UpdateTask task = new UpdateTask(this, modifier.getAlpha());
+        TaskUtil.execute(task, null, Bundle.LBL_ExponentialSmoothingModifier_ProgressName());
+    }
+    
+    private static class UpdateTask implements Callable<Void> {
+        
+        private final ExponentialSmoothingModifier esm;
+        private final double alpha;
+
+        private UpdateTask(ExponentialSmoothingModifier esm, double alpha) {
+            this.esm = esm;
+            this.alpha = alpha;
+        }
+        
+        @Override
+        public Void call() throws Exception {
+            synchronized(esm) {
+                esm.setAlpha(alpha);
+                return null;
+            }
+        }    
     }
 }

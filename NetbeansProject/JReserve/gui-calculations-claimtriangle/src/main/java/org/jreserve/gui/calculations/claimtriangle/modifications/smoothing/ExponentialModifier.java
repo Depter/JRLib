@@ -55,16 +55,19 @@ public class ExponentialModifier
     
     @Override
     public void edit(ModifiableCalculationProvider<ClaimTriangle> calculation) {
-        ClaimTriangle source = super.getSource(calculation);
-        TriangleGeometry geometry = ((ClaimTriangleCalculationImpl) calculation).getGeometry();
-        List<Cell> cells = getAffectedCells();
-        
-        DialogController controller = new DialogController(source, geometry, cells);
+        DialogController controller = createController(calculation);
+        controller.setAlpha(super.getAlpha());
+        controller.setAllowsModifyCells(false);
         ExponentialModifier em = (ExponentialModifier) AbstractSmoothDialog.createModifier(controller);
         
         if(em != null)
-            super.setAlpha(em.getAlpha());
+            super.updateFrom(em);
     }
     
-    //TODO worker thread
+    private DialogController createController(ModifiableCalculationProvider<ClaimTriangle> calculation) {
+        ClaimTriangle source = super.getSource(calculation);
+        TriangleGeometry geometry = ((ClaimTriangleCalculationImpl) calculation).getGeometry();
+        List<Cell> cells = getAffectedCells();
+        return new DialogController(source, geometry, cells);
+    }
 }

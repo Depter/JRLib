@@ -23,6 +23,7 @@ import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 
 /**
  *
@@ -43,7 +44,12 @@ public class SmoothRecord {
         MonthDate accident = geometry.getAccidentDate(cell.getAccident());
         int development = cell.getDevelopment();
         double value = triangle.getValue(cell);
-        return new SmoothRecord(accident, cell.getAccident(), development, value);
+        
+        SmoothRecord record = new SmoothRecord(accident, cell.getAccident(), development, value);
+        if(cell instanceof SmoothingCell)
+            record.used = ((SmoothingCell)cell).isApplied();
+        
+        return record;
     }
     
     private final int accident;

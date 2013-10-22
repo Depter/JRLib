@@ -56,10 +56,15 @@ public abstract class ExponentialSmoothingDialogController<T extends Triangle>
         for(int i=0; i<original.length; i++)
             original[i] = records.get(i).getOriginal();
     }
+    
+    public void setAlpha(double alpha) {
+        this.alpha = alpha;
+    }
 
     @Override
     public Component getParameterComponent() {
         if(panel == null) {
+            updateRecords(records);
             panel = new ExponentialParamPanel(this);
             panel.setAlpha(LocaleSettings.getExactString(alpha));
         }
