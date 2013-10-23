@@ -82,6 +82,10 @@ public class CalculationEventUtil {
         fireEvent(new Changed());
     }
     
+    public void fireValueChanged() {
+        fireEvent(new ValueChanged());
+    }
+    
     public void fireChange(String change) {
         fireEvent(new Changed());
         auditCache.add(new AbstractAuditEvent(calculation, change));
@@ -136,6 +140,7 @@ public class CalculationEventUtil {
     private class Created extends Event implements CalculationEvent.Created {}
     private class Deleted extends Event implements CalculationEvent.Deleted {}
     private class Changed extends Event implements CalculationEvent.Change {}
+    private class ValueChanged extends Event implements CalculationEvent.ValueChanged{}
     private class Saved extends Event implements CalculationEvent.Saved {}
     private class Renamed extends Event implements CalculationEvent.Renamed {
         private final String oldPath;

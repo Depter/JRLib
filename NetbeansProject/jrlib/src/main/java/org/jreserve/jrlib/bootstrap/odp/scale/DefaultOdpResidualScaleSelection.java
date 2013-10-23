@@ -60,6 +60,11 @@ public class DefaultOdpResidualScaleSelection
     }
     
     @Override
+    public boolean isAccident() {
+        return false;
+    }
+    
+    @Override
     public OdpResidualScale getOdpSourceResidualScale() {
         return source;
     }

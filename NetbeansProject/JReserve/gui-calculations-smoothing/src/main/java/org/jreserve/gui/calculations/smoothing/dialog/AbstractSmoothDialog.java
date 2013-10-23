@@ -49,6 +49,7 @@ import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.ScaleSpinner;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.plot.ChartWrapper;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
@@ -69,15 +70,15 @@ import org.openide.util.NbBundle.Messages;
     "LBL.AbstractSmoothDialog.Ok=ok",
     "LBL.AbstractSmoothDialog.Help=Help"
 })
-public class AbstractSmoothDialog<T extends Triangle> extends JPanel {
+public class AbstractSmoothDialog<C extends CalculationData> extends JPanel {
     
     private final static boolean MODAL = true;
     private final static Dimension TABS_SIZE = new Dimension(400, 400);
     private final static Dimension TAB_PANEL_SIZE = new Dimension(100, 100);
     private final static Dimension PLOT_SIZE = new Dimension(300, 300);
     
-    public static <T extends Triangle> CalculationModifier<T> createModifier(SmoothDialogController<T> controller) {
-        AbstractSmoothDialog<T> content = new AbstractSmoothDialog<T>(controller);
+    public static <C extends CalculationData> CalculationModifier<C> createModifier(SmoothDialogController<C> controller) {
+        AbstractSmoothDialog<C> content = new AbstractSmoothDialog<C>(controller);
         DialogDescriptor dd = new DialogDescriptor(
             content, controller.getDialogTitle(), MODAL, 
             new Object[0], null, DialogDescriptor.DEFAULT_ALIGN, 
@@ -88,7 +89,7 @@ public class AbstractSmoothDialog<T extends Triangle> extends JPanel {
         return content.modifier;
     }
     
-    private SmoothDialogController<T> controller;
+    private SmoothDialogController<C> controller;
     private JButton okButton;
     private JButton cancelButton;
     private JButton helpButton;
@@ -100,10 +101,10 @@ public class AbstractSmoothDialog<T extends Triangle> extends JPanel {
     private List<SmoothRecord> records;
     private boolean myChnage = false;
     private Dialog dialog;
-    private CalculationModifier<T> modifier = null;
+    private CalculationModifier<C> modifier = null;
     private LocaleSettings.DecimalFormatter df;
     
-    public AbstractSmoothDialog(SmoothDialogController<T> controller) {
+    public AbstractSmoothDialog(SmoothDialogController<C> controller) {
         this.controller = controller;
         initComponents();
         this.controller.addChangeListener(new ControllerListener());

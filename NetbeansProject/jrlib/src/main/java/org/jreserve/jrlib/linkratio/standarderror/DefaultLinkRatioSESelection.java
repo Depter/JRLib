@@ -84,6 +84,11 @@ public class DefaultLinkRatioSESelection extends AbstractMethodSelection<LinkRat
     }
     
     @Override
+    public boolean isAccident() {
+        return false;
+    }
+    
+    @Override
     public void setDefaultMethod(LinkRatioSEFunction defaultMethod) {
         if(defaultMethod == null)
             defaultMethod = new DefaultLinkRatioSEFunction();

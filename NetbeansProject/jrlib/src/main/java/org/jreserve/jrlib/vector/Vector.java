@@ -27,6 +27,12 @@ import org.jreserve.jrlib.CalculationData;
 public interface Vector extends CalculationData {
     
     /**
+     * Returns wether this vector is an accident vector or
+     * a development vector.
+     */
+    public boolean isAccident();
+    
+    /**
      * Retunrs the length of this vector.
      */
     public int getLength();

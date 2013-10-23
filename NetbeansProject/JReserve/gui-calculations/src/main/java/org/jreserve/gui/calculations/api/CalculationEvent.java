@@ -40,6 +40,8 @@ public interface CalculationEvent {
     
     public static interface Change extends CalculationEvent {}
     
+    public static interface ValueChanged extends CalculationEvent {};
+    
     public static interface ModificationChange extends Change {
         public int getModifiedIndex();
         public CalculationModifier getModifier();

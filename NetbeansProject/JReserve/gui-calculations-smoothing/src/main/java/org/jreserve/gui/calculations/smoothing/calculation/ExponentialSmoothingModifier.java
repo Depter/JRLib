@@ -22,9 +22,12 @@ import java.util.concurrent.Callable;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.ExponentialSmoothing;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.smoothing.AbstractSmoothing;
+import org.jreserve.jrlib.vector.smoothing.ExponentialSmoothingMethod;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothing;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -39,15 +42,15 @@ import org.openide.util.NbBundle.Messages;
     "LBL.ExponentialSmoothingModifier.Description=Exponential Smoothing [alpha={0}], [{1}]",
     "LBL.ExponentialSmoothingModifier.ProgressName=Exponential Smoothing"
 })
-public abstract class ExponentialSmoothingModifier<T extends Triangle> 
-    extends AbstractSmoothingModifier<T> {
+public abstract class ExponentialSmoothingModifier<C extends CalculationData> 
+    extends AbstractSmoothingModifier<C> {
 
     public final static String ROOT_TAG = "exponentialSmoothing";
     public final static String ALPHA_TAG = "alpha";
     
     private double alpha;
     
-    public ExponentialSmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, double alpha) {
+    public ExponentialSmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, double alpha) {
         super(cells, clazz);
         checkCells(cells);
         
@@ -119,7 +122,13 @@ public abstract class ExponentialSmoothingModifier<T extends Triangle>
         return new ExponentialSmoothing(getCellsAsArray(), alpha);
     }
     
-    protected final void updateFrom(ExponentialSmoothingModifier<T> modifier) {
+    protected final VectorSmoothing createVectorSmoothing() {
+        return new AbstractSmoothing(
+                getCellsAsIndices(),
+                new ExponentialSmoothingMethod(alpha));
+    }
+    
+    protected final void updateFrom(ExponentialSmoothingModifier<C> modifier) {
         UpdateTask task = new UpdateTask(this, modifier.getAlpha());
         TaskUtil.execute(task, null, Bundle.LBL_ExponentialSmoothingModifier_ProgressName());
     }

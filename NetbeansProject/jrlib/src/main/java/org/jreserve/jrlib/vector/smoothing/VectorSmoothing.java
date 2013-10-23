@@ -16,6 +16,7 @@
  */
 package org.jreserve.jrlib.vector.smoothing;
 
+import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.jreserve.jrlib.vector.Vector;
 
 /**
@@ -35,4 +36,9 @@ public interface VectorSmoothing {
      * @return the smoothed vector values.
      */
     public double[] smooth(Vector input);
+    
+    /**
+     * Returns the cells, which are smoothed, or input for the smoothing.
+     */
+    public SmoothingIndex[] getSmoothingCells();
 }

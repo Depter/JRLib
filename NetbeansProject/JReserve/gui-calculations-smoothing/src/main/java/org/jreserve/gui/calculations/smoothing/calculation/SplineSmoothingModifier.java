@@ -22,9 +22,13 @@ import java.util.concurrent.Callable;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.jreserve.jrlib.triangle.smoothing.SplineSmoothing;
+import org.jreserve.jrlib.vector.smoothing.AbstractSmoothing;
+import org.jreserve.jrlib.vector.smoothing.SmoothingIndex;
+import org.jreserve.jrlib.vector.smoothing.SplineSmoothingMethod;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothing;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -39,14 +43,15 @@ import org.openide.util.NbBundle.Messages;
     "LBL.SplineSmoothingModifier.Description=Spline Smoothing [lambda={0}], [{1}]",
     "LBL.SplineSmoothingModifier.ProgressName=Spline Smoothing"
 })
-public abstract class SplineSmoothingModifier<T extends Triangle> extends AbstractSmoothingModifier<T> {
+public abstract class SplineSmoothingModifier<C extends CalculationData> 
+    extends AbstractSmoothingModifier<C> {
 
     public final static String ROOT_TAG = "splineSmoothing";
     public final static String LAMBDA_TAG = "lambda";
     
     private double lambda;
     
-    public SplineSmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, double lambda) {
+    public SplineSmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, double lambda) {
         super(cells, clazz);
         checkCells(cells);
         
@@ -110,7 +115,12 @@ public abstract class SplineSmoothingModifier<T extends Triangle> extends Abstra
         return new SplineSmoothing(getCellsAsArray(), lambda);
     }
     
-    protected final void updateFrom(SplineSmoothingModifier<T> modifier) {
+    protected final VectorSmoothing createVectorSmoothing() {
+        SplineSmoothingMethod ssm = new SplineSmoothingMethod(lambda);
+        return new AbstractSmoothing(getCellsAsIndices(), ssm);
+    }
+    
+    protected final void updateFrom(SplineSmoothingModifier<C> modifier) {
         UpdateTask task = new UpdateTask(this, modifier.getLambda());
         TaskUtil.execute(task, null, Bundle.LBL_SplineSmoothingModifier_ProgressName());
     }

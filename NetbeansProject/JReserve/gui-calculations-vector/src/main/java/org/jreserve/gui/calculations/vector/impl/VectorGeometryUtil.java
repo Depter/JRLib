@@ -30,6 +30,7 @@ import org.jreserve.jrlib.triangle.InputTriangle;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.vector.InputVector;
 import org.jreserve.jrlib.vector.Vector;
+import org.jreserve.jrlib.vector.VectorTriangle;
 
 /**
  *
@@ -80,11 +81,7 @@ public class VectorGeometryUtil {
     }
     
     public static Triangle toTriangle(Vector vector) {
-        int length = vector.getLength();
-        double[][] data = new double[length][1];
-        for(int i=0; i<length; i++)
-            data[i][0] = vector.getValue(i);
-        return new InputTriangle(data);
+        return new VectorTriangle(vector);
     }
     
     private VectorGeometryUtil() {

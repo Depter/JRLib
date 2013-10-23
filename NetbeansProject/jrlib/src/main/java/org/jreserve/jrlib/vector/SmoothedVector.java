@@ -49,6 +49,10 @@ public class SmoothedVector extends AbstractVectorModification {
         return withinBonds(index)? values[index] : Double.NaN;
     }
 
+    public VectorSmoothing getSmoothing() {
+        return smoothing;
+    }
+    
     @Override
     protected void recalculateLayer() {
        doRecalculate();

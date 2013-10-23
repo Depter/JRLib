@@ -26,7 +26,6 @@ import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.Cell;
-import org.jreserve.jrlib.triangle.Triangle;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 
@@ -38,7 +37,7 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "MSG.AbstractSmoothable.PH.Title=Apply smoothing"
 })
-public abstract class AbstractSmoothable<T extends Triangle> implements Smoothable {
+public abstract class AbstractSmoothable<C extends CalculationData> implements Smoothable {
 
     @Override
     public boolean canSmooth(Lookup context) {
@@ -79,7 +78,7 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
         return false;
     }
     
-    protected abstract ModifiableCalculationProvider<T> getCalculation(Lookup context);
+    protected abstract ModifiableCalculationProvider<C> getCalculation(Lookup context);
     
     protected abstract int getMinCellCount();
     
@@ -93,7 +92,7 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
     
     @Override
     public void smooth(Lookup context) {
-        CalculationModifier<T> modifier = createSmoothing(context);
+        CalculationModifier<C> modifier = createSmoothing(context);
         UndoUtil undo = context.lookup(UndoUtil.class);
         
         if(modifier != null && undo != null) {
@@ -103,19 +102,19 @@ public abstract class AbstractSmoothable<T extends Triangle> implements Smoothab
         }
     }
     
-    protected CalculationModifier<T> createSmoothing(Lookup context) {
-        SmoothDialogController<T> controller = createController(context);
+    protected CalculationModifier<C> createSmoothing(Lookup context) {
+        SmoothDialogController<C> controller = createController(context);
         return AbstractSmoothDialog.createModifier(controller);
     }
 
-    protected abstract SmoothDialogController<T> createController(Lookup context);
+    protected abstract SmoothDialogController<C> createController(Lookup context);
     
     private class AddTask implements Callable<Void> {
         
-        private final UndoUtil<T> undo;
-        private final CalculationModifier<T> mod;
+        private final UndoUtil<C> undo;
+        private final CalculationModifier<C> mod;
         
-        private AddTask(UndoUtil<T> undo, CalculationModifier<T> mod) {
+        private AddTask(UndoUtil<C> undo, CalculationModifier<C> mod) {
             this.undo = undo;
             this.mod = mod;
         }

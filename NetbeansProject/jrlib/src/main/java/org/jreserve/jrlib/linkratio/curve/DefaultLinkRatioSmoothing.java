@@ -106,6 +106,11 @@ public class DefaultLinkRatioSmoothing extends AbstractMethodSelection<LinkRatio
     }
     
     @Override
+    public boolean isAccident() {
+        return false;
+    }
+    
+    @Override
     public LinkRatio getSourceLinkRatios() {
         return source;
     }

@@ -21,9 +21,9 @@ import java.util.List;
 import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialogController;
 import org.jreserve.gui.calculations.smoothing.dialog.SmoothRecord;
 import org.jreserve.gui.localesettings.LocaleSettings;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
-import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.ExponentialSmoothing;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.NbBundle.Messages;
@@ -39,8 +39,8 @@ import org.openide.util.NbBundle.Messages;
     "MSG.ExponentialSmoothingDialogController.Alpha.NotNumeric=Alpha is not a number!",
     "MSG.ExponentialSmoothingDialogController.Alpha.Invalid=Alpha must be within [0; 1]"
 })
-public abstract class ExponentialSmoothingDialogController<T extends Triangle> 
-    extends AbstractSmoothDialogController<T> {
+public abstract class ExponentialSmoothingDialogController<C extends CalculationData> 
+    extends AbstractSmoothDialogController<C> {
     
     private List<SmoothRecord> records;
     private double alpha = 0d;
@@ -48,9 +48,9 @@ public abstract class ExponentialSmoothingDialogController<T extends Triangle>
     private double[] original;
     private ExponentialParamPanel panel;
     
-    public ExponentialSmoothingDialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
+    public ExponentialSmoothingDialogController(C data, TriangleGeometry geometry, List<Cell> cells) {
         super(Bundle.LBL_ExponentialSmoothingDialogController_Title());
-        this.records = SmoothRecord.createRecords(triangle, geometry, cells);
+        this.records = SmoothRecord.createRecords(data, geometry, cells);
         
         this.original = new double[records.size()];
         for(int i=0; i<original.length; i++)

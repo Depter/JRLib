@@ -20,7 +20,9 @@ package org.jreserve.gui.calculations.claimtriangle.impl;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.api.NamedDataSourceProvider;
 import org.jreserve.gui.misc.namedcontent.DefaultContentChooserController;
+import org.jreserve.gui.misc.namedcontent.NamedContent;
 import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -40,4 +42,13 @@ public class DataSourceController extends DefaultContentChooserController {
     private DataSourceController(NamedDataSourceProvider dop) {
         super(dop, DataSource.class, Bundle.LBL_DataSourceController_Title());
     }
+
+    @Override
+    public boolean acceptsContent(NamedContent content) {
+        DataSource ds = content.getLookup().lookup(DataSource.class);
+        return ds != null &&
+               DataType.TRIANGLE == ds.getDataType();
+    }
+    
+    
 }

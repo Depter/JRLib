@@ -59,9 +59,7 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
     
     protected void setPath(String path) {
         synchronized(lock) {
-            String oldPath = path;
             this.path = path;
-            events.fireRenamed(oldPath);
         }
     }
 

@@ -23,6 +23,7 @@ import java.util.List;
 import org.jdom2.Element;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.smoothing.SmoothingIndex;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -102,6 +103,21 @@ public class SmoothingModifierUtil {
         int development = JDomUtil.getExistingInt(root, DEVELOPMENT_TAG);
         boolean applied = JDomUtil.getExistingBoolean(root, APPLIED_TAG);
         return new SmoothingCell(accident, development, applied);
+    }
+    
+    public static SmoothingIndex[] getCellsAsIndices(AbstractSmoothingModifier modifier) {
+        List<SmoothingCell> cells = modifier.getCells();
+        int size = cells.size();
+        SmoothingIndex[] indices = new SmoothingIndex[size];
+        for(int i=0; i<size; i++)
+            indices[i] = getCellAsIndex(cells.get(i));
+        return indices;
+    }
+    
+    private static SmoothingIndex getCellAsIndex(SmoothingCell cell) {
+        int a = cell.getAccident();
+        int d = cell.getDevelopment();
+        return new SmoothingIndex(a<0? d : a, cell.isApplied());
     }
     
     private SmoothingModifierUtil() {}

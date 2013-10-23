@@ -25,6 +25,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
 import org.jreserve.gui.data.api.DataEvent;
@@ -33,6 +34,7 @@ import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -153,17 +155,18 @@ public class ClaimTriangleCalculationImpl
     }
     
     private void recalculate() {
-        try {
-            claimTriangle = TriangleGeometryUtil.createTriangle(dataSource, geometry);
-            claimTriangle = new CummulatedClaimTriangle(claimTriangle);
-            claimTriangle = super.modifyCalculation(claimTriangle);
-        } catch (Exception ex) {
-            String msg = "Unable to calculate claim triangle!";
-            logger.log(Level.SEVERE, msg, ex);
-            String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
-            BubbleUtil.showException(title, getPath(), ex);
-            claimTriangle = new InputClaimTriangle(new double[0][0]);
-        }    
+        TaskUtil.execute(new RecalculateTask());
+//        try {
+//            claimTriangle = TriangleGeometryUtil.createTriangle(dataSource, geometry);
+//            claimTriangle = new CummulatedClaimTriangle(claimTriangle);
+//            claimTriangle = super.modifyCalculation(claimTriangle);
+//        } catch (Exception ex) {
+//            String msg = "Unable to calculate claim triangle!";
+//            logger.log(Level.SEVERE, msg, ex);
+//            String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
+//            BubbleUtil.showException(title, getPath(), ex);
+//            claimTriangle = new InputClaimTriangle(new double[0][0]);
+//        }    
     }
     
     @Override
@@ -201,7 +204,13 @@ public class ClaimTriangleCalculationImpl
     
     @Override
     public ClaimTriangle getCalculation() {
-        return claimTriangle;
+        synchronized(lock) {
+            if(claimTriangle == null) {
+                recalculate();
+                return new InputClaimTriangle(new double[0][]);
+            }
+            return claimTriangle;
+        }
     }
     
     @Override
@@ -301,41 +310,44 @@ public class ClaimTriangleCalculationImpl
         }
     }
     
-//    private class RecalculateTask implements Runnable {
-//        
-//        private final DataSource ds;
-//        private final TriangleGeometry geometry;
-//        private final List<CalculationModifier<ClaimTriangle>> modifications;
-//        
-//        private RecalculateTask() {
-//            synchronized(lock) {
-//                this.ds = ClaimTriangleCalculationImpl.this.dataSource;
-//                this.geometry = new TriangleGeometry(ClaimTriangleCalculationImpl.this.geometry);
-//                this.modifications = new ArrayList<CalculationModifier<ClaimTriangle>>(ClaimTriangleCalculationImpl.this.getModifications());
-//            }
-//        }
-//        
-//        @Override
-//        public void run() {
-//            ClaimTriangle result = calculateResult();
-//            
-//        }
-//        
-//        private ClaimTriangle calculateResult() {
-//            try {
-//                ClaimTriangle result = TriangleGeometryUtil.createTriangle(ds, this.geometry);
-//                result = new CummulatedClaimTriangle(result);
-//                for(CalculationModifier<ClaimTriangle> cm : this.modifications)
-//                    result = cm.createCalculation(result);
-//                return result;
-//            } catch (Exception ex) {
-//                String msg = "Unable to calculate claim triangle!";
-//                logger.log(Level.SEVERE, msg, ex);
-//                String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
-//                BubbleUtil.showException(title, getPath(), ex);
-//                return new InputClaimTriangle(new double[0][0]);
-//            }
-//        }
-//    
-//    }
+    private class RecalculateTask implements Runnable {
+        
+        private final DataSource ds;
+        private final TriangleGeometry geometry;
+        private final List<CalculationModifier<ClaimTriangle>> modifications;
+        
+        private RecalculateTask() {
+            synchronized(lock) {
+                this.ds = ClaimTriangleCalculationImpl.this.dataSource;
+                this.geometry = new TriangleGeometry(ClaimTriangleCalculationImpl.this.geometry);
+                this.modifications = new ArrayList<CalculationModifier<ClaimTriangle>>(ClaimTriangleCalculationImpl.this.modifications);
+            }
+        }
+        
+        @Override
+        public void run() {
+            final ClaimTriangle result = calculateResult();
+            synchronized(lock) {
+                claimTriangle = result;
+                events.fireValueChanged();
+            }
+        }
+        
+        private ClaimTriangle calculateResult() {
+            try {
+                ClaimTriangle result = TriangleGeometryUtil.createTriangle(ds, this.geometry);
+                result = new CummulatedClaimTriangle(result);
+                for(CalculationModifier<ClaimTriangle> cm : this.modifications)
+                    result = cm.createCalculation(result);
+                return result;
+            } catch (Exception ex) {
+                String msg = "Unable to calculate claim triangle!";
+                logger.log(Level.SEVERE, msg, ex);
+                String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
+                BubbleUtil.showException(title, getPath(), ex);
+                return new InputClaimTriangle(new double[0][0]);
+            }
+        }
+    
+    }
 }

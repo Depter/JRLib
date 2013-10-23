@@ -23,7 +23,7 @@ import java.util.concurrent.Callable;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 
 /**
@@ -31,13 +31,14 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractRegressionSmoothingModifier<T extends Triangle> extends AbstractSmoothingModifier<T> {
+public abstract class AbstractRegressionSmoothingModifier<C extends CalculationData> 
+    extends AbstractSmoothingModifier<C> {
 
     public final static String INTERCEPT_TAG = "hasIntercept";
     
     private boolean hasIntercept;
     
-    public AbstractRegressionSmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, boolean hasIntercept) {
+    public AbstractRegressionSmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, boolean hasIntercept) {
         super(cells, clazz);
         checkCells(cells);
         
@@ -90,7 +91,7 @@ public abstract class AbstractRegressionSmoothingModifier<T extends Triangle> ex
     
     protected abstract String getRootTag();
     
-    protected final void updateFrom(AbstractRegressionSmoothingModifier<T> modifier) {
+    protected final void updateFrom(AbstractRegressionSmoothingModifier<C> modifier) {
         UpdateTask task = new UpdateTask(this, modifier.hasIntercept);
         TaskUtil.execute(task, null, getUpdatePHTitle());
     }

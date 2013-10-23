@@ -66,7 +66,7 @@ public class SplineClaimTriangleSmoothable extends LinearSmoothable<ClaimTriangl
     static class DialogController extends SplineSmoothingDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
-            super(triangle, geometry, cells);
+            super((ClaimTriangle) triangle, geometry, cells);
         }
         
         @Override

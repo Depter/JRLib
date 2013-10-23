@@ -35,6 +35,11 @@ public class InputVector extends AbstractVector<CalculationData> {
      * `null` then an empty vector with length of 0 is created.
      */
     public InputVector(double[] values) {
+        this(values, true);
+    }
+    
+    public InputVector(double[] values, boolean isAccident) {
+        super(isAccident);
         initData(values);
     }
     

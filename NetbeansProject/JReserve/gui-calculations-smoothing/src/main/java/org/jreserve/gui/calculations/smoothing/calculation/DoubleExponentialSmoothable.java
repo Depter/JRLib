@@ -17,15 +17,15 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import org.jreserve.gui.calculations.smoothing.AbstractSmoothable;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class DoubleExponentialSmoothable<T extends Triangle>
-    extends AbstractSmoothable<T> {
+public abstract class DoubleExponentialSmoothable<C extends CalculationData>
+    extends AbstractSmoothable<C> {
 
     private final static int MIN_CELL_COUNT = 2;
     

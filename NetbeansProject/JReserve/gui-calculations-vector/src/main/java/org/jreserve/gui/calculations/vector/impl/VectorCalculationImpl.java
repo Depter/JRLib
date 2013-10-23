@@ -25,6 +25,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.vector.VectorCalculation;
 import org.jreserve.gui.calculations.vector.VectorModifier;
 import org.jreserve.gui.data.api.DataEvent;
@@ -33,6 +34,7 @@ import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -114,16 +116,17 @@ public class VectorCalculationImpl
     }
     
     private void recalculate() {
-        try {
-            vector = VectorGeometryUtil.createTriangle(dataSource, geometry);
-            vector = super.modifyCalculation(vector);
-        } catch (Exception ex) {
-            String msg = "Unable to calculate claim triangle!";
-            logger.log(Level.SEVERE, msg, ex);
-            String title = Bundle.MSG_VectorCalculationImpl_Calculation_Error();
-            BubbleUtil.showException(title, getPath(), ex);
-            vector = new InputVector(new double[0]);
-        }    
+        TaskUtil.execute(new RecalculateTask());
+//        try {
+//            vector = VectorGeometryUtil.createTriangle(dataSource, geometry);
+//            vector = super.modifyCalculation(vector);
+//        } catch (Exception ex) {
+//            String msg = "Unable to calculate claim triangle!";
+//            logger.log(Level.SEVERE, msg, ex);
+//            String title = Bundle.MSG_VectorCalculationImpl_Calculation_Error();
+//            BubbleUtil.showException(title, getPath(), ex);
+//            vector = new InputVector(new double[0]);
+//        }    
     }
     
     public void fireCreated() {
@@ -201,7 +204,13 @@ public class VectorCalculationImpl
     
     @Override
     public Vector getCalculation() {
-        return vector;
+        synchronized(lock) {
+            if(vector == null) {
+                recalculate();
+                return new InputVector(new double[0]);
+            }
+            return vector;
+        }
     }
     
     @Override
@@ -299,5 +308,45 @@ public class VectorCalculationImpl
         public void stateChanged(ChangeEvent e) {
             geometryChanged();
         }
+    }
+    
+    private class RecalculateTask implements Runnable {
+        
+        private final DataSource ds;
+        private final TriangleGeometry geometry;
+        private final List<CalculationModifier<Vector>> modifications;
+        
+        private RecalculateTask() {
+            synchronized(lock) {
+                this.ds = VectorCalculationImpl.this.dataSource;
+                this.geometry = new TriangleGeometry(VectorCalculationImpl.this.geometry);
+                this.modifications = new ArrayList<CalculationModifier<Vector>>(VectorCalculationImpl.this.modifications);
+            }
+        }
+        
+        @Override
+        public void run() {
+            final Vector result = calculateResult();
+            synchronized(lock) {
+                vector = result;
+                events.fireValueChanged();
+            }
+        }
+        
+        private Vector calculateResult() {
+            try {
+                Vector result = VectorGeometryUtil.createTriangle(dataSource, geometry);
+                for(CalculationModifier<Vector> cm : this.modifications)
+                    result = cm.createCalculation(result);
+                return result;
+            } catch (Exception ex) {
+                String msg = "Unable to calculate vector!";
+                logger.log(Level.SEVERE, msg, ex);
+                String title = Bundle.MSG_VectorCalculationImpl_Calculation_Error();
+                BubbleUtil.showException(title, getPath(), ex);
+                return new InputVector(new double[0]);
+            }
+        }
+    
     }
 }

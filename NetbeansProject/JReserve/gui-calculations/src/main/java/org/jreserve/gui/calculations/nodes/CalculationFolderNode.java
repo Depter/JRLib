@@ -27,6 +27,7 @@ import javax.swing.Action;
 import javax.swing.Icon;
 import org.jreserve.gui.calculations.api.CalculationProvider;
 import org.jreserve.gui.calculations.api.NamedCalculationProvider;
+import org.jreserve.gui.misc.renameable.Renameable;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.misc.utils.actions.deletable.DataObjectDeletable;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
@@ -60,6 +61,10 @@ import org.openide.util.lookup.ProxyLookup;
         path = CalculationFolderNode.ACTION_PATH,
         id = @ActionID(category = "Project", id = "org.netbeans.modules.project.ui.NewFile$WithSubMenu"),
         position = 100, separatorAfter = 150),
+    @ActionReference(
+        path = CalculationFolderNode.ACTION_PATH,
+        id = @ActionID(category = "File", id = "org.jreserve.gui.misc.renameable.action.RenameAction"),
+        position = 200),
     @ActionReference(
         path = CalculationFolderNode.ACTION_PATH,
         id = @ActionID(category = "Edit", id = "org.jreserve.gui.misc.utils.actions.CopyAction"),
@@ -110,6 +115,7 @@ class CalculationFolderNode extends FilterNode {
             ic.add(new FolderDeletable(folder));
             ic.add(ClipboardUtil.createCopiable(folder));
             ic.add(ClipboardUtil.createCutable(folder));
+            ic.add(new RenameableFolder());
         }
     }
 
@@ -234,5 +240,22 @@ class CalculationFolderNode extends FilterNode {
         public String getDisplayName() {
             return Displayable.Utils.displayProjectPath(getDeletedObject().getPrimaryFile());
         }        
+    }
+    
+    private class RenameableFolder implements Renameable {
+        @Override
+        public DataObject getObject() {
+            return folder;
+        }
+
+        @Override
+        public Icon getIcon() {
+            return ImageUtilities.loadImageIcon(IMG_PATH, false);
+        }
+
+        @Override
+        public String getDisplayName() {
+            return Displayable.Utils.displayProjectPath(folder.getPrimaryFile());
+        }
     }
 }

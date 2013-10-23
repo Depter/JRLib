@@ -20,9 +20,9 @@ import java.awt.Component;
 import java.util.List;
 import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialogController;
 import org.jreserve.gui.calculations.smoothing.dialog.SmoothRecord;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
-import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.AbstractVectorSmoothing;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.NbBundle.Messages;
@@ -38,8 +38,8 @@ import org.openide.util.NbBundle.Messages;
     "# {0} - maxLength",
     "MSG.MASmoothingDialogController.Length.Invalid=Length must be wihin [1; {0}]!"
 })
-public abstract class MASmoothingDialogController<T extends Triangle> 
-    extends AbstractSmoothDialogController<T> {
+public abstract class MASmoothingDialogController<C extends CalculationData> 
+    extends AbstractSmoothDialogController<C> {
     
     private List<SmoothRecord> records;
     private int length = 2;
@@ -47,9 +47,9 @@ public abstract class MASmoothingDialogController<T extends Triangle>
     private double[] original;
     private MAParamPanel panel;
     
-    public MASmoothingDialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells, String title) {
+    public MASmoothingDialogController(C data, TriangleGeometry geometry, List<Cell> cells, String title) {
         super(title);
-        this.records = SmoothRecord.createRecords(triangle, geometry, cells);
+        this.records = SmoothRecord.createRecords(data, geometry, cells);
         
         this.original = new double[records.size()];
         for(int i=0; i<original.length; i++)

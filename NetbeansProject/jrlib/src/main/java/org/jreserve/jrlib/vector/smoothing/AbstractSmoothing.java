@@ -17,6 +17,7 @@
 package org.jreserve.jrlib.vector.smoothing;
 
 import java.util.Arrays;
+import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.jreserve.jrlib.vector.Vector;
 
 /**
@@ -101,6 +102,13 @@ public class AbstractSmoothing implements VectorSmoothing {
         if(!applied[i]) return false;
         int index = cells[i];
         return index >=0 && index < values.length;
+    }
+
+    public SmoothingIndex[] getSmoothingCells() {
+        SmoothingIndex[] result = new SmoothingIndex[cellCount];
+        for(int i=0; i<cellCount; i++)
+            result[i] = new SmoothingIndex(cells[i], applied[i]);
+        return result;
     }
     
 }

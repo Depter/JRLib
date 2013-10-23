@@ -85,6 +85,7 @@
     <module>gui-plot</module>
     <module>gui-calculations-smoothing</module>
     <module>gui-calculations-vector</module>
+    <module>gui-calculations-factor</module>
   </modules>
 
     <properties>

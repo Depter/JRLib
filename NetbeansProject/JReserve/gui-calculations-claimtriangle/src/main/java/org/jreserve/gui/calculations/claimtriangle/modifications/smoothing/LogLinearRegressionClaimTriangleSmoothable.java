@@ -66,7 +66,7 @@ public class LogLinearRegressionClaimTriangleSmoothable extends LinearSmoothable
     static class DialogController extends LogLinearRegressionDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
-            super(triangle, geometry, cells);
+            super((ClaimTriangle) triangle, geometry, cells);
         }
         
         @Override

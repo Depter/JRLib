@@ -44,6 +44,7 @@ import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.gui.trianglewidget.model.TriangleModel;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.openide.util.ChangeSupport;
 import org.openide.util.NbBundle.Messages;
@@ -103,8 +104,7 @@ public class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     public ImportDataWizardVisualPanelLast(ImportDataWizardPanelLast controller) {
         this.controller = controller;
         initComponents();
-        CardLayout layout = (CardLayout) overviewPanel.getLayout();
-        layout.show(overviewPanel, "triangle");
+        showOverview("triangle");
     }
     
     @Override
@@ -136,8 +136,18 @@ public class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
         if(this.ds != ds) {
             this.ds = ds;
             tableModel.setDataType(ds.getDataType());
+            if(DataType.VECTOR == ds.getDataType()) {
+                showOverview("table");
+            } else {
+                showOverview("triangle");
+            }
             startLoader();
         }
+    }
+    
+    private void showOverview(String card) {
+        CardLayout layout = (CardLayout) overviewPanel.getLayout();
+        layout.show(overviewPanel, card);
     }
     
     private void startLoader() {
@@ -281,11 +291,10 @@ public class ImportDataWizardVisualPanelLast extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void overviewTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_overviewTypeComboActionPerformed
-        CardLayout layout = (CardLayout) overviewPanel.getLayout();
         if(OverviewType.TABLE == overviewTypeCombo.getSelectedItem())
-            layout.show(overviewPanel, "table");
+            showOverview("table");
         else
-            layout.show(overviewPanel, "triangle");
+            showOverview("triangle");
     }//GEN-LAST:event_overviewTypeComboActionPerformed
 
     private void saveTypeComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveTypeComboActionPerformed

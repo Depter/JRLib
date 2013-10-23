@@ -115,7 +115,7 @@ abstract class AbstractPlotElement extends AbstractExpandableElement {
     }
     
     @EventBusListener(forceEDT = true)
-    public void calculationChanged(CalculationEvent.Change evt) {
+    public void calculationChanged(CalculationEvent.ValueChanged evt) {
         if(panel!=null && calculation==evt.getCalculationProvider()) {
             initPlot();
             panel.revalidate();

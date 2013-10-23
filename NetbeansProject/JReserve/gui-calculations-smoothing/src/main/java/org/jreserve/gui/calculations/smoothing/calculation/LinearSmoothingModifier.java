@@ -17,9 +17,12 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.LinearRegressionSmoothing;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.smoothing.AbstractSmoothing;
+import org.jreserve.jrlib.vector.smoothing.LinearRegressionSmoothingMethod;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothing;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -34,11 +37,12 @@ import org.openide.util.NbBundle.Messages;
     "LBL.LinearSmoothingModifier.Description=Linear Regression [hasIntercept={0}], [{1}]",
     "LBL.LinearSmoothingModifier.ProgressName=Linear Smoothing"
 })
-public abstract class LinearSmoothingModifier<T extends Triangle> extends AbstractRegressionSmoothingModifier<T> {
+public abstract class LinearSmoothingModifier<C extends CalculationData> 
+    extends AbstractRegressionSmoothingModifier<C> {
 
     public final static String ROOT_TAG = "linearRegressionSmoothing";
     
-    public LinearSmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, boolean hasIntercept) {
+    public LinearSmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, boolean hasIntercept) {
         super(cells, clazz, hasIntercept);
     }
     
@@ -61,6 +65,12 @@ public abstract class LinearSmoothingModifier<T extends Triangle> extends Abstra
         return new LinearRegressionSmoothing(getCellsAsArray(), hasIntercept());
     }
 
+    protected final VectorSmoothing createVectorSmoothing() {
+        return new AbstractSmoothing(
+                getCellsAsIndices(), 
+                new LinearRegressionSmoothingMethod(hasIntercept()));
+    }
+    
     @Override
     protected String getUpdatePHTitle() {
         return Bundle.LBL_LinearSmoothingModifier_ProgressName();

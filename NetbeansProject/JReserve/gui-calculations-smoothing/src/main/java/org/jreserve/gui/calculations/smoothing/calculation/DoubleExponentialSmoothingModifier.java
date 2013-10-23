@@ -22,9 +22,12 @@ import java.util.concurrent.Callable;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.DoubleExponentialSmoothing;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.smoothing.AbstractSmoothing;
+import org.jreserve.jrlib.vector.smoothing.DoubleExponentialSmoothingMethod;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothing;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -40,8 +43,8 @@ import org.openide.util.NbBundle.Messages;
     "LBL.DoubleExponentialSmoothingModifier.Description=Double Exponential Smoothing [alpha={0}, beta={1}], [{2}]",
     "LBL.DoubleExponentialSmoothingModifier.ProgressName=Double Exponential Smoothing"
 })
-public abstract class DoubleExponentialSmoothingModifier<T extends Triangle> 
-    extends AbstractSmoothingModifier<T> {
+public abstract class DoubleExponentialSmoothingModifier<C extends CalculationData> 
+    extends AbstractSmoothingModifier<C> {
 
     public final static String ROOT_TAG = "doubleExponentialSmoothing";
     public final static String ALPHA_TAG = "alpha";
@@ -50,7 +53,7 @@ public abstract class DoubleExponentialSmoothingModifier<T extends Triangle>
     private double alpha;
     private double beta;
     
-    public DoubleExponentialSmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, double alpha, double beta) {
+    public DoubleExponentialSmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, double alpha, double beta) {
         super(cells, clazz);
         checkCells(cells);
         
@@ -149,7 +152,13 @@ public abstract class DoubleExponentialSmoothingModifier<T extends Triangle>
         return new DoubleExponentialSmoothing(getCellsAsArray(), alpha, beta);
     }
     
-    protected final void updateFrom(DoubleExponentialSmoothingModifier<T> modifier) {
+    protected final VectorSmoothing createVectorSmoothing() {
+        return new AbstractSmoothing(
+                getCellsAsIndices(),
+                new DoubleExponentialSmoothingMethod(alpha, beta));
+    }
+    
+    protected final void updateFrom(DoubleExponentialSmoothingModifier<C> modifier) {
         UpdateTask task = new UpdateTask(this, modifier.getAlpha(), modifier.getBeta());
         TaskUtil.execute(task, null, Bundle.LBL_DoubleExponentialSmoothingModifier_ProgressName());
     }

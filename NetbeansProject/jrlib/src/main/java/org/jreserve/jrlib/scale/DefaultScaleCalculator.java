@@ -59,6 +59,11 @@ public class DefaultScaleCalculator<T extends ScaleInput> extends AbstractCalcul
         doRecalculate();
     }
     
+    @Override
+    public boolean isAccident() {
+        return false;
+    }
+    
     /**
      * Returns the source for this calculation.
      */

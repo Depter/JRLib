@@ -89,6 +89,11 @@ public class DefaultScaleSelection<T extends ScaleInput>extends AbstractMethodSe
         this.length = length<0? 0 : length;
         doRecalculate();
     }
+    
+    @Override
+    public boolean isAccident() {
+        return false;
+    }
 
     @Override
     public T getSourceInput() {

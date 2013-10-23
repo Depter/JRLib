@@ -17,6 +17,7 @@
 package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 
 import java.util.List;
+import org.jreserve.gui.calculations.api.CalculationModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.smoothing.Smoothable;
 import org.jreserve.gui.calculations.smoothing.calculation.AbstractMASmoothable;
@@ -61,14 +62,14 @@ public class ArithmeticMAClaimTriangleSmoothable extends AbstractMASmoothable<Cl
         
         TriangleSelection selection = context.lookup(TriangleSelection.class);
         List<Cell> cells = selection.getCells();
-        Triangle triangle = selection.getTriangle();
+        ClaimTriangle triangle = (ClaimTriangle) selection.getTriangle();
         
         return new DialogController(triangle, geometry, cells);
     }
     
     static class DialogController extends MASmoothingDialogController<ClaimTriangle> {
 
-        public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
+        public DialogController(ClaimTriangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells, Bundle.LBL_ArithmeticMAClaimTriangleSmoothable_Name());
         }
         

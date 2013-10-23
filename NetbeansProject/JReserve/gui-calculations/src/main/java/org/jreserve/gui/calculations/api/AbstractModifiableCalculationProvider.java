@@ -35,7 +35,7 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
 
     public final static String MODIFICATIONS_ELEMENT = "modifications";
     
-    private List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
+    protected final List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
     private final ModificationListener cmListener = new ModificationListener();
     
     protected AbstractModifiableCalculationProvider(CalculationDataObject obj) {

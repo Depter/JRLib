@@ -26,8 +26,9 @@ import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractEditableCalculationModifier;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.smoothing.SmoothingIndex;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.ImageUtilities;
 
@@ -36,15 +37,15 @@ import org.openide.util.ImageUtilities;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractSmoothingModifier<T extends Triangle> 
-    extends AbstractEditableCalculationModifier<T>{
+public abstract class AbstractSmoothingModifier<C extends CalculationData> 
+    extends AbstractEditableCalculationModifier<C>{
 
     @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/smoothing/smoothing.png";
     protected final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
     
     private List<SmoothingCell> cells;
     
-    protected AbstractSmoothingModifier(List<SmoothingCell> cells, Class<T> clazz) {
+    protected AbstractSmoothingModifier(List<SmoothingCell> cells, Class<C> clazz) {
         super(clazz);
         this.cells = new ArrayList<SmoothingCell>(cells);
     }
@@ -87,6 +88,10 @@ public abstract class AbstractSmoothingModifier<T extends Triangle>
         return SmoothingModifierUtil.getCellsAsArray(this);
     }
     
+    protected synchronized final SmoothingIndex[] getCellsAsIndices() {
+        return SmoothingModifierUtil.getCellsAsIndices(this);
+    }
+    
     protected synchronized final String getCellsAsString() {
         return SmoothingModifierUtil.getCellsAsString(this);
     }
@@ -95,7 +100,7 @@ public abstract class AbstractSmoothingModifier<T extends Triangle>
         return SmoothingModifierUtil.cellsToXml(this);
     }
     
-    public synchronized final TriangleLayer createLayer(T input) {
+    public synchronized final TriangleLayer createLayer(C input) {
         return new SmoothingLayer(input, getDisplayName());
     }
     

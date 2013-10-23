@@ -187,6 +187,11 @@ public class DefaultClaimRatioSelection extends AbstractMethodSelection<ClaimRat
     }
     
     @Override
+    public boolean isAccident() {
+        return false;
+    }
+    
+    @Override
     public void setSource(RatioTriangle ratioTriangle) {
         source.setSource(ratioTriangle);
     }

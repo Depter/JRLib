@@ -25,7 +25,6 @@ import org.jreserve.gui.calculations.smoothing.dialog.SmoothDialogController;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
-import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.Lookup;
@@ -58,14 +57,14 @@ public class ExponentialClaimTriangleSmoothable extends ExponentialSmoothable<Cl
         
         TriangleSelection selection = context.lookup(TriangleSelection.class);
         List<Cell> cells = selection.getCells();
-        Triangle triangle = selection.getTriangle();
+        ClaimTriangle triangle = (ClaimTriangle) selection.getTriangle();
         
         return new DialogController(triangle, geometry, cells);
     }
     
     static class DialogController extends ExponentialSmoothingDialogController<ClaimTriangle> {
 
-        DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
+        DialogController(ClaimTriangle triangle, TriangleGeometry geometry, List<Cell> cells) {
             super(triangle, geometry, cells);
         }
         

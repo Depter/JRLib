@@ -68,7 +68,7 @@ public class GeometricMAClaimTriangleSmoothable extends AbstractMASmoothable<Cla
     static class DialogController extends MASmoothingDialogController<ClaimTriangle> {
 
         public DialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
-            super(triangle, geometry, cells, Bundle.LBL_GeometricMAClaimTriangleSmoothable_Name());
+            super((ClaimTriangle) triangle, geometry, cells, Bundle.LBL_GeometricMAClaimTriangleSmoothable_Name());
         }
         
         @Override

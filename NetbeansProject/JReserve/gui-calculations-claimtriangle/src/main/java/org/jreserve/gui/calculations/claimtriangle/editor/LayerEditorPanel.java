@@ -132,7 +132,7 @@ class LayerEditorPanel extends javax.swing.JPanel {
     }
     
     @EventBusListener(forceEDT = true)
-    public void calculationChanged(CalculationEvent.Change evt) {
+    public void calculationChanged(CalculationEvent.ValueChanged evt) {
         if(calculation == evt.getCalculationProvider()) {
             widgetPanel.setTriangleGeometry(calculation.getGeometry());
             widgetPanel.setLayers(calculation.createLayers());
@@ -217,6 +217,7 @@ class LayerEditorPanel extends javax.swing.JPanel {
 
         editButton.setIcon(CommonIcons.edit());
         org.openide.awt.Mnemonics.setLocalizedText(editButton, null);
+        editButton.setToolTipText(org.openide.util.NbBundle.getMessage(LayerEditorPanel.class, "LayerEditorPanel.editButton.toolTipText")); // NOI18N
         editButton.setEnabled(false);
         editButton.setFocusable(false);
         editButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);

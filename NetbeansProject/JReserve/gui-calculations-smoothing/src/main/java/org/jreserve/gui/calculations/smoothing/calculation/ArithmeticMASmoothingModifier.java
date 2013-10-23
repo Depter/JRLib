@@ -17,10 +17,13 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.NbBundle.Messages;
 import org.jreserve.jrlib.triangle.smoothing.ArithmeticMovingAverage;
+import org.jreserve.jrlib.vector.smoothing.AbstractSmoothing;
+import org.jreserve.jrlib.vector.smoothing.ArithmeticMovingAverageMethod;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothing;
 
 /**
  *
@@ -34,12 +37,12 @@ import org.jreserve.jrlib.triangle.smoothing.ArithmeticMovingAverage;
     "LBL.ArithmeticMASmoothingModifier.Description=Arithmetic MA [length={0}], [{1}]",
     "LBL.ArithmeticMASmoothingModifier.ProgressName=Arithmetic MA Smoothing"
 })
-public abstract class ArithmeticMASmoothingModifier<T extends Triangle>
-    extends AbstractMASmoothingModifier<T> {
+public abstract class ArithmeticMASmoothingModifier<C extends CalculationData>
+    extends AbstractMASmoothingModifier<C> {
     
     public final static String ROOT_TAG = "arithmeticMovingAverage";
     
-    public ArithmeticMASmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, int length) {
+    public ArithmeticMASmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, int length) {
         super(cells, clazz, length);
     }
 
@@ -60,6 +63,12 @@ public abstract class ArithmeticMASmoothingModifier<T extends Triangle>
 
     protected final ArithmeticMovingAverage createSmoothing() {
         return new ArithmeticMovingAverage(getCellsAsArray(), getLength());
+    }
+    
+    protected final VectorSmoothing createVectorSmoothing() {
+        return new AbstractSmoothing(
+                getCellsAsIndices(),
+                new ArithmeticMovingAverageMethod(getLength()));
     }
 
     @Override

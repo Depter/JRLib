@@ -84,6 +84,11 @@ public class DefaultLinkRatioSelection extends AbstractMethodSelection<FactorTri
     }
     
     @Override
+    public boolean isAccident() {
+        return false;
+    }
+    
+    @Override
     public FactorTriangle getSourceFactors() {
         return source;
     }

@@ -17,9 +17,9 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
-import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.LogLinearRegressionSmoothing;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.NbBundle.Messages;
@@ -32,11 +32,11 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.LogLinearRegressionDialogController.Title=Log-Linear Regression"
 })
-public abstract class LogLinearRegressionDialogController<T extends Triangle> 
-    extends AbstractRegressionDialogController<T> {
+public abstract class LogLinearRegressionDialogController<C extends CalculationData> 
+    extends AbstractRegressionDialogController<C> {
     
-    public LogLinearRegressionDialogController(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
-        super(Bundle.LBL_LogLinearRegressionDialogController_Title(), triangle, geometry, cells);
+    public LogLinearRegressionDialogController(C data, TriangleGeometry geometry, List<Cell> cells) {
+        super(Bundle.LBL_LogLinearRegressionDialogController_Title(), data, geometry, cells);
     }
     
     @Override

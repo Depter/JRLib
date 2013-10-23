@@ -17,9 +17,12 @@
 package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.util.List;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.HarmonicMovingAverage;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.smoothing.AbstractSmoothing;
+import org.jreserve.jrlib.vector.smoothing.HarmonicMovingAverageMethod;
+import org.jreserve.jrlib.vector.smoothing.VectorSmoothing;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -34,12 +37,12 @@ import org.openide.util.NbBundle.Messages;
     "LBL.HarmonicMASmoothingModifier.Description=Harmonic MA [length={0}], [{1}]",
     "LBL.HarmonicMASmoothingModifier.ProgressName=Harmonic MA Smoothing"
 })
-public abstract class HarmonicMASmoothingModifier<T extends Triangle>
-    extends AbstractMASmoothingModifier<T> {
+public abstract class HarmonicMASmoothingModifier<C extends CalculationData>
+    extends AbstractMASmoothingModifier<C> {
     
     public final static String ROOT_TAG = "harmonicMovingAverage";
     
-    public HarmonicMASmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, int length) {
+    public HarmonicMASmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, int length) {
         super(cells, clazz, length);
     }
 
@@ -60,6 +63,12 @@ public abstract class HarmonicMASmoothingModifier<T extends Triangle>
 
     protected final HarmonicMovingAverage createSmoothing() {
         return new HarmonicMovingAverage(getCellsAsArray(), getLength());
+    }
+    
+    protected final VectorSmoothing createVectorSmoothing() {
+        return new AbstractSmoothing(
+                getCellsAsIndices(),
+                new HarmonicMovingAverageMethod(getLength()));
     }
     
     @Override

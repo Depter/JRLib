@@ -19,11 +19,13 @@ package org.jreserve.gui.calculations.smoothing.dialog;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
+import org.jreserve.jrlib.vector.Vector;
 
 /**
  *
@@ -32,24 +34,39 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  */
 public class SmoothRecord {
     
-    public static List<SmoothRecord> createRecords(Triangle triangle, TriangleGeometry geometry, List<Cell> cells) {
+    public static List<SmoothRecord> createRecords(CalculationData data, TriangleGeometry geometry, List<Cell> cells) {
         Collections.sort(cells);
         List<SmoothRecord> records = new ArrayList<SmoothRecord>(cells.size());
         for(Cell cell : cells)
-            records.add(createRecord(triangle, geometry, cell));
+            records.add(createRecord(data, geometry, cell));
         return records;
     }
     
-    public static SmoothRecord createRecord(Triangle triangle, TriangleGeometry geometry, Cell cell) {
+    public static SmoothRecord createRecord(CalculationData data, TriangleGeometry geometry, Cell cell) {
         MonthDate accident = geometry.getAccidentDate(cell.getAccident());
         int development = cell.getDevelopment();
-        double value = triangle.getValue(cell);
+        double value = getValue(data, cell);
         
         SmoothRecord record = new SmoothRecord(accident, cell.getAccident(), development, value);
         if(cell instanceof SmoothingCell)
             record.used = ((SmoothingCell)cell).isApplied();
         
         return record;
+    }
+    
+    private static double getValue(CalculationData data, Cell cell) {
+        if(data instanceof Triangle) {
+            return ((Triangle)data).getValue(cell);
+        } else if(data instanceof Vector) {
+            int index = cell.getAccident();
+            if(index<0)
+                index = cell.getDevelopment();
+            return ((Vector)data).getValue(index);
+        } else {
+            String msg = "Data must be an instance of '%s' or '%s', but it was '%s'!";
+            msg = String.format(msg, Triangle.class, Vector.class, data.getClass());
+            throw new IllegalArgumentException(msg);
+        }
     }
     
     private final int accident;

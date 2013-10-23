@@ -110,8 +110,12 @@ public abstract class CalculationDataObject extends MultiDataObject {
     protected void handleDelete() throws IOException {
         synchronized(lock) {
             super.handleDelete();
-            getCalculation().events.fireDeleted();
+            fireDeleteEvent();
         }
+    }
+    
+    protected void fireDeleteEvent() {
+        getCalculation().events.fireDeleted();
     }
     
     private AbstractCalculationProvider getCalculation() {
@@ -130,9 +134,13 @@ public abstract class CalculationDataObject extends MultiDataObject {
             if(isModified())
                 saveCalculation();
             CalculationDataObject result = (CalculationDataObject) super.handleCopy(df);
-            result.getCalculation().events.fireCreated();
+            fireCreated(result);
             return result;
         }
+    }
+    
+    protected void fireCreated(CalculationDataObject obj) {
+        obj.getCalculation().events.fireCreated();
     }
     
     private void saveCalculation() throws IOException {
@@ -142,14 +150,18 @@ public abstract class CalculationDataObject extends MultiDataObject {
             Element e = calculation.toXml();
             JDomUtil.save(pf, e);
             calculation.events.flushAuditCache();
-            calculation.events.fireSave();
             setModified(false);
+            fireSaved();
         } catch (IOException ex) {
             String msg = String.format("Unabel to save calculation to file ''%s''.", pf.getPath());
             logger.log(Level.SEVERE, msg, ex);
             throw ex;
         }
     } 
+    
+    protected void fireSaved() {
+        getCalculation().events.fireSave();
+    }
 
     @Override
     protected FileObject handleRename(String name) throws IOException {
@@ -157,10 +169,16 @@ public abstract class CalculationDataObject extends MultiDataObject {
             if(isModified())
                 saveCalculation();
             
+            String oldPath = getPath(getPrimaryFile());
             FileObject result = super.handleRename(name);
             getCalculation().setPath(getPath(result));
+            fireRenamed(oldPath);
             return result;
         }
+    }
+    
+    protected void fireRenamed(String oldPath) {
+        getCalculation().events.fireRenamed(oldPath);
     }
 
     @Override
@@ -169,8 +187,10 @@ public abstract class CalculationDataObject extends MultiDataObject {
             if(isModified())
                 saveCalculation();
             
+            String oldPath = getPath(getPrimaryFile());
             FileObject result = super.handleMove(df);
             getCalculation().setPath(getPath(result));
+            fireRenamed(oldPath);
             return result;
         }
     }
@@ -238,7 +258,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
                 saveCalculation();
 
             CalculationDataObject result = (CalculationDataObject) super.handleCopyRename(df, name, ext);
-            result.getCalculation().events.fireCreated();
+            fireCreated(result);
             return result;
         }
     }

@@ -20,7 +20,7 @@ import java.awt.Component;
 import java.util.List;
 import javax.swing.event.ChangeListener;
 import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.openide.util.HelpCtx;
 
 /**
@@ -28,7 +28,7 @@ import org.openide.util.HelpCtx;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface SmoothDialogController<T extends Triangle> {
+public interface SmoothDialogController<C extends CalculationData> {
     
     public String getDialogTitle();
     
@@ -42,7 +42,7 @@ public interface SmoothDialogController<T extends Triangle> {
     
     public boolean isValid();
     
-    public CalculationModifier<T> createModifier();
+    public CalculationModifier<C> createModifier();
     
     public void updateRecords(List<SmoothRecord> records);
     

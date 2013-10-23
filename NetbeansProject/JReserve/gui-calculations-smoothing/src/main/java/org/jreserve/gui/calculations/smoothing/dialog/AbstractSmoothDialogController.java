@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.smoothing.dialog;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 import org.openide.util.ChangeSupport;
 import org.openide.util.HelpCtx;
@@ -29,7 +29,7 @@ import org.openide.util.HelpCtx;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractSmoothDialogController<T extends Triangle> implements SmoothDialogController<T> {
+public abstract class AbstractSmoothDialogController<C extends CalculationData> implements SmoothDialogController<C> {
 
     private String title;
     private final ChangeSupport cs = new ChangeSupport(this);

@@ -22,7 +22,7 @@ import java.util.concurrent.Callable;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.Triangle;
+import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
 
 /**
@@ -30,14 +30,14 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class AbstractMASmoothingModifier<T extends Triangle> 
-    extends AbstractSmoothingModifier<T> {
+public abstract class AbstractMASmoothingModifier<C extends CalculationData> 
+    extends AbstractSmoothingModifier<C> {
 
     public final static String LENGTH_TAG = "length";
     
     private int length;
     
-    public AbstractMASmoothingModifier(List<SmoothingCell> cells, Class<T> clazz, int length) {
+    public AbstractMASmoothingModifier(List<SmoothingCell> cells, Class<C> clazz, int length) {
         super(cells, clazz);
         
         checkLength(length);
@@ -101,7 +101,7 @@ public abstract class AbstractMASmoothingModifier<T extends Triangle>
     
     protected abstract String getRootName();
     
-    protected final void updateFrom(AbstractMASmoothingModifier<T> modifier) {
+    protected final void updateFrom(AbstractMASmoothingModifier<C> modifier) {
         UpdateTask task = new UpdateTask(this, modifier.getLength());
         TaskUtil.execute(task, null, getUpdatePHTitle());
     }

@@ -27,6 +27,13 @@ import org.jreserve.jrlib.CalculationData;
 public abstract class AbstractVector<T extends CalculationData> extends AbstractCalculationData<T> implements Vector {
     
     protected int length;
+    protected boolean isAccident;
+    
+    private static boolean isAccident(CalculationData cd) {
+        if(cd instanceof Vector)
+            return ((Vector)cd).isAccident();
+        return false;
+    }
     
     /**
      * Creates a class, with the given source.
@@ -34,13 +41,36 @@ public abstract class AbstractVector<T extends CalculationData> extends Abstract
      * @throws NullPointerException when `source` is `null`.
      */
     protected AbstractVector(T source) {
+        this(source, isAccident(source));
+    }
+    
+    /**
+     * Creates a class, with the given source.
+     * 
+     * @throws NullPointerException when `source` is `null`.
+     */
+    protected AbstractVector(T source, boolean isAccident) {
         super(source);
+        this.isAccident = isAccident;
     }
     
     /**
      * Creates an instance, without a source calculation.
      */
     protected AbstractVector() {
+        this(true);
+    }
+    
+    /**
+     * Creates an instance, without a source calculation.
+     */
+    protected AbstractVector(boolean isAccident) {
+        this.isAccident = isAccident;
+    }
+    
+    @Override
+    public boolean isAccident() {
+        return isAccident;
     }
 
     /**
