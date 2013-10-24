@@ -85,7 +85,8 @@ public class FactorDataObject extends CalculationDataObject {
     }
     
     public Node createNodeDelegate() {
-        return new VectorNode(this);
+        //TODO create node;
+        return null;//new VectorNode(this);
     }
 
     @Override
@@ -102,7 +103,9 @@ public class FactorDataObject extends CalculationDataObject {
 
         @Override
         public Icon getIcon() {
-            return ImageUtilities.loadImageIcon(FactorNode.IMG, false);
+            //TODO create node;
+            return null;
+//            return ImageUtilities.loadImageIcon(FactorNode.IMG, false);
         }
 
         @Override

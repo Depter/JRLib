@@ -16,8 +16,11 @@
  */
 package org.jreserve.gui.calculations.api;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import org.jdom2.Element;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
 
 /**
@@ -25,15 +28,15 @@ import org.jreserve.jrlib.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifier<C extends CalculationData> {
+public interface CalculationMethodFactory<C extends CalculationData> {
     
-    public C createCalculation(C sourceCalculation);
+    public CalculationMethod<C> fromXml(Element element) throws Exception;
     
-    public Class<? extends C> getCalculationClass();
-    
-    public Element toXml();
-    
-    public String getDescription();
-    
-    public Displayable getDisplayable();
+    @Retention(RetentionPolicy.SOURCE)
+    @Target(ElementType.TYPE)
+    public static @interface Registration {
+        String category();
+        String rootName();
+        int position() default Integer.MAX_VALUE;
+    }
 }

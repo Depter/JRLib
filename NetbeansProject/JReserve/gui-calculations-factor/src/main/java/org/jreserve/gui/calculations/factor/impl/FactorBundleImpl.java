@@ -18,7 +18,11 @@ package org.jreserve.gui.calculations.factor.impl;
 
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractCalculationProvider;
-import org.jreserve.gui.calculations.api.CalculationDataObject;
+import org.jreserve.gui.calculations.factor.FactorBundle;
+import org.jreserve.gui.calculations.factor.FactorTriangleCalculation;
+import org.jreserve.gui.calculations.factor.LinkRatioCalculation;
+import org.jreserve.gui.calculations.factor.LinkRatioSECalculation;
+import org.jreserve.gui.calculations.factor.LinkRatioScaleCalculation;
 import org.jreserve.jrlib.CalculationData;
 
 /**
@@ -27,7 +31,8 @@ import org.jreserve.jrlib.CalculationData;
  * @version 1.0
  */
 public class FactorBundleImpl 
-    extends AbstractCalculationProvider<CalculationData> {
+    extends AbstractCalculationProvider<CalculationData> 
+    implements FactorBundle {
 
     public FactorBundleImpl(FactorDataObject obj, Element root) throws Exception {
         super(obj);
@@ -42,7 +47,7 @@ public class FactorBundleImpl
     public long getAuditId() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-
+    
     @Override
     public Class<CalculationData> getCalculationClass() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -52,5 +57,24 @@ public class FactorBundleImpl
     public CalculationData getCalculation() throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    @Override
+    public FactorTriangleCalculation getFactors() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public LinkRatioCalculation getLinkRatio() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public LinkRatioScaleCalculation getScale() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public LinkRatioSECalculation getStandardError() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -160,100 +160,134 @@ public class JDomUtil {
     
     public static String getExistingString(Element parent, String name) throws IOException {
         Element e = getExistingChild(parent, name);
-        String str = e.getTextTrim();
+        return getNonEmptyString(e);
+    }
+    
+    private static String getNonEmptyString(Element element) throws IOException {
+        String str = element.getTextTrim();
         if(str == null || str.length() == 0) {
             String msg = "Value not set at '%s'!";
-            throw new IOException(String.format(msg, getPath(e)));
+            throw new IOException(String.format(msg, getPath(element)));
         }
         return str;
     }
     
     public static byte getExistingByte(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getByte(e);
+    }
+    
+    public static byte getByte(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
             return Byte.parseByte(str);
         } catch (Exception ex) {
             String msg = "Illegal Byte literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     
     public static short getExistingShort(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getShort(e);
+    }
+    
+    public static short getShort(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
             return Short.parseShort(str);
         } catch (Exception ex) {
             String msg = "Illegal Short literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     
     public static int getExistingInt(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getInt(e);
+    }
+    
+    public static int getInt(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
             return Integer.parseInt(str);
         } catch (Exception ex) {
             String msg = "Illegal Integer literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     
     public static long getExistingLong(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getLong(e);
+    }
+    
+    public static long getLong(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
             return Long.parseLong(str);
         } catch (Exception ex) {
             String msg = "Illegal Long literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     
     public static float getExistingFloat(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getFloat(e);
+    }
+    
+    public static float getFloat(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
             return Float.parseFloat(str);
         } catch (Exception ex) {
             String msg = "Illegal Float literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     
     public static double getExistingDouble(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getDouble(e);
+    }
+    
+    public static double getDouble(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
-            if("NaN".equalsIgnoreCase(str))
-                return Double.NaN;
             return Double.parseDouble(str);
         } catch (Exception ex) {
             String msg = "Illegal Double literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     
     public static char getExistingCharacter(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getCharacter(e);
+    }
+    
+    public static char getCharacter(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         if(str.length() == 1)
             return str.charAt(0);
         
         String msg = "Illegal Long literal '%s' at '%s'!";
-        Element e = getExistingChild(parent, name);
-        throw new IOException(String.format(msg, str, getPath(e)));
+        throw new IOException(String.format(msg, str, getPath(element)));
     }
     
     public static boolean getExistingBoolean(Element parent, String name) throws IOException {
-        String str = getExistingString(parent, name);
+        Element e = getExistingChild(parent, name);
+        return getBoolean(e);
+    }
+    
+    public static boolean getBoolean(Element element) throws IOException {
+        String str = getNonEmptyString(element);
         try {
             return Boolean.parseBoolean(str);
         } catch (Exception ex) {
             String msg = "Illegal Boolean literal '%s' at '%s'!";
-            Element e = getExistingChild(parent, name);
-            throw new IOException(String.format(msg, str, getPath(e)), ex);
+            throw new IOException(String.format(msg, str, getPath(element)), ex);
         }
     }
     

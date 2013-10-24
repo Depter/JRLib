@@ -23,6 +23,8 @@ package org.jreserve.gui.calculations.factor;
  */
 public interface FactorBundle {
     
+    public FactorTriangleCalculation getFactors();
+    
     public LinkRatioCalculation getLinkRatio();
     
     public LinkRatioScaleCalculation getScale();

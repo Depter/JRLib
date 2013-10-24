@@ -17,23 +17,21 @@
 package org.jreserve.gui.calculations.api;
 
 import org.jdom2.Element;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifier<C extends CalculationData> {
+public interface CalculationMethod<C extends CalculationData> {
     
-    public C createCalculation(C sourceCalculation);
-    
-    public Class<? extends C> getCalculationClass();
-    
+    public SelectableMethod<C> createMethod(C sourceCalculation);
+
     public Element toXml();
     
-    public String getDescription();
+    public String getDisplayName();
     
-    public Displayable getDisplayable();
+    public String getId();
 }

@@ -60,4 +60,9 @@ public interface CalculationEvent {
         
         public Map getPreState();
     }
+    
+    public static interface MethodChange extends Change {
+        public int getMethodIndex();
+        public CalculationMethod getOldMethod();
+    }
 }

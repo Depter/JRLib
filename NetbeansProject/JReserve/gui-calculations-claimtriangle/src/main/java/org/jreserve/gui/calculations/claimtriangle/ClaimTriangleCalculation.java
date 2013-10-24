@@ -29,7 +29,12 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  */
 public interface ClaimTriangleCalculation extends ModifiableCalculationProvider<ClaimTriangle> {
 
+    public final static ClaimTriangleCalculation EMPTY = 
+            new EmptyClaimTriangleCalculation();
+    
     public DataSource getDataSource();
     
     public TriangleGeometry getGeometry();
+    
+    
 }

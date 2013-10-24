@@ -14,26 +14,25 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.factor.impl;
 
-import org.jdom2.Element;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
+import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
+import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifier<C extends CalculationData> {
+class BundleUtils {
     
-    public C createCalculation(C sourceCalculation);
+    static FactorTriangle createEmptyFactors() {
+        double[][] data = new double[0][];
+        ClaimTriangle claims = new InputClaimTriangle(data);
+        return new DevelopmentFactors(claims);
+    }
     
-    public Class<? extends C> getCalculationClass();
-    
-    public Element toXml();
-    
-    public String getDescription();
-    
-    public Displayable getDisplayable();
+    private BundleUtils() {}
 }

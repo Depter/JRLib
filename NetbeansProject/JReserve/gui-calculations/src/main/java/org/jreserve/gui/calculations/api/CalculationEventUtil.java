@@ -47,7 +47,11 @@ import org.openide.util.NbBundle.Messages;
     "LBL.CalculationEventUtil2.Modification.Deleted=Modification deleted from index {0}. {1}.",
     "# {0} - index",
     "# {1} - modification",
-    "LBL.CalculationEventUtil2.Modification.Changed=Modification changed at position {0}. {1}."
+    "LBL.CalculationEventUtil2.Modification.Changed=Modification changed at position {0}. {1}.",
+    "# {0} - index",
+    "# {1} - oldMethod",
+    "# {2} - newMethod",
+    "LBL.CalculationEventUtil2.Method.Changed=Method at position {0} changed from ''{1}'' to ''{2}''."
 })
 public class CalculationEventUtil {
 
@@ -114,6 +118,16 @@ public class CalculationEventUtil {
         fireEvent(new ModificationChanged(index, modifier, preState));
         String description = modifier.getDescription();
         auditCache.add(new AbstractAuditEvent(calculation, Bundle.LBL_CalculationEventUtil2_Modification_Changed(index+1, description)));
+    }
+
+    public void fireMethodChanged(int index, CalculationMethod oldMentod, CalculationMethod newMethod) {
+        String auditMsg = Bundle.LBL_CalculationEventUtil2_Method_Changed(index+1, oldMentod, newMethod);
+        fireMethodChanged(index, oldMentod, auditMsg);
+    }
+    
+    public void fireMethodChanged(int index, CalculationMethod oldMethod, String auditMsg) {
+        fireEvent(new MethodChanged(index, oldMethod));
+        auditCache.add(new AbstractAuditEvent(calculation, auditMsg));
     }
     
     public void clearAuditCache() {
@@ -214,6 +228,27 @@ public class CalculationEventUtil {
         @Override
         public EditableCalculationModifier getModifier() {
             return (EditableCalculationModifier) super.getModifier();
+        }
+    }
+    
+    private class MethodChanged extends Event implements CalculationEvent.MethodChange {
+        
+        private int index;
+        private CalculationMethod oldMethod;
+
+        private MethodChanged(int index, CalculationMethod oldMethod) {
+            this.index = index;
+            this.oldMethod = oldMethod;
+        }
+        
+        @Override
+        public int getMethodIndex() {
+            return index;
+        }
+
+        @Override
+        public CalculationMethod getOldMethod() {
+            return oldMethod;
         }
     }
 }

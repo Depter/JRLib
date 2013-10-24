@@ -32,20 +32,18 @@ import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
-import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
+import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.CummulatedClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.ModifiedClaimTriangle;
-import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
-import org.openide.filesystems.FileObject;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -75,7 +73,6 @@ public class ClaimTriangleCalculationImpl
     private final GeometryListener geometryListener = new GeometryListener();
     private final ClaimTriangleDataObject dObj;
     private final long auditId;
-    private final Project project;
     
     private DataSource dataSource;
     private TriangleGeometry geometry;
@@ -85,34 +82,17 @@ public class ClaimTriangleCalculationImpl
         super(dObj, root, CATEGORY);
         this.dObj = dObj;
         
-        FileObject pf = dObj.getPrimaryFile();
-        project = FileOwnerQuery.getOwner(pf);
-        if(project == null)
-            throw new IOException(String.format("File '%s' does not belong to a project!", pf.getPath()));
-        
         auditId = JDomUtil.getExistingLong(root, AUDIT_ID_ELEMENT);
-        dataSource = initDataSource(pf, root);
+        initDataSource(root);
         geometry = TriangleGeometryUtil.fromXml(root);
         geometry.addChangeListener(geometryListener);
         recalculate();
     }
     
-    private DataSource initDataSource(FileObject file, Element root) throws IOException {
-        Element dse = JDomUtil.getExistingChild(root, DS_ELEMENT);
-        String dsPath = dse.getTextTrim();
-        if(dsPath == null || dsPath.length() == 0)
-            return DataSource.EMPTY_TRIANGLE;
-        
-        Project p = FileOwnerQuery.getOwner(file);
-        if(p == null) 
-            return DataSource.EMPTY_TRIANGLE;
-        
-        ProjectContentProvider pol = p.getLookup().lookup(ProjectContentProvider.class);
-        if(pol == null) 
-            return DataSource.EMPTY_TRIANGLE;
-        
-        DataSource result = pol.getContent(dsPath, DataSource.class);
-        return result == null? DataSource.EMPTY_TRIANGLE : result;
+    private void initDataSource(Element root) throws IOException {
+        dataSource = super.lookupSource(DataSource.class, root, DS_ELEMENT);
+        if(dataSource == null || DataType.TRIANGLE != dataSource.getDataType())
+            dataSource = DataSource.EMPTY_TRIANGLE;
     }
     
     public void fireCreated() {
@@ -124,11 +104,6 @@ public class ClaimTriangleCalculationImpl
     @Override
     public Class<ClaimTriangle> getCalculationClass() {
         return ClaimTriangle.class;
-    }
-    
-    @Override
-    public Project getProject() {
-        return project;
     }
     
     @Override
@@ -156,17 +131,6 @@ public class ClaimTriangleCalculationImpl
     
     private void recalculate() {
         TaskUtil.execute(new RecalculateTask());
-//        try {
-//            claimTriangle = TriangleGeometryUtil.createTriangle(dataSource, geometry);
-//            claimTriangle = new CummulatedClaimTriangle(claimTriangle);
-//            claimTriangle = super.modifyCalculation(claimTriangle);
-//        } catch (Exception ex) {
-//            String msg = "Unable to calculate claim triangle!";
-//            logger.log(Level.SEVERE, msg, ex);
-//            String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
-//            BubbleUtil.showException(title, getPath(), ex);
-//            claimTriangle = new InputClaimTriangle(new double[0][0]);
-//        }    
     }
     
     @Override
@@ -247,7 +211,7 @@ public class ClaimTriangleCalculationImpl
 
     @Override
     public Project getAuditedProject() {
-        return project;
+        return getProject();
     }
 
     @Override

@@ -16,8 +16,6 @@
  */
 package org.jreserve.gui.calculations.api;
 
-import org.jdom2.Element;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
 
 /**
@@ -25,15 +23,13 @@ import org.jreserve.jrlib.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface CalculationModifier<C extends CalculationData> {
+public interface MethodCalculationProvider<C extends CalculationData, S extends CalculationData> 
+    extends CalculationProvider<C> {
     
-    public C createCalculation(C sourceCalculation);
+    public CalculationMethod<S> getMethodAt(int index);
     
-    public Class<? extends C> getCalculationClass();
+    public void setMethod(int index, CalculationMethod<S> cm);
     
-    public Element toXml();
+    public void setFixedValue(int index, double value);
     
-    public String getDescription();
-    
-    public Displayable getDisplayable();
 }

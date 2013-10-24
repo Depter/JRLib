@@ -16,9 +16,12 @@
  */
 package org.jreserve.gui.calculations.api;
 
+import java.io.IOException;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
+import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.CalculationData;
 import org.netbeans.api.project.FileOwnerQuery;
 import org.netbeans.api.project.Project;
@@ -74,4 +77,21 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
     }
     
     protected abstract Element toXml();
+    
+    protected <T> T lookupSource(Class<T> clazz, Element root, String sourceTag) throws IOException {
+        if(project == null)
+            return null;
+        
+        Element dse = JDomUtil.getExistingChild(root, sourceTag);
+        
+        String sPath = dse.getTextTrim();
+        if(sPath == null || sPath.length() == 0)
+            return null;
+        
+        ProjectContentProvider pol = project.getLookup().lookup(ProjectContentProvider.class);
+        if(pol == null) 
+            return null;
+    
+        return pol.getContent(sPath, clazz);
+    }
 }
