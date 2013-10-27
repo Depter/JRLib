@@ -21,16 +21,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.jdom2.Element;
-import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
+ * @param <M> the method type.
  */
-public interface CalculationMethodFactory<C extends CalculationData> {
+public interface CalculationMethodFactory<M extends SelectableMethod> {
     
-    public CalculationMethod<C> fromXml(Element element) throws Exception;
+    public CalculationMethod<M> fromXml(Element element) throws Exception;
     
     @Retention(RetentionPolicy.SOURCE)
     @Target(ElementType.TYPE)

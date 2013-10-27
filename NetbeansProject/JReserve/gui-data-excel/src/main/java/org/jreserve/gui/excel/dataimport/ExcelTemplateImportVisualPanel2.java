@@ -42,12 +42,15 @@ import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.data.spi.inport.ImportSettings;
 import org.jreserve.gui.data.spi.inport.SaveType;
 import org.jreserve.gui.excel.template.dataimport.DataImportTemplateItem;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectChooser;
-import org.jreserve.gui.misc.utils.dataobject.DataObjectProvider;
+import org.jreserve.gui.misc.namedcontent.NamedContent;
+import org.jreserve.gui.misc.namedcontent.NamedContentChooserController;
+import org.jreserve.gui.misc.namedcontent.NamedContentProvider;
+import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.EmptyIcon;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
 import org.jreserve.jrlib.gui.data.DataType;
+import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
 import org.openide.util.NbBundle.Messages;
 
@@ -68,7 +71,7 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
     private final DataSourceRenderer dsRenderer = new DataSourceRenderer();
     private final ExcelTemplateImportTableModel tableModel = new ExcelTemplateImportTableModel();
     private final ExcelTemplateImportWizardPanel2 controller;
-    private DataObjectProvider dop;
+    private NamedContentProvider dop;
     
     public ExcelTemplateImportVisualPanel2(ExcelTemplateImportWizardPanel2 controller) {
         this.controller = controller;
@@ -97,7 +100,7 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
         column.setWidth(MAX_IMG_WIDTH);
     }
 
-    void setDataObjectProvider(DataObjectProvider dop) {
+    void setDataObjectProvider(NamedContentProvider dop) {
         this.dop = dop;
     }
     
@@ -352,8 +355,7 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
         
         private void selectDataSource(int row) {
             DataType dt = tableModel.getItem(row).getDataType();
-            DataObject obj = DataObjectChooser.selectOne(new DsController(dop, dt));
-            DataSource ds = obj==null? null : obj.getLookup().lookup(DataSource.class);
+            DataSource ds = NamedContentUtil.userSelect(new DsController(dt), DataSource.class);
             if(ds != null)
                 tableModel.setDataSource(row, ds);
         }
@@ -363,30 +365,42 @@ class ExcelTemplateImportVisualPanel2 extends javax.swing.JPanel {
         }
     }
     
-    private static class DsController extends DataObjectChooser.DefaultController {
-        
+    private class DsController implements NamedContentChooserController {
         private final DataType dt;
         
-        private DsController(DataObjectProvider dop, DataType dt) {
-            super(Bundle.LBL_ExcelTemplateImportVisualPanel2_SelectTitle(), dop.getRootFolder());
+        private DsController(DataType dt) {
             this.dt = dt;
         }
 
         @Override
-        public boolean showDataObject(DataObject obj) {
-            if(super.showDataObject(obj))
+        public String getTitle() {
+            return Bundle.LBL_ExcelTemplateImportVisualPanel2_SelectTitle();
+        }
+
+        @Override
+        public NamedContentProvider getRoot() {
+            return dop;
+        }
+
+        @Override
+        public boolean showsContent(NamedContent content) {
+            DataObject obj = content.getLookup().lookup(DataObject.class);
+            if(obj instanceof DataFolder)
                 return true;
-            DataSource ds = obj.getLookup().lookup(DataSource.class);
+            return acceptsContent(content);
+        }
+
+        @Override
+        public boolean acceptsContent(NamedContent content) {
+            DataSource ds = content.getLookup().lookup(DataSource.class);
             return ds != null && ds.getDataType() == dt;
         }
 
         @Override
-        public boolean canSelectObject(DataObject obj) {
-            DataSource ds = obj.getLookup().lookup(DataSource.class);
-            return ds != null && ds.getDataType() == dt;
+        public boolean acceptsFolder() {
+            return false;
         }
-        
-        
+    
     }
     
     private class TableKeyListener extends KeyAdapter {

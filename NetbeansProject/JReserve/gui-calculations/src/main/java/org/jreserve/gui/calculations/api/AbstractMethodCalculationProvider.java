@@ -18,9 +18,11 @@ package org.jreserve.gui.calculations.api;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -29,17 +31,19 @@ import org.jdom2.Element;
 import org.jreserve.gui.calculations.util.CalculationMethodFactoryRegistry;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.CalculationData;
-import org.jreserve.jrlib.util.method.AbstractVectorUserInput;
+import org.jreserve.jrlib.util.method.FixedValueMethod;
 import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
+ * @param <C> the result calculation type.
+ * @param <M> the method type.
  */
-public abstract class AbstractMethodCalculationProvider<C extends CalculationData, S extends CalculationData> 
+public abstract class AbstractMethodCalculationProvider<C extends CalculationData, M extends SelectableMethod> 
     extends AbstractCalculationProvider<C> 
-    implements MethodCalculationProvider<C, S> {
+    implements MethodCalculationProvider<C, M> {
     
     private final static Logger logger = Logger.getLogger(AbstractMethodCalculationProvider.class.getName());
     private final static String CONSTANTS_ELEMENT = "constant";
@@ -60,10 +64,10 @@ public abstract class AbstractMethodCalculationProvider<C extends CalculationDat
                 double value = JDomUtil.getExistingDouble(me, VALUE_ELEMENT);
                 fixed.set(index, value);
             } else {
-                CalculationMethodFactory<S> factory = CalculationMethodFactoryRegistry.getFactory(category, rootName);
+                CalculationMethodFactory<M> factory = CalculationMethodFactoryRegistry.getFactory(category, rootName);
                 if(factory != null) {
                     Set<Integer> indices = getIndices(me);
-                    CalculationMethod<S> cm = factory.fromXml(me);
+                    CalculationMethod<M> cm = factory.fromXml(me);
                     entries.add(new MethodEntry(cm, indices));
                 } else {
                     String msg = "CalculationMethodFactory for xml name '%s' in category '%s' is not found!";   //NOI18
@@ -81,7 +85,7 @@ public abstract class AbstractMethodCalculationProvider<C extends CalculationDat
     }
     
     @Override
-    public CalculationMethod<S> getMethodAt(int index) {
+    public CalculationMethod<M> getMethodAt(int index) {
         synchronized(lock) {
             Integer objIndex = index;
             for(MethodEntry me : entries)
@@ -95,11 +99,10 @@ public abstract class AbstractMethodCalculationProvider<C extends CalculationDat
         }
     }
     
-    protected abstract CalculationMethod<S> getDefaultMethod();
+    protected abstract CalculationMethod<M> getDefaultMethod();
     
-    protected abstract AbstractVectorUserInput<S> getFixedMethod();
-    
-    public void setMethod(int index, CalculationMethod<S> cm) {
+    @Override
+    public void setMethod(int index, CalculationMethod<M> cm) {
         synchronized(lock) {
             CalculationMethod oldMethod = deleteMethod(index);
             if(cm != null) {
@@ -120,7 +123,7 @@ public abstract class AbstractMethodCalculationProvider<C extends CalculationDat
     
     protected abstract void methodsChanged();
     
-    private CalculationMethod<S> deleteMethod(int index) {
+    private CalculationMethod<M> deleteMethod(int index) {
         if(fixed.containsIndex(index)) {
             fixed.set(index, Double.NaN);
             return fixed;
@@ -176,27 +179,44 @@ public abstract class AbstractMethodCalculationProvider<C extends CalculationDat
         return root;
     }
     
+    protected final Map<Integer, M> createMethods() {
+        Map<Integer, M> methods = new HashMap<Integer, M>();
+        for(MethodEntry entry : entries) {
+            M method = entry.method.createMethod();
+            for(Integer index : entry.indices)
+                methods.put(index, method);
+        }
+        
+        M method = fixed.createMethod();
+        for(Integer index : fixed.indices)
+            methods.put(index, method);
+        
+        return methods;
+    }
+    
     private class MethodEntry {
-        private CalculationMethod<S> method;
+        private CalculationMethod<M> method;
         private Set<Integer> indices;
 
-        private MethodEntry(CalculationMethod<S> method) {
+        private MethodEntry(CalculationMethod<M> method) {
             this(method, new TreeSet<Integer>());
         }
 
-        private MethodEntry(CalculationMethod<S> method, Set<Integer> indices) {
+        private MethodEntry(CalculationMethod<M> method, Set<Integer> indices) {
             this.method = method;
             this.indices = indices;
         }
     }
     
-    private class FixedCalculationMethod implements CalculationMethod<S> {
+    protected abstract FixedValueMethod getFixedMethod();
+    
+    private class FixedCalculationMethod implements CalculationMethod<M> {
 
-        private Set<Integer> indices = new HashSet<Integer>();
+        private final Set<Integer> indices = new HashSet<Integer>();
         
         @Override
-        public SelectableMethod<S> createMethod(S sourceCalculation) {
-            return getFixedMethod();
+        public M createMethod() {
+            return (M) getFixedMethod();
         }
         
         private boolean containsIndex(int index) {
@@ -214,7 +234,7 @@ public abstract class AbstractMethodCalculationProvider<C extends CalculationDat
         @Override
         public Element toXml() {
             Element root = new Element(CONSTANTS_ELEMENT);
-            AbstractVectorUserInput m = getFixedMethod();
+            FixedValueMethod m = getFixedMethod();
             for(int i : indices) {
                 double value = m.getValue(i);
                 if(Double.isNaN(value)) 

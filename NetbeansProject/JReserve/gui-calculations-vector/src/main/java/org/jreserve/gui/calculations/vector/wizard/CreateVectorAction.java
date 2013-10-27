@@ -44,7 +44,7 @@ import org.openide.util.NbBundle.Messages;
 )
 @ActionReference(
     path = "Ribbon/TaskPanes/Edit/Edit/New",
-    position = 500, separatorBefore = 490
+    position = 600
 )
 @Messages({
     "LBL.CreateVectorAction.Name=Vector",

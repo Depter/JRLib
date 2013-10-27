@@ -17,18 +17,21 @@
 package org.jreserve.gui.calculations.api;
 
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
+ * @param <C> the result calculation type.
+ * @param <M> the method type.
  */
-public interface MethodCalculationProvider<C extends CalculationData, S extends CalculationData> 
+public interface MethodCalculationProvider<C extends CalculationData, M extends SelectableMethod> 
     extends CalculationProvider<C> {
     
-    public CalculationMethod<S> getMethodAt(int index);
+    public CalculationMethod<M> getMethodAt(int index);
     
-    public void setMethod(int index, CalculationMethod<S> cm);
+    public void setMethod(int index, CalculationMethod<M> cm);
     
     public void setFixedValue(int index, double value);
     

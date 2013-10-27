@@ -68,8 +68,6 @@ import org.openide.util.Utilities;
 })
 public class CreateVectorWizardIterator extends AbstractWizardIterator implements WizardDescriptor.ProgressInstantiatingIterator<WizardDescriptor> {
     
-    private final static String TEMPLATE_FILE = "Templates/Calculation/VectorTemplate.jcv"; //NOI18
-    
     final static String PROP_PROJECT = "project";
     final static String PROP_INIT_FOLDER = "initFolder";
     
@@ -141,7 +139,7 @@ public class CreateVectorWizardIterator extends AbstractWizardIterator implement
             FileUtil.runAtomicAction(builder);
             return Collections.singleton(builder.getResult().getPrimaryFile());
         } catch(IOException ex) {
-            String msg = "Unable to create new ClaimTriangle!";
+            String msg = "Unable to create new Vector!";
             logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         } finally {

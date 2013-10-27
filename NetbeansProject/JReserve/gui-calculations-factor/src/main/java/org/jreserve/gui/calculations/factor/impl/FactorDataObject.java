@@ -30,7 +30,6 @@ import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Node;
-import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -69,6 +68,7 @@ public class FactorDataObject extends CalculationDataObject {
         
         super.ic.add(new FactorDisplayable());
         super.ic.add(calculation);
+        super.ic.add(new FactorBundleNamedContent(this));
         super.setDeleteAllowed(true);
     }
     
@@ -84,13 +84,14 @@ public class FactorDataObject extends CalculationDataObject {
         }
     }
     
+    @Override
     public Node createNodeDelegate() {
-        //TODO create node;
-        return null;//new VectorNode(this);
+        return new FactorBundleNode(this);
     }
 
     @Override
     protected void handleDelete() throws IOException {
+        super.handleDelete();
         synchronized(lock) {
             //TODO fire delete SE
             //TODO fire delete scale

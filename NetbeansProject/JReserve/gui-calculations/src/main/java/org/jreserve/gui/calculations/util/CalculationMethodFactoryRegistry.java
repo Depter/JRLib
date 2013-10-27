@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import org.jreserve.gui.calculations.api.CalculationMethodFactory;
 import org.jreserve.gui.misc.annotations.AnnotationUtils;
 import org.jreserve.gui.misc.annotations.CachedLayerRegistrationLoader;
-import org.jreserve.jrlib.CalculationData;
 import org.openide.filesystems.FileObject;
 
 /**
@@ -35,10 +34,6 @@ public class CalculationMethodFactoryRegistry extends CachedLayerRegistrationLoa
     
     private final static Logger logger = Logger.getLogger(CalculationMethodFactoryRegistry.class.getName());
     private final static Map<String, CalculationMethodFactoryRegistry> registries = new HashMap<String, CalculationMethodFactoryRegistry>();
-    
-    public static <C extends CalculationData> CalculationMethodFactory<C> getFactory(Class<C> category, String rootName) {
-        return getFactory(category.getName(), rootName);
-    }
     
     public static CalculationMethodFactory getFactory(String category, String rootName) {
         CalculationMethodFactoryRegistry r = registries.get(category);

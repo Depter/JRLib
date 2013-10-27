@@ -57,7 +57,7 @@
         </dependency>
         <dependency>
             <groupId>org.jreserve</groupId>
-            <artifactId>org-jreserve-gui-misc-annotations</artifactId>
+            <artifactId>gui-misc-annotations</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -16,6 +16,8 @@
  */
 package org.jreserve.gui.calculations.factor.impl;
 
+import org.jreserve.jrlib.linkratio.LinkRatio;
+import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
@@ -26,12 +28,17 @@ import org.jreserve.jrlib.triangle.factor.FactorTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-class BundleUtils {
+public class BundleUtils {
     
-    static FactorTriangle createEmptyFactors() {
+    public static FactorTriangle createEmptyFactors() {
         double[][] data = new double[0][];
         ClaimTriangle claims = new InputClaimTriangle(data);
         return new DevelopmentFactors(claims);
+    }
+    
+    public static LinkRatio createEmptyLinkRatios() {
+        FactorTriangle factors = createEmptyFactors();
+        return new SimpleLinkRatio(factors);
     }
     
     private BundleUtils() {}

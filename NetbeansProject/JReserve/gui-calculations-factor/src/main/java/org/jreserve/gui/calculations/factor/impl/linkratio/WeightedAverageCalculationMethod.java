@@ -20,8 +20,6 @@ import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.CalculationMethod;
 import org.jreserve.jrlib.linkratio.LinkRatioMethod;
 import org.jreserve.jrlib.linkratio.WeightedAverageLRMethod;
-import org.jreserve.jrlib.triangle.factor.FactorTriangle;
-import org.jreserve.jrlib.util.method.SelectableMethod;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -32,12 +30,12 @@ import org.openide.util.NbBundle.Messages;
 @Messages({
     "LBL.WeightedAverageCalculationMethod.Name=Weighted Average"
 })
-public class WeightedAverageCalculationMethod implements CalculationMethod<FactorTriangle> {
+public class WeightedAverageCalculationMethod implements CalculationMethod<LinkRatioMethod> {
 
     final static String ROOT_ELEMENT = "weightedAverage";
     
     @Override
-    public LinkRatioMethod createMethod(FactorTriangle factors) {
+    public LinkRatioMethod createMethod() {
         return new WeightedAverageLRMethod();
     }
 

@@ -219,9 +219,9 @@ public class RegressionUtil {
     /**
      * Creates `n` predictions, where x'es are 1 based indices.
      * Calling this has the same result as calling
-     * {@link #predic(double, double, double[]) predic}(intercept, slope, {1, ..., n).
+     * {@link #predict(double, double, double[]) predict}(intercept, slope, {1, ..., n).
      * 
-     * @see #predic(double, double, double[]) 
+     * @see #predict(double, double, double[]) 
      */
     public static double[] predict(double intercept, double slope, int n) {
         double[] result = new double[n];

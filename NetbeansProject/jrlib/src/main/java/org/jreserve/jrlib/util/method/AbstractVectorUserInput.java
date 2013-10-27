@@ -25,7 +25,9 @@ import org.jreserve.jrlib.triangle.TriangleUtil;
  * purpose is to enable manual input at a given stage of a 
  * calculation.
  */
-public abstract class AbstractVectorUserInput<T> implements SelectableMethod<T> {
+public abstract class AbstractVectorUserInput<T> 
+    implements FixedValueMethod<T> {
+    
     protected double[] values;
     
     /**
@@ -60,7 +62,7 @@ public abstract class AbstractVectorUserInput<T> implements SelectableMethod<T> 
     
     /**
      * Sets the value for the given index. If there
-     * are indices before the given index, for wich
+     * are indices before the given index, for which
      * the value has not been set, then they have
      * the value of `NaN`.
      */

@@ -17,17 +17,17 @@
 package org.jreserve.gui.calculations.api;
 
 import org.jdom2.Element;
-import org.jreserve.jrlib.CalculationData;
 import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
+ * @param <M> the method type.
  */
-public interface CalculationMethod<C extends CalculationData> {
+public interface CalculationMethod<M extends SelectableMethod> {
     
-    public SelectableMethod<C> createMethod(C sourceCalculation);
+    public M createMethod();
 
     public Element toXml();
     

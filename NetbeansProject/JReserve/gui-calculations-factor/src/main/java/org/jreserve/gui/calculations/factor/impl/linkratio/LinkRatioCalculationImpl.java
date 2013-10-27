@@ -14,29 +14,41 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.factor.impl;
+package org.jreserve.gui.calculations.factor.impl.linkratio;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractMethodCalculationProvider;
 import org.jreserve.gui.calculations.api.CalculationMethod;
-import org.jreserve.gui.calculations.factor.impl.linkratio.WeightedAverageCalculationMethod;
 import org.jreserve.gui.calculations.factor.FactorBundle;
 import org.jreserve.gui.calculations.factor.LinkRatioCalculation;
+import org.jreserve.gui.calculations.factor.impl.BundleUtils;
+import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
+import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
+import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.jrlib.linkratio.DefaultLinkRatioSelection;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.LinkRatioMethod;
 import org.jreserve.jrlib.linkratio.UserInputLRMethod;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.jreserve.jrlib.util.method.AbstractVectorUserInput;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@Messages({
+    "MSG.LinkRatioCalculationImpl.Calculation.Error=Unable to calculate link ratios!"
+})
 public class LinkRatioCalculationImpl 
-    extends AbstractMethodCalculationProvider<LinkRatio, FactorTriangle>
+    extends AbstractMethodCalculationProvider<LinkRatio, LinkRatioMethod>
     implements LinkRatioCalculation {
+    
+    private final static Logger logger = Logger.getLogger(LinkRatioCalculationImpl.class.getName());
     
     private final static String CATEGORY = "LinkRatio";
     private final static String LINK_RATIO_ELEMENT = "linkRatio";
@@ -46,6 +58,8 @@ public class LinkRatioCalculationImpl
             new WeightedAverageCalculationMethod();
     private final UserInputLRMethod fixedMethod =
             new UserInputLRMethod();
+    
+    private LinkRatio linkRatios;
     
     LinkRatioCalculationImpl(FactorDataObject obj, Element root, FactorBundleImpl bundle) throws Exception {
         super(obj, root, CATEGORY);
@@ -58,7 +72,7 @@ public class LinkRatioCalculationImpl
     }
 
     @Override
-    protected CalculationMethod<FactorTriangle> getDefaultMethod() {
+    protected CalculationMethod<LinkRatioMethod> getDefaultMethod() {
         return defaultMethod;
     }
 
@@ -84,7 +98,13 @@ public class LinkRatioCalculationImpl
 
     @Override
     public LinkRatio getCalculation() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        synchronized(lock) {
+            if(linkRatios == null) {
+                recalculate();
+                return BundleUtils.createEmptyLinkRatios();
+            }
+            return linkRatios;
+        }
     }
 
     @Override
@@ -100,42 +120,30 @@ public class LinkRatioCalculationImpl
     private class RecalculateTask implements Runnable {
         
         private RecalculateTask() {
-            synchronized(lock) {
-                
-            }
         }
         
         @Override
         public void run() {
-            final FactorTriangle result = calculateResult();
             synchronized(lock) {
-                factors = result;
+                linkRatios = calculateResult();
                 events.fireValueChanged();
             }
         }
         
-        private FactorTriangle calculateResult() {
+        private LinkRatio calculateResult() {
             try {
-                DefaultLinkRatioSelection sel = createSelection();
-                set
-                ClaimTriangle input = this.source.getCalculation();
-                FactorTriangle result = new DevelopmentFactors(input);
-                for(CalculationModifier<FactorTriangle> cm : this.modifications)
-                    result = cm.createCalculation(result);
-                return result;
+                FactorTriangle factors = bundle.getFactors().getCalculation();
+                LinkRatioMethod defMethod = defaultMethod.createMethod();
+                DefaultLinkRatioSelection sel = new DefaultLinkRatioSelection(factors, defMethod);
+                sel.setMethods(createMethods());
+                return sel;
             } catch (Exception ex) {
                 String msg = "Unable to calculate vector!";
                 logger.log(Level.SEVERE, msg, ex);
-                String title = Bundle.MSG_FactorTriangleCalculationImpl_Calculation_Error();
+                String title = Bundle.MSG_LinkRatioCalculationImpl_Calculation_Error();
                 BubbleUtil.showException(title, getPath(), ex);
-                return BundleUtils.createEmptyFactors();
+                return BundleUtils.createEmptyLinkRatios();
             }
-        }
-        
-        private DefaultLinkRatioSelection createSelection() throws Exception {
-            FactorTriangle factors = bundle.getFactors().getCalculation();
-            LinkRatioMethod defMethod = defaultMethod.createMethod(factors);
-            return new DefaultLinkRatioSelection(factors, defMethod);
         }
     }
 }

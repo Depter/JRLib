@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.calculations.factor.impl;
 
+import org.jreserve.gui.calculations.factor.impl.linkratio.LinkRatioCalculationImpl;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractCalculationProvider;
 import org.jreserve.gui.calculations.factor.FactorBundle;
@@ -34,6 +35,15 @@ public class FactorBundleImpl
     extends AbstractCalculationProvider<CalculationData> 
     implements FactorBundle {
 
+    public final static String ROOT_ELEMENT = "factorBundle";
+    public final static String AUDIT_ID_ELEMENT = "auditId";
+    public final static String SOURCE_ELEMENT = "source";
+    public final static String FACTORS_ELEMENT = "developmentFactors";
+    public final static String LINK_RATIO_ELEMENT = "linkRatios";
+    public final static String TAIL_ELEMENT = "linkRatioTail";
+    public final static String SCALE_ELEMENT = "linkRatioScale";
+    public final static String SE_ELEMENT = "linkRatioSE";
+    
     public FactorBundleImpl(FactorDataObject obj, Element root) throws Exception {
         super(obj);
     }
@@ -59,12 +69,12 @@ public class FactorBundleImpl
     }
 
     @Override
-    public FactorTriangleCalculation getFactors() {
+    public FactorTriangleCalculationImpl getFactors() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public LinkRatioCalculation getLinkRatio() {
+    public LinkRatioCalculationImpl getLinkRatio() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -75,6 +85,10 @@ public class FactorBundleImpl
 
     @Override
     public LinkRatioSECalculation getStandardError() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public void fireCreated() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
