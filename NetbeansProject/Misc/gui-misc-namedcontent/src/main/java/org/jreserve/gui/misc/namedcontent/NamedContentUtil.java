@@ -82,16 +82,9 @@ public class NamedContentUtil {
             name = path;
         }
         
-        for(NamedContent nc : ncp.getContents()) {
-            if(index < 0) {
-                if(name.equals(nc.getName()))
-                    return nc;
-            } else {
-                nc = getContent(nc, path);
-                if(nc != null)
-                    return nc;
-            }
-        }
+        for(NamedContent nc : ncp.getContents())
+            if(name.equals(nc.getName()))
+                return index<0? nc : getContent(nc, path);
         
         return null;
     }
@@ -107,7 +100,7 @@ public class NamedContentUtil {
             path = null;
         } else {
             name = path.substring(0, index);
-            path = path.substring(index=1);
+            path = path.substring(index+1);
         }
         
         NamedContent child = getChild(nc, name);

@@ -74,7 +74,7 @@ public abstract class CalculationDataObject extends MultiDataObject {
     }
     
     protected static String escapeExtension(String str) {
-        int length = str==null? 0 :str.length();
+        int length = str==null? 0 : str.length();
         if(length < 0)
             return str;
         

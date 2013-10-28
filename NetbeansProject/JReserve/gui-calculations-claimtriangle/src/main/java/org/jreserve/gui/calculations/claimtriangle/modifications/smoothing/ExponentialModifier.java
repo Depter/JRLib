@@ -18,7 +18,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.smoothing.ExponentialClaimTriangleSmoothable.DialogController;

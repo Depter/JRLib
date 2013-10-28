@@ -14,15 +14,18 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications;
+package org.jreserve.gui.calculations.api.modification;
 
 import java.awt.Color;
 import java.awt.Component;
+import javax.swing.Icon;
+import org.jreserve.gui.calculations.api.DefaultColor;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.jrlib.triangle.Triangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
+import org.netbeans.api.annotations.common.StaticResource;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -31,25 +34,25 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.CorrectionLayer.Name=Correction"
+    "LBL.TriangleCorrectionLayer.Name=Correction",
+    "LBL.TriangleCorrectionLayer.Color.Background=Correction, Background",
+    "LBL.TriangleCorrectionLayer.Color.Foreground=Correction, Foreground"
 })
-class CorrectionLayer extends DefaultTriangleLayer {
+public class TriangleCorrectionLayer extends DefaultTriangleLayer {
     
+    @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/correction.png"; //NOI18
+    private final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
+    
+    private final static Color BACKGROUND = DefaultColor.getColor("correction.background");
+    private final static Color FOREGROUND = DefaultColor.getColor("correction.foreground");
     private int accident;
     private int development;
     
-    CorrectionLayer(Triangle triangle) {
-        super(triangle, Bundle.LBL_CorrectionLayer_Name(), 
-                ClaimTriangleCorrectionModifier.ICON, 
-                new CorrectionRenderer());
-        if(triangle instanceof ClaimTriangleCorrection) {
-            ClaimTriangleCorrection correction = (ClaimTriangleCorrection) triangle;
-            accident = correction.getCorrigatedAccident();
-            development = correction.getCorrigatedDevelopment();
-        } else {
-            accident = -1;
-            development = -1;
-        }
+    TriangleCorrectionLayer(Triangle triangle, int accident, int development) {
+        super(triangle, Bundle.LBL_TriangleCorrectionLayer_Name(),
+                ICON, new CorrectionRenderer());
+        this.accident = accident;
+        this.development = development;
     }
 
     @Override
@@ -63,8 +66,10 @@ class CorrectionLayer extends DefaultTriangleLayer {
         @Override
         public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
             super.getComponent(widget, value, accident, development, selected);
-            if(!selected)
-                setBackground(Color.ORANGE);
+            if(!selected) {
+                setBackground(BACKGROUND);
+                setForeground(FOREGROUND);
+            }
             return this;
         }
         

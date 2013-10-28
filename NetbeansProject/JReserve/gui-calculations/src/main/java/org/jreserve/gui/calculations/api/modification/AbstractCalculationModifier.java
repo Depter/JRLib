@@ -14,9 +14,9 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.modification;
 
-import java.util.Map;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.jrlib.CalculationData;
 
 /**
@@ -24,16 +24,26 @@ import org.jreserve.jrlib.CalculationData;
  * @author Peter Decsi
  * @version 1.0
  */
-public interface EditableCalculationModifier<C extends CalculationData> 
-    extends CalculationModifier<C> {
+public abstract class AbstractCalculationModifier<C extends CalculationData> implements CalculationModifier<C>{
+
+    private final Class<C> clazz;
+    private Displayable displayable;
     
-    public void addCalculationModifierListener(CalculationModifierListener<C> listener);
+    protected AbstractCalculationModifier(Class<C> clazz) {
+        this.clazz = clazz;
+    }
     
-    public void removeCalculationModifierListener(CalculationModifierListener<C> listener);
+    @Override
+    public Class<? extends C> getCalculationClass() {
+        return clazz;
+    }
+
+    @Override
+    public synchronized Displayable getDisplayable() {
+        if(displayable == null)
+            displayable = createDisplayable();
+        return displayable;
+    }
     
-    public void edit(ModifiableCalculationProvider<C> calculation);
-    
-    public void getState(Map state);
-    
-    public void loadState(Map state);
+    protected abstract Displayable createDisplayable();    
 }

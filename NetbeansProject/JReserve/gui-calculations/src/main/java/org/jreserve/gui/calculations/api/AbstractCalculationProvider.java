@@ -35,7 +35,7 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
     implements CalculationProvider<C>, AuditedObject {
 
     private final Project project;
-    final CalculationDataObject obj;
+    private final CalculationDataObject obj;
     private String path;
     protected final CalculationEventUtil events;
     protected final Object lock;

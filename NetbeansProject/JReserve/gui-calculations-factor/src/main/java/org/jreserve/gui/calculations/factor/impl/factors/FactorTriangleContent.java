@@ -15,7 +15,7 @@
  * along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.jreserve.gui.calculations.factor.impl;
+package org.jreserve.gui.calculations.factor.impl.factors;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,11 +32,11 @@ import org.openide.util.lookup.Lookups;
 @Messages({
     "LBL.FactorTriangleContent.Name=Factors"
 })
-class FactorTriangleContent implements NamedContent {
+public class FactorTriangleContent implements NamedContent {
 
     private final Lookup lkp;
     
-    FactorTriangleContent(FactorTriangleCalculationImpl factors) {
+    public FactorTriangleContent(FactorTriangleCalculationImpl factors) {
         lkp = Lookups.singleton(factors);
     }
     

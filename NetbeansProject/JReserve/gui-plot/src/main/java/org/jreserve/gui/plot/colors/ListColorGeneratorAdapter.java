@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.plot.colors;
 
+import org.jreserve.gui.misc.utils.widgets.ColorUtil;
 import java.awt.Color;
 import java.util.LinkedList;
 import java.util.List;

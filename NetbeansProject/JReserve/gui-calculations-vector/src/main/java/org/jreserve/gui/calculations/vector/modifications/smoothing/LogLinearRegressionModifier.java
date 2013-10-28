@@ -18,7 +18,7 @@ package org.jreserve.gui.calculations.vector.modifications.smoothing;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 import org.jreserve.gui.calculations.smoothing.calculation.LogLinearSmoothingModifier;
 import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialog;
 import org.jreserve.gui.calculations.vector.VectorCalculation;

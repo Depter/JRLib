@@ -14,12 +14,14 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.modification;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.jdom2.Element;
+import org.jreserve.gui.calculations.api.AbstractCalculationProvider;
+import org.jreserve.gui.calculations.api.CalculationDataObject;
 import org.jreserve.gui.calculations.util.CalculationModifierFactoryRegistry;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.CalculationData;
@@ -165,7 +167,7 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
 
         @Override
         public void modificationChanged(EditableCalculationModifier<C> source, Map<Object, Object> preState) {
-            synchronized(AbstractModifiableCalculationProvider.super.obj.lock) {
+            synchronized(AbstractModifiableCalculationProvider.super.lock) {
                 modificationsChanged();
                 
                 int index = indexOf(source);

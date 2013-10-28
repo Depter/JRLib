@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.jreserve.gui.calculations.api.CalculationMethodFactory;
+import org.jreserve.gui.calculations.api.method.CalculationMethodFactory;
 import org.jreserve.gui.misc.annotations.AnnotationUtils;
 import org.jreserve.gui.misc.annotations.CachedLayerRegistrationLoader;
 import org.openide.filesystems.FileObject;

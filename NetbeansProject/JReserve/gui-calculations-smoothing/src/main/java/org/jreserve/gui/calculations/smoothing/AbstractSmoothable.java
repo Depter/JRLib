@@ -17,8 +17,8 @@
 package org.jreserve.gui.calculations.smoothing;
 
 import java.util.concurrent.Callable;
-import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.smoothing.dialog.AbstractSmoothDialog;
 import org.jreserve.gui.calculations.smoothing.dialog.SmoothDialogController;

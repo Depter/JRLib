@@ -17,12 +17,12 @@
 
 package org.jreserve.gui.calculations.factor.impl;
 
+import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleContent;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.factor.impl.linkratio.LinkRatioNamedContent;
 import org.jreserve.gui.misc.namedcontent.NamedContent;
 import org.jreserve.gui.misc.namedcontent.NamedDataObjectContent;
-import org.openide.loaders.DataObject;
 
 /**
  *

@@ -65,6 +65,7 @@ public class ClaimTriangleDataObject extends CalculationDataObject {
         super.registerEditor(MIME_TYPE, true);
         
         calculation = loadCalculation();
+        calculation.setPath(getPath(getPrimaryFile()));
         EventBusManager.getDefault().subscribe(calculation);
         
         super.ic.add(new ClaimTriangleDisplayable());

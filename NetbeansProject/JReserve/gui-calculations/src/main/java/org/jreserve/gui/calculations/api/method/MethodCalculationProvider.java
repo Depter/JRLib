@@ -14,17 +14,26 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.method;
 
-import java.util.Map;
+import org.jreserve.gui.calculations.api.CalculationProvider;
 import org.jreserve.jrlib.CalculationData;
+import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
+ * @param <C> the result calculation type.
+ * @param <M> the method type.
  */
-public interface CalculationModifierListener<C extends CalculationData> {
+public interface MethodCalculationProvider<C extends CalculationData, M extends SelectableMethod> 
+    extends CalculationProvider<C> {
     
-    public void modificationChanged(EditableCalculationModifier<C> source, Map<Object, Object> preState);
+    public CalculationMethod<M> getMethodAt(int index);
+    
+    public void setMethod(int index, CalculationMethod<M> cm);
+    
+    public void setFixedValue(int index, double value);
+    
 }

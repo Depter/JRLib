@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import org.jreserve.gui.calculations.api.modification.TriangleCorrectionModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
-import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
@@ -59,11 +58,6 @@ public class ClaimTriangleCorrectionModifier
         return Bundle.LBL_ClaimTriangleCorrectionModifier_Description(
                 getAccident()+1, getDevelopment()+1, 
                 getValue());
-    }
-
-    @Override
-    public TriangleLayer createLayer(ClaimTriangle input) {
-        return new CorrectionLayer(input);
     }
 
     @Override

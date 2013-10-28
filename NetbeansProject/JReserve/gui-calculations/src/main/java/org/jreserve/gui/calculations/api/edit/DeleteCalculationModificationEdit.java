@@ -19,8 +19,8 @@ package org.jreserve.gui.calculations.api.edit;
 
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
-import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 import org.openide.util.NbBundle.Messages;
 
 /**

@@ -17,6 +17,7 @@
 
 package org.jreserve.gui.calculations.factor.wizard;
 
+import org.jreserve.gui.calculations.api.CalculationContents;
 import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
 import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
@@ -55,18 +56,13 @@ class CreateFactorWizardPanel2 extends AbstractWizardPanel<CreateFactorVisualPan
     }
     
     private ClaimTriangleCalculation getSource() {
-        ProjectContentProvider pol = panel.getProjectObjectLookup();
-        String path = panel.getSourcePath();
-        return pol.getContent(path, ClaimTriangleCalculation.class);
+        return CalculationContents.getCalculation(
+                panel.getProject(), panel.getSourcePath(), 
+                ClaimTriangleCalculation.class);
     }
 
     @Override
     protected boolean isInputValid() {
-        NamedCalculationProvider dop = panel.getSourceProvider();
-        if(dop == null) {
-            showError(Bundle.MSG_CreateFactorWizardPanel2_DOP_NotFound());
-            return false;
-        }
         
         String path = panel.getSourcePath();
         if(path == null || path.length() == 0) {
@@ -74,8 +70,8 @@ class CreateFactorWizardPanel2 extends AbstractWizardPanel<CreateFactorVisualPan
             return false;
         }
         
-        ProjectContentProvider pol = panel.getProjectObjectLookup();
-        if(pol == null || pol.getContent(path, ClaimTriangleCalculation.class) == null) {
+        Project p = panel.getProject();
+        if(CalculationContents.getCalculation(p, path, ClaimTriangleCalculation.class) == null) {
             showError(Bundle.MSG_CreateFactorWizardPanel2_Source_NotFound());
             return false;
         }

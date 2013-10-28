@@ -14,17 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.plot.colors;
+package org.jreserve.gui.misc.utils.widgets;
 
 import java.awt.Color;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JColorChooser;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.util.HelpCtx;
@@ -38,12 +36,12 @@ import org.openide.util.NbBundle.Messages;
     "LBL.ColorChooserDialog.Title=Choose Color",
     "MSG.ColorChooserDialog.NoColor=Color is not selected!"
 })
-class ColorChooserDialog extends javax.swing.JPanel {
+public class ColorChooserDialog extends javax.swing.JPanel {
     
     private final static int OPTION_ALIGN = DialogDescriptor.DEFAULT_ALIGN;
     private final static boolean MODAL = true;
     
-    static Color selectColor(Color initColor) {
+    public static Color selectColor(Color initColor) {
         ColorChooserDialog form = new ColorChooserDialog(initColor);
         DialogDescriptor dd = new DialogDescriptor(
                 form, Bundle.LBL_ColorChooserDialog_Title(), MODAL, 

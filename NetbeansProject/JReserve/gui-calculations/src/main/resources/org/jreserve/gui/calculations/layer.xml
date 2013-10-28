@@ -16,4 +16,21 @@
             </folder>
         </folder>
     </folder>
+    
+    <folder name="JReserve">
+        <folder name="CalculationColors">
+            <file name="correction-background.color">
+                <attr name="id" stringvalue="correction.background"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.calculations.api.modification.Bundle#LBL.TriangleCorrectionLayer.Color.Background" name="displayName"/>
+                <attr name="color" stringvalue="FFC800"/>
+            </file>
+            <file name="correction-foreground.color">
+                <attr name="id" stringvalue="correction.foreground"/>
+                <attr
+                    bundlevalue="org.jreserve.gui.calculations.api.modification.Bundle#LBL.TriangleCorrectionLayer.Color.Foreground" name="displayName"/>
+                <attr name="color" stringvalue="000000"/>
+            </file>
+        </folder>
+    </folder>    
 </filesystem>

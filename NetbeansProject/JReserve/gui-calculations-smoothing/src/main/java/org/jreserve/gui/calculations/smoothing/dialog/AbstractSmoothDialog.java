@@ -44,7 +44,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
-import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.localesettings.ScaleSpinner;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;

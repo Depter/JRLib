@@ -18,6 +18,7 @@ package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.awt.Color;
 import java.awt.Component;
+import org.jreserve.gui.calculations.api.DefaultColor;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
@@ -29,16 +30,47 @@ import org.jreserve.jrlib.vector.SmoothedVector;
 import org.jreserve.jrlib.vector.Vector;
 import org.jreserve.jrlib.vector.VectorTriangle;
 import org.jreserve.jrlib.vector.smoothing.SmoothingIndex;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
+@DefaultColor.Registrations({
+    @DefaultColor.Registration(
+        id="smoothing.background",
+        displayName = "#LBL.SmoothingLayer.BG.NotApplied",
+        color = "99CCFF"
+    ),
+    @DefaultColor.Registration(
+        id="smoothing.foreground",
+        displayName = "#LBL.SmoothingLayer.FG.NotApplied",
+        color = "000000"
+    ),
+    @DefaultColor.Registration(
+        id="smoothing.background.applied",
+        displayName = "#LBL.SmoothingLayer.BG.Applied",
+        color = "6699FF"
+    ),
+    @DefaultColor.Registration(
+        id="smoothing.foreground.applied",
+        displayName = "#LBL.SmoothingLayer.FG.Applied",
+        color = "000000"
+    )
+})
+@Messages({
+    "LBL.SmoothingLayer.BG.NotApplied=Smoothing, not applied, background",
+    "LBL.SmoothingLayer.FG.NotApplied=Smoothing, not applied, foreground",
+    "LBL.SmoothingLayer.BG.Applied=Smoothing, applied, background",
+    "LBL.SmoothingLayer.FG.Applied=Smoothing, applied, foreground"
+})
 class SmoothingLayer extends DefaultTriangleLayer {
     
-    private final static Color BACKGROUND = new Color(153, 204, 255);
-    private final static Color APPLIED_BACKGROUND = new Color(102, 153, 255);
+    private final static String ID_BG = "smoothing.background"; //NOI18
+    private final static String ID_BG_APPLIED = "smoothing.background.applied"; //NOI18
+    private final static Color BACKGROUND = DefaultColor.getColor(ID_BG);
+    private final static Color APPLIED_BACKGROUND = DefaultColor.getColor(ID_BG_APPLIED);
 
     private static Triangle getTriangle(CalculationData data) {
         if(data instanceof Triangle) {

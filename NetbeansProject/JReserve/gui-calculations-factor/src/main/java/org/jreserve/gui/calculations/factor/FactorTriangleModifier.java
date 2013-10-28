@@ -14,30 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.factor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-import org.jdom2.Element;
-import org.jreserve.jrlib.util.method.SelectableMethod;
+import java.util.List;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.trianglewidget.model.TriangleLayer;
+import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
- * @param <M> the method type.
  */
-public interface CalculationMethodFactory<M extends SelectableMethod> {
+public interface FactorTriangleModifier extends CalculationModifier<FactorTriangle> {
     
-    public CalculationMethod<M> fromXml(Element element) throws Exception;
+    public TriangleLayer createLayer(FactorTriangle input);
     
-    @Retention(RetentionPolicy.SOURCE)
-    @Target(ElementType.TYPE)
-    public static @interface Registration {
-        String category();
-        String rootName();
-        int position() default Integer.MAX_VALUE;
-    }
+    public List<Cell> getAffectedCells();
 }

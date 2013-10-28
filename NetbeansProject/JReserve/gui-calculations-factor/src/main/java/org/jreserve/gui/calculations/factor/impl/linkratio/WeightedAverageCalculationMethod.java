@@ -17,7 +17,7 @@
 package org.jreserve.gui.calculations.factor.impl.linkratio;
 
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.CalculationMethod;
+import org.jreserve.gui.calculations.api.method.CalculationMethod;
 import org.jreserve.jrlib.linkratio.LinkRatioMethod;
 import org.jreserve.jrlib.linkratio.WeightedAverageLRMethod;
 import org.openide.util.NbBundle.Messages;

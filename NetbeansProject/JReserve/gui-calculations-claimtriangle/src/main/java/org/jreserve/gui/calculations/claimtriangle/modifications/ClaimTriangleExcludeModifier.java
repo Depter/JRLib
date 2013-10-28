@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import javax.swing.Icon;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.AbstractCalculationModifier;
+import org.jreserve.gui.calculations.api.modification.AbstractCalculationModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;

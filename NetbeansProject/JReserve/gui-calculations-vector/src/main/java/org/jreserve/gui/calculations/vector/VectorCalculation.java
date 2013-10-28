@@ -16,7 +16,7 @@
  */
 package org.jreserve.gui.calculations.vector;
 
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.vector.Vector;

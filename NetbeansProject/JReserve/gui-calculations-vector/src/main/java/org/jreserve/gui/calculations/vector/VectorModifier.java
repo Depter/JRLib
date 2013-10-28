@@ -17,7 +17,7 @@
 package org.jreserve.gui.calculations.vector;
 
 import java.util.List;
-import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.vector.Vector;

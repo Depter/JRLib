@@ -16,14 +16,14 @@
  */
 package org.jreserve.gui.calculations.factor.impl;
 
+import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleCalculationImpl;
 import org.jreserve.gui.calculations.factor.impl.linkratio.LinkRatioCalculationImpl;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.AbstractCalculationProvider;
 import org.jreserve.gui.calculations.factor.FactorBundle;
-import org.jreserve.gui.calculations.factor.FactorTriangleCalculation;
-import org.jreserve.gui.calculations.factor.LinkRatioCalculation;
 import org.jreserve.gui.calculations.factor.LinkRatioSECalculation;
 import org.jreserve.gui.calculations.factor.LinkRatioScaleCalculation;
+import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.CalculationData;
 
 /**
@@ -37,15 +37,27 @@ public class FactorBundleImpl
 
     public final static String ROOT_ELEMENT = "factorBundle";
     public final static String AUDIT_ID_ELEMENT = "auditId";
-    public final static String SOURCE_ELEMENT = "source";
-    public final static String FACTORS_ELEMENT = "developmentFactors";
-    public final static String LINK_RATIO_ELEMENT = "linkRatios";
-    public final static String TAIL_ELEMENT = "linkRatioTail";
-    public final static String SCALE_ELEMENT = "linkRatioScale";
-    public final static String SE_ELEMENT = "linkRatioSE";
+//    public final static String SOURCE_ELEMENT = "source";
+//    public final static String FACTORS_ELEMENT = "developmentFactors";
+//    public final static String LINK_RATIO_ELEMENT = "linkRatios";
+//    public final static String TAIL_ELEMENT = "linkRatioTail";
+//    public final static String SCALE_ELEMENT = "linkRatioScale";
+//    public final static String SE_ELEMENT = "linkRatioSE";
+    
+    private final long auditId;
+    private final FactorTriangleCalculationImpl factors;
+    private final LinkRatioCalculationImpl linkRatios;
     
     public FactorBundleImpl(FactorDataObject obj, Element root) throws Exception {
         super(obj);
+        auditId = JDomUtil.getExistingLong(root, AUDIT_ID_ELEMENT);
+        
+        Element cr = JDomUtil.getExistingChild(root, FactorTriangleCalculationImpl.ROOT_ELEMENT);
+        factors = new FactorTriangleCalculationImpl(obj, cr, this);
+        
+        cr = JDomUtil.getExistingChild(root, LinkRatioCalculationImpl.ROOT_ELEMENT);
+        linkRatios = new LinkRatioCalculationImpl(obj, cr, this);
+        
     }
     
     @Override
@@ -55,7 +67,7 @@ public class FactorBundleImpl
 
     @Override
     public long getAuditId() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return auditId;
     }
     
     @Override
@@ -70,12 +82,12 @@ public class FactorBundleImpl
 
     @Override
     public FactorTriangleCalculationImpl getFactors() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return factors;
     }
 
     @Override
     public LinkRatioCalculationImpl getLinkRatio() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return linkRatios;
     }
 
     @Override
@@ -89,6 +101,10 @@ public class FactorBundleImpl
     }
     
     public void fireCreated() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        events.fireCreated();
+        factors.fireCreated();
+        linkRatios.fireCreated();
+        //TODO scales.fireCreated();
+        //TODO ses.fireCreated();
     }
 }

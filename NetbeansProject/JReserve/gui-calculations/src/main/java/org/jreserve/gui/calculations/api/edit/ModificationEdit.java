@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoableEdit;
-import org.jreserve.gui.calculations.api.EditableCalculationModifier;
+import org.jreserve.gui.calculations.api.modification.EditableCalculationModifier;
 import org.openide.util.NbBundle.Messages;
 
 /**

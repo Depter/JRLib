@@ -21,7 +21,7 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
-import org.jreserve.gui.calculations.api.CalculationModifierFactory;
+import org.jreserve.gui.calculations.api.modification.CalculationModifierFactory;
 import org.jreserve.gui.misc.annotations.AbstractRegistrationProcessor;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -34,7 +34,7 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedAnnotationTypes("org.jreserve.gui.calculations.api.CalculationModifierFactory.Registration")
+@SupportedAnnotationTypes("org.jreserve.gui.calculations.api.modification.CalculationModifierFactory.Registration")
 public class CalculationModifierFactoryRegistrationProcessor extends AbstractRegistrationProcessor<CalculationModifierFactory.Registration, CalculationModifierFactory> {
 
     final static String LAYER_PATH = "JReserve/CalculationModifierFactory/%s/";

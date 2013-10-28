@@ -14,24 +14,26 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.modification;
 
 import org.jdom2.Element;
-import org.jreserve.jrlib.util.method.SelectableMethod;
+import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.jreserve.jrlib.CalculationData;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
- * @param <M> the method type.
  */
-public interface CalculationMethod<M extends SelectableMethod> {
+public interface CalculationModifier<C extends CalculationData> {
     
-    public M createMethod();
-
+    public C createCalculation(C sourceCalculation);
+    
+    public Class<? extends C> getCalculationClass();
+    
     public Element toXml();
     
-    public String getDisplayName();
+    public String getDescription();
     
-    public String getId();
+    public Displayable getDisplayable();
 }

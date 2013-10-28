@@ -97,6 +97,11 @@
             <artifactId>org-openide-dialogs</artifactId>
             <version>${netbeans.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.netbeans.api</groupId>
+            <artifactId>org-netbeans-modules-options-api</artifactId>
+            <version>${netbeans.version}</version>
+        </dependency>
         
         <dependency>
             <groupId>org.jreserve</groupId>
@@ -150,6 +155,11 @@
             <artifactId>gui-localesettings</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jreserve</groupId>
+            <artifactId>gui-trianglewidget</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -161,6 +171,7 @@
                 <configuration>
                     <publicPackages>
                         <publicPackage>org.jreserve.gui.calculations.api</publicPackage>
+                        <publicPackage>org.jreserve.gui.calculations.api.method</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.modification</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.edit</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.smoothing</publicPackage>

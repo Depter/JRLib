@@ -17,8 +17,8 @@
 package org.jreserve.gui.calculations.vector.modifications;
 
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.jreserve.gui.calculations.api.CalculationModifierFactory;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifierFactory;
 import org.jreserve.gui.calculations.vector.impl.VectorCalculationImpl;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.vector.Vector;

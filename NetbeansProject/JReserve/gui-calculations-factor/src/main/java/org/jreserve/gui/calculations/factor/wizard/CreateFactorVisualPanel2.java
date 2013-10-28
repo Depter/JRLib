@@ -19,10 +19,8 @@ package org.jreserve.gui.calculations.factor.wizard;
 
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.jreserve.gui.calculations.api.NamedCalculationProvider;
+import org.jreserve.gui.calculations.api.CalculationContents;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
-import org.jreserve.gui.misc.namedcontent.NamedContentUtil;
-import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.netbeans.api.project.Project;
 import org.openide.util.NbBundle.Messages;
@@ -41,7 +39,8 @@ class CreateFactorVisualPanel2 extends javax.swing.JPanel {
     
     private final CreateFactorWizardPanel2 controller;
     private final InputListener inputListener = new InputListener();
-    private NamedCalculationProvider dop;
+    private Project project;
+//    private NamedCalculationProvider dop;
 //    private ProjectContentProvider pol;
     
     CreateFactorVisualPanel2(CreateFactorWizardPanel2 controller) {
@@ -55,17 +54,19 @@ class CreateFactorVisualPanel2 extends javax.swing.JPanel {
     }
     
     void setProject(Project p) {
-        dop = p.getLookup().lookup(NamedCalculationProvider.class);
-//        pol = p.getLookup().lookup(ProjectContentProvider.class);
-        
-        boolean enable = dop != null;
+        this.project = p;
+        boolean enable = CalculationContents.containsCalculations(p);
         sourceText.setEnabled(enable);
         browseButton.setEnabled(enable);
     }
     
-    NamedCalculationProvider getSourceProvider() {
-        return dop;
+    Project getProject() {
+        return project;
     }
+//    
+//    NamedCalculationProvider getSourceProvider() {
+//        return dop;
+//    }
     
 //    ProjectContentProvider getProjectObjectLookup() {
 //        return pol;
@@ -138,16 +139,10 @@ class CreateFactorVisualPanel2 extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void browseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_browseButtonActionPerformed
-        ClaimTriangleCalculation ctc = selectClaimTriangle();
+        ClaimTriangleCalculation ctc = CalculationContents.selectOne(project, ClaimTriangleCalculation.class);
         if(ctc != null)
             sourceText.setText(ctc.getPath());
     }//GEN-LAST:event_browseButtonActionPerformed
-
-    private ClaimTriangleCalculation selectClaimTriangle() {
-        return NamedContentUtil.userSelect(
-                dop, ClaimTriangleCalculation.class, 
-                Bundle.LBL_CreateFactorVisualPanel2_Browse_Title());
-    }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;

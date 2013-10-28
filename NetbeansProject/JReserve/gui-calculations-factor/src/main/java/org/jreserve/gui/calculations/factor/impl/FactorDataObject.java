@@ -64,7 +64,7 @@ public class FactorDataObject extends CalculationDataObject {
         super.registerEditor(MIME_TYPE, true);
         
         calculation = loadCalculation();
-        EventBusManager.getDefault().subscribe(calculation);
+        subscribeForEvents();
         
         super.ic.add(new FactorDisplayable());
         super.ic.add(calculation);
@@ -84,6 +84,14 @@ public class FactorDataObject extends CalculationDataObject {
         }
     }
     
+    private void subscribeForEvents() {
+        EventBusManager ebm = EventBusManager.getDefault();
+        ebm.subscribe(calculation.getFactors());
+        ebm.subscribe(calculation.getLinkRatio());
+        //TODO ebm.subscribe(calculation.getScale());
+        //TODO ebm.subscribe(calculation.getStandardError());
+    }
+    
     @Override
     public Node createNodeDelegate() {
         return new FactorBundleNode(this);
@@ -97,7 +105,33 @@ public class FactorDataObject extends CalculationDataObject {
             //TODO fire delete scale
             //TODO fire delete linkRatio
         }
-        EventBusManager.getDefault().unsubscribe(calculation);
+        unsubscribeFromEvents();
+    }
+    
+    private void unsubscribeFromEvents() {
+        EventBusManager ebm = EventBusManager.getDefault();
+        ebm.unsubscribe(calculation.getFactors());
+        ebm.unsubscribe(calculation.getLinkRatio());
+        //TODO ebm.unsubscribe(calculation.getScale());
+        //TODO ebm.unsubscribe(calculation.getStandardError());
+    }
+
+    @Override
+    protected void fireDeleteEvent() {
+        //TODO implement
+        super.fireDeleteEvent();
+    }
+
+    @Override
+    protected void fireSaved() {
+        //TODO implement
+        super.fireSaved();
+    }
+
+    @Override
+    protected void fireRenamed(String oldPath) {
+        //TODO implement
+        super.fireRenamed(oldPath);
     }
     
     private class FactorDisplayable implements Displayable {

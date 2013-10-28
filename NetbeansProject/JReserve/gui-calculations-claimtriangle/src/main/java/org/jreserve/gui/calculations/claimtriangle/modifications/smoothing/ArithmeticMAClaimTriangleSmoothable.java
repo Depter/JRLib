@@ -17,7 +17,7 @@
 package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 
 import java.util.List;
-import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.smoothing.Smoothable;
 import org.jreserve.gui.calculations.smoothing.calculation.AbstractMASmoothable;

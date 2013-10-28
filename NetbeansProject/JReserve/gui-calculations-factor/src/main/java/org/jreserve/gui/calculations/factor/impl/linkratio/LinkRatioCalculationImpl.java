@@ -19,8 +19,8 @@ package org.jreserve.gui.calculations.factor.impl.linkratio;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.AbstractMethodCalculationProvider;
-import org.jreserve.gui.calculations.api.CalculationMethod;
+import org.jreserve.gui.calculations.api.method.AbstractMethodCalculationProvider;
+import org.jreserve.gui.calculations.api.method.CalculationMethod;
 import org.jreserve.gui.calculations.factor.FactorBundle;
 import org.jreserve.gui.calculations.factor.LinkRatioCalculation;
 import org.jreserve.gui.calculations.factor.impl.BundleUtils;
@@ -51,7 +51,7 @@ public class LinkRatioCalculationImpl
     private final static Logger logger = Logger.getLogger(LinkRatioCalculationImpl.class.getName());
     
     private final static String CATEGORY = "LinkRatio";
-    private final static String LINK_RATIO_ELEMENT = "linkRatio";
+    public final static String ROOT_ELEMENT = "linkRatio";
     
     private final FactorBundleImpl bundle;
     private final WeightedAverageCalculationMethod defaultMethod = 
@@ -61,10 +61,9 @@ public class LinkRatioCalculationImpl
     
     private LinkRatio linkRatios;
     
-    LinkRatioCalculationImpl(FactorDataObject obj, Element root, FactorBundleImpl bundle) throws Exception {
+    public LinkRatioCalculationImpl(FactorDataObject obj, Element root, FactorBundleImpl bundle) throws Exception {
         super(obj, root, CATEGORY);
         this.bundle = bundle;
-        recalculate();
     }
     
     private void recalculate() {
@@ -88,7 +87,7 @@ public class LinkRatioCalculationImpl
 
     @Override
     protected Element toXml() {
-        return super.toXml(LINK_RATIO_ELEMENT);
+        return super.toXml(ROOT_ELEMENT);
     }
 
     @Override
@@ -115,6 +114,12 @@ public class LinkRatioCalculationImpl
     @Override
     public FactorBundle getBundle() {
         return bundle;
+    }
+    
+    public void fireCreated() {
+        synchronized(lock) {
+            events.fireCreated();
+        }
     }
     
     private class RecalculateTask implements Runnable {

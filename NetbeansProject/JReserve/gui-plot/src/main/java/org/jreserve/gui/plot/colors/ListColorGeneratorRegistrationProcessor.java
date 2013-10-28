@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.plot.colors;
 
+import org.jreserve.gui.misc.utils.widgets.ColorUtil;
 import java.util.Set;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;

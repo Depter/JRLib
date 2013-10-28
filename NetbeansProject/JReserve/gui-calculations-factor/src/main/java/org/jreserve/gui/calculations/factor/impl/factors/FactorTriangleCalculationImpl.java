@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.factor.impl;
+package org.jreserve.gui.calculations.factor.impl.factors;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,11 +22,15 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.AbstractModifiableCalculationProvider;
-import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.AbstractModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.CalculationContents;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.factor.FactorBundle;
 import org.jreserve.gui.calculations.factor.FactorTriangleCalculation;
+import org.jreserve.gui.calculations.factor.impl.BundleUtils;
+import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
+import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -51,17 +55,17 @@ public class FactorTriangleCalculationImpl
     implements FactorTriangleCalculation {
 
     private final static Logger logger = Logger.getLogger(FactorTriangleCalculationImpl.class.getName());
-    private final static String CATEGORY = "FactorTriangle";
+    public final static String CATEGORY = "FactorTriangle";
     
-    final static String FACTOR_ELEMENT = "factors";
-    private final static String SOURCE_ELEMENT = "claimTriangle";
+    public final static String ROOT_ELEMENT = "developmentFactors";
+    public final static String SOURCE_ELEMENT = "source";
     
     private final FactorDataObject dObj;
     private final FactorBundleImpl bundle;
     private ClaimTriangleCalculation source;
     private FactorTriangle factors;
     
-    FactorTriangleCalculationImpl(FactorDataObject obj, Element root, FactorBundleImpl bundle) throws Exception {
+    public FactorTriangleCalculationImpl(FactorDataObject obj, Element root, FactorBundleImpl bundle) throws Exception {
         super(obj, root, CATEGORY);
         this.dObj = obj;
         this.bundle = bundle;
@@ -71,7 +75,8 @@ public class FactorTriangleCalculationImpl
     }
     
     private void initSource(Element root) throws IOException {
-        source = super.lookupSource(ClaimTriangleCalculation.class, root, SOURCE_ELEMENT);
+        String path = JDomUtil.getExistingString(root, SOURCE_ELEMENT);
+        source = CalculationContents.getCalculation(getProject(), path, ClaimTriangleCalculation.class);
         if(source == null)
             source = ClaimTriangleCalculation.EMPTY;
     }
@@ -150,11 +155,19 @@ public class FactorTriangleCalculationImpl
     }
     
     @Override
-    public synchronized Element toXml() {
-        Element root = new Element(FACTOR_ELEMENT);
-        JDomUtil.addElement(root, SOURCE_ELEMENT, source.getPath());
-        root.addContent(super.toXml());
-        return root;
+    public Element toXml() {
+        synchronized(lock) {
+            Element root = new Element(ROOT_ELEMENT);
+            JDomUtil.addElement(root, SOURCE_ELEMENT, source.getPath());
+            root.addContent(super.toXml());
+            return root;
+        }
+    }
+    
+    public void fireCreated() {
+        synchronized(lock) {
+            events.fireCreated();
+        }
     }
     
     private class RecalculateTask implements Runnable {

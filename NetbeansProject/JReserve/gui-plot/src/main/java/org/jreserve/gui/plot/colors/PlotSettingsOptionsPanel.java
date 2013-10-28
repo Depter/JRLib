@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.plot.colors;
 
+import org.jreserve.gui.misc.utils.widgets.ColorChooserDialog;
 import java.awt.Color;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;

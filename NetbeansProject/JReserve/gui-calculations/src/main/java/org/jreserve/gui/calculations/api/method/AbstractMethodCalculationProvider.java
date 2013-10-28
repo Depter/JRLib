@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.method;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,6 +28,8 @@ import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdom2.Element;
+import org.jreserve.gui.calculations.api.AbstractCalculationProvider;
+import org.jreserve.gui.calculations.api.CalculationDataObject;
 import org.jreserve.gui.calculations.util.CalculationMethodFactoryRegistry;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.CalculationData;

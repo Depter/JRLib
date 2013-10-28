@@ -17,6 +17,9 @@
 
 package org.jreserve.gui.calculations.api;
 
+import org.jreserve.gui.calculations.api.method.CalculationMethod;
+import org.jreserve.gui.calculations.api.modification.EditableCalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;

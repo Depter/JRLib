@@ -14,25 +14,28 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.modification;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import org.jdom2.Element;
 import org.jreserve.jrlib.CalculationData;
-import org.jreserve.jrlib.util.method.SelectableMethod;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
- * @param <C> the result calculation type.
- * @param <M> the method type.
  */
-public interface MethodCalculationProvider<C extends CalculationData, M extends SelectableMethod> 
-    extends CalculationProvider<C> {
+public interface CalculationModifierFactory<C extends CalculationData> {
     
-    public CalculationMethod<M> getMethodAt(int index);
+    public CalculationModifier<C> fromXml(Element element) throws Exception;
     
-    public void setMethod(int index, CalculationMethod<M> cm);
-    
-    public void setFixedValue(int index, double value);
-    
+    @Retention(RetentionPolicy.SOURCE)
+    public static @interface Registration {
+        //The Category, to which factory belongs (exclusion, correction, smoothing)
+        String category();
+        //The xml root name for the factory
+        String rootName();
+        int position() default Integer.MAX_VALUE;
+    }
 }

@@ -16,7 +16,7 @@
  */
 package org.jreserve.gui.calculations.claimtriangle;
 
-import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.jrlib.gui.data.MonthDate;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;

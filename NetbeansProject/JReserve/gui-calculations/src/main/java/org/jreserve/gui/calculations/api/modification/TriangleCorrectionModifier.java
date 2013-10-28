@@ -20,9 +20,8 @@ import java.util.Collections;
 import java.util.Map;
 import javax.swing.Icon;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.AbstractEditableCalculationModifier;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
+import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.netbeans.api.annotations.common.StaticResource;
@@ -109,6 +108,10 @@ public abstract class TriangleCorrectionModifier<T extends Triangle>
     public void edit(ModifiableCalculationProvider<T> calculation) {
         T source = super.getSource(calculation);
         TriangleCorrectionEditDialog.editCorrection(this, source);
+    }
+
+    public TriangleLayer createLayer(T input) {
+        return new TriangleCorrectionLayer(input, accident, development);
     }
     
     private class CorrectionDisplayable implements Displayable {

@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.smoothing.dialog;
 import java.awt.Component;
 import java.util.List;
 import javax.swing.event.ChangeListener;
-import org.jreserve.gui.calculations.api.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.jrlib.CalculationData;
 import org.openide.util.HelpCtx;
 

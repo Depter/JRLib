@@ -30,6 +30,10 @@ import org.jreserve.gui.calculations.api.NamedCalculationProvider;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
 import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
+import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleCalculationImpl;
+import org.jreserve.gui.calculations.factor.impl.linkratio.LinkRatioCalculationImpl;
+import org.jreserve.gui.calculations.factor.impl.scale.LinkRatioScaleCalculationImpl;
+import org.jreserve.gui.calculations.factor.impl.se.LinkRatioSECalculationImpl;
 import org.jreserve.gui.misc.audit.db.AuditDbManager;
 import org.jreserve.gui.misc.utils.wizard.AbstractWizardIterator;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -170,7 +174,7 @@ public class CreateFactorWizardIterator
             Element root = new Element(FactorBundleImpl.ROOT_ELEMENT);
             initAuditId(root, wizard);
             initSource(root, wizard);
-            initSubCalculations(root);
+            initSubCalculations(root, wizard);
             return root;
         }
         
@@ -180,16 +184,23 @@ public class CreateFactorWizardIterator
             JDomUtil.addElement(root, FactorBundleImpl.AUDIT_ID_ELEMENT, auditId);
         }
         
-        private void initSource(Element root, WizardDescriptor wizard) {
-            ClaimTriangleCalculation ctc = (ClaimTriangleCalculation) wizard.getProperty(PROP_DATA_SOURCE);
-            JDomUtil.addElement(root, FactorBundleImpl.SOURCE_ELEMENT, ctc.getPath());
+        private void initSubCalculations(Element root, WizardDescriptor wizard) {
+            root.addContent(createFactorsElement(wizard));
+            root.addContent(new Element(LinkRatioCalculationImpl.ROOT_ELEMENT));
+            root.addContent(new Element(LinkRatioScaleCalculationImpl.ROOT_ELEMENT));
+            root.addContent(new Element(LinkRatioSECalculationImpl.ROOT_ELEMENT));
         }
         
-        private void initSubCalculations(Element root) {
-            root.addContent(new Element(FactorBundleImpl.FACTORS_ELEMENT));
-            root.addContent(new Element(FactorBundleImpl.LINK_RATIO_ELEMENT));
-            root.addContent(new Element(FactorBundleImpl.SCALE_ELEMENT));
-            root.addContent(new Element(FactorBundleImpl.SE_ELEMENT));
+        private Element createFactorsElement(WizardDescriptor wizard) {
+            Element root = new Element(FactorTriangleCalculationImpl.ROOT_ELEMENT);
+            initSource(root, wizard);
+            root.addContent(new Element(FactorTriangleCalculationImpl.MODIFICATIONS_ELEMENT));
+            return root;
+        }
+        
+        private void initSource(Element root, WizardDescriptor wizard) {
+            ClaimTriangleCalculation ctc = (ClaimTriangleCalculation) wizard.getProperty(PROP_DATA_SOURCE);
+            JDomUtil.addElement(root, FactorTriangleCalculationImpl.SOURCE_ELEMENT, ctc.getPath());
         }
         
         private FileObject createFile(WizardDescriptor wizard) throws IOException {

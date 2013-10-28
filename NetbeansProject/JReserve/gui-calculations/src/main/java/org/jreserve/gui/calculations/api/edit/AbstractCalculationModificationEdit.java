@@ -18,8 +18,8 @@
 package org.jreserve.gui.calculations.api.edit;
 
 import javax.swing.undo.UndoableEdit;
-import org.jreserve.gui.calculations.api.CalculationModifier;
-import org.jreserve.gui.calculations.api.ModifiableCalculationProvider;
+import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 
 /**
  *
