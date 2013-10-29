@@ -18,12 +18,11 @@ package org.jreserve.gui.calculations.vector.modifications;
 
 import java.awt.Color;
 import java.awt.Component;
-import org.jreserve.gui.calculations.vector.modifications.VectorCorrectionModifier;
+import org.jreserve.gui.calculations.api.modification.DefaultColor;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.jrlib.triangle.Triangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -31,10 +30,20 @@ import org.openide.util.NbBundle.Messages;
  * @author Peter Decsi
  * @version 1.0
  */
+@DefaultColor.Registration(
+    id="vector.correction",
+    displayName = "#LBL.CorrectionLayer.Color.Name",
+    background = "FFC800"
+)
 @Messages({
-    "LBL.CorrectionLayer.Name=Correction"
+    "LBL.CorrectionLayer.Name=Correction",
+    "LBL.CorrectionLayer.Color.Name=Vector Correction"
 })
 class CorrectionLayer extends DefaultTriangleLayer {
+    
+    private final static String COLOR_ID = "vector.correction";
+    private final static Color BACKGROUND = DefaultColor.getBackground(COLOR_ID);
+    private final static Color FOREGROUND = DefaultColor.getForeground(COLOR_ID);
     
     private int accident;
     
@@ -55,8 +64,10 @@ class CorrectionLayer extends DefaultTriangleLayer {
         @Override
         public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
             super.getComponent(widget, value, accident, development, selected);
-            if(!selected)
-                setBackground(Color.ORANGE);
+            if(!selected) {
+                setBackground(BACKGROUND);
+                setForeground(FOREGROUND);
+            }
             return this;
         }
         

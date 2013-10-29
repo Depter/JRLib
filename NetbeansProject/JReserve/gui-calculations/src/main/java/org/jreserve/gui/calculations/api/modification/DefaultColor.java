@@ -14,10 +14,11 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api;
+package org.jreserve.gui.calculations.api.modification;
 
 import java.awt.Color;
 import java.util.prefs.Preferences;
+import org.jreserve.gui.calculations.util.DefaultColorAdapter;
 import org.jreserve.gui.calculations.util.DefaultColorRegistry;
 import org.jreserve.gui.misc.utils.widgets.ColorUtil;
 import org.openide.util.NbPreferences;
@@ -29,18 +30,41 @@ import org.openide.util.NbPreferences;
  */
 public class DefaultColor {
     
-    public static Color getColor(String id) {
-        String hex = getPreferences().get(id, null);
+    private final static String BACKGROUND = ".background";
+    private final static String FOREGROUDN = ".foreground";
+    
+    public static Color getBackground(String id) {
+        return getColor(id, false);
+    }
+    
+    public static Color getForeground(String id) {
+        return getColor(id, true);
+    }
+    
+    private static Color getColor(String id, boolean fg) {
+        String hex = getPreferences().get(id+(fg? FOREGROUDN : BACKGROUND), null);
         if(hex != null && hex.length() > 0)
             return ColorUtil.parseColor(hex);
-        return DefaultColorRegistry.getColor(id);
+        
+        DefaultColorAdapter dfa = DefaultColorRegistry.getColor(id);
+        if(dfa == null)
+            return fg? Color.BLACK : Color.WHITE;
+        return fg? dfa.getForeground() : dfa.getBackground();
     }
     
     private static Preferences getPreferences() {
         return NbPreferences.forModule(DefaultColor.class);
     }
     
-    public static void setColor(String id, Color color) {
+    public static void setBackground(String id, Color color) {
+        setColor(id+BACKGROUND, color);
+    }
+    
+    public static void setForeground(String id, Color color) {
+        setColor(id+FOREGROUDN, color);
+    }
+    
+    private static void setColor(String id, Color color) {
         if(color == null) {
             getPreferences().remove(id);
         } else {
@@ -53,7 +77,9 @@ public class DefaultColor {
     
         public String displayName();
     
-        public String color();
+        public String background() default "FFFFFF";
+    
+        public String foreground() default "000000";
     
         public int position() default Integer.MAX_VALUE;
     }

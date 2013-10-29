@@ -14,27 +14,26 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications;
+package org.jreserve.gui.calculations.factor.impl.factors;
 
 import org.jreserve.gui.calculations.api.modification.triangle.TriangleCorrectionModifier;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
-import org.openide.util.NbBundle.Messages;
+import org.jreserve.jrlib.triangle.factor.FactorTriangle;
+import org.jreserve.jrlib.triangle.factor.FactorTriangleCorrection;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class ClaimTriangleCorrectionModifier extends TriangleCorrectionModifier<ClaimTriangle> {
+public class FactorTriangleCorrectionModifier extends TriangleCorrectionModifier<FactorTriangle> {
 
-    public ClaimTriangleCorrectionModifier(int accident, int development, double value) {
-        super(ClaimTriangle.class, accident, development, value);
+    public FactorTriangleCorrectionModifier(int accident, int development, double value) {
+        super(FactorTriangle.class, accident, development, value);
     }
     
     @Override
-    public ClaimTriangle createCalculation(ClaimTriangle sourceCalculation) {
-        return new ClaimTriangleCorrection(
+    public FactorTriangle createCalculation(FactorTriangle sourceCalculation) {
+        return new FactorTriangleCorrection(
                 sourceCalculation, 
                 getAccident(), getDevelopment(), 
                 getValue()

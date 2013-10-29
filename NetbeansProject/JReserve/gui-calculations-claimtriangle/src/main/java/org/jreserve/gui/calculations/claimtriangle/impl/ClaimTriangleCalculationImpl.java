@@ -26,8 +26,8 @@ import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.modification.AbstractModifiableCalculationProvider;
 import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
@@ -104,11 +104,6 @@ public class ClaimTriangleCalculationImpl
     @Override
     public Class<ClaimTriangle> getCalculationClass() {
         return ClaimTriangle.class;
-    }
-    
-    @Override
-    protected void setPath(String path) {
-        super.setPath(path);
     }
     
     @Override
@@ -227,7 +222,7 @@ public class ClaimTriangleCalculationImpl
             result.add(createBaseLayer(triangles.get(0)));
             
             for(int i=1; i<size; i++) {
-                ClaimTriangleModifier modifier = (ClaimTriangleModifier) getModificationAt(i-1);
+                TriangleModifier modifier = (TriangleModifier) getModificationAt(i-1);
                 ClaimTriangle layer = triangles.get(i);
                 result.add(modifier.createLayer(layer));
             }
@@ -252,6 +247,11 @@ public class ClaimTriangleCalculationImpl
     private TriangleLayer createBaseLayer(ClaimTriangle input) {
         String name = Bundle.LBL_ClaimTriangleCalculationImpl_Layer_Base();
         return new DefaultTriangleLayer(input, name);
+    }
+    
+    @Override
+    public void setPath(String path) {
+        super.setPath(path);
     }
     
     @EventBusListener

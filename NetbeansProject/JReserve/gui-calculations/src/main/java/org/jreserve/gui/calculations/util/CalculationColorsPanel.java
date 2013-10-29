@@ -16,23 +16,27 @@
  */
 package org.jreserve.gui.calculations.util;
 
-import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Point;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import javax.swing.JTable;
+import java.util.Map;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
-import org.jreserve.gui.calculations.api.DefaultColor;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import org.jreserve.gui.calculations.api.modification.DefaultColor;
+import org.jreserve.gui.localesettings.LocaleSettings;
 import org.jreserve.gui.misc.utils.widgets.ColorChooserDialog;
+import org.jreserve.gui.misc.utils.widgets.ColorUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.TextPrompt;
 import org.openide.util.NbBundle.Messages;
@@ -47,15 +51,27 @@ import org.openide.util.NbBundle.Messages;
 })
 final class CalculationColorsPanel extends javax.swing.JPanel {
     
+    private final static double EXAMPLE = 1234.567;
+    
     private final CalculationColorsOptionsPanelController controller;
     private List<DefaultColorAdapter> colors;
-    private ColorTableModel tableModel = new ColorTableModel();
+    private DefaultListModel model = new DefaultListModel();
+    private Map<DefaultColorAdapter, Color> bgs = new HashMap<DefaultColorAdapter, Color>();
+    private Map<DefaultColorAdapter, Color> fgs = new HashMap<DefaultColorAdapter, Color>();
     
     CalculationColorsPanel(CalculationColorsOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
+        setPreviev();
     }
-
+    
+    private void setPreviev() {
+        DecimalFormat df = LocaleSettings.createDecimalFormat();
+        df.setMaximumFractionDigits(3);
+        df.setMinimumFractionDigits(3);
+        previewText.setText(df.format(EXAMPLE));
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -68,10 +84,20 @@ final class CalculationColorsPanel extends javax.swing.JPanel {
         searchPanel = new javax.swing.JPanel();
         searchLabel = new javax.swing.JLabel();
         searchText = new javax.swing.JTextField();
-        colorTable = new javax.swing.JScrollPane();
-        table = new javax.swing.JTable();
+        listScroll = new javax.swing.JScrollPane();
+        list = new javax.swing.JList();
         buttonPanel = new javax.swing.JPanel();
         defaultButton = new javax.swing.JButton();
+        chooserPanel = new javax.swing.JPanel();
+        fgLabel = new javax.swing.JLabel();
+        bgLabel = new javax.swing.JLabel();
+        fgButton = new javax.swing.JButton();
+        bgButton = new javax.swing.JButton();
+        fgText = new javax.swing.JTextField();
+        bgText = new javax.swing.JTextField();
+        previewLabel = new javax.swing.JLabel();
+        previewText = new javax.swing.JTextField();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 32767));
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(12, 12, 12, 12));
         setLayout(new java.awt.BorderLayout(10, 10));
@@ -100,14 +126,15 @@ final class CalculationColorsPanel extends javax.swing.JPanel {
 
         add(searchPanel, java.awt.BorderLayout.PAGE_START);
 
-        colorTable.setPreferredSize(new java.awt.Dimension(200, 100));
+        listScroll.setPreferredSize(new java.awt.Dimension(150, 132));
 
-        table.setModel(tableModel);
-        table.setDefaultRenderer(Color.class, new TableColorRenderer());
-        table.addMouseListener(new TableMouseListener());
-        colorTable.setViewportView(table);
+        list.setModel(model);
+        list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        list.addListSelectionListener(new SelectionListener());
+        list.setCellRenderer(new ListRenderer());
+        listScroll.setViewportView(list);
 
-        add(colorTable, java.awt.BorderLayout.CENTER);
+        add(listScroll, java.awt.BorderLayout.WEST);
 
         buttonPanel.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 0, 0));
 
@@ -120,24 +147,180 @@ final class CalculationColorsPanel extends javax.swing.JPanel {
         buttonPanel.add(defaultButton);
 
         add(buttonPanel, java.awt.BorderLayout.PAGE_END);
+
+        chooserPanel.setLayout(new java.awt.GridBagLayout());
+
+        org.openide.awt.Mnemonics.setLocalizedText(fgLabel, org.openide.util.NbBundle.getMessage(CalculationColorsPanel.class, "CalculationColorsPanel.fgLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        chooserPanel.add(fgLabel, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(bgLabel, org.openide.util.NbBundle.getMessage(CalculationColorsPanel.class, "CalculationColorsPanel.bgLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        chooserPanel.add(bgLabel, gridBagConstraints);
+
+        fgButton.setIcon(CommonIcons.search());
+        org.openide.awt.Mnemonics.setLocalizedText(fgButton, org.openide.util.NbBundle.getMessage(CalculationColorsPanel.class, "CalculationColorsPanel.fgButton.text")); // NOI18N
+        fgButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fgButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        chooserPanel.add(fgButton, gridBagConstraints);
+
+        bgButton.setIcon(CommonIcons.search());
+        org.openide.awt.Mnemonics.setLocalizedText(bgButton, org.openide.util.NbBundle.getMessage(CalculationColorsPanel.class, "CalculationColorsPanel.bgButton.text")); // NOI18N
+        bgButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bgButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 0);
+        chooserPanel.add(bgButton, gridBagConstraints);
+
+        fgText.setEditable(false);
+        fgText.setBackground(new java.awt.Color(0, 0, 0));
+        fgText.setColumns(9);
+        fgText.setForeground(new java.awt.Color(255, 255, 255));
+        fgText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        fgText.setText("#000000");
+        fgText.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        chooserPanel.add(fgText, gridBagConstraints);
+
+        bgText.setEditable(false);
+        bgText.setBackground(new java.awt.Color(255, 255, 255));
+        bgText.setColumns(9);
+        bgText.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        bgText.setText("#FFFFFF");
+        bgText.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        chooserPanel.add(bgText, gridBagConstraints);
+
+        org.openide.awt.Mnemonics.setLocalizedText(previewLabel, org.openide.util.NbBundle.getMessage(CalculationColorsPanel.class, "CalculationColorsPanel.previewLabel.text")); // NOI18N
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_LEADING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        chooserPanel.add(previewLabel, gridBagConstraints);
+
+        previewText.setEditable(false);
+        previewText.setBackground(Color.WHITE);
+        previewText.setColumns(9);
+        previewText.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        previewText.setText(null);
+        previewText.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.BASELINE_TRAILING;
+        gridBagConstraints.insets = new java.awt.Insets(0, 0, 10, 5);
+        chooserPanel.add(previewText, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        chooserPanel.add(filler1, gridBagConstraints);
+
+        add(chooserPanel, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
     private void defaultButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_defaultButtonActionPerformed
-        for(DefaultColorAdapter color : colors)
-            DefaultColor.setColor(color.getId(), null);
-        
-        searchText.setText(null);
-        tableModel.setColors(colors);
-        controller.changed();
+        for(DefaultColorAdapter dca : colors) {
+            bgs.put(dca, dca.getBackground());
+            fgs.put(dca, dca.getForeground());
+        }
+        selectColor();
     }//GEN-LAST:event_defaultButtonActionPerformed
 
+    private void fgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fgButtonActionPerformed
+        selectColor(fgText, fgs);
+    }//GEN-LAST:event_fgButtonActionPerformed
+
+    private void bgButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bgButtonActionPerformed
+        selectColor(bgText, bgs);
+    }//GEN-LAST:event_bgButtonActionPerformed
+
+    private void selectColor(JTextField text, Map<DefaultColorAdapter, Color> map) {
+        Color color = text.getBackground();
+        Color newColor = ColorChooserDialog.selectColor(color);
+        if(newColor != null && !newColor.equals(color)) {
+            text.setBackground(newColor);
+            text.setForeground(newColor);
+            
+            DefaultColorAdapter dfa = (DefaultColorAdapter) list.getSelectedValue();
+            map.put(dfa, color);
+            controller.changed();
+            
+            updatePreview();
+        }
+    }
+    
+    private void updatePreview() {
+        previewText.setForeground(fgText.getBackground());
+        previewText.setBackground(bgText.getBackground());
+    }
+    
     void load() {
+        if(colors != null)
+            return;
         colors = DefaultColorRegistry.getColors();
-        Collections.sort(colors, new ColorComparator());
-        tableModel.setColors(colors);
+        Collections.sort(colors);
+        
+        for(DefaultColorAdapter dfa : colors) {
+            String id = dfa.getId();
+            bgs.put(dfa, DefaultColor.getBackground(id));
+            fgs.put(dfa, DefaultColor.getForeground(id));
+            model.addElement(dfa);
+        }
+        
+        selectColor();
     }
 
     void store() {
+        for(DefaultColorAdapter dfa : colors) {
+            Color color = bgs.get(dfa);
+            if(color.equals(dfa.getBackground()))
+                color = null;
+            DefaultColor.setBackground(dfa.getId(), color);
+            
+            color = fgs.get(dfa);
+            if(color.equals(dfa.getForeground()))
+                color = null;
+            DefaultColor.setForeground(dfa.getId(), color);
+        }
     }
 
     boolean valid() {
@@ -145,56 +328,60 @@ final class CalculationColorsPanel extends javax.swing.JPanel {
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bgButton;
+    private javax.swing.JLabel bgLabel;
+    private javax.swing.JTextField bgText;
     private javax.swing.JPanel buttonPanel;
-    private javax.swing.JScrollPane colorTable;
+    private javax.swing.JPanel chooserPanel;
     private javax.swing.JButton defaultButton;
+    private javax.swing.JButton fgButton;
+    private javax.swing.JLabel fgLabel;
+    private javax.swing.JTextField fgText;
+    private javax.swing.Box.Filler filler1;
+    private javax.swing.JList list;
+    private javax.swing.JScrollPane listScroll;
+    private javax.swing.JLabel previewLabel;
+    private javax.swing.JTextField previewText;
     private javax.swing.JLabel searchLabel;
     private javax.swing.JPanel searchPanel;
     private javax.swing.JTextField searchText;
-    private javax.swing.JTable table;
     // End of variables declaration//GEN-END:variables
-
-    private static class ColorComparator implements Comparator<DefaultColorAdapter> {
+    
+    private static class ListRenderer extends DefaultListCellRenderer {
         @Override
-        public int compare(DefaultColorAdapter o1, DefaultColorAdapter o2) {
-            String n1 = o1.getDisplayName();
-            String n2 = o2.getDisplayName();
-            return n1.compareTo(n2);
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            if(value instanceof DefaultColorAdapter)
+                value = ((DefaultColorAdapter)value).getDisplayName();
+            return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         }
     }
     
-    private static class TableColorRenderer extends DefaultTableCellRenderer {
+    private class SelectionListener implements ListSelectionListener {
 
         @Override
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-            hasFocus = false;
-            super.getTableCellRendererComponent(table, null, isSelected, hasFocus, row, column);
-            setBackground((Color) value);
-            return this;
+        public void valueChanged(ListSelectionEvent e) {
+            selectColor();
         }
     }
     
-    private class TableMouseListener extends MouseAdapter {
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            Point p = e.getPoint();
-            int column = table.columnAtPoint(p);
-            if(column != 1)
-                return;
-            
-            int row = table.rowAtPoint(p);
-            if(row < 0)
-                return;
-            
-            Color initColor = (Color) tableModel.getValueAt(row, column);
-            Color color = ColorChooserDialog.selectColor(initColor);
-            if(color != null) {
-                DefaultColorAdapter dfa = tableModel.getColorAt(row);
-                DefaultColor.setColor(dfa.getId(), color);
-                tableModel.fireTableCellUpdated(row, column);
-            }
-        }
+    private void selectColor() {
+        DefaultColorAdapter dfa = (DefaultColorAdapter) list.getSelectedValue();
+        
+        Color bg = dfa==null? Color.WHITE : bgs.get(dfa);
+        Color fg = dfa==null? Color.BLACK : fgs.get(dfa);
+        setColor(bgText, bg);
+        setColor(fgText, fg);
+        
+        updatePreview();
+        
+        fgButton.setEnabled(dfa != null);
+        bgButton.setEnabled(dfa != null);
+    }
+        
+    private void setColor(JTextField field, Color color) {
+        field.setText("#"+ColorUtil.toHex(color));
+        field.setBackground(color);
+        field.setForeground(color);
     }
     
     private class SearchListener implements DocumentListener {
@@ -227,8 +414,9 @@ final class CalculationColorsPanel extends javax.swing.JPanel {
                 }
             }
             
-            tableModel.setColors(filtered);
-            controller.changed();
+            model.removeAllElements();
+            for(DefaultColorAdapter dfa : filtered)
+                model.addElement(dfa);
         }
         
     }

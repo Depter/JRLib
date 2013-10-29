@@ -14,44 +14,51 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.modification;
+package org.jreserve.gui.calculations.api.modification.triangle;
 
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 import javax.swing.Icon;
 import org.jdom2.Element;
+import org.jreserve.gui.calculations.api.modification.AbstractCalculationModifier;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
+import org.jreserve.jrlib.triangle.Cell;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.netbeans.api.annotations.common.StaticResource;
 import org.openide.util.ImageUtilities;
+import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public abstract class TriangleCorrectionModifier<T extends Triangle> 
-    extends AbstractEditableCalculationModifier<T>{
+@Messages({
+    "# {0} - accident",
+    "# {1} - development",
+    "LBL.TriangleExcludeModifier.Description=Exclusion [{0}; {1}]",
+    "LBL.TriangleExcludeModifier.Name=Exclusion"
+})
+public abstract class TriangleExcludeModifier<T extends Triangle> 
+    extends AbstractCalculationModifier<T> 
+    implements TriangleModifier<T> {
     
-    public final static String ROOT_ELEMENT = "triangleCorrection";
+    public final static String ROOT_ELEMENT = "triangleExclusion";
     public final static String ACCIDENT_ELEMENT = "accident";
     public final static String DEVELOPMENT_ELEMENT = "development";
-    public final static String VALUE_ELEMENT = "value";
     
-    @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/correction.png";
+    @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/exclude.png";
     public final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
     
     private int accident;
     private int development;
-    private double value;
 
-    public TriangleCorrectionModifier(Class<T> clazz, int accident, int development, double value) {
+    public TriangleExcludeModifier(Class<T> clazz, int accident, int development) {
         super(clazz);
         this.accident = accident;
         this.development = development;
-        this.value = value;
     }
     
     public int getAccident() {
@@ -61,57 +68,37 @@ public abstract class TriangleCorrectionModifier<T extends Triangle>
     public int getDevelopment() {
         return development;
     }
-    
-    public synchronized double getValue() {
-        return value;
-    }
-    
-    public synchronized void setValue(double value) {
-        Map preState = getState() ;
-        this.value = value;
-        fireChange(preState);
-    }
-
-    @Override
-    public void getState(Map state) {
-        state.put(VALUE_ELEMENT, value);
-    }
-    
-    private Map getState() {
-        return Collections.singletonMap(VALUE_ELEMENT, this.value);
-    }
-    
-    @Override
-    public void loadState(Map state) {
-        setValue(getInt(state, VALUE_ELEMENT));
-    }
 
     @Override
     public Element toXml() {
         Element root = new Element(ROOT_ELEMENT);
         JDomUtil.addElement(root, ACCIDENT_ELEMENT, accident);
         JDomUtil.addElement(root, DEVELOPMENT_ELEMENT, development);
-        JDomUtil.addElement(root, VALUE_ELEMENT, value);
         return root;
+    }
+
+    @Override
+    public List<Cell> getAffectedCells() {
+        return Collections.singletonList(new Cell(accident, development));
     }
 
     @Override
     protected Displayable createDisplayable() {
         return new CorrectionDisplayable();
     }
-    
-    protected abstract String getDisplayName();
-    
-    protected abstract boolean isEditInputCummulated();
 
     @Override
-    public void edit(ModifiableCalculationProvider<T> calculation) {
-        T source = super.getSource(calculation);
-        TriangleCorrectionEditDialog.editCorrection(this, source);
+    public String getDescription() {
+        return Bundle.LBL_TriangleExcludeModifier_Description(
+                accident+1, development+1);
+    }
+
+    protected String getDisplayName() {
+        return Bundle.LBL_TriangleExcludeModifier_Name();
     }
 
     public TriangleLayer createLayer(T input) {
-        return new TriangleCorrectionLayer(input, accident, development);
+        return new TriangleExcludeLayer(input, accident, development);
     }
     
     private class CorrectionDisplayable implements Displayable {
@@ -123,7 +110,7 @@ public abstract class TriangleCorrectionModifier<T extends Triangle>
 
         @Override
         public String getDisplayName() {
-            return TriangleCorrectionModifier.this.getDisplayName();
+            return TriangleExcludeModifier.this.getDisplayName();
         }
     }
 }

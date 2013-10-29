@@ -14,28 +14,29 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.factor.impl.factors;
+package org.jreserve.gui.calculations.factor.impl;
 
-import org.jreserve.gui.calculations.api.modification.triangle.TriangleExcludeModifier;
-import org.jreserve.jrlib.triangle.factor.FactorTriangle;
-import org.jreserve.jrlib.triangle.factor.FactorTriangleCorrection;
+import org.jreserve.gui.calculations.api.AbstractCalculationSourceClient;
+import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
+import org.openide.loaders.DataObject;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public class FactorTriangleExcludeModifier 
-    extends TriangleExcludeModifier<FactorTriangle> {
+abstract class AbstractClaimTriangleClient<T> extends AbstractCalculationSourceClient<T, ClaimTriangleCalculation> {
 
-    public FactorTriangleExcludeModifier(int accident, int development) {
-        super(FactorTriangle.class, accident, development);
-    }    
+    @Override
+    protected ClaimTriangleCalculation getSource(DataObject obj) {
+        return obj.getLookup().lookup(ClaimTriangleCalculation.class);
+    }
     
     @Override
-    public FactorTriangle createCalculation(FactorTriangle sourceCalculation) {
-        int a = getAccident();
-        int d = getDevelopment();
-        return new FactorTriangleCorrection(sourceCalculation, a, d, Double.NaN);
+    protected boolean hasSource(DataObject obj, ClaimTriangleCalculation ct) {
+        FactorBundleImpl bundle = obj.getLookup().lookup(FactorBundleImpl.class);
+        if(bundle == null)
+            return false;
+        return ct == bundle.getFactors().getSource();
     }
 }

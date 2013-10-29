@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.plot.colors;
+package org.jreserve.gui.plot;
 
 import java.awt.Color;
 import java.awt.Paint;

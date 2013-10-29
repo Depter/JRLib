@@ -173,6 +173,7 @@
                         <publicPackage>org.jreserve.gui.calculations.api</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.method</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.modification</publicPackage>
+                        <publicPackage>org.jreserve.gui.calculations.api.modification.triangle</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.edit</publicPackage>
                         <publicPackage>org.jreserve.gui.calculations.api.smoothing</publicPackage>
                     </publicPackages>

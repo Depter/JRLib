@@ -25,7 +25,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
-import org.jreserve.gui.calculations.api.DefaultColor;
+import org.jreserve.gui.calculations.api.modification.DefaultColor;
 import org.openide.filesystems.annotations.LayerBuilder;
 import org.openide.filesystems.annotations.LayerGeneratingProcessor;
 import org.openide.filesystems.annotations.LayerGenerationException;
@@ -39,15 +39,16 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service=Processor.class)
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedAnnotationTypes({
-    "org.jreserve.gui.calculations.api.DefaultColor.Registration",
-    "org.jreserve.gui.calculations.api.DefaultColor.Registrations"
+    "org.jreserve.gui.calculations.api.modification.DefaultColor.Registration",
+    "org.jreserve.gui.calculations.api.modification.DefaultColor.Registrations"
 })
 public class DefaultColorRegistrationProcessor extends LayerGeneratingProcessor {
     
     final static String FOLDER = "JReserve/CalculationColors/";
     final static String ID = "id";
     final static String DISPLAY_NAME = "displayName";
-    final static String COLOR = "color";
+    final static String BACKGROUND = "background";
+    final static String FOREGROUND = "foreground";
     
     @Override
     protected boolean handleProcess(Set<? extends TypeElement> annotations, RoundEnvironment re) throws LayerGenerationException {
@@ -87,11 +88,18 @@ public class DefaultColorRegistrationProcessor extends LayerGeneratingProcessor 
         file.stringvalue(ID, id);
         file.bundlevalue(DISPLAY_NAME, a.displayName(), a, "displayName");
         
-        String color = a.color();
+        String color = a.background();
         if(color.startsWith("#")) {
-            file.bundlevalue(COLOR, color);
+            file.bundlevalue(BACKGROUND, color);
         } else {
-            file.stringvalue(COLOR, color);
+            file.stringvalue(BACKGROUND, color);
+        }
+        
+        color = a.foreground();
+        if(color.startsWith("#")) {
+            file.bundlevalue(FOREGROUND, color);
+        } else {
+            file.stringvalue(FOREGROUND, color);
         }
         
         file.position(a.position());

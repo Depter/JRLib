@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.plot.colors;
 
+import org.jreserve.gui.plot.DefaultColorGenerator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

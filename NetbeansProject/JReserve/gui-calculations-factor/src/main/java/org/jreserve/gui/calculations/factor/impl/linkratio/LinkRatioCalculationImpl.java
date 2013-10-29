@@ -96,7 +96,7 @@ public class LinkRatioCalculationImpl
     }
 
     @Override
-    public LinkRatio getCalculation() throws Exception {
+    public LinkRatio getCalculation() {
         synchronized(lock) {
             if(linkRatios == null) {
                 recalculate();

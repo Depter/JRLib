@@ -56,7 +56,7 @@ import org.openide.util.lookup.ProxyLookup;
 })
 public class LayerEditor extends AbstractExpandableElement {
     
-    private LayerEditorPanel panel;
+    private ClaimTriangleLayerEditorPanel panel;
     private ClaimTriangleCalculationImpl calculation;
     private final Lookup lkp;
     private final InstanceContent ic = new InstanceContent();
@@ -104,7 +104,7 @@ public class LayerEditor extends AbstractExpandableElement {
     
     @Override
     protected Component createVisualComponent() {
-        panel = new LayerEditorPanel(calculation);
+        panel = new ClaimTriangleLayerEditorPanel(calculation);
         
         TriangleWidgetPanel wPanel = panel.getWidgetPanel();
         wPanel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
@@ -117,7 +117,7 @@ public class LayerEditor extends AbstractExpandableElement {
     @Override
     public void componentClosed() {
         if(panel != null)
-            panel.componentClosed();
+            panel.closeComponent();
         super.componentClosed();
     }
     

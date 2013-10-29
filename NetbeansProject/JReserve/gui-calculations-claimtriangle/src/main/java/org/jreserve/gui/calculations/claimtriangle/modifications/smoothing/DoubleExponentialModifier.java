@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.smoothing.DoubleExponentialClaimTriangleSmoothable.DialogController;
 import org.jreserve.gui.calculations.smoothing.calculation.DoubleExponentialSmoothingModifier;
@@ -45,7 +45,7 @@ import org.openide.util.NbBundle.Messages;
 })
 public class DoubleExponentialModifier 
     extends DoubleExponentialSmoothingModifier<ClaimTriangle>
-    implements ClaimTriangleModifier {
+    implements TriangleModifier<ClaimTriangle> {
 
     public DoubleExponentialModifier(List<SmoothingCell> cells, double alpha, double beta) {
         super(cells, ClaimTriangle.class, alpha, beta);

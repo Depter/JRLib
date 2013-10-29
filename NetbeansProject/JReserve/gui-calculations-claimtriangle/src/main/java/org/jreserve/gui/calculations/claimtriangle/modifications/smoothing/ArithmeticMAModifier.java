@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.smoothing.ArithmeticMAClaimTriangleSmoothable.DialogController;
 import org.jreserve.gui.calculations.smoothing.calculation.ArithmeticMASmoothingModifier;
@@ -36,7 +36,7 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  * @version 1.0
  */
 public class ArithmeticMAModifier extends ArithmeticMASmoothingModifier<ClaimTriangle>
-    implements ClaimTriangleModifier {
+    implements TriangleModifier<ClaimTriangle> {
 
     public ArithmeticMAModifier(List<SmoothingCell> cells, int length) {
         super(cells, ClaimTriangle.class, length);

@@ -19,17 +19,19 @@
     
     <folder name="JReserve">
         <folder name="CalculationColors">
-            <file name="correction-background.color">
-                <attr name="id" stringvalue="correction.background"/>
+            <file name="triangle-correction.color">
+                <attr name="id" stringvalue="triangle.correction"/>
                 <attr
-                    bundlevalue="org.jreserve.gui.calculations.api.modification.Bundle#LBL.TriangleCorrectionLayer.Color.Background" name="displayName"/>
-                <attr name="color" stringvalue="FFC800"/>
+                    bundlevalue="org.jreserve.gui.calculations.api.modification.Bundle#LBL.TriangleCorrectionLayer.Color.Name" name="displayName"/>
+                <attr name="background" stringvalue="FFC800"/>
+                <attr name="foreground" stringvalue="000000"/>
             </file>
-            <file name="correction-foreground.color">
-                <attr name="id" stringvalue="correction.foreground"/>
+            <file name="triangle-exclusion.color">
+                <attr name="id" stringvalue="triangle.exclusion"/>
                 <attr
-                    bundlevalue="org.jreserve.gui.calculations.api.modification.Bundle#LBL.TriangleCorrectionLayer.Color.Foreground" name="displayName"/>
-                <attr name="color" stringvalue="000000"/>
+                    bundlevalue="org.jreserve.gui.calculations.api.modification.Bundle#LBL.TriangleExcludeLayer.Color.Name" name="displayName"/>
+                <attr name="background" stringvalue="FF0000"/>
+                <attr name="foreground" stringvalue="000000"/>
             </file>
         </folder>
     </folder>    

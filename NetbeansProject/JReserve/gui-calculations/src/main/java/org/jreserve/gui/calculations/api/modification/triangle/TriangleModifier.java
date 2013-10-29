@@ -14,22 +14,22 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle;
+package org.jreserve.gui.calculations.api.modification.triangle;
 
 import java.util.List;
 import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
+import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.triangle.Cell;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-public interface ClaimTriangleModifier extends CalculationModifier<ClaimTriangle> {
+public interface TriangleModifier<T extends Triangle> extends CalculationModifier<T> {
     
-    public TriangleLayer createLayer(ClaimTriangle input);
+    public TriangleLayer createLayer(T input);
     
-    public List<Cell> getAffectedCells();
+    public List<Cell> getAffectedCells();    
 }

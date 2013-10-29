@@ -16,93 +16,26 @@
  */
 package org.jreserve.gui.calculations.claimtriangle.modifications;
 
-import java.util.Collections;
-import java.util.List;
-import javax.swing.Icon;
-import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.modification.AbstractCalculationModifier;
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
-import org.jreserve.gui.misc.utils.widgets.Displayable;
-import org.jreserve.gui.trianglewidget.model.TriangleLayer;
-import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.Cell;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleExcludeModifier;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
-import org.openide.util.ImageUtilities;
-import org.openide.util.NbBundle.Messages;
 
 /**
  *
  * @author Peter Decsi
  * @version 1.0
  */
-@Messages({
-    "# {0} - accident",
-    "# {1} - development",
-    "LBL.ClaimTriangleExcludeModifier.Description=Exclusion [{0}; {1}]",
-    "LBL.ClaimTriangleExcludeModifier.Name=Exclusion"
-})
-public class ClaimTriangleExcludeModifier extends AbstractCalculationModifier<ClaimTriangle> implements ClaimTriangleModifier {
-    final static String ROOT_ELEMENT = "claimTriangleExclusion";
-    final static String ACCIDENT_ELEMENT = "accident";
-    final static String DEVELOPMENT_ELEMENT = "development";
-
-    private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/exclude.png";   //NOI18
-    final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
-    
-    private int accident;
-    private int development;
+public class ClaimTriangleExcludeModifier 
+        extends TriangleExcludeModifier<ClaimTriangle> {
 
     public ClaimTriangleExcludeModifier(int accident, int development) {
-        super(ClaimTriangle.class);
-        this.accident = accident;
-        this.development = development;
+        super(ClaimTriangle.class, accident, development);
     }    
     
     @Override
     public ClaimTriangle createCalculation(ClaimTriangle sourceCalculation) {
-        return new ClaimTriangleCorrection(sourceCalculation, accident, development, Double.NaN);
-    }
-
-    @Override
-    public Element toXml() {
-        Element root = new Element(ROOT_ELEMENT);
-        JDomUtil.addElement(root, ACCIDENT_ELEMENT, accident);
-        JDomUtil.addElement(root, DEVELOPMENT_ELEMENT, development);
-        return root;
-    }
-
-    @Override
-    public String getDescription() {
-        return Bundle.LBL_ClaimTriangleExcludeModifier_Description(
-                accident+1, development+1);
-    }
-
-    @Override
-    protected Displayable createDisplayable() {
-        return new ExclusionDisplayable();
-    }
-
-    @Override
-    public TriangleLayer createLayer(ClaimTriangle input) {
-        return new ExclusionLayer(input);
-    }
-
-    @Override
-    public List<Cell> getAffectedCells() {
-        return Collections.singletonList(new Cell(accident, development));
-    }
-    
-    private static class ExclusionDisplayable implements Displayable {
-        
-        @Override
-        public Icon getIcon() {
-            return ICON;
-        }
-
-        @Override
-        public String getDisplayName() {
-            return Bundle.LBL_ClaimTriangleExcludeModifier_Name();
-        }
+        int a = getAccident();
+        int d = getDevelopment();
+        return new ClaimTriangleCorrection(sourceCalculation, a, d, Double.NaN);
     }
 }

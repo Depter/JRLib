@@ -14,15 +14,15 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications;
+package org.jreserve.gui.calculations.api.modification.triangle;
 
 import java.awt.Color;
 import java.awt.Component;
+import org.jreserve.gui.calculations.api.modification.DefaultColor;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
 import org.jreserve.jrlib.triangle.Triangle;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangleCorrection;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -31,25 +31,21 @@ import org.openide.util.NbBundle.Messages;
  * @version 1.0
  */
 @Messages({
-    "LBL.ExclusionLayer.Name=Exclusion"
+    "LBL.TriangleExcludeLayer.Name=Exclusion",
+    "LBL.TriangleExcludeLayer.Color.Name=Triangle Exclusion"
 })
-class ExclusionLayer extends DefaultTriangleLayer {
+class TriangleExcludeLayer extends DefaultTriangleLayer {
     
+    private final static Color BACKGROUND = DefaultColor.getBackground("triangle.exclusion");
+    private final static Color FOREGROUND = DefaultColor.getForeground("triangle.exclusion");
     private int accident;
     private int development;
     
-    ExclusionLayer(Triangle triangle) {
-        super(triangle, Bundle.LBL_ExclusionLayer_Name(), 
-                ClaimTriangleExcludeModifier.ICON, 
-                new ExclusionRenderer());
-        if(triangle instanceof ClaimTriangleCorrection) {
-            ClaimTriangleCorrection correction = (ClaimTriangleCorrection) triangle;
-            accident = correction.getCorrigatedAccident();
-            development = correction.getCorrigatedDevelopment();
-        } else {
-            accident = -1;
-            development = -1;
-        }
+    TriangleExcludeLayer(Triangle triangle, int accident, int development) {
+        super(triangle, Bundle.LBL_TriangleExcludeLayer_Name(),
+                TriangleExcludeModifier.ICON, new ExcludeRenderer());
+        this.accident = accident;
+        this.development = development;
     }
 
     @Override
@@ -58,14 +54,17 @@ class ExclusionLayer extends DefaultTriangleLayer {
                this.development == development;
     }
     
-    private static class ExclusionRenderer extends DefaultTriangleWidgetRenderer {
+    private static class ExcludeRenderer extends DefaultTriangleWidgetRenderer {
 
         @Override
-        public Component getComponent(TriangleWidget widget, double value, int row, int column, boolean selected) {
-            super.getComponent(widget, value, row, column, selected);
-            if(!selected)
-                setBackground(Color.RED);
+        public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
+            super.getComponent(widget, value, accident, development, selected);
+            if(!selected) {
+                setBackground(BACKGROUND);
+                setForeground(FOREGROUND);
+            }
             return this;
         }
+        
     }
 }

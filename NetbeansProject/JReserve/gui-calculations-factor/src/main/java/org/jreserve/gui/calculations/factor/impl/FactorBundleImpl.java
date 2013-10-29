@@ -76,7 +76,7 @@ public class FactorBundleImpl
     }
 
     @Override
-    public CalculationData getCalculation() throws Exception {
+    public CalculationData getCalculation() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

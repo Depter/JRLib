@@ -31,7 +31,7 @@ public interface CalculationProvider<C extends CalculationData> {
     
     public Class<C> getCalculationClass();
     
-    public C getCalculation() throws Exception;
+    public C getCalculation();
     
     public String getPath();
 }

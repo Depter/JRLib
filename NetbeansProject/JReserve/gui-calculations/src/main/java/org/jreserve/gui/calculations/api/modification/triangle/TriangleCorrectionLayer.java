@@ -14,12 +14,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.api.modification;
+package org.jreserve.gui.calculations.api.modification.triangle;
 
 import java.awt.Color;
 import java.awt.Component;
 import javax.swing.Icon;
-import org.jreserve.gui.calculations.api.DefaultColor;
+import org.jreserve.gui.calculations.api.modification.DefaultColor;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
@@ -35,16 +35,15 @@ import org.openide.util.NbBundle.Messages;
  */
 @Messages({
     "LBL.TriangleCorrectionLayer.Name=Correction",
-    "LBL.TriangleCorrectionLayer.Color.Background=Correction, Background",
-    "LBL.TriangleCorrectionLayer.Color.Foreground=Correction, Foreground"
+    "LBL.TriangleCorrectionLayer.Color.Name=Triangle Correction"
 })
-public class TriangleCorrectionLayer extends DefaultTriangleLayer {
+class TriangleCorrectionLayer extends DefaultTriangleLayer {
     
     @StaticResource private final static String IMG_PATH = "org/jreserve/gui/calculations/icons/correction.png"; //NOI18
     private final static Icon ICON = ImageUtilities.loadImageIcon(IMG_PATH, false);
     
-    private final static Color BACKGROUND = DefaultColor.getColor("correction.background");
-    private final static Color FOREGROUND = DefaultColor.getColor("correction.foreground");
+    private final static Color BACKGROUND = DefaultColor.getBackground("triangle.correction");
+    private final static Color FOREGROUND = DefaultColor.getForeground("triangle.correction");
     private int accident;
     private int development;
     

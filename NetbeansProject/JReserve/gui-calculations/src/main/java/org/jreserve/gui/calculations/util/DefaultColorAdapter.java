@@ -27,25 +27,27 @@ import org.openide.filesystems.FileObject;
  * @author Peter Decsi
  * @version 1.0
  */
-public class DefaultColorAdapter {
+public class DefaultColorAdapter implements Comparable<DefaultColorAdapter>{
     
     private final static Logger logger = Logger.getLogger(DefaultColorAdapter.class.getName());
     
     private String id;
     private String displayName;
-    private Color color;
+    private Color background;
+    private Color foreground;
     
     DefaultColorAdapter(FileObject file) {
         id = AnnotationUtils.stringAttribute(DefaultColorRegistrationProcessor.ID, file);
         displayName = AnnotationUtils.stringAttribute(DefaultColorRegistrationProcessor.DISPLAY_NAME, file, id);
-        color = getColor(file);
+        background = getColor(file, DefaultColorRegistrationProcessor.BACKGROUND);
+        foreground = getColor(file, DefaultColorRegistrationProcessor.FOREGROUND);
     }
     
-    private Color getColor(FileObject file) {
-        String hex = AnnotationUtils.stringAttribute(DefaultColorRegistrationProcessor.COLOR, file);
+    private Color getColor(FileObject file, String property) {
+        String hex = AnnotationUtils.stringAttribute(property, file);
         if(hex == null || hex.length() == 0) {
-            String msg = "Default color definition '%s' does not contain a color attribute!";
-            logger.warning(String.format(msg, file.getPath()));
+            String msg = "Default color definition '%s' does not contain a color for attribute '%s'!";
+            logger.warning(String.format(msg, file.getPath(), property));
             return Color.BLACK;
         }
         return ColorUtil.parseColor(hex);
@@ -59,7 +61,27 @@ public class DefaultColorAdapter {
         return displayName;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getBackground() {
+        return background;
+    }
+
+    public Color getForeground() {
+        return foreground;
+    }
+    
+    @Override
+    public boolean equals(Object o) {
+        return (o instanceof DefaultColorAdapter) &&
+               id.equals(((DefaultColorAdapter)o).id);
+    }
+    
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+    
+    @Override
+    public int compareTo(DefaultColorAdapter o) {
+        return displayName.compareTo(o.displayName);
     }
 }

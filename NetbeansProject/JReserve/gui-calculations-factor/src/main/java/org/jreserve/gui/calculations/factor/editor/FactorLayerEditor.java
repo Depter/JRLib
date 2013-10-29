@@ -19,11 +19,13 @@ package org.jreserve.gui.calculations.factor.editor;
 import java.awt.Component;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
+import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
 import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleCalculationImpl;
 import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleExcludeable;
 import org.jreserve.gui.calculations.smoothing.SmoothableCategory;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
+import org.jreserve.gui.misc.expandable.ExpandableElement;
 import org.jreserve.gui.trianglewidget.TriangleWidgetPanel;
 import org.jreserve.gui.trianglewidget.model.TriangleSelection;
 import org.jreserve.gui.trianglewidget.model.TriangleSelectionEvent;
@@ -31,6 +33,7 @@ import org.jreserve.gui.trianglewidget.model.TriangleSelectionListener;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 import org.openide.awt.UndoRedo;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle.Messages;
 import org.openide.util.lookup.AbstractLookup;
 import org.openide.util.lookup.InstanceContent;
 import org.openide.util.lookup.ProxyLookup;
@@ -40,23 +43,23 @@ import org.openide.util.lookup.ProxyLookup;
  * @author Peter Decsi
  * @version 1.0
  */
-//@ExpandableElement.Registration(
-//    displayName = "#LBL.LayerEditor.Title",
-//    mimeType = ClaimTriangleDataObject.MIME_TYPE,
-//    position = 300,
-//    prefferedID = "org.jreserve.gui.calculations.claimtriangle.editor.LayerEditor",
-//    background = "#COLOR.LayerEditor.Background",
-//    iconBase = "org/jreserve/gui/calculations/claimtriangle/triangle.png"
-//)
-//@Messages({
-//    "LBL.LayerEditor.Title=Triangle",
-//    "COLOR.LayerEditor.Background=43C443"
-//})
+@ExpandableElement.Registration(
+    displayName = "#LBL.FactorLayerEditor.Title",
+    mimeType = FactorDataObject.MIME_TYPE,
+    position = 200,
+    prefferedID = "org.jreserve.gui.calculations.factor.editor.FactorLayerEditor",
+    background = "#COLOR.FactorLayerEditor.Background",
+    iconBase = "org/jreserve/gui/calculations/factor/factors.png"
+)
+@Messages({
+    "LBL.FactorLayerEditor.Title=Development Factors",
+    "COLOR.FactorLayerEditor.Background=43C443"
+})
 public class FactorLayerEditor extends AbstractExpandableElement {
     
     private final static int FACTOR_DECIMALS = 3;
     
-    private FactorLayerEditorPanel panel;
+    private FactorTriangleLayerEditorPanel panel;
     private FactorTriangleCalculationImpl calculation;
     private final Lookup lkp;
     private final InstanceContent ic = new InstanceContent();
@@ -108,7 +111,7 @@ public class FactorLayerEditor extends AbstractExpandableElement {
     
     @Override
     protected Component createVisualComponent() {
-        panel = new FactorLayerEditorPanel(calculation);
+        panel = new FactorTriangleLayerEditorPanel(calculation);
         
         TriangleWidgetPanel wPanel = panel.getWidgetPanel();
         wPanel.getTriangleSelectionModel().addTriangleSelectionListener(new SelectionListener());
@@ -123,7 +126,7 @@ public class FactorLayerEditor extends AbstractExpandableElement {
     @Override
     public void componentClosed() {
         if(panel != null)
-            panel.componentClosed();
+            panel.closeComponent();
         super.componentClosed();
     }
     

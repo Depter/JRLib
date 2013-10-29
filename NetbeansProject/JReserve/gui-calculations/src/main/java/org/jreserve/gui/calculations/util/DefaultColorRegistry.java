@@ -16,7 +16,6 @@
  */
 package org.jreserve.gui.calculations.util;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.logging.Logger;
 import org.jreserve.gui.misc.annotations.CachedLayerRegistrationLoader;
@@ -33,11 +32,11 @@ public class DefaultColorRegistry extends CachedLayerRegistrationLoader<DefaultC
 
     private static DefaultColorRegistry INSTANCE;
     
-    public synchronized static Color getColor(String id) {
+    public synchronized static DefaultColorAdapter getColor(String id) {
         for(DefaultColorAdapter adapter : getColors())
             if(id.equals(adapter.getId()))
-                return adapter.getColor();
-        return Color.BLACK;
+                return adapter;
+        return null;
     }
     
     public synchronized static List<DefaultColorAdapter> getColors() {

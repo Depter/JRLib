@@ -16,6 +16,7 @@
  */
 package org.jreserve.gui.plot.colors;
 
+import org.jreserve.gui.plot.DefaultColorGenerator;
 import org.jreserve.gui.plot.ColorGenerator;
 import org.openide.util.NbBundle;
 

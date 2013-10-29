@@ -18,7 +18,7 @@ package org.jreserve.gui.calculations.smoothing.calculation;
 
 import java.awt.Color;
 import java.awt.Component;
-import org.jreserve.gui.calculations.api.DefaultColor;
+import org.jreserve.gui.calculations.api.modification.DefaultColor;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.DefaultTriangleWidgetRenderer;
 import org.jreserve.gui.trianglewidget.TriangleWidget;
@@ -39,38 +39,28 @@ import org.openide.util.NbBundle.Messages;
  */
 @DefaultColor.Registrations({
     @DefaultColor.Registration(
-        id="smoothing.background",
-        displayName = "#LBL.SmoothingLayer.BG.NotApplied",
-        color = "99CCFF"
+        id="smoothing.notapplied",
+        displayName = "#LBL.SmoothingLayer.Color.NotApplied",
+        background = "99CCFF"
     ),
     @DefaultColor.Registration(
-        id="smoothing.foreground",
-        displayName = "#LBL.SmoothingLayer.FG.NotApplied",
-        color = "000000"
-    ),
-    @DefaultColor.Registration(
-        id="smoothing.background.applied",
-        displayName = "#LBL.SmoothingLayer.BG.Applied",
-        color = "6699FF"
-    ),
-    @DefaultColor.Registration(
-        id="smoothing.foreground.applied",
-        displayName = "#LBL.SmoothingLayer.FG.Applied",
-        color = "000000"
+        id="smoothing.applied",
+        displayName = "#LBL.SmoothingLayer.Color.Applied",
+        background = "6699FF"
     )
 })
 @Messages({
-    "LBL.SmoothingLayer.BG.NotApplied=Smoothing, not applied, background",
-    "LBL.SmoothingLayer.FG.NotApplied=Smoothing, not applied, foreground",
-    "LBL.SmoothingLayer.BG.Applied=Smoothing, applied, background",
-    "LBL.SmoothingLayer.FG.Applied=Smoothing, applied, foreground"
+    "LBL.SmoothingLayer.Color.NotApplied=Smoothing, not applied",
+    "LBL.SmoothingLayer.Color.Applied=Smoothing, applied"
 })
 class SmoothingLayer extends DefaultTriangleLayer {
     
-    private final static String ID_BG = "smoothing.background"; //NOI18
-    private final static String ID_BG_APPLIED = "smoothing.background.applied"; //NOI18
-    private final static Color BACKGROUND = DefaultColor.getColor(ID_BG);
-    private final static Color APPLIED_BACKGROUND = DefaultColor.getColor(ID_BG_APPLIED);
+    private final static String ID_NOT_APPLIED = "smoothing.notapplied"; //NOI18
+    private final static String ID_APPLIED = "smoothing.applied"; //NOI18
+    private final static Color BACKGROUND = DefaultColor.getBackground(ID_NOT_APPLIED);
+    private final static Color FOREGROUND = DefaultColor.getForeground(ID_NOT_APPLIED);
+    private final static Color APPLIED_BACKGROUND = DefaultColor.getBackground(ID_APPLIED);
+    private final static Color APPLIED_FOREGROUND = DefaultColor.getForeground(ID_APPLIED);
 
     private static Triangle getTriangle(CalculationData data) {
         if(data instanceof Triangle) {
@@ -131,8 +121,11 @@ class SmoothingLayer extends DefaultTriangleLayer {
         @Override
         public Component getComponent(TriangleWidget widget, double value, int accident, int development, boolean selected) {
             super.getComponent(widget, value, accident, development, selected);
-            if(!selected)
-                setBackground(isApplied(accident, development)? APPLIED_BACKGROUND : BACKGROUND);
+            if(!selected) {
+                boolean applied = isApplied(accident, development);
+                setBackground(applied? APPLIED_BACKGROUND : BACKGROUND);
+                setForeground(applied? APPLIED_FOREGROUND : FOREGROUND);
+            }
             return this;
         }
         

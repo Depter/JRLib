@@ -22,7 +22,7 @@ import org.jreserve.gui.plot.ColorGenerator;
 import org.jreserve.gui.plot.colors.AbstractColorGeneratorAdapter;
 import org.jreserve.gui.plot.colors.ColorGeneratorRegistry;
 import org.jreserve.gui.misc.utils.widgets.ColorUtil;
-import org.jreserve.gui.plot.colors.DefaultColorGenerator;
+import org.jreserve.gui.plot.DefaultColorGenerator;
 import org.openide.util.NbPreferences;
 
 /**

@@ -14,15 +14,13 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this library.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.jreserve.gui.calculations.claimtriangle.modifications;
+package org.jreserve.gui.calculations.factor.impl.factors;
 
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.calculations.api.modification.CalculationModifierFactory;
-import org.jreserve.gui.calculations.api.modification.triangle.TriangleExcludeModifier;
-import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
-import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
+import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 
 /**
  *
@@ -30,14 +28,15 @@ import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
  * @version 1.0
  */
 @CalculationModifierFactory.Registration(
-    category = ClaimTriangleCalculationImpl.CATEGORY,
-    rootName = TriangleExcludeModifier.ROOT_ELEMENT
+    category = FactorTriangleCalculationImpl.CATEGORY,
+    rootName = FactorTriangleCorrectionModifier.ROOT_ELEMENT
 )
-public class ClaimTriangleExclusionFactory implements CalculationModifierFactory<ClaimTriangle> {
+public class FactorTriangleCorrectionModifierFactory implements CalculationModifierFactory<FactorTriangle> {
     @Override
-    public CalculationModifier<ClaimTriangle> fromXml(Element element) throws Exception {
-        int accident = JDomUtil.getExistingInt(element, ClaimTriangleExcludeModifier.ACCIDENT_ELEMENT);
-        int development = JDomUtil.getExistingInt(element, ClaimTriangleExcludeModifier.DEVELOPMENT_ELEMENT);
-        return new ClaimTriangleExcludeModifier(accident, development);
-    }    
+    public CalculationModifier<FactorTriangle> fromXml(Element element) throws Exception {
+        int accident = JDomUtil.getExistingInt(element, FactorTriangleCorrectionModifier.ACCIDENT_ELEMENT);
+        int development = JDomUtil.getExistingInt(element, FactorTriangleCorrectionModifier.DEVELOPMENT_ELEMENT);
+        double value = JDomUtil.getExistingDouble(element, FactorTriangleCorrectionModifier.VALUE_ELEMENT);
+        return new FactorTriangleCorrectionModifier(accident, development, value);
+    }
 }

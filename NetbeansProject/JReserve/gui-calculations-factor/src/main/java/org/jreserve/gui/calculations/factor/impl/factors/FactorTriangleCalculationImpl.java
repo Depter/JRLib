@@ -24,19 +24,25 @@ import java.util.logging.Logger;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.modification.AbstractModifiableCalculationProvider;
 import org.jreserve.gui.calculations.api.CalculationContents;
+import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.modification.CalculationModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
 import org.jreserve.gui.calculations.factor.FactorBundle;
 import org.jreserve.gui.calculations.factor.FactorTriangleCalculation;
 import org.jreserve.gui.calculations.factor.impl.BundleUtils;
 import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
 import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
+import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
+import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.factor.DevelopmentFactors;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
+import org.jreserve.jrlib.triangle.factor.ModifiedFactorTriangle;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -115,7 +121,7 @@ public class FactorTriangleCalculationImpl
     }
 
     @Override
-    public FactorTriangle getCalculation() throws Exception {
+    public FactorTriangle getCalculation() {
         synchronized(lock) {
             if(factors == null) {
                 recalculate();
@@ -169,6 +175,49 @@ public class FactorTriangleCalculationImpl
             events.fireCreated();
         }
     }
+    
+    public List<TriangleLayer> createLayers() {
+        synchronized(lock) {
+            List<FactorTriangle> triangles = getCalculationLayers();
+            int size = triangles.size();
+            List<TriangleLayer> result = new ArrayList<TriangleLayer>(size);
+            result.add(createBaseLayer(triangles.get(0)));
+            
+            for(int i=1; i<size; i++) {
+                TriangleModifier modifier = (TriangleModifier) getModificationAt(i-1);
+                FactorTriangle layer = triangles.get(i);
+                result.add(modifier.createLayer(layer));
+            }
+            return result;
+        }
+    }
+    
+    private List<FactorTriangle> getCalculationLayers() {
+        FactorTriangle layer = factors;
+        int count = getModificationCount();
+        List<FactorTriangle> result = new ArrayList<FactorTriangle>(count+1);
+        
+        for(int i=0; i<count; i++) {
+            result.add(0, layer);
+            layer = ((ModifiedFactorTriangle)layer).getSourceFactorTriangle();
+        }
+        result.add(0, layer);
+        
+        return result;
+    }
+    
+    private TriangleLayer createBaseLayer(FactorTriangle input) {
+        String name = Bundle.LBL_FactorTriangleCalculationImpl_Layer_Base();
+        return new DefaultTriangleLayer(input, name);
+    }
+    
+    @EventBusListener
+    public void sourceChanged(CalculationEvent.ValueChanged evt) {
+        if(source == evt.getCalculationProvider()) {
+            recalculate();
+            events.fireChange();
+        }
+    } 
     
     private class RecalculateTask implements Runnable {
         

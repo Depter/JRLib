@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.smoothing.SplineClaimTriangleSmoothable.DialogController;
 import org.jreserve.gui.calculations.smoothing.calculation.SplineSmoothingModifier;
@@ -37,7 +37,7 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  */
 public class SplineModifier
     extends SplineSmoothingModifier<ClaimTriangle>
-    implements ClaimTriangleModifier {
+    implements TriangleModifier<ClaimTriangle> {
 
     public SplineModifier(List<SmoothingCell> cells, double lambda) {
         super(cells, ClaimTriangle.class, lambda);

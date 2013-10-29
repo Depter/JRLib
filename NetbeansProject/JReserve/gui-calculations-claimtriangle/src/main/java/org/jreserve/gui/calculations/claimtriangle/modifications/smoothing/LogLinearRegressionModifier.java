@@ -19,7 +19,7 @@ package org.jreserve.gui.calculations.claimtriangle.modifications.smoothing;
 import java.util.ArrayList;
 import java.util.List;
 import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
-import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.modifications.smoothing.LogLinearRegressionClaimTriangleSmoothable.DialogController;
 import org.jreserve.gui.calculations.smoothing.calculation.LogLinearSmoothingModifier;
@@ -37,7 +37,7 @@ import org.jreserve.jrlib.triangle.smoothing.SmoothingCell;
  */
 public class LogLinearRegressionModifier
     extends LogLinearSmoothingModifier<ClaimTriangle>
-    implements ClaimTriangleModifier {
+    implements TriangleModifier<ClaimTriangle> {
 
     public LogLinearRegressionModifier(List<SmoothingCell> cells, boolean hasIntercept) {
         super(cells, ClaimTriangle.class, hasIntercept);
