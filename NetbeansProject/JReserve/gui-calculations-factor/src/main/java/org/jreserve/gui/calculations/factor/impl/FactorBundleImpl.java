@@ -62,7 +62,10 @@ public class FactorBundleImpl
     
     @Override
     protected Element toXml() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Element root = new Element(ROOT_ELEMENT);
+        root.addContent(factors.toXml());
+        root.addContent(linkRatios.toXml());
+        return root;
     }
 
     @Override
@@ -106,5 +109,15 @@ public class FactorBundleImpl
         linkRatios.fireCreated();
         //TODO scales.fireCreated();
         //TODO ses.fireCreated();
+    }
+
+    @Override
+    protected CalculationData createDummyCalculation() {
+        return null;
+    }
+
+    @Override
+    protected Calculator<CalculationData> createCalculator() {
+        return null;
     }
 }

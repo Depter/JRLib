@@ -89,7 +89,7 @@ class EmptyClaimTriangleCalculation implements ClaimTriangleCalculation {
     }
 
     @Override
-    public ClaimTriangle getCalculation() throws Exception {
+    public ClaimTriangle getCalculation() {
         return new InputClaimTriangle(new double[0][]);
     }
 

@@ -17,11 +17,14 @@
 package org.jreserve.gui.calculations.claimtriangle.editor;
 
 import java.awt.Component;
+import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.smoothing.SmoothableCategory;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleCalculationImpl;
 import org.jreserve.gui.calculations.claimtriangle.impl.ClaimTriangleDataObject;
 import org.jreserve.gui.calculations.claimtriangle.modifications.ClaimTriangleExcludeable;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
@@ -67,6 +70,7 @@ public class LayerEditor extends AbstractExpandableElement {
     }
     
     public LayerEditor(Lookup context) {
+        EventBusManager.getDefault().subscribe(this);
         calculation = context.lookup(ClaimTriangleCalculationImpl.class);
         lkp = new ProxyLookup(new AbstractLookup(ic));
         ic.add(new ClaimTriangleExcludeable());
@@ -116,9 +120,17 @@ public class LayerEditor extends AbstractExpandableElement {
     
     @Override
     public void componentClosed() {
+        calculation = null;
         if(panel != null)
             panel.closeComponent();
+        EventBusManager.getDefault().unsubscribe(this);
         super.componentClosed();
+    }
+    
+    @EventBusListener(forceEDT = true)
+    public void calculationChanged(CalculationEvent.ValueChanged evt) {
+        if(panel != null && calculation == evt.getCalculationProvider())
+            panel.recalculate();
     }
     
     private class SelectionListener implements TriangleSelectionListener {

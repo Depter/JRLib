@@ -21,6 +21,7 @@ import org.jreserve.gui.calculations.api.method.CalculationMethod;
 import org.jreserve.gui.calculations.api.modification.EditableCalculationModifier;
 import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import java.util.Map;
+import org.jreserve.jrlib.CalculationData;
 
 /**
  *
@@ -43,7 +44,9 @@ public interface CalculationEvent {
     
     public static interface Change extends CalculationEvent {}
     
-    public static interface ValueChanged extends CalculationEvent {};
+    public static interface ValueChanged<C extends CalculationData> extends CalculationEvent {
+        public C getCalculationData();
+    };
     
     public static interface ModificationChange extends Change {
         public int getModifiedIndex();

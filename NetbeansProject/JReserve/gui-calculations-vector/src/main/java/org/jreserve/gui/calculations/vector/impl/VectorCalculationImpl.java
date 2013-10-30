@@ -18,6 +18,7 @@ package org.jreserve.gui.calculations.vector.impl;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +26,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
 import org.jreserve.gui.calculations.api.modification.AbstractModifiableCalculationProvider;
-import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.calculations.vector.VectorCalculation;
 import org.jreserve.gui.calculations.vector.VectorModifier;
 import org.jreserve.gui.data.api.DataEvent;
@@ -33,7 +33,6 @@ import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
-import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
 import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
@@ -41,7 +40,6 @@ import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.Triangle;
 import org.jreserve.jrlib.vector.InputVector;
-import org.jreserve.jrlib.vector.ModifiedVector;
 import org.jreserve.jrlib.vector.Vector;
 import org.netbeans.api.project.Project;
 import org.openide.util.NbBundle.Messages;
@@ -76,7 +74,6 @@ public class VectorCalculationImpl
     
     private DataSource dataSource;
     private TriangleGeometry geometry;
-    private Vector vector;
     
     VectorCalculationImpl(VectorDataObject dObj, Element root) throws Exception {
         super(dObj, root, CATEGORY);
@@ -86,7 +83,6 @@ public class VectorCalculationImpl
         initDataSource(root);
         geometry = VectorGeometryUtil.fromXml(root);
         geometry.addChangeListener(geometryListener);
-        recalculate();
     }
     
     private void initDataSource(Element root) throws IOException {
@@ -94,11 +90,7 @@ public class VectorCalculationImpl
         if(dataSource == null || DataType.TRIANGLE == dataSource.getDataType())
             dataSource = DataSource.EMPTY_VECTOR;
     }
-    
-    private void recalculate() {
-        TaskUtil.execute(new RecalculateTask());
-    }
-    
+
     public void fireCreated() {
         synchronized(lock) {
             events.fireCreated();
@@ -161,40 +153,6 @@ public class VectorCalculationImpl
     }
     
     @Override
-    protected void modificationsChanged() {
-        recalculate();
-        events.fireChange();
-        this.dObj.setModified(true);
-    }
-    
-    @Override
-    public Vector getCalculation() {
-        synchronized(lock) {
-            if(vector == null) {
-                recalculate();
-                return new InputVector(new double[0]);
-            }
-            return vector;
-        }
-    }
-    
-    @Override
-    public Vector getCalculation(int layer) {
-        synchronized(lock) {
-            try {
-                Vector result = VectorGeometryUtil.createTriangle(dataSource, geometry);
-                return super.modifyCalculation(result, layer);
-            } catch (Exception ex) {
-                String msg = "Unable to calculate claim triangle!";
-                logger.log(Level.SEVERE, msg, ex);
-                String title = Bundle.MSG_VectorCalculationImpl_Calculation_Error();
-                BubbleUtil.showException(title, getPath(), ex);
-                return new InputVector(new double[0]);
-            }
-        }
-    }
-    
-    @Override
     public synchronized Element toXml() {
         Element root = new Element(CT_ELEMENT);
         JDomUtil.addElement(root, AUDIT_ID_ELEMENT, auditId);
@@ -221,32 +179,25 @@ public class VectorCalculationImpl
     
     public List<TriangleLayer> createLayers() {
         synchronized(lock) {
-            List<Vector> triangles = getCalculationLayers();
-            int size = triangles.size();
-            List<TriangleLayer> result = new ArrayList<TriangleLayer>(size);
-            result.add(createBaseLayer(triangles.get(0)));
+            if(!calculationExists()) {
+                recalculate();
+                Vector dummy = createDummyCalculation();
+                return Collections.singletonList(createBaseLayer(dummy));
+            }
             
-            for(int i=1; i<size; i++) {
+            int count = super.getModificationCount() + 1;
+            List<TriangleLayer> result = new ArrayList<TriangleLayer>(count);
+            
+            Vector base = super.getCalculation(0);
+            result.add(createBaseLayer(base));
+            
+            for(int i=1; i<count; i++) {
                 VectorModifier modifier = (VectorModifier) getModificationAt(i-1);
-                Vector layer = triangles.get(i);
+                Vector layer = super.getCalculation(i);
                 result.add(modifier.createLayer(layer));
             }
             return result;
         }
-    }
-    
-    private List<Vector> getCalculationLayers() {
-        Vector layer = vector;
-        int count = getModificationCount();
-        List<Vector> result = new ArrayList<Vector>(count+1);
-        
-        for(int i=0; i<count; i++) {
-            result.add(0, layer);
-            layer = ((ModifiedVector)layer).getSourceVector();
-        }
-        result.add(0, layer);
-        
-        return result;
     }
     
     private TriangleLayer createBaseLayer(Vector input) {
@@ -267,6 +218,16 @@ public class VectorCalculationImpl
         return dataSource == evt.getDataSource() &&
                (evt instanceof DataEvent.DataChange);
     }
+
+    @Override
+    protected Vector createDummyCalculation() {
+        return new InputVector(new double[0]);
+    }
+
+    @Override
+    protected ModificationCalculator createCalculator() {
+        return new RecalculateTask();
+    }
     
     private class GeometryListener implements ChangeListener {
         @Override
@@ -275,35 +236,21 @@ public class VectorCalculationImpl
         }
     }
     
-    private class RecalculateTask implements Runnable {
-        
+    private class RecalculateTask extends ModificationCalculator {
         private final DataSource ds;
         private final TriangleGeometry geometry;
-        private final List<CalculationModifier<Vector>> modifications;
-        
+
         private RecalculateTask() {
             synchronized(lock) {
                 this.ds = VectorCalculationImpl.this.dataSource;
                 this.geometry = new TriangleGeometry(VectorCalculationImpl.this.geometry);
-                this.modifications = new ArrayList<CalculationModifier<Vector>>(VectorCalculationImpl.this.modifications);
             }
         }
-        
+
         @Override
-        public void run() {
-            final Vector result = calculateResult();
-            synchronized(lock) {
-                vector = result;
-                events.fireValueChanged();
-            }
-        }
-        
-        private Vector calculateResult() {
+        protected Vector getRootCalculation() {
             try {
-                Vector result = VectorGeometryUtil.createTriangle(ds, geometry);
-                for(CalculationModifier<Vector> cm : this.modifications)
-                    result = cm.createCalculation(result);
-                return result;
+                return VectorGeometryUtil.createTriangle(ds, geometry);
             } catch (Exception ex) {
                 String msg = "Unable to calculate vector!";
                 logger.log(Level.SEVERE, msg, ex);

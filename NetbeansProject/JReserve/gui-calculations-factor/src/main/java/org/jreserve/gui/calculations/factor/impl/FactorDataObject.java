@@ -30,6 +30,7 @@ import org.openide.filesystems.MIMEResolver;
 import org.openide.loaders.DataObject;
 import org.openide.loaders.MultiFileLoader;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -64,7 +65,6 @@ public class FactorDataObject extends CalculationDataObject {
         super.registerEditor(MIME_TYPE, true);
         
         calculation = loadCalculation();
-        subscribeForEvents();
         
         super.ic.add(new FactorDisplayable());
         super.ic.add(calculation);
@@ -82,14 +82,6 @@ public class FactorDataObject extends CalculationDataObject {
             logger.log(Level.SEVERE, msg, ex);
             throw new IOException(msg, ex);
         }
-    }
-    
-    private void subscribeForEvents() {
-        EventBusManager ebm = EventBusManager.getDefault();
-        ebm.subscribe(calculation.getFactors());
-        ebm.subscribe(calculation.getLinkRatio());
-        //TODO ebm.subscribe(calculation.getScale());
-        //TODO ebm.subscribe(calculation.getStandardError());
     }
     
     @Override
@@ -138,9 +130,7 @@ public class FactorDataObject extends CalculationDataObject {
 
         @Override
         public Icon getIcon() {
-            //TODO create node;
-            return null;
-//            return ImageUtilities.loadImageIcon(FactorNode.IMG, false);
+            return ImageUtilities.loadImageIcon(FactorBundleNode.IMG, false);
         }
 
         @Override

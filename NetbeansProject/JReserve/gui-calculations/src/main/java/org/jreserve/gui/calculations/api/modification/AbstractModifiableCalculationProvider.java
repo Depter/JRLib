@@ -17,6 +17,7 @@
 package org.jreserve.gui.calculations.api.modification;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.jdom2.Element;
@@ -39,13 +40,17 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
     
     protected final List<CalculationModifier<C>> modifications = new ArrayList<CalculationModifier<C>>();
     private final ModificationListener cmListener = new ModificationListener();
+    private final CalculationDataObject obj;
+    private Map<Integer, C> layers;
     
     protected AbstractModifiableCalculationProvider(CalculationDataObject obj) {
         super(obj);
+        this.obj = obj;
     }
     
     protected AbstractModifiableCalculationProvider(CalculationDataObject obj, Element parent, String category) throws Exception {
         super(obj);
+        this.obj = obj;
         Element mr = JDomUtil.getExistingChild(parent, MODIFICATIONS_ELEMENT);
         for(Element me : mr.getChildren()) {
             String rootName = me.getName();
@@ -103,7 +108,11 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
         }
     }
     
-    protected abstract void modificationsChanged();
+    protected final void modificationsChanged() {
+        recalculateIfExists();
+        events.fireChange();
+        this.obj.setModified(true);
+    }
     
     @Override
     public void addModification(CalculationModifier<C> cm) {
@@ -163,6 +172,9 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
         return root;
     }
     
+    @Override
+    protected abstract ModificationCalculator createCalculator();
+    
     private class ModificationListener implements CalculationModifierListener<C> {
 
         @Override
@@ -183,5 +195,47 @@ public abstract class AbstractModifiableCalculationProvider<C extends Calculatio
                     return i;
             return -1;
         }
+    }
+    
+    @Override
+    public final C getCalculation(int layer) {
+        synchronized(lock) {
+            if(layers == null)
+                return createDummyCalculation();
+            C result = layers.get(layer);
+            return result==null? createDummyCalculation() : result;
+        }
+    }
+    
+    protected abstract class ModificationCalculator implements Calculator<C> {
+        
+        private final List<CalculationModifier<C>> mods;
+        
+        protected ModificationCalculator() {
+            synchronized(lock) {
+                mods = new ArrayList<CalculationModifier<C>>(modifications);
+            }
+        }
+        
+        @Override
+        public C createCalculation() {
+            C result = getRootCalculation();
+            final Map<Integer, C> layers = new HashMap<Integer, C>();
+            int layer = 0;
+            layers.put(layer++, result);
+            for(CalculationModifier<C> mod : mods) {
+                result = mod.createCalculation(result);
+                layers.put(layer++, result);
+            }
+            
+            synchronized(lock) {
+                AbstractModifiableCalculationProvider.this.layers = layers;
+            }
+            
+            return result;
+        }
+        
+        protected abstract C getRootCalculation();
+    
     }
 }

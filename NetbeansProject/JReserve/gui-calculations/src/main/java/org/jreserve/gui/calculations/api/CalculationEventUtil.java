@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Queue;
 import org.jreserve.gui.misc.audit.event.AbstractAuditEvent;
 import org.jreserve.gui.misc.eventbus.EventBusManager;
+import org.jreserve.jrlib.CalculationData;
 import org.openide.util.NbBundle.Messages;
 
 /**
@@ -89,8 +90,8 @@ public class CalculationEventUtil {
         fireEvent(new Changed());
     }
     
-    public void fireValueChanged() {
-        fireEvent(new ValueChanged());
+    public void fireValueChanged(CalculationData calculation) {
+        fireEvent(new ValueChanged(calculation));
     }
     
     public void fireChange(String change) {
@@ -157,8 +158,25 @@ public class CalculationEventUtil {
     private class Created extends Event implements CalculationEvent.Created {}
     private class Deleted extends Event implements CalculationEvent.Deleted {}
     private class Changed extends Event implements CalculationEvent.Change {}
-    private class ValueChanged extends Event implements CalculationEvent.ValueChanged{}
     private class Saved extends Event implements CalculationEvent.Saved {}
+
+    private class ValueChanged<C extends CalculationData> extends Event implements CalculationEvent.ValueChanged<C> {
+        private final C calculation;
+        
+        private ValueChanged(C calculation) {
+            this.calculation = calculation;
+        }
+        
+        @Override
+        public C getCalculationData() {
+            return calculation;
+        }
+        
+        public String toString() {
+            return "ValueChanged ["+calculation+"]";
+        }
+    }
+    
     private class Renamed extends Event implements CalculationEvent.Renamed {
         private final String oldPath;
 

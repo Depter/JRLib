@@ -43,8 +43,8 @@ import org.jreserve.gui.calculations.api.modification.CalculationModifier;
 import org.jreserve.gui.calculations.api.modification.EditableCalculationModifier;
 import org.jreserve.gui.calculations.api.modification.ModifiableCalculationProvider;
 import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
-import org.jreserve.gui.misc.eventbus.EventBusListener;
-import org.jreserve.gui.misc.eventbus.EventBusManager;
+//import org.jreserve.gui.misc.eventbus.EventBusListener;
+//import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.CommonIcons;
 import org.jreserve.gui.misc.utils.widgets.WidgetUtils;
@@ -90,11 +90,11 @@ public abstract class TriangleLayerEditorPanel<T extends Triangle, C extends Abs
 
     private void initCalculation() {
         if (calculation != null) {
+//            EventBusManager.getDefault().subscribe(this);
             widgetPanel.setTriangleGeometry(getGeometry(calculation));
             widgetPanel.setLayers(createLayers(calculation));
             widgetPanel.getTriangleWidget().setEditController(new LayerEditController());
             resetModificationList();
-            EventBusManager.getDefault().subscribe(this);
         }
     }
 
@@ -131,20 +131,25 @@ public abstract class TriangleLayerEditorPanel<T extends Triangle, C extends Abs
     }
     
     public void closeComponent() {
-        EventBusManager.getDefault().unsubscribe(this);
+        this.calculation = null;
+        this.undo = null;
+//        EventBusManager.getDefault().unsubscribe(this);
     }
     
     public void setUndoUtil(UndoUtil undoUtil) {
         this.undo = undoUtil;
     }
     
-    @EventBusListener(forceEDT = true)
-    public void calculationChanged(CalculationEvent.ValueChanged evt) {
-        if(calculation == evt.getCalculationProvider()) {
-            widgetPanel.setTriangleGeometry(getGeometry(calculation));
-            widgetPanel.setLayers(createLayers(calculation));
-            resetModificationList();
-        }
+//    @EventBusListener(forceEDT = true)
+//    public void calculationChanged(CalculationEvent.ValueChanged evt) {
+//        if(calculation == evt.getCalculationProvider()) {
+//        }
+//    }
+    
+    public void recalculate() {
+        widgetPanel.setTriangleGeometry(getGeometry(calculation));
+        widgetPanel.setLayers(createLayers(calculation));
+        resetModificationList();
     }
     
     private void initComponents() {

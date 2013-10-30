@@ -17,32 +17,24 @@
 package org.jreserve.gui.calculations.claimtriangle.impl;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.jdom2.Element;
-import org.jreserve.gui.calculations.api.modification.AbstractModifiableCalculationProvider;
-import org.jreserve.gui.calculations.api.modification.CalculationModifier;
-import org.jreserve.gui.calculations.api.modification.triangle.TriangleModifier;
+import org.jreserve.gui.calculations.api.modification.triangle.AbstractModifiableTriangleProvider;
 import org.jreserve.gui.calculations.claimtriangle.ClaimTriangleCalculation;
 import org.jreserve.gui.data.api.DataEvent;
 import org.jreserve.gui.data.api.DataSource;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.eventbus.EventBusListener;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
-import org.jreserve.gui.misc.utils.tasks.TaskUtil;
-import org.jreserve.gui.trianglewidget.DefaultTriangleLayer;
-import org.jreserve.gui.trianglewidget.model.TriangleLayer;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.gui.data.DataType;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
 import org.jreserve.jrlib.triangle.claim.ClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.CummulatedClaimTriangle;
 import org.jreserve.jrlib.triangle.claim.InputClaimTriangle;
-import org.jreserve.jrlib.triangle.claim.ModifiedClaimTriangle;
 import org.netbeans.api.project.Project;
 import org.openide.util.NbBundle.Messages;
 
@@ -60,7 +52,7 @@ import org.openide.util.NbBundle.Messages;
     "LBL.ClaimTriangleCalculationImpl.Layer.Base=Input."
 })
 public class ClaimTriangleCalculationImpl 
-    extends AbstractModifiableCalculationProvider<ClaimTriangle> 
+    extends AbstractModifiableTriangleProvider<ClaimTriangle> 
     implements ClaimTriangleCalculation, AuditedObject {
     
     public final static String CATEGORY = "ClaimTriangle";
@@ -76,7 +68,6 @@ public class ClaimTriangleCalculationImpl
     
     private DataSource dataSource;
     private TriangleGeometry geometry;
-    private ClaimTriangle claimTriangle;
     
     ClaimTriangleCalculationImpl(ClaimTriangleDataObject dObj, Element root) throws Exception {
         super(dObj, root, CATEGORY);
@@ -86,7 +77,6 @@ public class ClaimTriangleCalculationImpl
         initDataSource(root);
         geometry = TriangleGeometryUtil.fromXml(root);
         geometry.addChangeListener(geometryListener);
-        recalculate();
     }
     
     private void initDataSource(Element root) throws IOException {
@@ -124,10 +114,6 @@ public class ClaimTriangleCalculationImpl
         }
     }
     
-    private void recalculate() {
-        TaskUtil.execute(new RecalculateTask());
-    }
-    
     @Override
     public TriangleGeometry getGeometry() {
         synchronized(lock) {
@@ -149,44 +135,9 @@ public class ClaimTriangleCalculationImpl
     
     private void geometryChanged() {
         dObj.setModified(true);
-        recalculate();
+        recalculateIfExists();
         String str = geometry.toString();
         events.fireChange(Bundle.LBL_ClaimTriangleCalculationImpl_Geometry_Change(str));
-    }
-    
-    @Override
-    protected void modificationsChanged() {
-        recalculate();
-        events.fireChange();
-        this.dObj.setModified(true);
-    }
-    
-    @Override
-    public ClaimTriangle getCalculation() {
-        synchronized(lock) {
-            if(claimTriangle == null) {
-                recalculate();
-                return new InputClaimTriangle(new double[0][]);
-            }
-            return claimTriangle;
-        }
-    }
-    
-    @Override
-    public ClaimTriangle getCalculation(int layer) {
-        synchronized(lock) {
-            try {
-                ClaimTriangle result = TriangleGeometryUtil.createTriangle(dataSource, geometry);
-                result = new CummulatedClaimTriangle(result);
-                return super.modifyCalculation(result, layer);
-            } catch (Exception ex) {
-                String msg = "Unable to calculate claim triangle!";
-                logger.log(Level.SEVERE, msg, ex);
-                String title = Bundle.MSG_ClaimTriangleCalculationImpl_Calculation_Error();
-                BubbleUtil.showException(title, getPath(), ex);
-                return new InputClaimTriangle(new double[0][0]);
-            }
-        }
     }
     
     @Override
@@ -214,41 +165,6 @@ public class ClaimTriangleCalculationImpl
         return getPath();
     }
     
-    public List<TriangleLayer> createLayers() {
-        synchronized(lock) {
-            List<ClaimTriangle> triangles = getCalculationLayers();
-            int size = triangles.size();
-            List<TriangleLayer> result = new ArrayList<TriangleLayer>(size);
-            result.add(createBaseLayer(triangles.get(0)));
-            
-            for(int i=1; i<size; i++) {
-                TriangleModifier modifier = (TriangleModifier) getModificationAt(i-1);
-                ClaimTriangle layer = triangles.get(i);
-                result.add(modifier.createLayer(layer));
-            }
-            return result;
-        }
-    }
-    
-    private List<ClaimTriangle> getCalculationLayers() {
-        ClaimTriangle layer = claimTriangle;
-        int count = getModificationCount();
-        List<ClaimTriangle> result = new ArrayList<ClaimTriangle>(count+1);
-        
-        for(int i=0; i<count; i++) {
-            result.add(0, layer);
-            layer = ((ModifiedClaimTriangle)layer).getSourceClaimTriangle();
-        }
-        result.add(0, layer);
-        
-        return result;
-    }
-    
-    private TriangleLayer createBaseLayer(ClaimTriangle input) {
-        String name = Bundle.LBL_ClaimTriangleCalculationImpl_Layer_Base();
-        return new DefaultTriangleLayer(input, name);
-    }
-    
     @Override
     public void setPath(String path) {
         super.setPath(path);
@@ -257,7 +173,7 @@ public class ClaimTriangleCalculationImpl
     @EventBusListener
     public synchronized void dataEvent(DataEvent evt) {
         if(isDataChanged(evt)) {
-            recalculate();
+            recalculateIfExists();
             events.fireChange();
         }
     }
@@ -265,6 +181,16 @@ public class ClaimTriangleCalculationImpl
     private boolean isDataChanged(DataEvent evt) {
         return dataSource == evt.getDataSource() &&
                (evt instanceof DataEvent.DataChange);
+    }
+
+    @Override
+    protected ClaimTriangle createDummyCalculation() {
+        return new InputClaimTriangle(new double[0][0]);
+    }
+
+    @Override
+    protected ModificationCalculator createCalculator() {
+        return new RecalculateTask();
     }
     
     private class GeometryListener implements ChangeListener {
@@ -274,36 +200,23 @@ public class ClaimTriangleCalculationImpl
         }
     }
     
-    private class RecalculateTask implements Runnable {
+    private class RecalculateTask extends ModificationCalculator {
         
         private final DataSource ds;
         private final TriangleGeometry geometry;
-        private final List<CalculationModifier<ClaimTriangle>> modifications;
         
         private RecalculateTask() {
             synchronized(lock) {
                 this.ds = ClaimTriangleCalculationImpl.this.dataSource;
                 this.geometry = new TriangleGeometry(ClaimTriangleCalculationImpl.this.geometry);
-                this.modifications = new ArrayList<CalculationModifier<ClaimTriangle>>(ClaimTriangleCalculationImpl.this.modifications);
             }
         }
-        
+
         @Override
-        public void run() {
-            final ClaimTriangle result = calculateResult();
-            synchronized(lock) {
-                claimTriangle = result;
-                events.fireValueChanged();
-            }
-        }
-        
-        private ClaimTriangle calculateResult() {
+        protected ClaimTriangle getRootCalculation() {
             try {
                 ClaimTriangle result = TriangleGeometryUtil.createTriangle(ds, this.geometry);
-                result = new CummulatedClaimTriangle(result);
-                for(CalculationModifier<ClaimTriangle> cm : this.modifications)
-                    result = cm.createCalculation(result);
-                return result;
+                return new CummulatedClaimTriangle(result);
             } catch (Exception ex) {
                 String msg = "Unable to calculate claim triangle!";
                 logger.log(Level.SEVERE, msg, ex);
@@ -312,6 +225,5 @@ public class ClaimTriangleCalculationImpl
                 return new InputClaimTriangle(new double[0][0]);
             }
         }
-    
     }
 }

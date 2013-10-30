@@ -105,8 +105,8 @@ class EventBus {
         for(Method method : getAnnotatedMethods(listener)) {
             Subscription s = new Subscription(listener, method);
             String msg = String.format(
-                    "Subscription '%s' for EventBus '%s', for event class '%s'.",
-                    listener, name, s.getEventClass().getName());
+                "Subscription '%s' for EventBus '%s', for event class '%s'.",
+                listener, name, s.getEventClass().getName());
             logger.log(Level.FINER, msg);
             subscriptions.add(s);
         }

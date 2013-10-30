@@ -20,9 +20,9 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
-import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ListCellRenderer;
@@ -39,14 +39,14 @@ import org.jreserve.gui.plot.PlotLabel;
  * @author Peter Decsi
  * @version 1.0
  */
-class AccidentFactorPlotComponent extends JPanel {
+class DevelopmentFactorPlotComponent extends JPanel {
     
     private FactorTriangleCalculation calculation;
     private DefaultListModel listModel = new DefaultListModel();
-    private JList accidentList;
-    private AccidentFactorPlot plot;
+    private JList seriesList;
+    private DevelopmentFactorPlot plot;
     
-    AccidentFactorPlotComponent(FactorTriangleCalculation calculation) {
+    DevelopmentFactorPlotComponent(FactorTriangleCalculation calculation) {
         this.calculation = calculation;
         initComponents();
     }
@@ -58,35 +58,36 @@ class AccidentFactorPlotComponent extends JPanel {
         split.setResizeWeight(1d);
         split.setOneTouchExpandable(true);
         
-        plot = new AccidentFactorPlot(calculation);
+        plot = new DevelopmentFactorPlot(calculation);
         Component c = plot.getPlot();
         split.setLeftComponent(c);
         
-        for(PlotLabel label : plot.getAccidents())
+        for(PlotLabel label : plot.getDevelopments())
             listModel.addElement(label);
-        accidentList = new JList(listModel);
-        accidentList.setCellRenderer(new ListRenderer());
-        accidentList.setSelectionModel(new PlotSeriesListSelectModel());
-        if(!listModel.isEmpty()) {
-            ListSelectionModel sModel = accidentList.getSelectionModel();
-            sModel.addSelectionInterval(0, listModel.getSize());
-        }
-        accidentList.addListSelectionListener(new SeriesListener());
-        split.setRightComponent(new JScrollPane(accidentList));
+        seriesList = new JList(listModel);
+        seriesList.setCellRenderer(new ListRenderer());
+        seriesList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        seriesList.addListSelectionListener(new SeriesListener());
+        if(!listModel.isEmpty())
+            seriesList.setSelectedIndex(0);
+        split.setRightComponent(new JScrollPane(seriesList));
         
         add(split, BorderLayout.CENTER);
     }
     
     void recalculate() {
+        int index = seriesList.getSelectedIndex();
         plot.recalculate();
         
         listModel.removeAllElements();
-        for(PlotLabel label : plot.getAccidents())
+        for(PlotLabel label : plot.getDevelopments())
             listModel.addElement(label);
         
         if(!listModel.isEmpty()) {
-            ListSelectionModel sModel = accidentList.getSelectionModel();
-            sModel.addSelectionInterval(0, listModel.getSize());
+            if(index >= 0 && listModel.size() > index)
+                seriesList.setSelectedIndex(index);
+            else
+                seriesList.setSelectedIndex(0);
         }
     }
     
@@ -97,15 +98,13 @@ class AccidentFactorPlotComponent extends JPanel {
     private class SeriesListener implements ListSelectionListener {
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            if(!e.getValueIsAdjusting()) {
-                int size = listModel.getSize();
-                for(int i=0; i<size; i++)
-                    plot.setSeriesVisible(i, accidentList.isSelectedIndex(i));
-            }
+            int index = seriesList.getSelectedIndex();
+            if(index >= 0)
+                plot.showSeries(index);
         }
     }
     
-    private class ListRenderer extends JCheckBox implements ListCellRenderer {
+    private class ListRenderer extends JRadioButton implements ListCellRenderer {
         
         private ListRenderer() {
             Border border = super.getBorder();
@@ -126,4 +125,5 @@ class AccidentFactorPlotComponent extends JPanel {
             return this;
         }
     }
+    
 }

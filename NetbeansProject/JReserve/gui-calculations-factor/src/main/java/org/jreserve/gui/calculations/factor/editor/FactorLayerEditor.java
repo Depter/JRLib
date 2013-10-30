@@ -17,12 +17,15 @@
 package org.jreserve.gui.calculations.factor.editor;
 
 import java.awt.Component;
+import org.jreserve.gui.calculations.api.CalculationEvent;
 import org.jreserve.gui.calculations.api.edit.UndoUtil;
 import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
 import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
 import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleCalculationImpl;
 import org.jreserve.gui.calculations.factor.impl.factors.FactorTriangleExcludeable;
 import org.jreserve.gui.calculations.smoothing.SmoothableCategory;
+import org.jreserve.gui.misc.eventbus.EventBusListener;
+import org.jreserve.gui.misc.eventbus.EventBusManager;
 import org.jreserve.gui.misc.expandable.AbstractExpandableElement;
 import org.jreserve.gui.misc.expandable.ExpandableComponentHandler;
 import org.jreserve.gui.misc.expandable.ExpandableElement;
@@ -70,6 +73,7 @@ public class FactorLayerEditor extends AbstractExpandableElement {
     }
     
     public FactorLayerEditor(Lookup context) {
+        EventBusManager.getDefault().subscribe(this);
         calculation = getCalculation(context);
         lkp = new ProxyLookup(new AbstractLookup(ic));
         ic.add(new FactorTriangleExcludeable());
@@ -125,9 +129,17 @@ public class FactorLayerEditor extends AbstractExpandableElement {
     
     @Override
     public void componentClosed() {
+        EventBusManager.getDefault().unsubscribe(this);
+        calculation = null;
         if(panel != null)
             panel.closeComponent();
         super.componentClosed();
+    }
+    
+    @EventBusListener(forceEDT = true)
+    public void calculationChanged(CalculationEvent.ValueChanged evt) {
+        if(panel != null && calculation == evt.getCalculationProvider())
+            panel.recalculate();
     }
     
     private class SelectionListener implements TriangleSelectionListener {

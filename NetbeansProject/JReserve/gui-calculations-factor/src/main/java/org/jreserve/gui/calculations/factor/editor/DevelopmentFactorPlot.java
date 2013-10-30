@@ -19,7 +19,6 @@ package org.jreserve.gui.calculations.factor.editor;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Paint;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
@@ -36,10 +35,9 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jreserve.gui.calculations.factor.FactorTriangleCalculation;
 import org.jreserve.gui.misc.utils.actions.ClipboardUtil;
 import org.jreserve.gui.plot.ChartCopiable;
-import org.jreserve.gui.plot.ColorGenerator;
 import org.jreserve.gui.plot.PlotLabel;
-import org.jreserve.gui.plot.DefaultColorGenerator;
 import org.jreserve.jrlib.gui.data.TriangleGeometry;
+import org.jreserve.jrlib.linkratio.SimpleLinkRatio;
 import org.jreserve.jrlib.triangle.factor.FactorTriangle;
 
 /**
@@ -47,19 +45,20 @@ import org.jreserve.jrlib.triangle.factor.FactorTriangle;
  * @author Peter Decsi
  * @version 1.0
  */
-class AccidentFactorPlot {
+class DevelopmentFactorPlot {
+    private final static Color FACTOR = Color.RED;
+    private final static Color LINK_RATIO = Color.BLUE;
     
     private FactorTriangleCalculation calculation;
     private DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
-    
-    private List<PlotLabel> aLabels = new ArrayList<PlotLabel>();
-//    private List<PlotLabel> dLabels = new ArrayList<PlotLabel>();
+    private List<PlotLabel> dLabels = new ArrayList<PlotLabel>();
+    private int developments;
     
     private JFreeChart chart;
     private CategoryItemRenderer renderer;
     private Component component;
     
-    AccidentFactorPlot(FactorTriangleCalculation calculation) {
+    DevelopmentFactorPlot(FactorTriangleCalculation calculation) {
         this.calculation = calculation;
         calculatePlotData();
         component = createPlotComponent();
@@ -68,39 +67,51 @@ class AccidentFactorPlot {
     private void calculatePlotData() {
         clearData();
         FactorTriangle factors = calculation.getCalculation();
+        SimpleLinkRatio lrs = new SimpleLinkRatio(factors);
         TriangleGeometry geometry = calculation.getSource().getGeometry();
+        developments = factors.getDevelopmentCount();
         
-        List<PlotLabel> dLabels = createDevelopmentLabels(factors);
+        createDevelopmentLabels();
+        List<PlotLabel> lrLabels = createLRLabels();
         
         int accidents = factors.getAccidentCount();
         for(int a=0; a<accidents; a++) {
             PlotLabel aLabel = new PlotLabel(a, geometry.getAccidentDate(a).toString());
-            aLabels.add(aLabel);
             
             int devs = factors.getDevelopmentCount(a);
             for(int d=0; d<devs; d++) {
                 PlotLabel dLabel = dLabels.get(d);
-                double value = factors.getValue(a, d);
-                dataSet.addValue(value, aLabel, dLabel);
+                PlotLabel lrLabel = lrLabels.get(d);
+                
+                double factor = factors.getValue(a, d);
+                double lr = lrs.getValue(d);
+                
+                dataSet.addValue(factor, dLabel, aLabel);
+                dataSet.addValue(lr, lrLabel, aLabel);
             }
         }
     }
     
-    private List<PlotLabel> createDevelopmentLabels(FactorTriangle factors) {
-        int developments = factors.getDevelopmentCount();
-        List<PlotLabel> result = new ArrayList<PlotLabel>();
-        for(int d=0; d<developments; d++)
-            result.add(new PlotLabel(d, getDevelopmentLabel(d)));
-        return result;
-    }
-    
-    private String getDevelopmentLabel(int development) {
-        return ""+(development+1) + " / " + (development+2);
-    }
-    
     private void clearData() {
+        dLabels.clear();
         dataSet.clear();
-        aLabels.clear();
+        developments = 0;
+    }
+    
+    private void createDevelopmentLabels() {
+        for(int d=0; d<developments; d++) {
+            String label = ""+(d+1) + " / " + (d+2);
+            dLabels.add(new PlotLabel(d, label));
+        }
+    }
+    
+    private List<PlotLabel> createLRLabels() {
+        List<PlotLabel> result = new ArrayList<PlotLabel>(developments);
+        for(int d=0; d<developments; d++) {
+            String label = "LR "+(d+1) + " / " + (d+2);
+            result.add(new PlotLabel(developments+d, label));
+        }
+        return result;
     }
     
     private Component createPlotComponent() {
@@ -130,18 +141,22 @@ class AccidentFactorPlot {
             lasr.setUseFillPaint(true);
             lasr.setBaseStroke(new BasicStroke(2));
 
-            ColorGenerator colors = new DefaultColorGenerator();
-            int count = dataSet.getRowCount();
             
             int r = 3;
             Shape circle = new Ellipse2D.Float(-r, -r, 2*r, 2*r);
+            int count = dataSet.getRowCount();
             for(int i=0; i<count; i++) {
-                Paint color = colors.nextColor();
+                PlotLabel label = (PlotLabel) dataSet.getRowKey(i);
+                boolean isLr = label.getId() >= developments;
+                
+                Color color = isLr? LINK_RATIO : FACTOR;
                 lasr.setSeriesPaint(i, color);
                 lasr.setSeriesFillPaint(i, color);
                 lasr.setSeriesShape(i, circle);
+                
+                lasr.setSeriesShapesVisible(i, !isLr);
+                lasr.setSeriesLinesVisible(i, isLr);
             }
-        
         }
         
         return new ChartPanel(chart);
@@ -151,19 +166,25 @@ class AccidentFactorPlot {
         return component;
     }
     
-    void setSeriesVisible(int index, boolean visible) {
-        renderer.setSeriesVisible(index, visible);
+    void showSeries(int index) {
+        int size = dataSet.getRowCount();
+        for(int row=0; row<size; row++) {
+            int id = ((PlotLabel) dataSet.getRowKey(row)).getId();
+            boolean visible = (id==index || (id-developments)==index); 
+            renderer.setSeriesVisible(row, visible);
+        }
     }
     
     void recalculate() {
         this.calculatePlotData();
     }
     
-    List<PlotLabel> getAccidents() {
-        return aLabels;
+    List<PlotLabel> getDevelopments() {
+        return dLabels;
     }
     
     ClipboardUtil.Copiable createCopiable() {
         return new ChartCopiable(chart, component);
     }
+
 }

@@ -44,9 +44,9 @@ public class EventBusManager {
         return INSTANCE;
     }
     
+    private final Object eventLock = new Object();
     private final EventBus root = new EventBus();
     private final List<Event> events = new LinkedList<Event>();
-//    private final BlockingQueue<Event> eventQue = new LinkedBlockingQueue<Event>();
     private final EventDispatcher dispatcher = new EventDispatcher();
     private final Thread dispatcherThread;
     
@@ -65,7 +65,7 @@ public class EventBusManager {
             throw new NullPointerException("Listener can not be null!");
         if(busName == null)
             busName = "";
-        synchronized(root) {
+        synchronized(eventLock) {
             root.getChild(busName).subscribe(listener);
         }
     }
@@ -80,7 +80,7 @@ public class EventBusManager {
         if(busName == null)
             busName = "";
         
-        synchronized(root) {
+        synchronized(eventLock) {
             root.getChild(busName).unsubscribe(listener);
         }
     }
@@ -95,9 +95,9 @@ public class EventBusManager {
         if(busName == null)
             busName = "";
         
-        synchronized(events) {
+        synchronized(eventLock) {
             events.add(new Event(busName, value));
-            events.notifyAll();
+            eventLock.notifyAll();
         }
     }
     
@@ -116,10 +116,10 @@ public class EventBusManager {
         
         private void doEventLoop() throws InterruptedException {
             while(true) {
-                synchronized(events) {
+                synchronized(eventLock) {
                     while(!events.isEmpty())
                         publishEvent(events.remove(0));
-                    events.wait();
+                    eventLock.wait();
                 }
             }
         }
@@ -131,7 +131,7 @@ public class EventBusManager {
         }
         
         private List<Subscription> getSubscriptons(String busName, Class clazz) {
-            synchronized(root) {
+            synchronized(eventLock) {
                 EventBus bus = root.getChild(busName);
                 List<Subscription> subscriptions = new ArrayList<Subscription>();
                 bus.fillSubscriptions(subscriptions, clazz);

@@ -27,7 +27,6 @@ import org.jreserve.gui.calculations.factor.impl.BundleUtils;
 import org.jreserve.gui.calculations.factor.impl.FactorBundleImpl;
 import org.jreserve.gui.calculations.factor.impl.FactorDataObject;
 import org.jreserve.gui.misc.utils.notifications.BubbleUtil;
-import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.jrlib.linkratio.DefaultLinkRatioSelection;
 import org.jreserve.jrlib.linkratio.LinkRatio;
 import org.jreserve.jrlib.linkratio.LinkRatioMethod;
@@ -59,15 +58,9 @@ public class LinkRatioCalculationImpl
     private final UserInputLRMethod fixedMethod =
             new UserInputLRMethod();
     
-    private LinkRatio linkRatios;
-    
     public LinkRatioCalculationImpl(FactorDataObject obj, Element root, FactorBundleImpl bundle) throws Exception {
         super(obj, root, CATEGORY);
         this.bundle = bundle;
-    }
-    
-    private void recalculate() {
-        TaskUtil.execute(new RecalculateTask());
     }
 
     @Override
@@ -86,24 +79,13 @@ public class LinkRatioCalculationImpl
     }
 
     @Override
-    protected Element toXml() {
+    public Element toXml() {
         return super.toXml(ROOT_ELEMENT);
     }
 
     @Override
     public Class<LinkRatio> getCalculationClass() {
         return LinkRatio.class;
-    }
-
-    @Override
-    public LinkRatio getCalculation() {
-        synchronized(lock) {
-            if(linkRatios == null) {
-                recalculate();
-                return BundleUtils.createEmptyLinkRatios();
-            }
-            return linkRatios;
-        }
     }
 
     @Override
@@ -121,23 +103,30 @@ public class LinkRatioCalculationImpl
             events.fireCreated();
         }
     }
+
+    @Override
+    protected LinkRatio createDummyCalculation() {
+        return BundleUtils.createEmptyLinkRatios();
+    }
+
+    @Override
+    protected Calculator<LinkRatio> createCalculator() {
+        return new RecalculateTask();
+    }
     
-    private class RecalculateTask implements Runnable {
+    private class RecalculateTask implements Calculator<LinkRatio> {
+        
+        private final FactorTriangle factors;
         
         private RecalculateTask() {
-        }
-        
-        @Override
-        public void run() {
             synchronized(lock) {
-                linkRatios = calculateResult();
-                events.fireValueChanged();
+                factors = bundle.getFactors().getCalculation();
             }
         }
         
-        private LinkRatio calculateResult() {
+        @Override
+        public LinkRatio createCalculation() {
             try {
-                FactorTriangle factors = bundle.getFactors().getCalculation();
                 LinkRatioMethod defMethod = defaultMethod.createMethod();
                 DefaultLinkRatioSelection sel = new DefaultLinkRatioSelection(factors, defMethod);
                 sel.setMethods(createMethods());

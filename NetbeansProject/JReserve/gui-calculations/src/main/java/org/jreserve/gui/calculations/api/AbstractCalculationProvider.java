@@ -20,6 +20,7 @@ import java.io.IOException;
 import org.jdom2.Element;
 import org.jreserve.gui.misc.audit.event.AuditedObject;
 import org.jreserve.gui.misc.namedcontent.ProjectContentProvider;
+import org.jreserve.gui.misc.utils.tasks.TaskUtil;
 import org.jreserve.gui.misc.utils.widgets.Displayable;
 import org.jreserve.gui.wrapper.jdom.JDomUtil;
 import org.jreserve.jrlib.CalculationData;
@@ -35,14 +36,13 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
     implements CalculationProvider<C>, AuditedObject {
 
     private final Project project;
-    private final CalculationDataObject obj;
     private String path;
     protected final CalculationEventUtil events;
     protected final Object lock;
+    private C calculation;
     
     protected AbstractCalculationProvider(CalculationDataObject obj) {
         this.events = new CalculationEventUtil(this);
-        this.obj = obj;
         this.lock = obj.lock;
         this.project = FileOwnerQuery.getOwner(obj.getPrimaryFile());
         path = Displayable.Utils.displayProjectPath(obj.getPrimaryFile());
@@ -76,6 +76,12 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
         return getPath();
     }
     
+    protected final boolean calculationExists() {
+        synchronized(lock) {
+            return calculation != null;
+        }
+    }
+    
     protected abstract Element toXml();
     
     protected <T> T lookupSource(Class<T> clazz, Element root, String sourceTag) throws IOException {
@@ -93,5 +99,56 @@ public abstract class AbstractCalculationProvider<C extends CalculationData>
             return null;
     
         return pol.getContent(sPath, clazz);
+    }
+    
+    @Override
+    public C getCalculation() {
+        synchronized(lock) {
+            if(calculation == null) {
+                recalculate();
+                return createDummyCalculation();
+            }
+            return calculation;
+        }
+    }
+    
+    protected abstract C createDummyCalculation();
+    
+    protected final void recalculateIfExists() {
+        synchronized(lock) {
+            if(calculation != null)
+                recalculate();
+        }
+    }
+    
+    protected final void recalculate() {
+        synchronized(lock) {
+            Calculator<C> calculator = createCalculator();
+            TaskUtil.execute(new CalculatorTask(calculator));
+        }
+    }
+    
+    protected abstract Calculator<C> createCalculator();
+    
+    public static interface Calculator<C extends CalculationData> {
+        C createCalculation();
+    }
+    
+    private class CalculatorTask implements Runnable {
+        
+        private final Calculator<C> calculator;
+        
+        private CalculatorTask(Calculator<C> calculator) {
+            this.calculator = calculator;
+        }
+        
+        @Override
+        public void run() {
+            final C calculation = calculator.createCalculation();
+            synchronized(lock) {
+                AbstractCalculationProvider.this.calculation = calculation;
+                events.fireValueChanged(calculation);
+            }
+        }
     }
 }
